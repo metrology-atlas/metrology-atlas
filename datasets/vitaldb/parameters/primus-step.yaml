@@ -1,0 +1,9 @@
+id: primus-step
+name: Primus correction size
+quantity: Size of the Primus's small corrections.
+value: 0.008
+unit: s
+spread: {min: -0.064, max: 0.08}
+status: measured
+study: correction-periods
+about: [primus-vs-pc]

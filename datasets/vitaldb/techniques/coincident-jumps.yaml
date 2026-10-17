@@ -1,0 +1,5 @@
+id: coincident-jumps
+name: Coincident jumps
+summary: >-
+  Look for stamp jumps that appear in several independently clocked tracks at the same moment. A step of the
+  common clock moves all of them; a device's own correction moves one.

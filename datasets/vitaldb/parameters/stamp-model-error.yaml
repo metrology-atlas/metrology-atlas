@@ -1,0 +1,10 @@
+id: stamp-model-error
+name: EEG–ECG timing error after the stamp model
+quantity: EEG–ECG timing error per 10-minute window with the stamp model and the SNUADC mode's constant.
+value: 0.033
+unit: s
+display: "33 ms median, p90 116 ms (16 ms and 67 ms with the case's own bursts)"
+status: measured
+study: snuadc-stamp-sawtooth
+about: [bis-vs-snuadc, bis-eeg]
+headline: true

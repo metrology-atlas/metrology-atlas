@@ -1,0 +1,21 @@
+id: dltubesize
+name: Double lumen tube size
+summary: Double lumen tube size (clinical table).
+type: clinical
+source_name: dltubesize
+group: Clinical record/Airway and lines
+source: clinical_data.csv
+unit: Fr
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/dltubesize.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 930 records in 9 categories.'
+  alt: Histogram of the recorded values of dltubesize.

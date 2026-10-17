@@ -1,0 +1,75 @@
+id: bis-eeg
+name: BIS EEG
+summary: The raw EEG from the BIS monitor at 128 Hz.
+type: waveform
+source_name: BIS/EEG1_WAV
+device: bis
+stamp_clock: recorder-pc
+sample_clock: bis-clock
+rate_hz: 128
+unit: uV
+timing:
+- id: bis-sync
+  name: after sync to the ECG
+  default: true
+  delay_s:
+  - 0.016
+  - 0.033
+  interval_s:
+  - 0.0078
+  - 0.0078
+  domain: reference
+  status: measured
+  evidence: 16-33 ms; loop closes in drift and steps; latency -0.80 s (SD 25 ms) in link K
+  corrected_delay_s:
+  - 0.53
+  - 1.05
+  correction: stamp model and ECG-EEG burst constant
+  corrects:
+  - bis-raw
+- id: bis-raw
+  name: raw stamps
+  delay_s:
+  - 0.53
+  - 1.05
+  interval_s:
+  - 0.0078
+  - 0.0078
+  domain: bis
+  status: measured
+  evidence: offset p5-p95 -1053..-533 ms
+tags:
+- stub
+chain:
+- node: BIS clock
+  clock: bis-clock
+  kind: clock
+  effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps sit 0.53–1.05 s off the
+    ECG's. It drifts +23 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +155 ms).
+  offset_s:
+  - 0.53
+  - 1.05
+  drift: +23 ppm against the PC; corrected every 8,192 s
+  status: measured
+  studies:
+  - snuadc-stamp-sawtooth
+- node: Synchronised to the ECG
+  kind: correction
+  effect: The stamp model removes the drift and corrections; one constant per SNUADC mode, from bursts seen in both
+    the ECG and the EEG, removes the offset. With the case's own bursts the error is about 16 ms.
+  offset_s:
+  - 0.53
+  - 1.05
+  residual_s:
+  - 0.016
+  - 0.033
+  status: measured
+  studies:
+  - snuadc-stamp-sawtooth
+- node: Stored sample time
+  kind: stamping
+  effect: 'Samples at 128 Hz: one sample is 7.8 ms.'
+  offset_s:
+  - 0.0078
+  - 0.0078
+  status: measured

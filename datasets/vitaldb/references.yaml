@@ -1,0 +1,302 @@
+- id: jcgm-200-2012
+  group: Metrology
+  citation: JCGM 200:2012. International vocabulary of metrology – Basic and general concepts and associated terms (VIM).
+    Joint Committee for Guides in Metrology; 2012.
+  doi: 10.59161/JCGM200-2012
+  url: https://jcgm.bipm.org/vim/en
+- id: jcgm-100-2008
+  group: Metrology
+  citation: JCGM 100:2008. Evaluation of measurement data – Guide to the expression of uncertainty in measurement (GUM).
+    Joint Committee for Guides in Metrology; 2008.
+  doi: 10.59161/JCGM100-2008E
+  url: https://www.bipm.org/en/publications/guides/gum.html
+- id: jcgm-101-2008
+  group: Metrology
+  citation: JCGM 101:2008. Evaluation of measurement data – Supplement 1 to the 'Guide to the expression of uncertainty
+    in measurement' – Propagation of distributions using a Monte Carlo method. Joint Committee for Guides in Metrology;
+    2008.
+  doi: 10.59161/JCGM101-2008
+- id: jcgm-102-2011
+  group: Metrology
+  citation: JCGM 102:2011. Evaluation of measurement data – Supplement 2 to the 'Guide to the expression of uncertainty
+    in measurement' – Extension to any number of output quantities. Joint Committee for Guides in Metrology; 2011.
+  doi: 10.59161/JCGM102-2011
+- id: jcgm-gum-6-2020
+  group: Metrology
+  citation: 'JCGM GUM-6:2020. Guide to the expression of uncertainty in measurement – Part 6: Developing and using measurement
+    models. Joint Committee for Guides in Metrology; 2020.'
+  doi: 10.59161/JCGMGUM-6-2020
+- id: lee2022vitaldb
+  group: Data and recording
+  citation: Lee H-C, Park Y, Yoon SB, Yang SM, Park D, Jung C-W. VitalDB, a high-fidelity multi-parameter vital signs database
+    in surgical patients. Sci Data. 2022;9:279.
+  doi: 10.1038/s41597-022-01411-5
+- id: lee2022vitaldb-physionet
+  group: Data and recording
+  citation: Lee H-C, Jung C-W. VitalDB, a high-fidelity multi-parameter vital signs database in surgical patients (version
+    1.0.0). PhysioNet. 2022.
+  doi: 10.13026/czw8-9p62
+  url: https://physionet.org/content/vitaldb/1.0.0/
+  note: The release this atlas describes.
+- id: goldberger2000physionet
+  group: Data and recording
+  citation: 'Goldberger AL, Amaral LAN, Glass L, Hausdorff JM, Ivanov PCh, Mark RG, Mietus JE, Moody GB, Peng C-K, Stanley
+    HE. PhysioBank, PhysioToolkit, and PhysioNet: components of a new research resource for complex physiologic signals.
+    Circulation. 2000;101(23):e215-e220.'
+  doi: 10.1161/01.CIR.101.23.e215
+- id: pollard2026physionet
+  group: Data and recording
+  citation: Pollard T, Moody BE, Lehman L, Gow B, Fernandes C, Xie C, Johnson A, Mark RG, Heldt T. PhysioNet as a global
+    platform for biomedical research. Nature Health. 2026.
+  doi: 10.1038/s44360-026-00096-z
+  note: The standard PhysioNet citation now given on the VitalDB page; volume and pages to be confirmed.
+- id: lee2018vitalrecorder
+  group: Data and recording
+  citation: Lee H-C, Jung C-W. Vital Recorder – a free research tool for automatic recording of high-resolution time-synchronised
+    physiological data from multiple anaesthesia devices. Sci Rep. 2018;8:1527.
+  doi: 10.1038/s41598-018-20062-4
+- id: snuadc
+  group: Data and recording
+  citation: 'VitalDB. SNUADC: firmware and hardware of the VitalDB analogue-to-digital converter. GitHub.'
+  url: https://github.com/vitaldb/snuadc
+  note: Firmware firmware/SNUADC/SNUADC.ino, read October 2026.
+- id: rfc5905
+  group: Timing and synchronisation
+  citation: 'Mills D, Martin J, Burbank J, Kasch W. Network Time Protocol Version 4: Protocol and Algorithms Specification.
+    RFC 5905. RFC Editor; 2010.'
+  doi: 10.17487/RFC5905
+  url: https://www.rfc-editor.org/info/rfc5905
+  note: How a PC clock is usually kept on UTC; the recorder PCs' link to UTC is assumed, not observed.
+- id: pilge2006timedelay
+  group: Timing and synchronisation
+  citation: 'Pilge S, Zanner R, Schneider G, Blum J, Kreuzer M, Kochs EF. Time delay of index calculation: analysis of cerebral
+    state, bispectral, and narcotrend indices. Anesthesiology. 2006;104(3):488-494.'
+  doi: 10.1097/00000542-200603000-00016
+- id: rampil1998primer
+  group: Timing and synchronisation
+  citation: Rampil IJ. A primer for EEG signal processing in anesthesia. Anesthesiology. 1998;89(4):980-1002.
+  doi: 10.1097/00000542-199810000-00023
+- id: openeeg
+  group: Timing and synchronisation
+  citation: 'VitalDB. openeeg: open-source EEG processing for depth of anaesthesia (BIS-mimic algorithms validated against
+    VitalDB). GitHub.'
+  url: https://github.com/vitaldb/openeeg
+  note: Commit bd476c5, 2 June 2026; read October 2026.
+- id: heitjan1989grouped
+  group: Coarse data and heaping
+  citation: 'Heitjan DF. Inference from grouped continuous data: a review. Stat Sci. 1989;4(2):164-179.'
+  doi: 10.1214/ss/1177012601
+- id: heitjan1991coarse
+  group: Coarse data and heaping
+  citation: Heitjan DF, Rubin DB. Ignorability and coarse data. Ann Stat. 1991;19(4):2244-2253.
+  doi: 10.1214/aos/1176348396
+- id: wang2008heaping
+  group: Coarse data and heaping
+  citation: Wang H, Heitjan DF. Modeling heaping in self-reported cigarette counts. Stat Med. 2008;27(19):3789-3804.
+  doi: 10.1002/sim.3281
+- id: leatt1986spinal
+  group: Anthropometry
+  citation: Leatt P, Reilly T, Troup JG. Spinal loading during circuit weight-training and running. Br J Sports Med. 1986;20(3):119-124.
+  doi: 10.1136/bjsm.20.3.119
+- id: voss1997diurnal
+  group: Anthropometry
+  citation: 'Voss LD, Bailey BJR. Diurnal variation in stature: is stretching the answer? Arch Dis Child. 1997;77(4):319-322.'
+  doi: 10.1136/adc.77.4.319
+- id: healey2011diurnal
+  group: Anthropometry
+  citation: 'Healey EL, Burden AM, McEwan IM, Fowler NE. Diurnal variation in stature: do those with chronic low-back pain
+    differ from asymptomatic controls? Clin Biomech. 2011;26(4):331-336.'
+  doi: 10.1016/j.clinbiomech.2010.11.017
+- id: khosla1964bodyweight
+  group: Anthropometry
+  citation: Khosla T, Billewicz WZ. Measurement of change in body-weight. Br J Nutr. 1964;18(1):227-239.
+  doi: 10.1079/BJN19640022
+- id: vivanti2013weight
+  group: Anthropometry
+  citation: Vivanti A, Yu L, Palmer M, Dakin L, Sun J, Campbell K. Short-term body weight fluctuations in older well-hydrated
+    hospitalised patients. J Hum Nutr Diet. 2013;26(5):429-435.
+  doi: 10.1111/jhn.12034
+- id: allen2000variability
+  group: Pulse arrival time
+  citation: Allen J, Murray A. Variability of photoplethysmography peripheral pulse measurements at the ears, thumbs and
+    toes. IEE Proc Sci Meas Technol. 2000;147(6):403-407.
+  doi: 10.1049/ip-smt:20000846
+- id: allen2002age
+  group: Pulse arrival time
+  citation: Allen J, Murray A. Age-related changes in peripheral pulse timing characteristics at the ears, fingers and toes.
+    J Hum Hypertens. 2002;16(10):711-717.
+  doi: 10.1038/sj.jhh.1001478
+- id: block2020conventional
+  group: Pulse arrival time
+  citation: Block RC, Yavarimanesh M, Natarajan K, et al. Conventional pulse transit times as markers of blood pressure
+    changes in humans. Sci Rep. 2020;10:16373.
+  doi: 10.1038/s41598-020-73143-8
+- id: jose2025exploring
+  group: Pulse arrival time
+  citation: 'Jose AS, Srivastav S, Mehta B. Exploring the repeatability of pulse arrival time in healthy subjects: a test-retest
+    approach. Indian J Physiol Pharmacol. 2025;69(1):27-33.'
+  doi: 10.25259/IJPP_149_2024
+- id: kortekaas2018small
+  group: Pulse arrival time
+  citation: Kortekaas MC, van Velzen MHN, Grüne F, Niehof SP, Stolker RJ, Huygen FJPM. Small intra-individual variability
+    of the pre-ejection period justifies the use of pulse transit time as approximation of the vascular transit. PLoS ONE.
+    2018;13(10):e0204105.
+  doi: 10.1371/journal.pone.0204105
+- id: lee2019analysis
+  group: Pulse arrival time
+  citation: 'Lee J, Yang S, Lee S, Kim HC. Analysis of pulse arrival time as an indicator of blood pressure in a large surgical
+    biosignal database: recommendations for developing ubiquitous blood pressure monitoring methods. J Clin Med. 2019;8(11):1773.'
+  doi: 10.3390/jcm8111773
+- id: liao2023filtering
+  group: Pulse arrival time
+  citation: 'Liao S, Liu H, Lin W-H, Zheng D, Chen F. Filtering-induced changes of pulse transmit time across different
+    ages: a neglected concern in photoplethysmography-based cuffless blood pressure measurement. Front Physiol. 2023;14:1172150.'
+  doi: 10.3389/fphys.2023.1172150
+- id: martin2016weighing
+  group: Pulse arrival time
+  citation: Martin SL-O, Carek AM, Kim C-S, Ashouri H, Inan OT, Hahn J-O, Mukkamala R. Weighing scale-based pulse transit
+    time is a superior marker of blood pressure than conventional pulse arrival time. Sci Rep. 2016;6:39273.
+  doi: 10.1038/srep39273
+- id: mohammadpoor2024use
+  group: Pulse arrival time
+  citation: Mohammadpoor Faskhodi M, Garcia-Gonzalez MA, Fernandez-Chimeno M, et al. On the use of fractional calculus to
+    improve the pulse arrival time (PAT) detection when using photoplethysmography (PPG) and electrocardiography (ECG) signals.
+    PLoS ONE. 2024;19(2):e0298354.
+  doi: 10.1371/journal.pone.0298354
+- id: obata2017noninvasive
+  group: Pulse arrival time
+  citation: Obata Y, Ong QJ, Magruder JT, et al. Noninvasive assessment of the effect of position and exercise on pulse
+    arrival to peripheral vascular beds in healthy volunteers. Front Physiol. 2017;8:47.
+  doi: 10.3389/fphys.2017.00047
+- id: vanvelzen2017increasing
+  group: Pulse arrival time
+  citation: van Velzen MHN, Loeve AJ, Niehof SP, Mik EG. Increasing accuracy of pulse transit time measurements by automated
+    elimination of distorted photoplethysmography waves. Med Biol Eng Comput. 2017;55(11):1989-2000.
+  doi: 10.1007/s11517-017-1642-x
+- id: youn2014changes
+  group: Pulse arrival time
+  citation: Youn AM, Shin YS, Park SI. Changes in pulse transit time according to target controlled infusion of propofol
+    versus sevoflurane inhalation induction. Anesth Pain Med. 2014;9(1):48-53.
+  note: Cited for the change after induction only.
+- id: goodwin2020practical
+  group: The authors' earlier work
+  citation: Goodwin AJ, Eytan D, Greer RW, Mazwi M, Thommandram A, Goodfellow SD, Assadi A, Jegatheeswaran A, Laussen PC.
+    A practical approach to storage and retrieval of high-frequency physiological signals. Physiol Meas. 2020;41(3):035008.
+  doi: 10.1088/1361-6579/ab7cb5
+- id: goodwin2021blood
+  group: The authors' earlier work
+  citation: 'Goodwin A, Mazwi ML, Somer J, Schwartz SM, McEwan A, Eytan D. Blood pressure in critically ill children: exploratory
+    analyses of concurrent invasive and noninvasive measurements. Crit Care Explor. 2021;3(12):e0586.'
+  note: Value accuracy of non-invasive against invasive blood pressure.
+- id: goodwin2022timing
+  group: The authors' earlier work
+  citation: Goodwin AJ, Eytan D, Dixon W, Goodfellow SD, Doherty Z, Greer RW, McEwan A, Tracy M, Laussen PC, Assadi A, et
+    al. Timing errors and temporal uncertainty in clinical databases – a narrative review. Front Digit Health. 2022;4:932599.
+- id: goodwin2023
+  group: The authors' earlier work
+  citation: Goodwin AJ, Dixon W, Mazwi M, Hahn CD, Meir T, Goodfellow SD, Kazazian V, Greer RW, McEwan A, Laussen PC, et
+    al. The truth Hertz – synchronization of electroencephalogram signals with physiological waveforms recorded in an intensive
+    care unit. Physiol Meas. 2023;44(8):085002.
+- id: goodwin2023high
+  group: The authors' earlier work
+  citation: 'Goodwin AJ. High frequency physiological data quality modelling in the intensive care unit [PhD thesis]. Sydney:
+    School of Biomedical Engineering, The University of Sydney; 2023.'
+- id: ruffolo2025high
+  group: The authors' earlier work
+  citation: Ruffolo I, Siddiqui A, Nguyen B, Dixon W, Assadi A, Greer R, Schwartz S, Brudno M, Mariakakis A, Goodwin A.
+    High-fidelity measurement of pulse arrival time in critically ill children using standard bedside monitoring equipment.
+    Physiol Meas. 2025;46(11):115006.
+- id: vitaldb-python
+  group: Software
+  citation: VitalLab. vitaldb [Python package]. PyPI.
+  url: https://pypi.org/project/vitaldb/
+  note: Version 1.7.2 was read for the loader study.
+- id: timenet
+  group: Software
+  citation: 'Maritsch M, Stoffregen T, Kaar T, et al. TimeNet: an extensible unified data infrastructure for next-generation
+    temporal foundation models. arXiv:2610.04407. 2026.'
+  url: https://github.com/OpenTSLM/TimeNet
+  note: Preprint details to be confirmed.
+- id: atriumdb
+  group: Software
+  citation: Greer R, Dixon W, Vecile S. AtriumDB [Python package]. Laussen Labs, The Hospital for Sick Children.
+  url: https://pypi.org/project/atriumdb/
+  note: No citation request found; cite with the version used.
+- id: hrvmatch
+  group: Software
+  citation: LaussenLabs. hrvmatch [source code]. GitHub.
+  url: https://github.com/LaussenLabs/hrvmatch
+  note: Beat matching by inter-beat intervals; cite with the commit used.
+- id: harris2020numpy
+  group: Software
+  citation: Harris CR, Millman KJ, van der Walt SJ, et al. Array programming with NumPy. Nature. 2020;585(7825):357-362.
+  doi: 10.1038/s41586-020-2649-2
+- id: virtanen2020scipy
+  group: Software
+  citation: 'Virtanen P, Gommers R, Oliphant TE, et al. SciPy 1.0: fundamental algorithms for scientific computing in Python.
+    Nat Methods. 2020;17(3):261-272.'
+  doi: 10.1038/s41592-019-0686-2
+- id: mckinney2010pandas
+  group: Software
+  citation: 'McKinney W. Data structures for statistical computing in Python. In: Proceedings of the 9th Python in Science
+    Conference. 2010. p. 56-61.'
+  doi: 10.25080/Majora-92bf1922-00a
+- id: pandas-zenodo
+  group: Software
+  citation: 'The pandas development team. pandas-dev/pandas: Pandas. Zenodo.'
+  doi: 10.5281/zenodo.3509134
+  note: Cite the record for the version used, with McKinney 2010.
+- id: hunter2007matplotlib
+  group: Software
+  citation: 'Hunter JD. Matplotlib: a 2D graphics environment. Comput Sci Eng. 2007;9(3):90-95.'
+  doi: 10.1109/MCSE.2007.55
+- id: apache-arrow
+  group: Software
+  citation: Apache Software Foundation. Apache Arrow (PyArrow).
+  url: https://arrow.apache.org/
+- id: raasveldt2019duckdb
+  group: Software
+  citation: 'Raasveldt M, Mühleisen H. DuckDB: an embeddable analytical database. In: Proceedings of the 2019 International
+    Conference on Management of Data (SIGMOD ''19). ACM; 2019. p. 1981-1984.'
+  doi: 10.1145/3299869.3320212
+- id: makowski2021neurokit2
+  group: Software
+  citation: 'Makowski D, Pham T, Lau ZJ, Brammer JC, Lespinasse F, Pham H, Schölzel C, Chen SHA. NeuroKit2: a Python toolbox
+    for neurophysiological signal processing. Behav Res Methods. 2021;53(4):1689-1696.'
+  doi: 10.3758/s13428-020-01516-y
+- id: bota2024biosppy
+  group: Software
+  citation: 'Bota P, Silva R, Carreiras C, Fred A, Plácido da Silva H. BioSPPy: a Python toolbox for physiological signal
+    processing. SoftwareX. 2024;26:101712.'
+  doi: 10.1016/j.softx.2024.101712
+- id: cairosvg
+  group: Software
+  citation: Kozea / CourtBouillon. CairoSVG.
+  url: https://github.com/Kozea/CairoSVG
+- id: jax2018github
+  group: Software
+  citation: 'Bradbury J, Frostig R, Hawkins P, Johnson MJ, Katariya Y, Leary C, Maclaurin D, Necula G, Paszke A, VanderPlas J, Wanderman-Milne
+    S, Zhang Q. JAX: composable transformations of Python+NumPy programs. 2018.'
+  url: https://github.com/jax-ml/jax
+  note: Used to fit the value models; cite with the version used.
+- id: pyyaml
+  group: Software
+  citation: Simonov K, et al. PyYAML.
+  url: https://github.com/yaml/pyyaml
+- id: zensical
+  group: Software
+  citation: 'Zensical. Zensical: static site generator.'
+  url: https://zensical.org/
+- id: pytest
+  group: Software
+  citation: Krekel H, Oliveira B, Pfannschmidt R, Bruynooghe F, Laugher B, Bruhin F. pytest. 2004.
+  url: https://github.com/pytest-dev/pytest
+  note: Cite with the major.minor version used.
+- id: rietveld2002rounding
+  group: Coarse data and heaping
+  citation: 'Rietveld P. Rounding of arrival and departure times in travel surveys: an interpretation in terms of
+    scheduled activities. J Transp Stat. 2002;5(1):71-81.'
+  url: https://www.bts.gov/archive/publications/journal_of_transportation_and_statistics/volume_05_number_01/paper_05/index
+  note: Reported clock times heap on multiples of 5, 15, 30 and 60 minutes; rounding probabilities are fitted by
+    maximum likelihood and Bayes' rule gives the distribution of the true time given the reported one. Also a
+    Tinbergen Institute discussion paper (TI 01-110/3, 2001).

@@ -1,0 +1,23 @@
+id: admission-discharge
+name: Admission and discharge
+summary: Hospital admission and discharge, in days.
+group: Clinical record/Times and durations
+type: event
+source_name: adm, dis
+device: clinical-records
+stamp_clock: hospital-records
+timing:
+- id: admdis
+  name: as recorded
+  default: true
+  delay_s:
+  - 3600.0
+  - 86400.0
+  interval_s:
+  - 86400.0
+  - 86400.0
+  domain: records
+  status: estimated
+  evidence: whole days
+tags:
+- stub

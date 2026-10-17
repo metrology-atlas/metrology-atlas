@@ -1,0 +1,4 @@
+id: null-controls
+name: Null controls
+summary: >-
+  Repeat each test where the effect cannot be: at random times, at the same interval later, sign-flipped, or between two channels of one device. The effect is real only where it beats its control.

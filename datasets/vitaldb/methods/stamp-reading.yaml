@@ -1,0 +1,39 @@
+id: stamp-reading
+name: Reading the stamps
+summary: >-
+  Fit drift and corrections from the record time stamps themselves, against the number of samples each record holds.
+order: 1
+techniques: [sawtooth-fit, coincident-jumps, unit-mixture]
+description: |
+  **The idea.** A recorder that receives blocks of samples stamps each block with a time. If the device sends no
+  time of its own, the recorder's stamps are its model of the device's clock: between corrections they advance by
+  exactly the number of samples received at the nominal rate, and where the model has drifted too far from the
+  recorder's own clock, the recorder pulls it back. So the stamps, compared with the sample count, show the drift
+  and every correction, with no signal content needed.
+
+  **What it gives.** For each device: its correction rule (a drift threshold, a fixed timer, re-anchoring at gaps),
+  its drift between corrections, and the size and timing of each correction. Rates cluster into physical units,
+  and a term shared by every device in a recording reveals the recorder's own clock. Jumps that hit every device at
+  once are recorder events (pauses, clock steps).
+
+  **How.** Split each track into runs that join to within half a sample; classify the jumps between runs by their
+  device's signature and by whether every track of the device jumps together; fit a line through each stretch, a
+  sawtooth across corrections, one rate per recording from whole teeth (correction to correction).
+
+  **Pitfalls.** Stamps show only what the recorder knew. Time the device lost without telling the recorder (a
+  sampling pause, a dropped sample) is invisible to them, and stamp arithmetic can masquerade as drift. A rate
+  read from stamps is relative to the recorder, never absolute. Check the result against an event seen on both
+  clocks ([[method:shared-events]]) or a clock carried in the signal ([[method:signal-borne-clocks]]).
+
+  [[figure:error-by-level]]
+figures:
+  - id: error-by-level
+    file: stamp-model-error-by-level.png
+    caption: |
+      What reading the stamps buys: the EEG–ECG timing error in 10-minute windows (3,683 windows, 165 cases),
+      checked against bursts seen in both signals. From [[study:snuadc-stamp-sawtooth]].
+    alt: >-
+      Bar chart of median and 90th-percentile timing error for five correction levels, falling from 792 and 1,005 ms
+      for recorded stamps to 16 and 67 ms for the stamp model with a per-case constant.
+    study: snuadc-stamp-sawtooth
+    placeholder: true

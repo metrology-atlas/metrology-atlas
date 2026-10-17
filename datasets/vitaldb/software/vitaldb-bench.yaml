@@ -1,0 +1,154 @@
+id: vitaldb-bench
+name: vitaldb-bench
+summary: >-
+  The timing and data-quality audit of VitalDB: the scripts behind most studies in this atlas, the clock model
+  and corrected-time reader, the per-case labels, and resumable TimeNet builds with their fidelity checks.
+repo: https://github.com/meshlab/vitaldb-bench
+branch: main
+visibility: private
+local: ../../../vitaldb/vitaldb-bench
+licence: MIT
+language: Python 3.11+
+description: |
+  vitaldb-bench measures how far every time stamp in the VitalDB release can be trusted, and builds databases
+  that carry what was found as labels. It has two halves.
+
+  - **The installed package** (`vitaldb_bench`) builds TimeNet databases from the .vital files in short,
+    resumable chunks, reads tracks back out, checks every stored value and time against the source files, and
+    benchmarks the builds. It also holds the **clock model** and a **corrected-time reader**: a view of a build
+    in which every SNUADC and BIS sample carries its corrected time and an error distribution.
+  - **The analysis scripts** (`tools/`) produced the tables and figures of the timing audit. Each reads the
+    .vital files directly, writes per-case output that stays on the analysis machine, and then aggregates it.
+    Only aggregates and figures are published (`results/`).
+
+  It depends on [[software:timenet]] for builds; its scripts also use [[software:physiosync]] (timing
+  corrections) and [[software:lineaccess]] (pressure-line accesses). AtriumDB builds live in the separate,
+  GPL-licensed [[software:vitaldb-bench-atriumdb]], which imports this package; nothing here imports it.
+
+  No VitalDB data are in the repository: only code, aggregate results and figures. To reproduce a result,
+  download the release from PhysioNet and point the scripts' `--root` at it.
+role: |
+  Most studies in this atlas were run with its scripts, and the **Code** section of each study names them.
+  Several atlas pages come straight from it:
+
+  - The [[method:delays-and-windows|timing budget]] behind the synchronisation planner is the model in
+    [[code:vitaldb-bench/tools/pair_timing_budget.py]]: each source's offset range and resolution become one
+    standard deviation, and the planner's coherence limit, grid and window sizing follow from it.
+  - The accuracy-against-resolution chart on the home page began as
+    [[code:vitaldb-bench/tools/time_source_accuracy_figure.py]]; the atlas now draws it from its own data.
+  - The clock fits that the [[study:snuadc-stamp-sawtooth]] study validated are made by
+    [[code:vitaldb-bench/tools/clock_model_fit.py]] and read through
+    [[code:vitaldb-bench/vitaldb_bench/correct/|the correct package]].
+  - The time of day of each case ([[study:case-clock]]) is recovered by
+    [[code:vitaldb-bench/vitaldb_bench/case_clock.py]].
+
+  The atlas is meant to become the single source of these numbers: the plan is for the package and scripts to
+  read the atlas JSON rather than keep their own copies.
+install: |
+  ```bash
+  pip install -e .            # the package: numpy, timenet, timenet-connectors
+  pip install -e ".[tools]"   # plus the analysis scripts' dependencies (scipy, pandas, physiosync, lineaccess, ...)
+  pytest -q
+  ```
+
+  Each script's docstring gives its commands and says what it reads and writes;
+  `python tools/<script>.py --help` lists its options.
+parts:
+  - group: The package
+    path: vitaldb_bench/build.py
+    summary: Resumable TimeNet builds in time-boxed chunks, with a choice of how samples are placed in time.
+  - group: The package
+    path: vitaldb_bench/stores.py
+    summary: Reads a track of a case back out of a build, in a common shape for comparison.
+  - group: The package
+    path: vitaldb_bench/fidelity.py
+    summary: >-
+      Checks every stored track of every built case against the shared reader, value by value and time by time.
+      With the reset reordering on, the reference is reordered the same way.
+  - group: The package
+    path: vitaldb_bench/perf.py
+    summary: Size, read-speed and downstream-equivalence benchmarks of two builds of the same cases.
+  - group: The package
+    path: vitaldb_bench/clock_model.py
+    summary: >-
+      The clock model: per-track fit tables written beside a build, and a corrected view of a TimeNet build.
+      Each fit records the sample order it was made on.
+  - group: The package
+    path: vitaldb_bench/correct/
+    summary: >-
+      Timing correction applied when data are read: clock models (`clock.py`), error distributions
+      (`dist.py`) and the reader `CorrectedStore` (`layer.py`), which refuses a fit made on a different sample
+      order.
+  - group: The package
+    path: vitaldb_bench/case_clock.py
+    summary: Recovers each case's clock time of day; the date stays hidden.
+  - group: The package
+    path: vitaldb_bench/label_families.py
+    summary: >-
+      The derived label families (delay groups, line accesses, lab draws, BIS smoothing ...): where each
+      family's rows come from and what its labels mean.
+  - group: The package
+    path: vitaldb_bench/timenet_labels.py
+    summary: Writes the label families into a TimeNet build as record annotations.
+  - group: The package
+    path: vitaldb_bench/timing_report.py
+    summary: Per-track summary of the rates a resync-timed build estimated (aggregates only).
+  - group: Scripts not tied to one study
+    path: tools/pair_timing_budget.py
+    summary: >-
+      Timing budget for combining two or more time sources: the model the atlas planner implements. Reads no
+      data.
+  - group: Scripts not tied to one study
+    path: tools/time_source_accuracy_figure.py
+    summary: The original accuracy-against-resolution figure for every kind of time stamp.
+  - group: Scripts not tied to one study
+    path: tools/timestamp_resolution.py
+    summary: Temporal resolution of every kind of time stamp (aggregates only).
+  - group: Scripts not tied to one study
+    path: tools/device_map_figure.py
+    summary: The device and timing-relationship diagram used as the system overview.
+  - group: Scripts not tied to one study
+    path: tools/sync_figures.py
+    summary: Redraws the clock re-synchronisation figures of the drift document from cached per-case rows.
+  - group: Scripts not tied to one study
+    path: tools/gen_tools_page.py
+    summary: Writes the scripts reference page from each script's docstring.
+  - group: Folders and documents
+    path: tools/
+    summary: All analysis scripts (about 90). Short provenance helpers are in `tools/adhoc/`.
+  - group: Folders and documents
+    path: results/
+    summary: Aggregate results and figures only; no per-case data.
+  - group: Folders and documents
+    path: scripts/
+    summary: Shell drivers for time-boxed build chunks.
+  - group: Folders and documents
+    path: docs/reference/tools.md
+    name: Scripts reference
+    summary: Every script in `tools/` with what it does.
+  - group: Folders and documents
+    path: docs/how-to/reproduce-results.md
+    name: Reproduce the results
+    summary: Which script made which file in `results/`, and the two-step pattern (per-case pass, then aggregate).
+  - group: Folders and documents
+    path: docs/how-to/corrected-times.md
+    name: Corrected times
+    summary: Reading a build with corrected times and their uncertainty.
+  - group: Folders and documents
+    path: docs/how-to/timing-budget.md
+    name: Timing budget
+    summary: Planning a multi-signal analysis (the text behind the planner).
+  - group: Folders and documents
+    path: docs/concepts/availability.md
+    name: Availability
+    summary: 'The availability rule: no value may be used before it could have been known.'
+  - group: Folders and documents
+    path: docs/concepts/timing-modes.md
+    name: Timing modes
+    summary: How builds place samples in time (`nominal`, `file`, `resync`) and what each costs.
+  - group: Folders and documents
+    path: docs/timing_guide/vitaldb_timing_guide.pdf
+    name: VitalDB timing guide (PDF)
+    summary: The longer write-up of the timing audit.
+related: [timenet, physiosync, lineaccess, vitaldb-bench-atriumdb, vitaldb-resolution]
+references: [harris2020numpy, virtanen2020scipy, mckinney2010pandas, pandas-zenodo, hunter2007matplotlib, apache-arrow, raasveldt2019duckdb, makowski2021neurokit2, bota2024biosppy, cairosvg, pytest]

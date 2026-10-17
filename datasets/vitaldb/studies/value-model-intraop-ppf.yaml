@@ -1,0 +1,41 @@
+id: value-model-intraop-ppf
+background: |
+  - Bolus drug totals are mostly sums of whole standard doses, so most are exact counts, not rounded estimates.
+  - Propofol bolus (`intraop_ppf`) is the exception: it is a single weight-based induction dose, written as a preferred value.
+  - The dose tracks weight (Spearman 0.54; median 1.8 mg/kg), but recorded values pile onto 100, 120 and 150 mg. 44% of patients weighing 50–60 kg got exactly 100 mg, while 57% of those over 80 kg got exactly 150 mg.
+  - It is the first model whose latent depends on the patient.
+data: |
+  - 2,335 non-zero values; 4 off the 10 mg grid (flagged) and 3 without age or weight, leaving 2,328 to fit.
+  - Resolution 10 mg, no override.
+  - The 3,719 zeros among 6,043 general anaesthetics are not fitted. Many of these probably had propofol by infusion (TIVA), recorded on the pump tracks.
+method: |
+  - Latent: log intended dose as a regression on weight, age and sex, with a Student-t residual (new family `log_student_t_regression`).
+  - Rounding: a preferred-value set, nearest 50 mg and nearest 10 mg.
+  - Set members were chosen by BIC, adding and removing candidates from 50 to 200 mg. Open set ends were compared with closed ends.
+  - A log-normal residual was compared with the Student-t, and a propensity that rises with weight was tested.
+  - The engine's likelihood on its 0.25 mg grid was checked against the closed form.
+results: |
+  [[figure:observed-vs-model]]
+
+  - The dose rises with weight^0.6 rather than in proportion, falls about 4% per decade of age, and is about 10% higher in men of the same weight.
+  - The residual is heavy-tailed (df 3.3). A log-normal residual is about 330 BIC points worse.
+  - A weight-dependent propensity adds nothing (ΔBIC 1.2), because the latent already moves the heap from 100 to 150 mg.
+  - Closing the set ends is worse (−log L 3,867–3,929 against 3,850).
+  - The engine reproduces the likelihood (−3,847.5 against −3,850.2 in closed form).
+discussion: |
+  - Doses below 60 mg or above 150 mg that are rounded to the set are written as 60 or 150, because the set ends are open.
+  - Zeros return status `zero_or_not_recorded` with no distribution, since a 0 can mean none given or given by another route.
+  - The API needs weight, age and sex for this variable.
+limitations: |
+  - The main misfits are 90 mg (144 recorded, 267 expected) and 130 mg (64 against 29).
+  - A recorded 150 mg in a light patient gets a long upper tail (95% up to 290 mg at 50 kg).
+open_questions:
+  - title: "Is 150 mg a ceiling?"
+    kind: phenomenon
+    summary: >-
+      Is 150 mg a ceiling people write for any large dose, or are larger doses usually given as a second bolus and
+      summed? The upper tail is right only in the first case. Adding 200 mg to the set did not pass BIC.
+  - title: "Misfits at 90 mg and 130 mg"
+    kind: phenomenon
+    summary: >-
+      The misfits at 90 mg and 130 mg are unexplained.

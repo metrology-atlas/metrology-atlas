@@ -1,0 +1,15 @@
+id: recorder-pc-vs-utc
+name: Recorder PC against UTC
+summary: >-
+  The recorder PC keeps Windows time, synchronised to the hospital's time server every 8–24 hours. Its offset from
+  UTC is assumed, not observed; no step of 0.5 s or more appears anywhere in the release.
+clock: recorder-pc
+against: utc
+rate: pc-utc-drift
+correction:
+  rule: |
+    Windows time synchronisation (NTP to the hospital time server) every 8–24 h is assumed. Whatever correction
+    it makes is smaller than 0.5 s: no simultaneous jump of every device of that size was found in any file
+    ([[parameter:pc-step-bound]]).
+  period: pc-sync-period
+status: assumed

@@ -1,0 +1,27 @@
+id: height
+name: Height
+summary: Height (clinical table).
+type: clinical
+source_name: height
+group: Clinical record/Patient
+source: clinical_data.csv
+unit: cm
+value:
+  kind: 'model: fitted rounding model (value kind); posterior over the true value'
+  resolution: 'heaped: a mixture of rounding modes (see the value model)'
+  spread: vitaldb-resolution/spread.json#height
+  model: vitaldb-resolution/vitaldb_resolution/data/models/height.model.json
+  status: measured
+  studies:
+  - value-model-height
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: distribution
+  file: distributions/height.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,388 records, median 162.2 cm; 63 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of height.

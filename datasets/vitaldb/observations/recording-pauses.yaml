@@ -1,0 +1,10 @@
+id: recording-pauses
+name: Recording pauses of about 20 s
+summary: >-
+  In 29% of files every device jumps forward together, by a median 19.6 s: the recorder paused. Data are missing
+  there, and the stamps show it honestly.
+status: established
+clocks: [recorder-pc]
+devices: [vital-recorder]
+studies: [recorder-pc-steps]
+consequence: Gaps common to every device are recorder pauses, not clock steps; nothing needs correcting.

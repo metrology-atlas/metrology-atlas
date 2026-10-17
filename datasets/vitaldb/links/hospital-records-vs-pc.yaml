@@ -1,0 +1,10 @@
+id: hospital-records-vs-pc
+name: Hospital records clock against the recorder PC
+summary: >-
+  The offset between the anaesthesia record and lab systems and the recorder PC cannot be measured in the release: it
+  is confounded with documentation lag. Entries rarely precede the device events they document.
+clock: hospital-records
+against: recorder-pc
+correction:
+  rule: Not observable. Both are assumed to keep hospital time synchronised to a common server.
+status: assumed

@@ -1,0 +1,32 @@
+id: metrology-atlas
+name: metrology-atlas
+summary: The engine that turns this dataset's YAML files into the atlas JSON and this site.
+visibility: unpublished
+local: ../..
+licence: MIT
+language: Python 3.11+ (pyyaml); the site is built with Zensical
+description: |
+  Nothing in the engine is specific to VitalDB. A dataset is a folder of YAML files, one per item, which the
+  engine checks (types, references, figures, code paths, forbidden patterns such as record identifiers),
+  compiles to one JSON file, and writes as this site, including the planner and the accuracy chart.
+  The repository is not yet published, so its paths are shown as text.
+install: |
+  ```bash
+  python -m metrology_atlas check datasets/vitaldb
+  python -m metrology_atlas json  datasets/vitaldb --out build/vitaldb.metrology.json
+  python -m metrology_atlas site  datasets/vitaldb --out build/vitaldb     # then: zensical build, in that folder
+  ```
+parts:
+  - path: metrology_atlas/model.py
+    summary: 'The schema: every kind of item and its fields.'
+  - path: metrology_atlas/load.py
+    summary: Loads and checks a dataset folder, and derives the relations stated on the other side.
+  - path: metrology_atlas/code.py
+    summary: Code references and their links into repositories.
+  - path: metrology_atlas/site.py
+    summary: Writes the site, one page per item.
+  - path: metrology_atlas/planner.py
+    summary: The synchronisation planner.
+  - path: metrology_atlas/chart.py
+    summary: The accuracy-against-resolution chart.
+references: [pyyaml, zensical, pytest]

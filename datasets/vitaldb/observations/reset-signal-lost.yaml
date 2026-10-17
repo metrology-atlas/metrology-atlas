@@ -1,0 +1,16 @@
+id: reset-signal-lost
+name: About 20 ms of signal lost at every SNUADC reset
+summary: >-
+  At each step-mode reset the acquisition pauses for about 20 ms inside the last record before the new timing, and
+  that time is never sampled. Every record still holds 100 samples, so nothing in the file shows it.
+status: established
+clocks: [snuadc-sample]
+devices: [snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [paced-ecg, reset-cluster-order, snuadc-stamp-sawtooth, snuadc-firmware]
+consequence: |
+  Timed by sample count, every sample after a reset is about 18 ms early. Over a case's one to three resets this adds
+  up, and it biases drift rates estimated from correction sizes by about 3.6%.
+handling: |
+  The stamp model adds 17.7 ms back at each step-mode reset, at the end of the record that holds the pause; samples
+  inside that record can still be up to about 20 ms late.

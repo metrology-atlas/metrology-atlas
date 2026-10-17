@@ -1,0 +1,42 @@
+id: physiosync
+name: physiosync
+summary: >-
+  Timing corrections for multi-signal physiological recordings: the stamp sawtooth, hidden frame clocks, the
+  ECG-to-PPG delay and its sawtooth, and the resolution of fiducial points. Dataset-neutral.
+repo: https://github.com/meshlab/physiosync
+branch: main
+visibility: private
+local: ../../../physiosync
+licence: MIT
+language: Python 3.10+ (numpy, scipy)
+description: |
+  physiosync works on times and samples it is given. It reads no file format and assumes no particular dataset,
+  monitor, sampling rate or frame rate; a dataset's import code calls it and stores the results (corrected
+  timing and quality labels). Corrections are applied only where they are corroborated, and each comes with a
+  confidence tier.
+role: |
+  It holds the general methods that several VitalDB studies rely on: the stamp-clock fit
+  ([[study:snuadc-stamp-sawtooth]]), the frame-clock search ([[study:ppg-frame-clock]]), the ECG-PPG sawtooth
+  removal ([[study:ppg-sawtooth]]) and fiducial resolution ([[observation:fiducial-quantisation]]).
+  [[software:vitaldb-bench]] scripts call it on VitalDB cases.
+parts:
+  - path: physiosync/stamps.py
+    summary: Record stamps that follow a sample clock between corrections; fits the rate and offsets and removes the stamp sawtooth.
+  - path: physiosync/frames.py
+    summary: Finds a hidden frame clock at any rate, from the spectrum of sample-to-sample change and fiducial locking.
+  - path: physiosync/quantisation.py
+    summary: Effective temporal resolution of fiducial points, on whole-sample grids or partly locked to a period.
+  - path: physiosync/ecg_ppg.py
+    summary: The ECG-to-PPG delay; fits and removes the frame-slip sawtooth, with confidence tiers.
+  - path: physiosync/labels.py
+    summary: One label per sawtooth tooth, with its correction, resolution and confidence.
+  - path: physiosync/chains.py
+    summary: Rate-consistent chains of slips, as lower-confidence labels.
+  - path: physiosync/measurement.py
+    summary: The PAT measurement model of a recording, for downstream estimators.
+  - path: physiosync/pairing.py
+    summary: Beat pairing between ECG and PPG.
+  - path: physiosync/reference.py
+    summary: Published pulse arrival times by study and hardware.
+related: [vitaldb-bench, lineaccess]
+references: [harris2020numpy, virtanen2020scipy, hrvmatch, pytest]

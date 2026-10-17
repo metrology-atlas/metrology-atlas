@@ -1,0 +1,9 @@
+id: rr-delay
+name: Primus RR delay
+quantity: Delay from the end of the 30 s breath-interval window to the stamp of the Primus respiratory rate.
+value: 4.3
+unit: s
+spread: {p10: 1.6, p90: 7.6}
+status: measured
+study: numeric-delay-variability
+about: [primus-numerics]

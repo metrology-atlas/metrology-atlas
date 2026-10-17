@@ -1,0 +1,11 @@
+id: solar8000-vs-snuadc
+name: Solar8000 numerics against SNUADC
+summary: >-
+  The Solar8000's numbers carry no clock of their own in the release; their delay behind the SNUADC waveforms they
+  summarise is fixed within a case, which bounds any drift of the monitor's timing.
+clock: solar8000-clock
+against: snuadc-sample
+rate: solar-delay-drift
+correction:
+  rule: None needed within a case; one delay per case (the numeric_delay label) puts each numeric on the SNUADC timeline.
+status: measured

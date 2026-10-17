@@ -1,0 +1,20 @@
+id: position
+name: Surgical position
+summary: Surgical position (clinical table).
+type: clinical
+source_name: position
+group: Clinical record/Operation and anaesthesia
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/position.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,194 records in 10 categories.'
+  alt: Histogram of the recorded values of position.

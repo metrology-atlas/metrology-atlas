@@ -1,0 +1,26 @@
+id: preop-na
+name: Preoperative Na
+summary: Preoperative Na (clinical table).
+type: clinical
+source_name: preop_na
+group: Laboratory/Preoperative labs
+source: clinical_data.csv
+unit: mmol/L
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 mmol/L, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#preop_na
+tags:
+- generated
+- vitaldb-resolution
+description: Pre-operative copy of a lab result; behaves like the lab data.
+figures:
+- id: distribution
+  file: distributions/preop-na.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 5,765 records, median 140 mmol/L; 46 outside the 0.5–99.5th percentiles are
+    not shown.'
+  alt: Histogram of the recorded values of preop_na.

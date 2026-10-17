@@ -1,0 +1,21 @@
+id: clinical-time
+name: Clinical and laboratory times
+summary: >-
+  Find out what a time in the clinical and lab tables marks (an event, its documentation, a rounding), using
+  signatures the event leaves in the signals.
+order: 6
+description: |
+  **The idea.** Anaesthesia record entries and laboratory results carry times made by other systems and by people.
+  An event often leaves a trace in the signals (an arterial blood draw in the pressure trace, the start of
+  anaesthesia in the BIS and ventilation), and comparing the two shows what the recorded time stands for.
+
+  **What it gives.** Rounding rules (5-minute entries rounded up), documentation lag, and what a lab timestamp marks
+  (here, a per-specimen time minutes after the draw, not the result time).
+
+  **How.** Detect the signal-side event independently, match it to the table entry, and fit how the recorded time
+  relates to it (nearest, floor, ceiling, plus a lag), with random times as the control.
+
+  **Pitfalls.** Both sides may be measured from the same origin (the case start), so an offset can cancel and look
+  like agreement. Without a time from outside the release, a clock offset and a documentation lag cannot be told
+  apart.
+references: [goodwin2022timing, rietveld2002rounding]

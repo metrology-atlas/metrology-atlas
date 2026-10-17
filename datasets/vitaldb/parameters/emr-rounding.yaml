@@ -1,0 +1,7 @@
+id: emr-rounding
+name: EMR 5-minute entries, rounding
+quantity: Where the true event lies for an anaesthesia record time t entered on a 5-minute mark.
+display: "(t − 300 s, t]; estimate t − 150 s (SD 87 s); observed shift against minute entries −89 to −293 s"
+status: measured
+study: emr-rounding
+about: [emr-events]

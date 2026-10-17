@@ -1,0 +1,23 @@
+id: vigilance-co
+name: Vigilance continuous cardiac output
+summary: Continuous cardiac output and averaged HR.
+type: numeric
+source_name: Vigilance/CO
+device: vigilance
+stamp_clock: recorder-pc
+unit: L/min
+timing:
+- id: vigilance
+  name: as stamped
+  default: true
+  delay_s:
+  - 1.0
+  - 175.0
+  interval_s:
+  - 600.0
+  - 2185.0
+  domain: vigilance
+  status: estimated
+  evidence: running median over 10-36 min; 0-175 s after its window ends (52-case pilot, 16 at zero)
+tags:
+- stub

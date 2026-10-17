@@ -1,0 +1,19 @@
+id: reset-records-out-of-order
+name: Five records out of order at every SNUADC reset
+summary: >-
+  At each step-mode reset the five records after it are written in the wrong order: two continue the old timing and
+  three start the new, interleaved. Read in file order, or sorted by stamp, one second of signal is scrambled.
+status: established
+clocks: [snuadc-sample]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [reset-cluster-order, clock-correction-scan]
+consequence: |
+  Any reader that keeps file order or sorts by stamp (the vitaldb package included) scrambles about 1 s of every
+  SNUADC channel at each reset, roughly every two hours of step-mode recording.
+handling: |
+  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] puts the records back in sampling order by default (VITALDB_RESET_ORDER), and the clock fits
+  use the same order; a fit and a build in different orders are not combined.
+code:
+  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py
+  - vitaldb-bench/vitaldb_bench/clock_model.py

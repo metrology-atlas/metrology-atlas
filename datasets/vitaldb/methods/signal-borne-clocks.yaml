@@ -1,0 +1,24 @@
+id: signal-borne-clocks
+name: Clocks carried in the signal
+summary: >-
+  Use a regular rhythm inside the recorded signal (a pacemaker, a monitor's frame clock, an output or mains line) as
+  a third clock, independent of the clocks being tested.
+order: 3
+techniques: [template-beat-timing, phase-step-detection]
+description: |
+  **The idea.** Two clocks measured against each other give only a relative rate. A third clock that sits inside
+  the signal breaks the tie: it is sampled by one clock, stamped by another, and corrected by neither. A pacemaker
+  at a fixed rate, the frame clock of a pulse oximeter, a line at a fixed frequency from a monitor's output stage:
+  each keeps its own time whatever the recorder does.
+
+  **What it gives.** Breaks in a timeline that no other method sees (time lost without a gap in the count), a
+  device's rate against a clock outside the recording chain, and fingerprints of the hardware (frame and line rates
+  fixed per setup).
+
+  **How.** Time each event of the rhythm as precisely as possible (template matching, phase-locked fiducials,
+  complex demodulation of a line), place the times on each timeline in turn (sample count, record stamps, corrected
+  line), and look for steps in phase between stretches where the rhythm should run on.
+
+  **Pitfalls.** The rhythm must truly be fixed: a demand pacemaker resets at every intrinsic beat, and a "regular"
+  sinus rhythm wanders by milliseconds. Frame clocks show only where a fiducial locks to them. Such clocks are rare:
+  seven of 6,388 cases are paced at a fixed rate.

@@ -1,0 +1,36 @@
+id: value-bolus-drug-doses
+name: Bolus drugs as unit-dose counts
+summary: |
+  Most bolus drug totals are exact counts of standard doses, not rounded estimates; propofol is the exception, and zeros are ambiguous.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - Nine bolus drug fields: propofol, midazolam, fentanyl, rocuronium, vecuronium, ephedrine, phenylephrine, epinephrine and calcium.
+  - The drug fields have no missing values, so 0 means "none given or none recorded".
+data: |
+  - Ephedrine 3,211 non-zero cases; calcium chloride 868; fentanyl 1,168; phenylephrine 844; rocuronium 5,942; propofol 2,335.
+  - Midazolam, vecuronium and epinephrine have 80, 12 and 89 non-zero cases.
+method: |
+  - For each drug, found the unit the values sit on and the most common totals.
+  - Checked rocuronium against case duration and weight, and propofol against weight.
+  - Checked zeros against anaesthesia type.
+results: |
+  - Ephedrine sits on 5 mg (99.4%): a count of 5 mg boluses.
+  - Calcium chloride sits on 300 mg (90%) or 150 mg (97%): a count of ampoules, sometimes half.
+  - Fentanyl sits mostly on 50 mcg; 100 mcg is the most common total.
+  - Phenylephrine sits on 10 mcg (99%): a sum of small boluses.
+  - Rocuronium sits on 10 mg (95%): an intubating dose plus top-ups. The total rises with case duration (Spearman 0.61), barely with weight (0.12).
+  - Rocuronium is 0 in all 72 sedation cases, in 261 of 273 spinal cases, and in 113 general anaesthetics.
+  - Propofol bolus is 0 in 3,719 of 6,043 general anaesthetics, many probably given by infusion (TIVA).
+discussion: |
+  - Agreed: unit-count drugs (ephedrine, calcium chloride, fentanyl, phenylephrine) are exact, with the unit dose as resolution; values off that unit are flagged `off_grid`.
+  - Rocuronium is exact on a 10 mg resolution.
+  - Midazolam, vecuronium and epinephrine get native resolution only.
+  - A 0 in any drug field returns status `zero_or_not_recorded` and no distribution.
+  - Propofol behaves like a rounded estimate and has its own fitted model (`value-model-intraop-ppf`).
+limitations: |
+  - Zeros cannot be told apart from drugs given by another route, such as a propofol infusion on the pump tracks.
+tags:
+- from the resolution work

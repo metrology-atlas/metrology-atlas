@@ -1,0 +1,13 @@
+id: reset-zero-sample
+name: An extra zero sample after most resets
+summary: >-
+  Most SNUADC resets (335 of 392) contain one sample that reads 0 in every channel at once, a little after the
+  reset. It carries no time of its own: the signal either side runs on as if it were not there.
+status: established
+devices: [snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [reset-cluster-order]
+consequence: |
+  A spike to the bottom of the range in every channel, and one sample more on the count than time passed. Detectors
+  that see it as a value will misfire; timing by count is off by 2 ms after it.
+handling: Still stored as a value. Masking it is a pending decision.

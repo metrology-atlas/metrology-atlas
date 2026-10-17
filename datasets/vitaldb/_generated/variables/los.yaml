@@ -1,0 +1,21 @@
+id: los
+name: Length of hospital stay (dis - adm)
+summary: Length of hospital stay (dis - adm) (derived table).
+type: clinical
+source_name: los
+group: Clinical record/Outcome
+source: derived
+unit: days
+value:
+  kind: 'derived: computed from other variables'' posteriors'
+  resolution: derived from adm, dis
+  inputs:
+  - adm
+  - dis
+  formula: (dis - adm) / 86400
+  combination: triangular over n ± 1 days
+  spread: vitaldb-resolution/spread.json#los
+tags:
+- generated
+- vitaldb-resolution
+description: Both ends are dates covering a whole day.

@@ -1,0 +1,24 @@
+id: intraop-colloid
+name: Intraoperative colloid
+summary: Intraoperative colloid (clinical table).
+type: clinical
+source_name: intraop_colloid
+group: Clinical record/Fluids and blood
+source: clinical_data.csv
+unit: mL
+value:
+  kind: 'colloid_rules: rule set by operation'
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#intraop_colloid
+tags:
+- generated
+- vitaldb-resolution
+description: Container sizes are exact counts; partial amounts estimated. Kidney question pending.
+figures:
+- id: distribution
+  file: distributions/intraop-colloid.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 531 records, median 500 mL; 2 outside the 0.5–99.5th percentiles are not shown.'
+  alt: Histogram of the recorded values of intraop_colloid.

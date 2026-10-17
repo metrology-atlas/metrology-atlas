@@ -1,0 +1,19 @@
+id: lineaccess
+name: lineaccess
+summary: >-
+  Finds accesses to invasive pressure lines (flushes, blood draws, zeroing) in the pressure waveform itself.
+repo: https://github.com/meshlab/lineaccess
+branch: main
+visibility: private
+local: ../../../lineaccess
+licence: MIT
+language: Python 3.10+ (numpy)
+description: |
+  When an arterial line is accessed the transducer stops seeing the patient: a flush reads about 300 mmHg with no
+  pulse, a stopcock open to air reads about 0 mmHg, and a line closed to the patient shows a pressure with no
+  pulse. lineaccess finds and classifies these stretches. It is independent of [[software:physiosync]].
+role: |
+  Line accesses mark the moments blood is drawn, so they give lab samples a draw time on the waveform clock
+  ([[study:arterial-line-accesses]], [[study:lab-timestamp-meaning]]).
+related: [vitaldb-bench, physiosync]
+references: [harris2020numpy, pytest]

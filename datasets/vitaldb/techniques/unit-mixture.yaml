@@ -1,0 +1,4 @@
+id: unit-mixture
+name: Units from drift
+summary: >-
+  Infer physical units from their drift rates: fit Gaussian mixtures with a shared per-unit width and let a model-selection score choose how many units there are.

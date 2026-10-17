@@ -1,0 +1,30 @@
+id: esr
+name: Erythrocyte sedimentation rate
+summary: Erythrocyte sedimentation rate (lab table).
+type: lab
+source_name: esr
+group: Laboratory/Haematology
+source: lab_data.csv
+unit: mm/hr
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 mm/hr, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#esr
+tags:
+- generated
+- vitaldb-resolution
+description: 'Single resolution; no heaping in the whole-number screen.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/esr.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 1,415 records, median 37 mm/hr; 6 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of esr.

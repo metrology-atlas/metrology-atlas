@@ -1,0 +1,20 @@
+id: iv1
+name: Site of IV line (1)
+summary: Site of IV line (1) (clinical table).
+type: clinical
+source_name: iv1
+group: Clinical record/Airway and lines
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/iv1.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,313 records in 11 categories.'
+  alt: Histogram of the recorded values of iv1.

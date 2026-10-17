@@ -1,0 +1,7 @@
+id: pc-utc-drift
+name: Recorder PC drift against UTC
+quantity: Drift of the recorder PC clock between time synchronisations.
+display: "0.1–10 ppm (assumed)"
+status: assumed
+about: [recorder-pc-vs-utc]
+notes: A typical range for PC crystals; not observable in the release.

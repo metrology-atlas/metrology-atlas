@@ -1,0 +1,12 @@
+id: snuadc-step-rate
+name: SNUADC step-mode drift
+quantity: Drift of the SNUADC stamps against the recorder PC in step mode, per case.
+value: -62
+unit: ppm
+spread: {p10: -71, p90: 7, text: "medians of −46 to −74 ppm by serial port"}
+status: measured
+study: snuadc-stamp-sawtooth
+about: [snuadc-step-vs-pc]
+date: 2026-10-15
+notes: The size of each correction divided by the time since the previous one, from the record stamps.
+headline: true

@@ -1,0 +1,23 @@
+id: case-end
+name: Case end
+summary: The end of the recording in the clinical table.
+group: Clinical record/Times and durations
+type: event
+source_name: caseend
+device: clinical-records
+stamp_clock: hospital-records
+timing:
+- id: caseend
+  name: as recorded
+  default: true
+  delay_s:
+  - 0.01
+  - 0.5
+  interval_s:
+  - 1.0
+  - 1.0
+  domain: records
+  status: measured
+  evidence: recording end rounded to 1 s (98.7% within 1 s)
+tags:
+- stub

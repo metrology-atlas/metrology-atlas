@@ -1,0 +1,23 @@
+id: intraop-ca
+name: Calcium chloride
+summary: Calcium chloride (clinical table).
+type: clinical
+source_name: intraop_ca
+group: Clinical record/Drugs
+source: clinical_data.csv
+unit: mg
+value:
+  kind: 'exact: exact count; point mass'
+  resolution: exact
+  spread: vitaldb-resolution/spread.json#intraop_ca
+tags:
+- generated
+- vitaldb-resolution
+description: Recorded total is a count of standard doses or ampoules; treated as exact.
+figures:
+- id: distribution
+  file: distributions/intraop-ca.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 868 records, median 600 mg; 10 outside the 0.5–99.5th percentiles are not shown.'
+  alt: Histogram of the recorded values of intraop_ca.

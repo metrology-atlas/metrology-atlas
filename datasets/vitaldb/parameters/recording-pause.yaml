@@ -1,0 +1,9 @@
+id: recording-pause
+name: Recording pause
+quantity: Length of the pauses in which every device jumps forward together.
+value: 19.6
+unit: s
+spread: {p10: 15.7, p90: 29.8, text: "2,025 pauses in 1,846 files (29%)"}
+status: measured
+study: recorder-pc-steps
+about: [recorder-pc]

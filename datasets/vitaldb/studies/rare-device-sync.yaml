@@ -1,0 +1,56 @@
+id: rare-device-sync
+name: Rare devices against SNUADC
+summary: >-
+  CardioQ, EV1000, Vigileo and Vigilance each get a link to the SNUADC timeline: beat matching for the CardioQ, mean
+  arterial pressure alignment for the EV1000 and Vigileo, and a long-window fit for Vigilance's averaged heart rate.
+date: 2026-10-13
+status: current
+methods: [shared-events, delays-and-windows]
+techniques: [beat-matching]
+clocks: [cardioq-clock, snuadc-sample, recorder-pc]
+devices: [cardioq, ev1000, vigileo, vigilance, snuadc]
+variables: [cardioq-abp, ev1000-art-mbp, vigileo-sv, vigilance-co, snuadc-art, snuadc-ecg-ii]
+data: |
+  997 cases with at least one of the rarer haemodynamic monitors, each with SNUADC arterial pressure or ECG as the
+  reference:
+
+  - **CardioQ:** 27 cases tried, 24 fitted.
+  - **EV1000 mean arterial pressure:** 588 tried, 579 fitted (stroke volume variation as a second signal: 67 of 589).
+  - **Vigileo stroke volume variation:** 343 tried, 25 aligned.
+  - **Vigilance averaged heart rate:** 63 cases; 52 fitted (11 lacked HR_AVG or ECG).
+background: |
+  A few hundred cases carry haemodynamic monitors besides the main ones. Their stamps re-anchor irregularly or
+  describe long averages, so each needs its own route to the reference.
+method: |
+  - **CardioQ:** beats in its arterial pressure matched to SNUADC arterial pressure within each re-anchored stretch.
+  - **EV1000, Vigileo:** their mean pressure or stroke volume variation aligned with the same quantity computed from
+    SNUADC arterial pressure, one offset per 30-minute window.
+  - **Vigilance:** its averaged heart rate fitted with long windows (mean and median over 32–4,096 beats or
+    30–3,600 s, exponential averages) against ECG R–R intervals, with the delay held at zero or above.
+results: |
+  - **CardioQ:** matched-beat MAD 0.24 s, R–R correlation 0.96 (24 cases); its stamps lag SNUADC by 0.4–4.4 s
+    (p5–p95) and re-anchor about 40 times per case.
+  - **EV1000:** values sit a median 1.6 s (p25 0.9, p95 3.2 s; 579 cases) after the end of an assumed 20 s window;
+    after alignment the residual SD is 0.25–2.4 s.
+  - **Vigileo:** aligned in only 25 of 343 cases (|offset| 4.7 s median, p95 26 s).
+  - **Vigilance:** a running median over 600–2,185 s (median 1,050 s, about 17 minutes), available 0–175 s after
+    its window ends (median 51 s); 16 of 52 cases sit at zero delay.
+discussion: |
+  The three-way arterial pressure loop confirms the CardioQ and EV1000 links against each other
+  ([[study:loop-closure]]). Vigilance values describe the last 10–36 minutes; alignment finer than minutes is not
+  meaningful.
+limitations: Small samples; Vigileo alignment is weak and Vigilance's fit is a pilot.
+open_questions:
+  - title: "Vigileo rarely aligns"
+    kind: phenomenon
+    summary: >-
+      Vigileo aligns in only 25 of 343 cases; whether its values are too smooth or its clock too unstable is not
+      known.
+  - title: "Vigilance: 13 cases or 52"
+    kind: conflict
+    summary: >-
+      Vigilance fits differ between the two analyses (13 cases in the rare-device scan, 52 in the window study); the
+      difference has not been reconciled.
+code:
+  - vitaldb-bench/tools/rare_device_sync.py
+  - vitaldb-bench/tools/vigilance_window.py

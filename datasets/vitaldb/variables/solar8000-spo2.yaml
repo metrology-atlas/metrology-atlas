@@ -1,0 +1,27 @@
+id: solar8000-spo2
+name: SpO2
+summary: Oxygen saturation from the pulse oximeter.
+type: numeric
+source_name: Solar8000/PLETH_SPO2
+device: solar8000
+stamp_clock: recorder-pc
+unit: '%'
+timing:
+- id: spo2
+  name: as stamped
+  default: true
+  delay_s:
+  - 4.0
+  - 4.8
+  interval_s:
+  - 10.0
+  - 20.0
+  domain: solar8000
+  status: measured
+  evidence: onset +4 s (+0.4 s PLETH); window 10-20 s estimated, not measured
+tags:
+- stub
+delays:
+- name: Onset
+  parameter: spo2-onset
+  description: From step events; the window itself is estimated.

@@ -1,0 +1,32 @@
+id: fiducial-quantisation
+name: Every time is quantised, and fiducials inherit it
+summary: >-
+  A time on a grid of step Δ carries an error of Δ/√12 (1 SD). In VitalDB that is 0.58 ms for a 500 Hz sample, 2.3
+  ms for BIS EEG, 0.8 ms for the arrhythmia annotations' 1/360 s grid, and up to ±17 ms for PPG fiducials taken on
+  raw samples, which lock to the 33.3 ms frame.
+status: established
+variables: [snuadc-pleth, snuadc-ecg-ii, bis-eeg]
+studies: [time-zeros, ppg-frame-clock]
+description: |
+  | Time | Grid | 1 SD |
+  |---|---|---|
+  | SNUADC sample (500 Hz) | 2 ms | 0.58 ms |
+  | BIS EEG sample (128 Hz) | 7.8 ms | 2.3 ms |
+  | Arrhythmia annotations | 1/360 s | 0.80 ms |
+  | Numeric record stamps | 1 ms (0.1 ms in about 17% of files) | 0.29 ms |
+  | PPG fiducial on raw samples, locked to the frame | up to 33.3 ms | up to about 9.6 ms |
+  | Clinical-table entries | 1 or 5 min | 17 s or 87 s |
+
+  Which PPG fiducials lock depends on how flat the pulse is where they sit: the raw systolic maximum locks most
+  (interval resultant at 33.3 ms: 0.38), the raw foot and steepest rise less (0.10), and the steepest upstroke on
+  the filtered signal hardly at all (0.02). Consecutive inter-beat intervals show no coarser grid for any detector.
+consequence: |
+  Timing differences smaller than the grid's SD cannot be resolved from single events; averaging over n events
+  divides the random part by √n. Sub-sample interpolation helps only where the signal is smooth and not
+  frame-quantised.
+handling: |
+  The PPG correction uses the steepest upstroke on the filtered signal, which does not lock. The planner adds each
+  signal's interval/√12 to its timing error.
+code:
+  - physiosync/physiosync/quantisation.py
+references: [ruffolo2025high]

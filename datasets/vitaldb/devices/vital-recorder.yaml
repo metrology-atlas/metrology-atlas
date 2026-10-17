@@ -1,0 +1,9 @@
+id: vital-recorder
+name: Vital Recorder
+summary: The recording software that collects every device's data and writes the .vital files.
+type: software
+clocks: [recorder-pc]
+description: |
+  Vital Recorder runs on a PC in each operating room. It stamps numeric records on arrival and stamps waveform
+  records from its model of each device's timing, re-synchronising that model when it drifts too far.
+references: [lee2022vitaldb, lee2018vitalrecorder]

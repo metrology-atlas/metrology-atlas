@@ -1,0 +1,23 @@
+id: invos-rso2
+name: Invos regional oxygen saturation
+summary: Cerebral oximetry; no signal shared with the reference.
+type: numeric
+source_name: Invos/SCO2_L
+device: invos
+stamp_clock: recorder-pc
+unit: '%'
+timing:
+- id: invos-fms
+  name: as stamped
+  default: true
+  delay_s:
+  - 1.0
+  - 100.0
+  interval_s:
+  - 1.0
+  - 10.0
+  domain: invos-fms
+  status: estimated
+  evidence: not synchronised; FMS flow start -> CVP rise 32 s median (plausible); Invos uninformative
+tags:
+- stub

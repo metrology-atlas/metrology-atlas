@@ -1,0 +1,26 @@
+id: preop-plt
+name: Preoperative platelet count
+summary: Preoperative platelet count (clinical table).
+type: clinical
+source_name: preop_plt
+group: Laboratory/Preoperative labs
+source: clinical_data.csv
+unit: x1000/mcL
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 x1000/mcL, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#preop_plt
+tags:
+- generated
+- vitaldb-resolution
+description: Pre-operative copy of a lab result; behaves like the lab data.
+figures:
+- id: distribution
+  file: distributions/preop-plt.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,047 records, median 235 x1000/mcL; 62 outside the 0.5–99.5th percentiles are
+    not shown.'
+  alt: Histogram of the recorded values of preop_plt.

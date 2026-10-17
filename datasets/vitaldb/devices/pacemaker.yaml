@@ -1,0 +1,5 @@
+id: pacemaker
+name: Implanted pacemaker
+summary: A patient's own pacemaker; at a fixed rate its pacing spikes are an independent clock in the ECG.
+type: implant
+clocks: [pacemaker]

@@ -1,0 +1,7 @@
+id: snuadc-frequent-steps
+name: SNUADC frequent-correction steps
+quantity: Forward steps of the SNUADC stamps in frequent-correction mode.
+display: "+5 to +15 ms (median +10), about 0.2 per hour"
+status: measured
+study: clock-correction-scan
+about: [snuadc-frequent-vs-pc]

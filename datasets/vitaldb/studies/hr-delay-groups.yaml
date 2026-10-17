@@ -1,0 +1,39 @@
+id: hr-delay-groups
+name: Two heart-rate delay groups, one poll apart
+summary: >-
+  Solar8000 heart rate reaches the recorder either about 1.9 s or about 4.2 s after its window ends: one 2 s poll
+  apart. The group belongs to the recording PC, stays fixed through a case, and on some PCs varies from case to case.
+date: 2026-10-13
+status: current
+methods: [delays-and-windows]
+devices: [solar8000, vital-recorder]
+variables: [solar8000-hr]
+data: 6,222 cases with heart rate; window fits on 240 cases; a file scan of 657 cases on five ports.
+method: |
+  A two-component Gaussian mixture on the per-case HR delays, each case's standard error added to the component
+  variance; a posterior of 0.9 assigns a group. Groups compared with the Solar8000 port, then with the full PC key
+  (the ports of the four core devices), department, surgery, rhythm, case order and the HR records themselves.
+results: |
+  - **Groups at 1.92 s (SD 0.51, 36%) and 4.20 s (SD 0.65, 64%):** 1,775 cases early, 3,652 late, 795 uncertain.
+  - **Not a different window:** both groups fit 6–8 s best; the 2.1 s gap matches one Solar8000 record period.
+    The arterial pressure numerics show no such split, so it is specific to HR.
+  - **The PC decides, not the port:** ports shared by several PCs separate almost completely by the full device
+    signature (purity 0.90–0.97). On 44 PCs the majority group is right for 94% of cases.
+  - **One-sided:** late-majority PCs hold 0.7% early cases (about the misclassification rate); early-majority PCs
+    hold 14% late cases (0–44% per PC).
+  - **Stable within a case;** nothing in the records (interval, stamp phase, first-record delay) tells the groups
+    apart.
+discussion: |
+  Late (one extra 2 s cycle) looks like the default path; some PCs have a faster path that on a given recording
+  sometimes does not engage. What sets it is not in the release. The hr_delay_group label gives each case's group,
+  and the PC gives a prior for uncertain cases.
+open_questions:
+  - title: "The recording PC sets the fast path"
+    kind: hypothesis
+    summary: >-
+      Some recordings get the Solar8000 heart rate one 2 s poll earlier, and on a given recording sometimes do not.
+      The working explanation is that the recording PC's polling decides it, but nothing in the release ties the
+      groups to a PC.
+code:
+  - vitaldb-bench/tools/numeric_delay_labels.py
+  - vitaldb-bench/tools/adhoc/hr_group_ports/

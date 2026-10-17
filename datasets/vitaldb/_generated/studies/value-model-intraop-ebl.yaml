@@ -1,0 +1,26 @@
+id: value-model-intraop-ebl
+name: Rounding and heaping of estimated blood loss
+summary: Recorded estimated blood loss is a mixture of 5 rounding modes (preferred small values, 500 mL, 100 mL, 50 mL,
+  10 mL (base)); the model gives the true value's distribution for each record.
+date: 2026-10-14
+status: current
+methods:
+- value-resolution
+variables:
+- intraop-ebl
+model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_ebl.model.json
+data: 3,933 records of intraop_ebl
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/intraop-ebl.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Every recorded value (blue lines) against what the fitted model predicts (orange dots): its rounding rules applied
+    to its true-value density. Heaps on round numbers are the rounding modes.'
+  alt: Spike histogram of recorded values with model predictions overlaid; spikes on round numbers.
+results: '[[figure:observed-vs-model]]'

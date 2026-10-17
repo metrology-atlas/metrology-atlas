@@ -1,0 +1,9 @@
+id: bis-index-delay
+name: BIS index delay
+quantity: Delay from the end of the EEG window to the start of the index's trailing average.
+value: 3
+unit: s
+spread: {p10: 3, p90: 4}
+status: measured
+study: bis-index-delay
+about: [bis-index]

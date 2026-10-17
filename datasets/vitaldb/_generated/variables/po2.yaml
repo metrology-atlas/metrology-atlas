@@ -1,0 +1,30 @@
+id: po2
+name: Partial pressure of O2
+summary: partial pressure of O2 (lab table).
+type: lab
+source_name: po2
+group: Laboratory/Blood gas
+source: lab_data.csv
+unit: mmHg
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 mmHg, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#po2
+tags:
+- generated
+- vitaldb-resolution
+description: 'Single resolution; no heaping in the whole-number screen.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/po2.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 14,597 records, median 150 mmHg; 144 outside the 0.5–99.5th percentiles are
+    not shown.'
+  alt: Histogram of the recorded values of po2.

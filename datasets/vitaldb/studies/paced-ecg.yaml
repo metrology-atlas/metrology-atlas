@@ -1,0 +1,57 @@
+id: paced-ecg
+name: Paced ECG as an independent clock
+summary: >-
+  Fixed-rate pacing gives a clock the recording chain cannot touch. Timing paced beats on three timelines shows that
+  each SNUADC step-mode correction loses about 18 ms of signal, and that nothing else breaks the sample stream.
+date: 2026-10-17
+status: current
+methods: [signal-borne-clocks]
+techniques: [template-beat-timing, phase-step-detection]
+clocks: [pacemaker, snuadc-sample, recorder-pc]
+devices: [pacemaker, snuadc, vital-recorder]
+variables: [snuadc-ecg-ii]
+data: |
+  All 6,388 cases were screened for runs of beats at one constant interval. Seven pass, paced at about 1,204, 1,000
+  and 860 ms (50, 60 and 70 bpm); only two of them list a pacemaker in the pre-operative ECG field. About 40 more
+  cases have long regular runs at 370–920 ms, but their interval wanders by about 1 ms between stretches: regular
+  sinus rhythm, not pacing.
+background: |
+  Every clock in the recording chain is either corrected by the recorder or measured against a clock that is. A
+  pacemaker at a fixed rate is different: beat *n* falls at *t₀ + n·P* on its own crystal, whatever the recorder
+  does. Any break in a timeline shows as a phase step in the pacing train on that timeline.
+method: |
+  Each beat was timed by template matching (fit residual about 1 ms) and placed on three timelines: the sample
+  count, the record stamps, and the stamp-model line. Between stretches paced at the same interval *P*, a phase step
+  on a timeline marks a break in that timeline. Steps of 6 ms or more were examined one by one, and an intervening
+  poorly matched beat (an intrinsic or fusion beat, which resets a demand pacemaker) was taken as an explanation.
+results: |
+  - **The pacing intervals agree between stretches** to 0.05–0.1 ms on the sample count.
+  - **Each step-mode correction loses about 18 ms of signal.** At the three corrections inside paced rhythm (two
+    cases, both leads where available), the pacing train steps on the sample count by −17.2 to −18.2 ms. The record
+    stamps step by −480.6 to −481.0 ms, and the train on stamp time by −498.1 to −498.8 ms. So the true correction
+    is about 0.498 s, close to a 0.5 s threshold, and the stamps show only 0.48 s of it because about 9 samples are
+    never taken. Every record still holds 100 samples, so nothing in the file shows the loss.
+  - **Recording gaps of 10–18 s shift the stamps by 127–149 ms** against the pacing train (four gaps, two cases).
+  - **No other breaks.** Apart from corrections and gaps, no phase step of 6 ms or more went without an intervening
+    beat or a poorly matched beat. No hidden concatenation was found in the paced stretches.
+discussion: |
+  The −0.48 s correction quoted for step mode is the visible part of a 0.5 s resynchronisation. Without the loss,
+  every sample after a correction sits about 18 ms early, adding up over a case's one to three corrections. The
+  ECG–EEG burst lag confirms the sign without pacing: it steps by +13.0 ± 1.7 ms at each correction (93 cases),
+  a little under the direct measurement.
+
+  The stamp model now adds the loss back at each correction, which removes the burst-lag step (−3.3 ± 1.8 ms after
+  the fix) but barely moves the overall error, because the loss is small beside the window-to-window spread of the
+  burst lag. The slight overshoot hints that the average loss is nearer 15 ms.
+limitations: |
+  Three paced corrections in two cases. The gap shift is measured modulo one pacing period. The location of the
+  lost time was not resolved by this study.
+open_questions:
+  - title: "Long regular runs that may be paced"
+    kind: phenomenon
+    summary: >-
+      About 40 cases have long regular runs (370–920 ms) whose interval wanders by about 1 ms between stretches.
+      Whether they are paced is not settled.
+code:
+  - vitaldb-bench/tools/paced_screen.py
+  - vitaldb-bench/tools/paced_breaks.py

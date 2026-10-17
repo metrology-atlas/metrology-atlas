@@ -1,0 +1,18 @@
+id: intraop-vecu
+name: Vecuronium
+summary: Vecuronium (clinical table).
+type: clinical
+source_name: intraop_vecu
+group: Clinical record/Drugs
+source: clinical_data.csv
+unit: mg
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 mg, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#intraop_vecu
+tags:
+- generated
+- vitaldb-resolution
+description: Sparse (80, 12 and 89 non-zero); native resolution only.

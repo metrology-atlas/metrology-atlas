@@ -1,0 +1,49 @@
+id: distribution-api-validation
+name: Package validation and Monte Carlo cache
+summary: |
+  The vitaldb_resolution package returns a status for every value in the dataset, reproduces each fitted likelihood, and can precompute every posterior for fast Monte Carlo draws.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - The API takes a VitalDB variable name and a recorded value and returns a distribution over true values. Single-resolution variables get one uniform component; heaped variables get a mixture over rounding modes.
+data: |
+  - 6,388 cases × 79 clinical variables (504,652 variable-case cells) and all 928,448 lab results.
+method: |
+  - Ran the full dataset through the package (`tools/validate.py`) and compared each model's log-likelihood with the stored one.
+  - Built quantile tables for posteriors from fitted models and compared knot counts, storage types and knot placement.
+results: |
+  - Clinical statuses: 217,111 ok, 61,129 zero or not recorded, 45,533 missing, 178,864 not applicable, 1,987 imputed, 20 invalid, 8 top-coded. All lab results are ok, with 19 off-grid flags.
+  - The clinical pass takes 7 min and the lab pass 10 min on one core.
+  - The cache holds the whole dataset in about 214 MB. One iteration draws every value in about 20 ms for the cases and about 75 ms including all lab results.
+  - At any number of knots, int16 has the same worst-case error as float32 and float64. The default is 1,024 knots in int16, with worst mean error 4.7 × 10⁻⁴ SD.
+  - Knot placement mattered more than either. End knots at the support ends inflated the SD by up to 80 % at 256 knots; interior knots with tail-mean-preserving end knots cut the worst SD error to 1.1 % and 0.42 %.
+discussion: |
+  - The default's worst mean error is about 20 times smaller than the Monte Carlo standard error after 10,000 iterations.
+  - Building the package surfaced new rules: two out-of-range anaesthesia ends, 93 clock-offset mismatches, child native resolution, and a revised red-cell rule.
+limitations: |
+  - Where a posterior has a gap between two rounding windows, draws can land inside it. This is the large point-wise quantile error (0.8 SD at the 99th percentile at 1,024 knots); it barely moves the mean, SD or W1.
+open_questions:
+  - title: "Compute the within-interval density from the latent"
+    kind: next step
+    summary: >-
+      Decided on 18 October: the API computes the latent truncated to each component's interval when called
+      (closed form for a log-normal latent, with the case's duration where the model has that covariate), and falls
+      back to uniform only where no latent is fitted; each result says which was used. A sketch on the urine latent
+      shows why: uniform overstates a charted 1,000 mL (interval 750–1,250) by about 64 mL, while near the median
+      the two agree to within a few mL.
+  - title: "Anchors still to confirm"
+    kind: next step
+    summary: >-
+      Which "to confirm" anchors can be settled from documentation, and which need the data?
+  - title: "Version each model separately"
+    kind: next step
+    summary: >-
+      Decided on 18 October: each model gets its own version, and a published model file is never edited. A refit
+      is a new version; old ones stay callable. Each file records a hash of its fitted numbers and what it was
+      fitted on. Each release ships a lock file listing every model's version and hash, and every API result names
+      the version that made it. The aim is that anyone can examine one model and propose a better version
+      alongside the current one. The change is with the vitaldb-resolution library.
+tags:
+- from the resolution work

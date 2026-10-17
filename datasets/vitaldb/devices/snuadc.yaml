@@ -1,0 +1,10 @@
+id: snuadc
+name: SNUADC
+summary: The analogue-to-digital converter board that samples the monitor's analogue outputs at 500 Hz.
+type: acquisition
+clocks: [snuadc-sample]
+description: |
+  SNUADC records the monitor's analogue waveform outputs (ECG leads, arterial pressure, plethysmogram, CVP) and
+  sends them to Vital Recorder in 0.2 s records of 100 samples. Its records are stamped by the recorder, which
+  models the board's timing (see [[clock:snuadc-sample]]).
+references: [lee2022vitaldb]

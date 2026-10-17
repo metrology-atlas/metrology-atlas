@@ -1,0 +1,29 @@
+id: pt-pct
+name: Prothrombin time (%)
+summary: Prothrombin time (%) (lab table).
+type: lab
+source_name: pt%
+group: Laboratory/Coagulation
+source: lab_data.csv
+unit: '%'
+value:
+  kind: 'neighbours: computed value; interval to midpoints of neighbouring reachable values'
+  resolution: 'computed value: interval to the neighbouring reachable values'
+  spread: vitaldb-resolution/spread.json#pt%
+tags:
+- generated
+- vitaldb-resolution
+description: 'Computed from a clotting time, so only some values are reachable; the interval runs to the midpoints of the
+  neighbouring reachable values.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/pt-pct.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 21,154 records, median 85 %; 195 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of pt%.

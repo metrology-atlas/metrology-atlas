@@ -1,0 +1,8 @@
+id: pc-utc-offset
+name: Recorder PC offset from UTC
+quantity: How far the recorder PC's time may sit from UTC at any moment.
+value: 0.003
+unit: s
+display: "3 ms to 0.9 s (assumed)"
+status: assumed
+about: [recorder-pc-vs-utc]

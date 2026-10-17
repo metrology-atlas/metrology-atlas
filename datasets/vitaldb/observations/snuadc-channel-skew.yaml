@@ -1,0 +1,12 @@
+id: snuadc-channel-skew
+name: SNUADC channels are read one after another
+summary: >-
+  The SNUADC firmware reads its 8 channels in turn, about 0.1 ms each, so within one sample the last channel is read
+  up to about 0.8 ms after the first. The channel order is not known.
+status: likely
+devices: [snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [monitor-lines, snuadc-firmware]
+consequence: |
+  A fixed sub-millisecond skew between SNUADC channels: a floor on same-clock alignment such as ECG to arterial
+  pressure. A monitor line seen in both ART and PLETH puts ART about 0.3–0.4 ms ahead.

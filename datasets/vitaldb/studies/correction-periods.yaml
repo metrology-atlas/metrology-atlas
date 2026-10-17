@@ -1,0 +1,38 @@
+id: correction-periods
+name: How often each device is corrected
+summary: >-
+  The devices re-synchronise in different ways: SNUADC when its drift reaches about half a second, BIS on a fixed
+  8,192 s timer, and the Primus by small steps about every two hours, which suggests far less drift than assumed.
+date: 2026-10-17
+status: current
+methods: [stamp-reading]
+techniques: [sawtooth-fit]
+clocks: [snuadc-sample, bis-clock, primus-clock, recorder-pc]
+devices: [snuadc, bis, primus]
+variables: [snuadc-ecg-ii, bis-eeg, primus-awp]
+data: |
+  Record stamps of SNUADC ECG II, BIS EEG1 and Primus AWP in the 250 cases with clock fits.
+method: |
+  Corrections were taken from the stamp fits. Intervals count only consecutive corrections inside one stretch
+  between gaps.
+results: |
+  - **SNUADC (step mode) corrects on a drift threshold.** Its interval follows its rate: about 0.5 s ÷ rate predicts
+    a median of 2.08 h, and 2.06 h is observed (p10–p90 1.70–2.31 h, 182 intervals).
+  - **BIS corrects on a fixed timer** of 8,192 s (2¹³ s) in 95% of 266 intervals. The step takes whatever drift has
+    built up (+83 to +289 ms, median +155 ms); 0.155 s per 8,192 s implies 19 ppm, against 23 ppm from the tooth
+    fits.
+  - **Primus AWP shows small corrections** of −64 to +80 ms (median +8 ms) about every 7,230 s (2.0 h; p90 twice
+    that), besides gaps of +20 to +22 s (median 5.5 per case).
+discussion: |
+  The Primus corrections imply a drift of only about 1–11 ppm against the recorder, far below the 115 ppm assumed
+  for the Primus elsewhere (in the numeric-delay fits and the planner's clock domain). The assumption needs a
+  recheck.
+open_questions:
+  - title: "The Primus drift: 1–11 ppm or 115 ppm"
+    kind: conflict
+    summary: >-
+      Its corrections imply only about 1–11 ppm against the recorder, far below the 115 ppm assumed elsewhere (the
+      numeric-delay fits and the planner's clock domain). Which is right decides the Primus clock domain;
+      [[study:ventilator-breath-matching]] at scale would measure it directly.
+code:
+  - vitaldb-bench/tools/clock_correction_periods.py

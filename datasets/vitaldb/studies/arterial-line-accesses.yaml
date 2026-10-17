@@ -1,0 +1,39 @@
+id: arterial-line-accesses
+name: Arterial line accesses in the pressure waveform
+summary: >-
+  Flushes, zeroing and blood draws leave clear signatures in the arterial pressure. A detector finds them in the
+  waveform alone (about one access per hour) and matches 77% of lab draws to an access within 15 minutes, against 26%
+  for random times.
+date: 2026-10-11
+status: current
+methods: [clinical-time, signal-continuity]
+techniques: [null-controls]
+devices: [snuadc, solar8000, clinical-records]
+variables: [snuadc-art, lab-blood-gas, lab-central, solar8000-nibp, snuadc-pleth, snuadc-ecg-ii]
+data: Every case with three or more blood draws during surgery plus the 204 benchmark cases with an arterial line, 1,440 cases and 7,507 hours; 50 accesses checked by eye.
+background: |
+  A blood sample for the lab is drawn from the arterial line, which interrupts the pressure trace. Finding those
+  interruptions gives the draw time, which the lab table does not record, and marks stretches where arterial timing
+  should not be trusted.
+method: |
+  [[software:lineaccess]] (a standalone MIT module) classifies 1 s windows as high (a flush from the pressure bag, over
+  200 mmHg), low (open to air, zeroing, disconnection, under 10 mmHg) or flat (no pulse, after removing a linear
+  trend), merges them into events, groups events less than 90 s apart into one access, and gives each a recovery
+  period until the pulse is back to 70% of its size. A lost pulse with no flush or zero is an occlusion; stretches
+  over 5 minutes are unavailable. Accesses were matched to lab times, and arterial-side timing steps (ECG→ABP moves,
+  ECG→PPG does not) to accesses, with random times as controls.
+results: |
+  - **8,245 accesses (1.1 per hour), 3,249 occlusions (0.4 per hour), 590 hours unavailable.**
+  - **Precision 33 of 34** on a visual check of 50 random events. Most "lost pulse only" events were a blood
+    pressure cuff inflating on the arm with the line: 66% have an NIBP reading 0–90 s later, against 24% at random.
+  - **Lab draws:** 76.6% follow an access within 15 minutes, against 26% for random times.
+  - **Arterial-side timing steps cluster at line events:** 24% fall within 60 s of an access or occlusion, against
+    4.5% at random. Cuff inflations disturb arterial timing as much as line accesses do.
+discussion: |
+  The access is the best available estimate of a lab draw, and the lab_draw label marks it where one matched.
+  Arterial timing (for example as a check on the PPG correction) should skip accesses and occlusions.
+limitations: No ground truth for accesses; recall is unchecked. Long real stretches without a pulse (for example bypass) would be labelled unavailable.
+code:
+  - lineaccess
+  - vitaldb-bench/tools/line_access_scan.py
+  - vitaldb-bench/tools/lab_draw_labels.py

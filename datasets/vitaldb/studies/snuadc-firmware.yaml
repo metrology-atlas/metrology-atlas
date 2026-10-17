@@ -1,0 +1,55 @@
+id: snuadc-firmware
+name: The SNUADC firmware
+summary: >-
+  The public SNUADC firmware explains the board's timing: it sends no time stamps, samples on its 16 MHz crystal,
+  loses time rather than bunching samples after a stall, reads its channels one after another, and truncates its
+  values. A predicted fault at the microsecond counter's wrap was not found in the data.
+date: 2026-10-13
+status: current
+techniques: [prediction-test]
+methods: [source-review, signal-borne-clocks]
+clocks: [snuadc-sample, monitor-output-clock]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+data: |
+  Source: github.com/vitaldb/snuadc, firmware/SNUADC/SNUADC.ino (an Arduino sketch for an ATmega32U4). The wrap
+  prediction was tested on 6 files with the 240 Hz monitor line (17 October).
+background: |
+  Several measured behaviours (the stamp sawtooth, the signal lost at resets, a sub-millisecond skew between
+  channels) needed a mechanism. The board's firmware is public.
+method: |
+  The sampling, transmission and calibration code was read for what it predicts about timing and values, and each
+  prediction was checked against the measurements in the atlas. One prediction (extra samples at each wrap of the
+  microsecond counter, every 2³² µs = 4,295 s of uptime) was tested directly: a fine step search on the sample-count
+  timeline of the 240 Hz monitor line (standard error 0.04–0.1 ms) for steps 4,295 s apart.
+results: |
+  - **No time stamps in the stream.** Each sample is 4 × 3 bytes (two 10-bit channels per 3 bytes) over USB serial.
+    The board sends no time, so the recorder stamps by sample count: the reason the SNUADC sawtooth and the stamp
+    model exist.
+  - **Crystal clock.** Sampling is timed by micros() on the 16 MHz crystal, so the long-term rate is the crystal's;
+    crystal tolerance gives the tens of ppm measured against the recorder.
+  - **No catch-up after an overrun.** The schedule is us_next = max(us_next + us_wait, now): a late sample resets
+    the schedule instead of sending extra samples, so a stall of more than 2 ms loses time rather than bunching
+    samples. The rate is set by the recorder (500 Hz = 2,000 µs exactly; up to 1,000 Hz).
+  - **Channel skew.** The 8 channels (pins A11, A6, A0–A5, in that order) are read one after another, about 0.1 ms
+    each, so the last is read up to about 0.8 ms after the first. Which track each pin carries is not stated.
+  - **Value scale.** A 10-bit converter on the internal 2.56 V reference; a two-point calibration in EEPROM maps
+    −4 V and +4 V to counts 102.4 and 921.6; the result is truncated (not rounded) and clamped to 0–1023.
+    Truncation biases values down by half a count (about 0.5 mmHg for arterial pressure). The arterial ceiling near
+    count 917 is the monitor's +4 V output (about 400 mmHg); the ECG clips at 0 and 1023.
+  - **Event inputs.** Two event jacks are sent as flag bits with each sample: a possible same-clock marker, if any
+    case used them.
+  - **The predicted wrap fault is not seen:** no steps 4,295 s apart, and half the files have no step shared by
+    PLETH and ART in the window where one was due. A few isolated shared steps of 0.2–1.9 ms remain unexplained.
+discussion: |
+  The stall rule explains the signal lost at each reset ([[study:reset-cluster-order]]): the acquisition pauses
+  about 20 ms and the time is never sampled. The channel skew fits the 0.31–0.39 ms ART–PLETH phase difference at
+  240 Hz ([[study:monitor-lines]]). The wrap result means either the per-sample processing time is close to 2 ms, or
+  the deployed firmware differs from the public one.
+limitations: Read, not tested on the device. The deployed firmware version is unknown; the channel-to-track mapping is unknown.
+open_questions:
+  - title: "Which firmware ran"
+    kind: phenomenon
+    summary: >-
+      The deployed version, and which converter channel feeds which track, are not known.
+references: [snuadc]

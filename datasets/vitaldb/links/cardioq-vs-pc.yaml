@@ -1,0 +1,9 @@
+id: cardioq-vs-pc
+name: CardioQ against the recorder PC
+summary: The CardioQ's stamps are re-anchored about every 5 minutes, with jumps of either sign up to ±2 s.
+clock: cardioq-clock
+against: recorder-pc
+correction:
+  rule: Irregular re-anchoring, about 40 times per case; drift within a stretch is taken as zero.
+  period: cardioq-reanchor
+status: measured

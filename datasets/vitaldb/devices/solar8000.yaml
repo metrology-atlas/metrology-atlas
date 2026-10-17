@@ -1,0 +1,8 @@
+id: solar8000
+name: Solar8000 monitor
+summary: 'GE Solar 8000M patient monitor: numerics (HR, pressures, SpO2, NIBP) and the analogue outputs SNUADC samples.'
+type: monitor
+clocks:
+- solar8000-clock
+tags:
+- stub

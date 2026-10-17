@@ -1,0 +1,10 @@
+id: snuadc-step-correction-size
+name: SNUADC step-mode correction size
+quantity: True size of a step-mode correction, from the pacing train on stamp time.
+value: 0.498
+unit: s
+display: "about 0.498 s true (paced: 0.4981–0.4988 s); −0.480 s on the stamps"
+status: measured
+study: paced-ecg
+about: [snuadc-step-vs-pc]
+date: 2026-10-17

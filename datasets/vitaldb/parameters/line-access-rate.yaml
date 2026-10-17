@@ -1,0 +1,7 @@
+id: line-access-rate
+name: Arterial line access rate
+quantity: Accesses to the arterial line (flush, zero, draw) found in the pressure waveform.
+display: "1.1 per hour (8,245 in 7,507 h); occlusions 0.4 per hour"
+status: measured
+study: arterial-line-accesses
+about: [snuadc-art]

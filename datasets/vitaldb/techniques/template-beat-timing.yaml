@@ -1,0 +1,5 @@
+id: template-beat-timing
+name: Template beat timing
+summary: >-
+  Time each beat by fitting a template of the case's own beats, for sub-millisecond precision that does not depend
+  on one fiducial point.

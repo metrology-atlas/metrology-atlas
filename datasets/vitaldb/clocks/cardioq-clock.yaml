@@ -1,0 +1,11 @@
+id: cardioq-clock
+name: CardioQ clock
+summary: The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes..
+type: oscillator
+nominal: Waveform sample clock
+description: The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes.
+tags:
+- stub
+utc_plan: Re-anchored about every 5 minutes against the PC, and matched beat by beat to SNUADC per stretch; the
+  three-way arterial pressure loop with the EV1000 and SNUADC closes. Enough for second-level alignment; no drift
+  within a stretch is modelled.

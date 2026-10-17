@@ -1,0 +1,7 @@
+id: pleth-chain-delay
+name: PPG hardware delay
+quantity: Delay of the PLETH behind the finger, by setup (raw R-to-foot PAT minus the adopted physiological PAT).
+display: "368–399 ms by setup (all recordings: 385 ms)"
+status: measured
+study: ppg-offset-reference
+about: [snuadc-pleth]

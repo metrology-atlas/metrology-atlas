@@ -1,0 +1,8 @@
+id: case-ids-not-chronological
+name: Case ids carry no time order
+summary: >-
+  Dates are shifted and case ids are shuffled: neighbouring ids are no more alike in device drift or port than
+  random pairs.
+status: established
+studies: [drift-units]
+consequence: Unit ageing, moves or replacements cannot be followed through the release.

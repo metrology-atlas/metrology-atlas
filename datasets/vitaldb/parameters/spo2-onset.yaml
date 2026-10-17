@@ -1,0 +1,7 @@
+id: spo2-onset
+name: SpO2 onset latency
+quantity: Time from a PLETH-only artefact to the start of the SpO2 response, relative to the recorded PLETH.
+display: "about 4 s to the start of the dip, 8 s to its deepest; window 10–20 s (estimated)"
+status: measured
+study: spo2-latency
+about: [solar8000-spo2]

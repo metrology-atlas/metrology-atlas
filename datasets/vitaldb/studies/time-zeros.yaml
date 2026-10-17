@@ -1,0 +1,33 @@
+id: time-zeros
+name: Time zeros and loaded subsets
+summary: >-
+  A VitalDB time "from the start" depends on which tracks were loaded: loading a subset moves the zero to that
+  subset's first record, seconds or hours later. The arrhythmia database's annotations count from the full file's
+  zero.
+date: 2026-10-16
+status: current
+methods: [stamp-reading, source-review]
+techniques: [beat-matching]
+clocks: [recorder-pc]
+devices: [vital-recorder, snuadc]
+variables: [snuadc-ecg-ii]
+data: |
+  The VitalDB Arrhythmia Database (PhysioNet 1.0.0; 482 cases, about 20 minutes of annotated ECG each, R peaks on a
+  1/360 s grid) against R peaks detected in SNUADC ECG II; work of the R-peak timing session, consolidated here.
+method: |
+  Beat-train alignment (impulse trains in 10 ms bins, FFT cross-correlation over ±120 s, beats matched within
+  150 ms, a linear trend for drift) gave each case's offset between annotations and detected beats.
+results: |
+  - **A constant offset per case:** median −1.55 s (5–95% −4.5 to −0.4 s). In 472 of 482 cases it equals minus the
+    ECG track's start delay after the file's first record, to within 1.5 ± 1.2 ms.
+  - **So the annotations count from the full-file zero.** The file's zero is its first record of any track (the
+    EVENT track in every file checked); loading only some tracks, in the vitaldb package or in our reader, moves it.
+  - **After removing it,** the median case matches 98.9% of annotations within 150 ms, with 0.2 ppm drift.
+  - **The annotations follow the stamps, not the sample count:** three cases with a stamp jump before the annotated
+    window keep the rule to within 1–33 ms.
+  - **The other residuals are fiducials, not time-base faults:** detector switching between two points in the QRS,
+    or where annotators placed beats. Two constant shifts and three late-starting recordings remain unexplained.
+discussion: |
+  Times taken from different track subsets share an axis only in absolute file time. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] reads whole
+  files, so nothing in the builds moves. Beat-train alignment recovers offsets to about 1 ms, and serves as an
+  integrity check and as a second cross-device method; the time-zero convention belongs in a reporting checklist.

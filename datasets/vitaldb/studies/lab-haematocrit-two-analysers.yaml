@@ -1,0 +1,31 @@
+id: lab-haematocrit-two-analysers
+name: Haematocrit from two analysers
+summary: |
+  Apparent heaping in haematocrit is two analysers with different resolutions, identifiable record by record from the co-timestamped panel.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - Lab analytes are machine-reported, so most should show a single resolution.
+  - Haematocrit looked like the exception: about a quarter of values are whole numbers, and its coarser share is 32.4% against 10% expected.
+data: |
+  - 58,489 haematocrit results in `lab_data.csv`, with the source taken from the panel sharing the timestamp (blood-gas panels contain pH).
+  - 1,328 pairs where a blood gas precedes a CBC by up to 15 min.
+method: |
+  - Split results by source before screening: stamped with pH and blood gases means the theatre blood-gas analyser; stamped with Hb, WBC and platelets means the central CBC analyser.
+  - Checked the last-digit distribution and heaping at 5 and 10 within each source.
+  - Compared resolutions of the other analytes both sources report (glucose, Na, K, iCa, lactate).
+results: |
+  - CBC analyser (43,939 results): 0.1 % resolution, every decimal digit at 10%, so no rounding.
+  - Blood-gas analyser (14,550 results): always whole percent; the last digit is flat (9.4–10.6% each) and counts vary smoothly, so no heaping at 5 or 10.
+  - Where a blood gas precedes a CBC by up to 15 min, the blood-gas haematocrit reads 0.8 % lower on average (SD 2.8 %).
+  - The other shared analytes have matching resolutions between sources, so only haematocrit needs a source rule.
+discussion: |
+  - There is no rounding model to fit. The registry gives haematocrit a source-dependent resolution (0.1 % or 1 %, anchor nearest), and the API decides the source from the panel.
+  - This is a third kind of mixed resolution, after people writing values in (height) and two scales (weight).
+  - The 0.8 % offset is a method difference (conductivity against a counted cell volume), not a resolution issue. It belongs in measurement variability if needed.
+limitations: |
+  - Nine stand-alone haematocrits (no other analyte at the same time; values 0.0–27) have unknown source. They are probably body-fluid samples and return the two-analyser mixture with flag `stand_alone_probable_body_fluid`.
+tags:
+- from the resolution work

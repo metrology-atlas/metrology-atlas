@@ -1,0 +1,11 @@
+id: monitor-output-clock
+name: Monitor analogue output clock
+summary: 'A line at 240 Hz in the arterial pressure and plethysmogram (weakly in the ECG) runs −25 to −29 ppm against
+  the SNUADC sample clock: most likely the patient monitor''s output stage.'
+type: oscillator
+nominal: 240 Hz line in the analogue outputs
+tags:
+- stub
+utc_plan: 'Measured against SNUADC on 6 files only. To strengthen: run the line scan on all cases, settle whether
+  the line is 240 Hz or an aliased 260 Hz (which flips the sign), and match it to the PC-stamped Solar8000 numerics
+  for a second route.'

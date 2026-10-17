@@ -1,0 +1,25 @@
+id: intraop-epi
+name: Epinephrine
+summary: Epinephrine (clinical table).
+type: clinical
+source_name: intraop_epi
+group: Clinical record/Drugs
+source: clinical_data.csv
+unit: mcg
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 mcg, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#intraop_epi
+tags:
+- generated
+- vitaldb-resolution
+description: Sparse (80, 12 and 89 non-zero); native resolution only.
+figures:
+- id: distribution
+  file: distributions/intraop-epi.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 89 records, median 60 mcg; 2 outside the 0.5–99.5th percentiles are not shown.'
+  alt: Histogram of the recorded values of intraop_epi.

@@ -1,0 +1,5 @@
+id: prediction-test
+name: Predict, then test
+summary: >-
+  Turn what a source says into a prediction about the data (a step every 4,295 s, a skew between two channels, a
+  sample lost every 35 minutes) and look for it, with a control; a source that is not borne out is set aside.

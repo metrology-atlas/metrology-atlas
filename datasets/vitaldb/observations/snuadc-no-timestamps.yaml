@@ -1,0 +1,14 @@
+id: snuadc-no-timestamps
+name: SNUADC sends no time; the recorder stamps by count
+summary: >-
+  The SNUADC board streams samples with no time stamps. Every SNUADC time in VitalDB is the recorder's model of the
+  board's clock: the sample count at the nominal rate, pulled back when it drifts too far.
+status: established
+clocks: [snuadc-sample, recorder-pc]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [snuadc-firmware, clock-correction-scan, snuadc-stamp-sawtooth]
+consequence: |
+  Anything the board loses without telling the recorder (a stall, a pause) is invisible in the stamps. The stamp
+  sawtooth is the recorder correcting its model, not the board.
+handling: The stamp model refits the line; paced and continuity checks find what the stamps miss.

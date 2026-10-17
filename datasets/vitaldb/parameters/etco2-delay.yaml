@@ -1,0 +1,9 @@
+id: etco2-delay
+name: Primus ETCO2 delay
+quantity: Delay from the end of the breath's CO2 plateau to the stamp of the Primus ETCO2.
+value: 1.55
+unit: s
+spread: {p10: 0.75, p90: 3.4}
+status: measured
+study: numeric-delay-variability
+about: [primus-numerics]

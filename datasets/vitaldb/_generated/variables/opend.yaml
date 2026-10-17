@@ -1,0 +1,35 @@
+id: opend
+name: Operation end time
+summary: Operation end time; from casestart (clinical table).
+type: time
+source_name: opend
+group: Clinical record/Times and durations
+source: clinical_data.csv
+unit: sec
+value:
+  kind: 'timestamp_model: fitted reference-offset model; posterior over the true event time'
+  resolution: 'heaped: a mixture of rounding modes (see the value model)'
+  spread: vitaldb-resolution/spread.json#opend
+  model: vitaldb-resolution/vitaldb_resolution/data/models/opend.model.json
+  status: measured
+  studies:
+  - value-model-opend
+tags:
+- generated
+- vitaldb-resolution
+description: 'Charted clock minute modelled as an offset from the recording end (device time). See the Timestamps section.
+
+
+  How its time was recorded is described with [[variable:emr-events]].'
+stamp_clock: hospital-records
+coupling:
+  status: coupled
+  note: 'The value is itself a time: its value side and its time side are the same uncertainty.'
+figures:
+- id: distribution
+  file: distributions/opend.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,388 records, median 8877 sec; 64 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of opend.

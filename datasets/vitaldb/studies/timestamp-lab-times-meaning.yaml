@@ -1,0 +1,42 @@
+id: timestamp-lab-times-meaning
+name: What lab timestamps mark
+summary: |
+  Merged into "What the lab timestamp marks" on 18 October 2026; kept so old links still work.
+  The original finding: central-lab timestamps most likely mark specimen receipt in the lab, about 10 minutes after the draw.
+date: 2026-10-13
+status: superseded
+methods:
+- clinical-time
+- value-resolution
+background: |
+  - Lab times are machine timestamps at 1 s resolution, with no rounding to model. The seconds component is spread evenly (about 1.7% per second).
+  - The working hypothesis was that they mark when the result was returned.
+data: |
+  - `lab_data.csv`: 131,942 unique timestamps.
+  - Intra-operative central-lab timestamps (to 30 min after anaesthesia end) with a blood gas in the preceding hour: CBC 1,665, coagulation 1,539, chemistry 1,613.
+method: |
+  - Compared timestamps of panels run on different analysers in the same case.
+  - Checked for a consistent order of draw between panels.
+  - Measured the lag from a point-of-care blood gas to the next central-lab panels.
+  - Checked the time of day of ward CBCs, and the minute of the hour for heaping.
+results: |
+  - Each panel has one timestamp for all its analytes. Panels drawn together are stamped within seconds of each other (75% of CBC–chemistry pairs within 60 s), centred on zero and in no fixed order.
+  - There is no consistent order of draw: each panel is equally likely to be first.
+  - Central-lab panels after a blood gas are stamped a median of about 10 min later (about a quarter within 5 min and three-quarters within 15 min). The lag is the same for CBC, coagulation and chemistry.
+  - Ward CBC timestamps peak at 08:00–09:00, after a typical early-morning phlebotomy round.
+  - The minute of the hour varies smoothly, with no spikes at 0 or 5.
+discussion: |
+  - Result times would differ by analyser turnaround, with chemistry later than CBC. They do not, which rules that out.
+  - For the API, lab times are single resolution (1 s, anchor floor). A central-lab timestamp should carry a backward lag of about 10 min (95% within about 30 min) to the sampling time; a blood-gas timestamp needs a few minutes at most.
+
+  The same question from the timing side: [[study:lab-timestamp-meaning]].
+limitations: |
+  - The conclusion assumes that a blood gas and central-lab tubes are often drawn together.
+open_questions:
+  - title: "Receipt hypothesis against flush artefacts"
+    kind: next step
+    summary: >-
+      The receipt hypothesis should be checked against arterial-line flush artefacts in the waveforms, or by asking
+      the VitalDB team.
+tags:
+- from the resolution work

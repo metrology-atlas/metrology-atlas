@@ -1,0 +1,6 @@
+id: invos
+name: Invos
+summary: Medtronic Invos cerebral oximeter.
+type: monitor
+tags:
+- stub

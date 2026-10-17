@@ -1,0 +1,67 @@
+id: value-model-intraop-uo
+background: |
+  - Intraoperative urine output (`intraop_uo`) is a hand-entered EMR total, probably charted on the anaesthesia record.
+  - It was the first value variable worked through, and the per-variable checklist used for every later variable was written from it.
+  - The finest observed resolution is 1 mL, but almost every value is rounded to at least 5 mL, and two in five to 50 or 100 mL.
+  - A urine volume can be rounded at three points before it is charted: at the device graduation (H1), when readings are summed (H2), or when the final total is charted (H3).
+data: |
+  - 3,707 non-missing values; 2,681 cases are blank.
+  - 42% of cases have no urine output, probably because no catheter was placed. Cases without it are much shorter (median 1.8 h), so the latent distribution is conditional on catheterisation.
+  - 15 values (0.4%) are not multiples of 5 mL. They are flagged `off_grid` and the resolution is overridden to 5 mL.
+  - The 23 exact zeros are set aside, to be modelled as a special value.
+  - The fit uses the 3,669 positive values on the 5 mL grid.
+method: |
+  - First screen: each value was placed in one of five nested groups by the coarsest anchor it sits on (100, 50, 10, 5 or 1 mL), and the shares were compared with a flat, no-rounding expectation.
+  - Step 1, binned exploration: 100 mL bins centred on the 100 mL anchors, a flat latent within each bin, and propensities by back-substitution as in the manuscript's closed form.
+  - Step 2, parametric latent: a log-normal latent fitted jointly with the propensities by maximum likelihood. Plain nearest rounding (model A) was compared with distance decay for the 50 mL mode (model B).
+  - Step 3, log-spline latent: log f as a cubic B-spline in log volume, with K chosen by BIC. Tested a steeper decay shape, volume-dependent 50 mL rounding and a 25 mL mode.
+  - Step 4, robustness: 100 simulated datasets refitted from a generic start, a profiled hard-threshold capture window, a 1 mL-base sensitivity fit and a more flexible latent (K = 8).
+  - The final model is the threshold form: rounding to 50 mL only for true values within 20 mL of the anchor, at a rate that rises with volume.
+results: |
+  [[figure:observed-vs-model]]
+
+  - On the first screen, 22.6% of values sit on 100 mL and 20.5% on 50 mL (not 100), against 1% each expected with no rounding. Only 0.4% are at 1 mL resolution.
+  - Values 10 mL from a 50 mL anchor are depleted: 677 records next to the anchors against 888 in the middle of each block. A smooth latent cannot do this. It matches Rietveld's distance-decay effect.
+  - Distance decay is real (likelihood-ratio statistic 22.4 on 1 df in step 2). A near-step decay shape almost matches the near/far counts (667 / 901 predicted against 677 / 888 observed).
+  - The log-spline beats the log-normal by 14.6 log-likelihood units for 2 extra parameters. A gamma latent fits clearly worse than the log-normal.
+  - A 25 mL mode is not needed: its fitted propensity goes to zero.
+  - A recorded 50, 100 or 500 mL is uncertain by roughly ±20–40 mL. A recorded 160 mL is uncertain by only ±5 mL, because 160 can only come from the 5 and 10 mL modes.
+  - A recorded 100 mL has only a 22% chance of having been read to 10 mL or finer.
+discussion: |
+  - Rounding looks similar across volumes and across elective and emergency cases. This argues against strong device-graduation effects (H1).
+  - Summing readings (H2) can explain multiples of 10, but not the extra 50 and 100 mL peaks. Those point to a charting preference (H3).
+  - The steep decay reads naturally as behaviour: a reading of 40 or 60 mL is rounded to 50 almost as often as one right on it, while readings 20–25 mL away are nearly as close to another 10 mL value.
+  - The threshold form was chosen over the smooth steep decay because it is simpler to explain and better identified. The best step, at 20 mL, is within 1.4 log-likelihood units of the smooth decay.
+  - The latent slope tilts each posterior. At 50 mL the latent is still rising, so the mean is pulled up to 50.9. At 500 mL it is falling, so the mean drops to 498.9.
+  - The 50 mL component spans ±20 mL, not ±25: the interval is the capture window, not the full half-resolution.
+limitations: |
+  - The decay steepness κ is not identifiable: in about half the simulation refits it ran off towards infinity. The data say "near-step" but cannot tell κ = 5 from a true step.
+  - The volume slope for 50 mL rounding is poorly determined in simulation (median 0.19, 95% interval 0.07–1.65).
+  - The nonparametric EM check was deferred, since K = 8 gives the same propensities. It would be run only if a reviewer asks.
+  - Correction, 13 Oct: the fitting code let the 100 mL mode round small true volumes to 0, which zero-truncation then silently dropped. After the fix the posterior weights moved by 0.01 or less. `intraop_uo.model.json` holds the corrected fit.
+  - Within each component the density is not flat. Treating components as uniform is only an approximation.
+open_questions:
+  - title: "Urine charted to the nearest graduation"
+    kind: hypothesis
+    summary: >-
+      The model reads urine volumes as rounded to the nearest anchor, a charting preference (H3). Floor rounding,
+      reading the last graduation passed (H1), is as plausible and has not been fitted against it.
+  - title: "A special-value rule for the 23 zeros"
+    kind: next step
+    summary: >-
+      Decided on 18 October: zero is a recorded value with its own probability (23 of 3,707, 0.6%), kept out of
+      the latent and rounding fit. Each zero is flagged: `zero_anuric` where preoperative creatinine is above
+      2 mg/dL or ASA is 6 (9 cases, very likely a true zero), `zero_unexplained` otherwise (14 cases, normal
+      creatinine, possibly a blocked catheter or a 0 for "not measured"). Missing (2,681 cases, mostly short) stays
+      distinct from zero. The change is with the vitaldb-resolution library.
+  - title: "Fit duration as a latent covariate"
+    kind: next step
+    summary: >-
+      Decided on 18 October: the volume models get anaesthesia duration as a latent covariate (the latent's
+      location rising with log duration), compared with the current fit by BIC. The refit is with the
+      vitaldb-resolution library.
+  - title: "Propensities by department, emergency status and era"
+    kind: next step
+    summary: >-
+      Heterogeneity of propensities by department, emergency status and case-ID era has been planned but not
+      reported.

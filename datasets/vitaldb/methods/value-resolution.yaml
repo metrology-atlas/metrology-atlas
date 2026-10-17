@@ -1,0 +1,29 @@
+id: value-resolution
+name: Rounding, heaping and value resolution
+order: 8
+summary: >-
+  How far a recorded number is from the true one because of how it was written down: the resolution it was
+  recorded at, and the coarser values people round to.
+description: |
+  A recorded value is the true value passed through a rounding rule. When one rule applies to every record,
+  the true value lies uniformly within half a step of the recorded one. Values written by people are usually
+  **heaped**: most records follow a fine rule, but some are rounded to 5, 10 or 100, and a recorded 100 mL
+  may be a measured 100 or anything from 50 to 150 rounded by hand.
+
+  The studies in this group fit each heaped variable as a **mixture of rounding modes** over a smooth
+  density of true values. Each mode is a rule (nearest 5, nearest 10, rounded up ...) with its own share of
+  the records. Given a recorded value, the model returns the distribution of the true value: a mixture of
+  the intervals each mode could have produced it from, weighted by how likely each mode is to give that
+  value. Values that a coarse mode can produce (multiples of 10, of 50 ...) therefore carry wider
+  distributions than values only the fine mode produces.
+
+  Charted clock times are heaped the same way, as reported travel times are on multiples of 5, 15 and 30
+  minutes ([[reference:rietveld2002rounding|Rietveld 2002]], who fitted the rounding probabilities and used Bayes'
+  rule to recover the true time). Here they are modelled as an offset from a device time recorded to the second,
+  so the time side and the value side are one uncertainty. The general framework for such data is coarsening
+  ([[reference:heitjan1989grouped|Heitjan 1989]], [[reference:heitjan1991coarse|Heitjan and Rubin 1991]]), and
+  heaping as a mixture of rounding behaviours follows [[reference:wang2008heaping|Wang and Heitjan 2008]].
+
+  The models are fitted and evaluated by [[software:vitaldb-resolution]]. The atlas reads them from a
+  pinned snapshot of that library, so each page shows the fitted modes and shares without copying them.
+references: [heitjan1989grouped, heitjan1991coarse, wang2008heaping, rietveld2002rounding]

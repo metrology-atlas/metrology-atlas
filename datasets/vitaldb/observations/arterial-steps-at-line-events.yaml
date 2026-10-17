@@ -1,0 +1,9 @@
+id: arterial-steps-at-line-events
+name: Arterial timing steps cluster at line events
+summary: >-
+  About a quarter of the steps in ECG→arterial-pressure timing fall within a minute of a line access or a cuff
+  occlusion, against 4.5% at random times.
+status: established
+variables: [snuadc-art, snuadc-ecg-ii]
+studies: [arterial-line-accesses]
+consequence: Arterial pressure is a clean timing reference only away from accesses and occlusions.

@@ -1,0 +1,7 @@
+id: solar-delay-drift
+name: Drift of Solar8000 numeric delays within a case
+quantity: Change of a Solar8000 numeric's delay through a case, per hour.
+display: "0 s/h median (p10–p90 about ±0.5 s/h)"
+status: measured
+study: numeric-delay-variability
+about: [solar8000-vs-snuadc]

@@ -1,0 +1,49 @@
+id: numeric-delay-variability
+name: Numeric delays are fixed within a case, different between cases
+summary: >-
+  With each numeric's algorithm held fixed, delays were fitted for every case and every 30-minute block. They do not
+  drift within a case, but 40–70% of their variance lies between cases, so a single population delay is wrong by up
+  to 2 s for HR and 1 s for the others. Each case gets its own delay label.
+date: 2026-10-12
+status: current
+methods: [delays-and-windows]
+devices: [solar8000, primus]
+variables: [solar8000-hr, solar8000-art-numerics, primus-numerics]
+data: 900 random cases with SNUADC and Solar8000, then 6,387 of 6,388 cases (one file too large for the analysis machine); Primus ETCO2 and PIP refitted in all 6,199 Primus cases on 13 October.
+method: |
+  The pilot's consensus algorithm for each track; the delay fitted per case and per 30-minute block with the same
+  uniform-phase likelihood; variance split by a one-way random-effects model on the block delays (between-case SD,
+  within-case SD, intraclass correlation); case delays compared with set-up variables and across tracks.
+results: |
+  | Track | Delay from window end, p10 / p50 / p90 (s) | Between-case SD (s) | ICC |
+  |---|---|---|---|
+  | HR | 1.7 / 3.7 / 5.0 | 1.31 | 0.71 |
+  | ART systolic | 0.3 / 1.0 / 1.9 | 0.79 | 0.61 |
+  | ART mean | 1.0 / 1.7 / 2.5 | 0.78 | 0.61 |
+  | ART diastolic | 0.3 / 1.2 / 2.0 | 0.87 | 0.68 |
+  | CVP | 3.1 / 3.8 / 4.7 | 0.60 | 0.41 |
+  | Primus ETCO2 | 0.75 / 1.55 / 3.4 | 0.94 | 0.58 |
+  | Primus PIP | 3.65 / 4.6 / 6.5 | 0.96 | 0.55 |
+  | Primus RR | 1.6 / 4.3 / 7.6 | 1.98 | 0.67 |
+
+  - **No drift within cases** (median 0 s/h).
+  - **Shared offsets within a device family:** the three arterial pressure delays correlate at ρ 0.86–0.92; across
+    families hardly at all.
+  - **HR is the only track whose delay follows the Solar8000 port** (η² 0.35): two groups
+    ([[study:hr-delay-groups]]).
+  - **The first Primus fit gave ETCO2 a delay of −1.5 s,** which the availability rule forbids: the hold until the
+    next breath had been counted twice. Refitted with a one-record phase, every median delay is positive.
+discussion: |
+  One delay per case is enough; per-record labels are not needed. Per-case labels (numeric_delay) carry the delay,
+  its standard error (median 0.15–0.29 s, 1.0 s for RR) and a quality flag; 607 per-case delays that still come out
+  below zero are flagged weak. The population distribution is the prior where a case cannot be fitted.
+code:
+  - vitaldb-bench/tools/numeric_delay_variability.py
+  - vitaldb-bench/tools/numeric_delay_labels.py
+figures:
+  - id: numeric-delay-variability
+    file: numeric-delay-variability.png
+    theme: delay and window fits
+    source: vitaldb-bench tools/numeric_delay_variability_plot.py
+    caption: Delays differ between cases far more than a fixed delay would allow (first run, 879 cases; a 6,222-case version is to replace it).
+    alt: Paired range bars, observed against expected, per numeric.

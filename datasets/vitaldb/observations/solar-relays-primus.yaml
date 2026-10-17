@@ -1,0 +1,9 @@
+id: solar-relays-primus
+name: The Solar8000 relays the Primus's ventilation numbers
+summary: >-
+  Solar8000 ETCO2, RR_CO2, VENT_PIP and VENT_RR change only every 6–8 s: they are Primus values passed on through the
+  Solar8000's 2 s polling, not measured by the monitor.
+status: established
+devices: [solar8000, primus]
+studies: [numeric-derivation-pilot]
+consequence: These tracks carry the Primus's timing plus the relay, and duplicate the Primus's own numerics.

@@ -1,0 +1,42 @@
+id: value-model-height
+references:
+- leatt1986spinal
+- voss1997diurnal
+- healey2011diurnal
+background: |
+  - Height is stored to 0.1 cm, so it looks measured. But some heights were written as whole centimetres, probably when the patient was not measured.
+  - It is the first variable whose resolution is mixed at the finest digit.
+  - Height changes by a centimetre or two over the day, which is handled separately as measurement variability.
+data: |
+  - 6,388 values, none missing or zero. One value is off the 0.1 cm grid (157.36).
+  - 57 cases are children (42 patients), down to 42 cm. They get native resolution only (flag `child_native_resolution`).
+  - Repeat cases copy the height: of 237 patients with more than one case, 158 have the same height every time.
+  - The fit uses adults, first case per patient (6,041). Later cases with the same height get the same posterior.
+  - Within each sex, height is close to normal (women 156.5 ± 6.1 cm, men 168.3 ± 6.4 cm).
+method: |
+  - Screened the last digit by emergency status, department, age, sex and calendar position.
+  - Latent: normal regression on sex and age (quadratic), with SD by sex.
+  - Candidate modes: whole cm, round tens, a half-centimetre mode, and a one-sided round-up from .9 with a ceiling anchor.
+  - Tested a rounding propensity that depends on emergency status, a first for the engine.
+  - Compared by BIC: no emergency effect, emergency on whole cm, plus the half-cm mode, plus round-up, and both.
+  - A 1 cm resolution override was fitted and then dropped (see discussion).
+results: |
+  [[figure:observed-vs-model]]
+
+  - After removing the 10% expected by chance, about 11% of elective and 21% of emergency heights were written as whole centimetres. Thoracic surgery is also higher (26% against 20% overall).
+  - The .9 digit is depleted (7.3% of elective heights, against about 9% for .1 to .4): a height just under a whole centimetre is often written as the centimetre above.
+  - There is a small excess at .5 (10.3%).
+  - Among whole-centimetre heights, 150, 160 and 170 are about 1.5 times their neighbours, but 155 and 165 are not.
+  - Each added component improved BIC: from 64,888 with no emergency effect to 64,852.5 with all of them.
+  - Emergency status on the 10 cm mode, department, and a heavy-tailed residual did not help.
+  - The engine reproduces the log-likelihood exactly (−32,378.3).
+discussion: |
+  - The 1 cm override worked as a fit, but it threw away the decimal digit, which is the best clue to whether a height was measured. The emergency effect vanished and the 160 heap could no longer be told apart from measured heights near 160.
+  - So the rounding model answers "what was written down?", and a separate measurement-variability field answers "how far is that from the patient's true height today?".
+  - The posterior weight of the non-measured modes is reported as `possibly_written_in`. It is zero for any height whose last digit is not 0 or 5.
+  - Measured heights get SD 0.5 cm (diurnal loss of about 14–17 mm plus stadiometer reproducibility; Leatt, Reilly & Troup 1986; Voss & Bailey 1997).
+  - Written-in heights are treated as self-reported, with bias by sex and age band from the 2018 Korea Community Health Survey (171,384 adults) and an SD of about 2.6 cm.
+  - The API needs sex, age and emergency status.
+limitations: |
+  - Measurement variability comes from the literature, not from this dataset, and is marked provisional.
+  - Children are not modelled.

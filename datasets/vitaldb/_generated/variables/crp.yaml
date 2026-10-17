@@ -1,0 +1,30 @@
+id: crp
+name: C-reactive protein
+summary: C-reactive protein (lab table).
+type: lab
+source_name: crp
+group: Laboratory/Chemistry
+source: lab_data.csv
+unit: mg/dL
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 0.01 mg/dL, nearest
+  step: 0.01
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#crp
+tags:
+- generated
+- vitaldb-resolution
+description: 'Single resolution; last digit flat.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/crp.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 28,278 records, median 3.31 mg/dL; 142 outside the 0.5–99.5th percentiles are
+    not shown.'
+  alt: Histogram of the recorded values of crp.

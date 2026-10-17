@@ -1,0 +1,33 @@
+id: value-model-opend
+background: |
+  - Op end is a charted event time with a 1-minute chronon.
+  - About one in twelve op ends appears to have been set from the recording itself rather than from the record (see the imputed-times study).
+data: |
+  - 5,850 op ends, after excluding the 537 imputed from the recording (598–604 s before it ends; status `imputed`).
+  - 92 op ends do not share the sub-minute offset of the other charted times in their case and are flagged `clock_offset_mismatch`.
+  - 52 op ends come after anaesthesia end (`order_violation`) and 108 equal it (`same_time`).
+method: |
+  - The true op end is modelled relative to the recording end with a log-spline offset (K = 12, chosen by BIC).
+  - Nearest, floor and ceiling anchors were compared, along with 10- and 30-minute modes.
+  - Posteriors were compared across K, because the latent is narrow relative to the grid.
+results: |
+  [[figure:observed-vs-model]]
+
+  - The anchor is floor (nearest is 173 BIC points worse, ceiling 312): op ends are written as the 5-minute mark at or before the true end.
+  - This is the opposite of anaesthesia end, which is written up to the next mark.
+  - The true op end is on average about 2.5 min after the charted one, so charted op durations run about 2.5 min short.
+  - The package reproduces the stored log-likelihood within 0.14.
+discussion: |
+  - Related times are rounded in opposite directions, so the anchor is fitted per variable and never assumed shared.
+  - Intervals inherit both biases: charted emergence (op end to anaesthesia end) is inflated by about 6–7 min.
+limitations: |
+  - The latent has two narrow peaks (13 and 17 min before the recording ends). With most values on a 5-minute grid, fine structure in a narrow latent is hard to separate from rounding, so these peaks should not be read as real.
+open_questions:
+  - title: "Was op end imputed deliberately?"
+    kind: next step
+    summary: >-
+      Was op end imputed from recording end deliberately? This is to be asked of the VitalDB team.
+  - title: "Imputed op ends by department"
+    kind: next step
+    summary: >-
+      The distribution of imputed op ends by department has not yet been mapped.

@@ -1,0 +1,7 @@
+id: bis-index-window
+name: BIS index averaging window
+quantity: Length of the trailing average that makes up the fast part of the BIS index's response.
+display: "16 s in 48% of good fits (the 15 s setting); 32–61 s in 40%; half the weight older than 30 s"
+status: measured
+study: bis-index-delay
+about: [bis-index]

@@ -1,0 +1,45 @@
+id: case-clock
+name: Recovering the time of day
+summary: >-
+  The release shifts every case to start at 2100-01-01 00:00 UTC, removing the date and the time of day. The time of
+  day (Korean local time) can be recovered to the minute from the admission date and the seconds of the EMR times.
+date: 2026-10-12
+status: current
+methods: [clinical-time]
+clocks: [recorder-pc, hospital-records]
+devices: [vital-recorder, clinical-records]
+variables: [emr-events, admission-discharge]
+data: |
+  All 6,388 rows of clinical_data.csv: the admission date (adm) and the four EMR times (anestart, opstart,
+  aneend, opend). A clock was recovered for 6,385 cases: all four EMR times share one seconds phase in 5,774 and three
+  of four in 611. Three cases get none (adm not on a whole minute in two, EMR times disagree in one). No waveform
+  data were needed.
+background: |
+  The recorder writes Unix time (UTC). The release then shifts each case so its start reads 2100-01-01 00:00 UTC.
+  Local Korean time (KST, UTC+9, no daylight saving since 1988) enters through the hospital systems: admission and
+  discharge are local dates, and the EMR times are local clock times relative to the case start.
+method: |
+  The admission date is a local midnight expressed relative to the case start, so −adm modulo one day gives the case
+  start's time of day; the seconds of the EMR times refine it. The case clock is accepted to the minute where three
+  or more EMR times agree.
+results: |
+  - **Time of day to the minute** in cases where at least three EMR times agree ([[code:vitaldb-bench/vitaldb_bench/case_clock.py|vitaldb_bench.case_clock]]).
+  - **The case clock is KST;** subtracting 9 h returns to UTC.
+  - **It reveals which EMR entries fall on 5-minute marks,** the basis of [[study:emr-rounding]].
+discussion: |
+  One assumption cannot be tested in the release: that the recorder PC's time zone was set correctly, so its Unix
+  time was true UTC rather than local time read as UTC. The EMR clock's own offset from the recorder cannot be
+  separated from documentation lag ([[study:loop-closure]]).
+open_questions:
+  - title: "The recorder PC's time zone"
+    kind: assumption
+    summary: >-
+      Whether its Unix time was true UTC, or local time read as UTC, cannot be tested in the release.
+  - title: "The PC-to-UTC link"
+    kind: assumption
+    summary: >-
+      Every route from a device clock to UTC passes through the recorder PC's clock, which is assumed to have been
+      kept on UTC by network time. The release holds no second, independent clock against which to test it, so this
+      link is assumed, not measured.
+code:
+  - vitaldb-bench/vitaldb_bench/case_clock.py

@@ -1,0 +1,7 @@
+id: solar-st-duplicated
+name: Solar8000 ST records are written twice
+summary: Every Solar8000 ST_II record is duplicated at the same stamp (0–20 ms apart).
+status: established
+devices: [solar8000]
+studies: [numeric-derivation-pilot]
+handling: The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] drops a record that repeats the previous value within 50 ms, and counts the drops.

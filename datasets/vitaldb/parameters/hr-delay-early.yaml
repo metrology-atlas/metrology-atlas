@@ -1,0 +1,9 @@
+id: hr-delay-early
+name: Solar8000 HR delay, early group
+quantity: Delay from the end of the HR window to its stamp, in the early group of cases.
+value: 1.92
+unit: s
+spread: {sd: 0.51, text: "36% of classified cases"}
+status: measured
+study: hr-delay-groups
+about: [solar8000-hr]

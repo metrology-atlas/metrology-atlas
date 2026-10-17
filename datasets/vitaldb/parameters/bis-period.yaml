@@ -1,0 +1,9 @@
+id: bis-period
+name: BIS correction interval
+quantity: Time between BIS corrections.
+value: 8192
+unit: s
+display: "8,192 s (2 h 16.5 min) in 95% of 266 intervals"
+status: measured
+study: correction-periods
+about: [bis-vs-pc]

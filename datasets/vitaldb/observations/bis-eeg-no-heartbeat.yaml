@@ -1,0 +1,8 @@
+id: bis-eeg-no-heartbeat
+name: The BIS EEG carries no heartbeat
+summary: >-
+  Claimed after a first search found no consistent cardiac trace in the BIS EEG. The search window was in the wrong
+  place: the BIS stamps sit about 0.8 s off the ECG's.
+status: withdrawn
+devices: [bis]
+variables: [bis-eeg]

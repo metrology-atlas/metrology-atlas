@@ -1,0 +1,20 @@
+id: preop-pft
+name: Preoperative pulmonary function
+summary: Preoperative pulmonary function (clinical table).
+type: clinical
+source_name: preop_pft
+group: Clinical record/Preoperative history
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/preop-pft.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,388 records in 9 categories.'
+  alt: Histogram of the recorded values of preop_pft.

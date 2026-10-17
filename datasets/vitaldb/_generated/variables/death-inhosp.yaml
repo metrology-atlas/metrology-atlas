@@ -1,0 +1,19 @@
+id: death-inhosp
+name: In-hospital Mortality
+summary: In-hospital Mortality (clinical table).
+type: clinical
+source_name: death_inhosp
+group: Clinical record/Outcome
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: distribution
+  file: distributions/death-inhosp.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,388 records in 2 categories.'
+  alt: Histogram of the recorded values of death_inhosp.

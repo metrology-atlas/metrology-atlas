@@ -1,0 +1,9 @@
+id: snuadc-stamp-arithmetic
+name: SNUADC stamp arithmetic
+quantity: Slope of the SNUADC block stamps against the sample count between corrections.
+value: -0.954
+unit: ppm
+spread: {n: 6, text: "6 files; census pending"}
+status: measured
+study: stamp-arithmetic
+about: [snuadc-sample, snuadc-frequent-vs-pc]

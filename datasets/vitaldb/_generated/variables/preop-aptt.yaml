@@ -1,0 +1,26 @@
+id: preop-aptt
+name: Preoperative aPTT
+summary: Preoperative aPTT (clinical table).
+type: clinical
+source_name: preop_aptt
+group: Laboratory/Preoperative labs
+source: clinical_data.csv
+unit: sec
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 0.1 sec, nearest
+  step: 0.1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#preop_aptt
+tags:
+- generated
+- vitaldb-resolution
+description: Pre-operative copy of a lab result; behaves like the lab data.
+figures:
+- id: distribution
+  file: distributions/preop-aptt.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 5,986 records, median 32.1 sec; 60 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of preop_aptt.

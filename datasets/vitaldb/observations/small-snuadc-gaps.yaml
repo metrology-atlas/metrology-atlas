@@ -1,0 +1,10 @@
+id: small-snuadc-gaps
+name: Small positive SNUADC gaps are real data loss
+summary: >-
+  Forward jumps of under a second in SNUADC stamps are missing data, not clock corrections: the beat interval across
+  them fits the gap better than the samples butted together.
+status: established
+devices: [snuadc]
+variables: [snuadc-art, snuadc-ecg-ii]
+studies: [clock-correction-scan]
+consequence: Treat them as gaps; joining across them shortens the time.

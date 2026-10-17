@@ -1,0 +1,26 @@
+id: value-model-intraop-uo
+name: Rounding and heaping of intraoperative urine output
+summary: Recorded intraoperative urine output is a mixture of 4 rounding modes (100 mL, 50 mL, 10 mL, 5 mL (base)); the
+  model gives the true value's distribution for each record.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+variables:
+- intraop-uo
+model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_uo.model.json
+data: 3,669 records of intraop_uo (VitalDB clinical_data.csv (intraop_uo), positive values on the 5 mL grid)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/intraop-uo.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Every recorded value (blue lines) against what the fitted model predicts (orange dots): its rounding rules applied
+    to its true-value density. Heaps on round numbers are the rounding modes.'
+  alt: Spike histogram of recorded values with model predictions overlaid; spikes on round numbers.
+results: '[[figure:observed-vs-model]]'

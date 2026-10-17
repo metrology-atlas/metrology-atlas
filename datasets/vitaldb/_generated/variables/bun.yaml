@@ -1,0 +1,30 @@
+id: bun
+name: Blood urea nitrogen
+summary: Blood urea nitrogen (lab table).
+type: lab
+source_name: bun
+group: Laboratory/Chemistry
+source: lab_data.csv
+unit: mg/dL
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 mg/dL, nearest
+  step: 1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#bun
+tags:
+- generated
+- vitaldb-resolution
+description: 'Single resolution; no heaping in the whole-number screen.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/bun.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 37,213 records, median 15 mg/dL; 235 outside the 0.5–99.5th percentiles are
+    not shown.'
+  alt: Histogram of the recorded values of bun.

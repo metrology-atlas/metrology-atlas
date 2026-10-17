@@ -1,0 +1,79 @@
+id: numeric-derivation-pilot
+name: How the monitors compute their numbers
+summary: >-
+  Recomputing each monitor numeric from its own waveform finds a short, simple algorithm for every one (a median, an
+  exponential average or a time mean over 3–30 s) and a delay of 2–9 s behind the newest data it uses. No value is
+  stamped before its data exist.
+date: 2026-10-12
+status: current
+methods: [delays-and-windows]
+devices: [solar8000, primus, bis]
+variables: [solar8000-hr, solar8000-art-numerics, solar8000-pleth-hr, primus-numerics, snuadc-ecg-ii, snuadc-art, primus-co2, primus-awp]
+data: |
+  Record rates on 1,000 random cases. The algorithm fit on 24 cases with ECG, arterial pressure, CVP and Primus
+  waveforms; PLETH_HR on 231 cases.
+background: |
+  A numeric summarises a window of signal that ended before its stamp. Knowing the window and the delay lets a value
+  be placed against the physiology it describes, and tells a model when the value could first have been known.
+method: |
+  **Timing model.** A value stamped at t is computed at u = t − d − φ from the data in a window ending at u: d is the
+  processing and transmission delay, and φ is where within the device's update phase the computation fell (uniform
+  over one poll for values the monitor recomputes on its own schedule; over one 0.48 s record for Primus values of
+  the last completed breath). Values are uniform over their reporting bin (rounded or truncated). Every delay is
+  measured from the window's end, the anchor; the window's middle is a derived description only.
+
+  **Fit.** Each numeric was fitted against beat-by-beat or breath-by-breath values from its waveform. Candidates: a
+  mean, median or exponential average over N events or T seconds, rate and waveform-mean variants, delays from −3 to
+  15 s; the best by likelihood per case. A held-value model (refreshing every 4–12 s) was the alternative.
+results: |
+  **Record rates:** Solar8000 every 2.00 s (99% within ±50 ms), BIS every 1.00 s, Primus about every 7.0 s (or
+  6.3 s; ±0.4 s, not locked to breaths). Solar8000's ETCO2 and ventilator values change only every 6–8 s: Primus
+  values relayed through the Solar8000. Every Solar8000 ST_II record is written twice at the same stamp.
+
+  | Numeric | Best fit (cases) | Delay from window end |
+  |---|---|---|
+  | HR | median R–R over ~6 s, truncated (14/24) | 3.6 s |
+  | ART systolic | median over 3 s, or EWMA ½ | 2.1 s |
+  | ART mean | EWMA ¼ per beat (16/24) | 2.3 s |
+  | ART diastolic | EWMA ½ (20/24) | 1.9 s |
+  | CVP | waveform mean over 4–5 s (16/21) | 5.0 s |
+  | PLETH_HR | median of ~12 beats (134/231) | 3.4 s |
+  | Primus RR | 60 / mean breath interval over 30 s (17/24) | 8.5 s |
+  | Primus ETCO2, PEEP | the latest breath | 1.8–1.9 s |
+  | Primus PIP | the latest breath | 5.2 s |
+
+  - **No slow updates:** the held-value model lost in every case for HR, ART, CVP and PLETH_HR.
+  - **HR is truncated, not rounded** (24/24); RR clearly rounds.
+  - **No front-stamping:** no numeric is stamped before the data it describes.
+discussion: |
+  Mean against median, or beats against seconds, often differ by only 0.01–0.05 log-likelihood per record, so the
+  algorithm family is less certain than the delay. Pressure numerics sit about 4 mmHg below the analogue waveform
+  (scale, not timing). Delays here are pilot values; [[study:numeric-delay-variability]] measures them in every case.
+code:
+  - vitaldb-bench/tools/numeric_intervals.py
+  - vitaldb-bench/tools/numeric_derivation_pilot.py
+figures:
+  - id: numeric-intervals-jitter
+    file: numeric-intervals-jitter.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench tools/numeric_intervals_plot.py
+    caption: Record intervals cluster tightly around each device’s nominal period, within a few milliseconds for Solar8000 and BIS.
+    alt: Four histograms of record interval in 5 ms bins.
+  - id: numeric-intervals-dist
+    file: numeric-intervals-dist.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench tools/numeric_intervals_plot.py
+    caption: 'Time between records and between value changes for each numeric track in 1,000 random cases: Solar8000 records every 2 s, Primus about every 7 s, BIS every 1 s.'
+    alt: Grid of histograms on a log time axis, one per track, grey for record intervals and coloured for change intervals.
+  - id: numeric-window-diagram
+    file: numeric-window-diagram.png
+    theme: schematics
+    source: vitaldb-bench tools/numeric_window_diagram.py
+    caption: 'How one recorded numeric value relates to its data window: window length T, processing delay d and poll phase φ.'
+    alt: Schematic ECG with an R–R window, brackets and dimension arrows on a time axis relative to the stamp.
+  - id: numeric-derivation-pilot
+    file: numeric-derivation-pilot.png
+    theme: delay and window fits
+    source: vitaldb-bench tools/numeric_derivation_plot.py
+    caption: In a 24-case pilot each monitor numeric is best explained by a short median, exponential or latest-breath window, recorded 2–9 s after its data. Held values repeat even when a large change is predicted.
+    alt: 'Three panels: delay dot and interquartile range per numeric, the best-fitting algorithms, and repeat fraction against predicted change.'

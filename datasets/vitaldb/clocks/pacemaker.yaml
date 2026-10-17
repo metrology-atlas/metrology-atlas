@@ -1,0 +1,14 @@
+id: pacemaker
+name: Pacemaker clock
+summary: The crystal of an implanted pacemaker. At a fixed pacing rate it beats at one constant interval that no
+  device in the recording chain can touch, which makes it an independent reference.
+type: oscillator
+nominal: Fixed pacing interval (about 1,204, 1,000 or 860 ms in VitalDB's paced recordings)
+description: 'Only fixed-rate (asynchronous) pacing works as a clock. A demand pacemaker resets its interval at
+  every
+
+  intrinsic or fusion beat, so its phase cannot be carried across such a beat.
+
+  '
+utc_plan: 'Not needed for synchronisation: the pacemaker is a reference, used to test the SNUADC timeline. Its own
+  absolute rate is unknown.'

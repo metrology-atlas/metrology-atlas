@@ -1,0 +1,30 @@
+id: wbc
+name: White blood cell count
+summary: White blood cell count (lab table).
+type: lab
+source_name: wbc
+group: Laboratory/Haematology
+source: lab_data.csv
+unit: ×1000/mcL
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 0.01 ×1000/mcL, nearest
+  step: 0.01
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#wbc
+tags:
+- generated
+- vitaldb-resolution
+description: 'Single resolution; last digit flat.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/wbc.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 43,941 records, median 8.2 ×1000/mcL; 439 outside the 0.5–99.5th percentiles
+    are not shown.'
+  alt: Histogram of the recorded values of wbc.

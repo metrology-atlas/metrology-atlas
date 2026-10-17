@@ -1,0 +1,11 @@
+id: bis-eeg-cardiac-artefact
+name: The BIS EEG carries an averaged cardiac artefact
+summary: >-
+  Averaged on the ECG's R peaks, the BIS EEG shows the heartbeat (median 4.3 µV), near-simultaneous with the R wave.
+  Single beats are too weak to match one by one.
+status: likely
+devices: [bis, snuadc]
+variables: [bis-eeg, snuadc-ecg-ii]
+studies: [bis-cardiac-artefact]
+supersedes: [bis-eeg-no-heartbeat]
+consequence: A second SNUADC–BIS timing reference for cases without bursts. Shown on 30 cases.

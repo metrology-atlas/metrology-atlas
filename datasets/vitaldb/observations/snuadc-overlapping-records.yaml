@@ -1,0 +1,16 @@
+id: snuadc-overlapping-records
+name: In 34 files the SNUADC records overlap throughout
+summary: >-
+  In 34 files the SNUADC records step back over their neighbours far more often than resets explain: in 20 of them
+  4–95% of all record junctions overlap, by up to about 100 ms. The reset-order rule matches there by coincidence.
+status: open
+devices: [snuadc, vital-recorder]
+studies: [reset-cluster-order]
+consequence: |
+  Read in file order, these files hold overlapping samples; reordered by the reset rule, they would be scrambled.
+  Their timing should not be trusted until the cause is known.
+handling: |
+  None yet. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py|reset-order rule]]
+  needs a guard that skips such tracks before the next full build. None is in the current builds or clock fits.
+code:
+  - vitaldb-bench/tools/snuadc_stamp_census.py

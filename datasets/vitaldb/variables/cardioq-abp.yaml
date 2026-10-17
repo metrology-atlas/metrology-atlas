@@ -1,0 +1,41 @@
+id: cardioq-abp
+name: CardioQ pressure and flow
+summary: Arterial pressure and aortic flow waveforms from the CardioQ oesophageal Doppler monitor.
+type: waveform
+source_name: CardioQ/ABP
+device: cardioq
+stamp_clock: recorder-pc
+sample_clock: cardioq-clock
+rate_hz: 180
+timing:
+- id: cardioq-sync
+  name: after beat matching
+  default: true
+  delay_s:
+  - 0.1
+  - 0.3
+  interval_s:
+  - 0.0056
+  - 0.0056
+  domain: reference
+  status: measured
+  evidence: per stretch; matched-beat MAD 0.24 s, R-R correlation 0.96 (24 cases)
+  corrected_delay_s:
+  - 0.4
+  - 4.4
+  correction: beat matching to SNUADC ART
+  corrects:
+  - cardioq-raw
+- id: cardioq-raw
+  name: raw stamps
+  delay_s:
+  - 0.4
+  - 4.4
+  interval_s:
+  - 0.0056
+  - 0.0056
+  domain: cardioq
+  status: measured
+  evidence: lag vs SNUADC ART p5-p95 0.4-4.4 s; re-anchors ~40 times per case
+tags:
+- stub

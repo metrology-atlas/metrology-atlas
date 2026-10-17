@@ -1,0 +1,21 @@
+id: delays-and-windows
+name: Delays and averaging windows
+summary: >-
+  Work out how long after the event a value is stamped, and what span of signal it summarises, by recomputing
+  monitor numbers from the waveforms they come from.
+order: 5
+description: |
+  **The idea.** A heart rate, a mean pressure or a depth-of-anaesthesia index describes a window of signal that
+  ended before its stamp. Recompute the number from the raw waveform with candidate algorithms and windows, and
+  find the window and the delay that best reproduce the stamped values.
+
+  **What it gives.** For each numeric: the window it averages, the delay from the window's end to its stamp, and
+  whether that delay is fixed within a case and between cases (and so whether it needs a per-case label).
+
+  **How.** A uniform model of time and value: each stamped value is the candidate statistic over a window ending
+  one delay before the stamp, plus noise; fit the delay per case by likelihood over a grid, with the availability
+  rule enforced (a value cannot precede its window). Step events (a sudden desaturation) give onset latencies.
+
+  **Pitfalls.** A longer window with a smaller delay can mimic a shorter one with a larger delay; the availability
+  rule removes the impossible half. Device settings (an averaging option) are not recorded and must be inferred.
+references: [goodwin2022timing]

@@ -1,0 +1,26 @@
+id: value-model-weight
+name: Rounding and heaping of weight
+summary: Recorded weight is a mixture of 3 rounding modes (whole_kg, scale_0.1, scale_0.05); the model gives the true value's
+  distribution for each record.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+variables:
+- weight
+model: vitaldb-resolution/vitaldb_resolution/data/models/weight.model.json
+data: 6,041 records of weight (clinical_data.csv)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/weight.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Every recorded value (blue lines) against what the fitted model predicts (orange dots): its rounding rules applied
+    to its true-value density. Heaps on round numbers are the rounding modes.'
+  alt: Spike histogram of recorded values with model predictions overlaid; spikes on round numbers.
+results: '[[figure:observed-vs-model]]'

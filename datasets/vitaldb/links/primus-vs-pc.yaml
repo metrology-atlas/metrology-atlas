@@ -1,0 +1,13 @@
+id: primus-vs-pc
+name: Primus against the recorder PC
+summary: >-
+  The Primus stamps are corrected by small steps about every two hours and re-anchored at recording gaps; their
+  drift is not yet well measured.
+clock: primus-clock
+against: recorder-pc
+rate: primus-drift-implied
+correction:
+  rule: Small steps of −64 to +80 ms about every 7,230 s, and re-anchoring at gaps of about 20 s.
+  period: primus-period
+  size: primus-step
+status: measured

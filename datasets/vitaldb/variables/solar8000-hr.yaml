@@ -1,0 +1,93 @@
+id: solar8000-hr
+name: Solar8000 heart rate
+summary: Heart rate from the Solar8000, in one of two delay groups per case.
+type: numeric
+source_name: Solar8000/HR
+device: solar8000
+stamp_clock: recorder-pc
+unit: /min
+timing:
+- id: hr-lab
+  name: after the per-case delay label
+  default: true
+  delay_s:
+  - 0.12
+  - 0.61
+  interval_s:
+  - 6.0
+  - 8.0
+  domain: solar8000
+  status: measured
+  evidence: numeric_delay label SE p10-p90 0.12-0.61 s (6,222 cases; 795 group-uncertain)
+  corrected_delay_s:
+  - 1.05
+  - 5.25
+  correction: per-case delay label (early or late group)
+  corrects:
+  - hr-early
+  - hr-late
+- id: hr-early
+  name: as stamped, early group
+  delay_s:
+  - 1.05
+  - 2.3
+  interval_s:
+  - 6.0
+  - 8.0
+  domain: solar8000
+  status: measured
+  evidence: delay p10-p90 1.05-2.3 s, 1,775 cases; best window 6-8 s
+- id: hr-late
+  name: as stamped, late group
+  delay_s:
+  - 3.6
+  - 5.25
+  interval_s:
+  - 6.0
+  - 8.0
+  domain: solar8000
+  status: measured
+  evidence: delay p10-p90 3.6-5.25 s, 3,652 cases; one extra 2 s cycle; follows the PC
+chain:
+- node: Heart rate algorithm
+  kind: window
+  effect: The Solar8000 averages heart rate over a window of about 6–8 s of ECG.
+  offset_s:
+  - 6.0
+  - 8.0
+  status: measured
+- node: Polled by the recorder
+  kind: transport
+  effect: The value reaches the recorder 1.05–2.3 s after its window ends in the early group of cases, or 3.6–5.25
+    s in the late group (one extra 2 s poll cycle). A per-case delay label fixes the offset to 0.12–0.61 s (standard
+    error, p10–p90).
+  offset_s:
+  - 1.05
+  - 5.25
+  residual_s:
+  - 0.12
+  - 0.61
+  status: measured
+- node: Stored stamp
+  clock: recorder-pc
+  kind: stamping
+  effect: Stamped by the recorder on arrival, on a 1 ms grid; the receipt latency is not measured.
+  offset_s:
+  - 0.001
+  - 0.02
+  status: estimated
+window:
+  name: Heart rate window
+  parameter: hr-window
+  description: 60 / median R–R over about 6 s, truncated to a whole beat per minute.
+delays:
+- name: Early group
+  parameter: hr-delay-early
+  description: From the end of the window to the stamp, in about a third of cases.
+- name: Late group
+  parameter: hr-delay-late
+  description: One 2 s poll later, in about two thirds of cases. The group belongs to the recording PC.
+description: The Solar8000 computes heart rate from its own ECG as 60 / median R–R over about 6 s, truncated, and
+  the recorder polls it every 2 s. The value is stamped on arrival, one or two polls after its window ends depending
+  on the recording PC ([[observation:hr-two-delay-groups]]). Per-case delay labels fix the offset to a few hundred
+  ms.

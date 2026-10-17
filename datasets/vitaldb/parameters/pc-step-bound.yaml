@@ -1,0 +1,8 @@
+id: pc-step-bound
+name: Largest recorder PC clock step
+quantity: The largest step of the recorder PC clock, seen as all devices' stamps jumping together.
+display: "no step of 0.5 s or more in 6,388 files (19,006 h)"
+status: measured
+study: recorder-pc-steps
+about: [recorder-pc-vs-utc, recorder-pc]
+date: 2026-10-17

@@ -1,0 +1,10 @@
+id: event-track-generated
+name: The EVENT track repeats the clinical table
+summary: >-
+  In 411 random cases the recorder EVENT track's four entries equal the clinical table's case start, operation start,
+  operation end and case end exactly: the release generated them from the table.
+status: established
+devices: [vital-recorder, clinical-records]
+variables: [emr-events, case-end]
+studies: [loop-closure]
+consequence: The EVENT track is not an independent record of when those events happened.

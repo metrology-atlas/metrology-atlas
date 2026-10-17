@@ -1,0 +1,26 @@
+id: value-model-height
+name: Rounding and heaping of height
+summary: Recorded height is a mixture of 5 rounding modes (tens, whole_cm, half_cm, round_up_from_x9, measured_0.1); the
+  model gives the true value's distribution for each record.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+variables:
+- height
+model: vitaldb-resolution/vitaldb_resolution/data/models/height.model.json
+data: 6,041 records of height (clinical_data.csv)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/height.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Every recorded value (blue lines) against what the fitted model predicts (orange dots): its rounding rules applied
+    to its true-value density. Heaps on round numbers are the rounding modes.'
+  alt: Spike histogram of recorded values with model predictions overlaid; spikes on round numbers.
+results: '[[figure:observed-vs-model]]'

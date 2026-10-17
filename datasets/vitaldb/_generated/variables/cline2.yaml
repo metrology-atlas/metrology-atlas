@@ -1,0 +1,20 @@
+id: cline2
+name: Site of central line (2)
+summary: Site of central line (2) (clinical table).
+type: clinical
+source_name: cline2
+group: Clinical record/Airway and lines
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/cline2.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 60 records in 10 categories.'
+  alt: Histogram of the recorded values of cline2.

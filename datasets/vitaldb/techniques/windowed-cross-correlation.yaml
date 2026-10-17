@@ -1,0 +1,4 @@
+id: windowed-cross-correlation
+name: Windowed cross-correlation
+summary: >-
+  Cross-correlate two signals' envelopes in sliding windows (for example 10 minutes, stepped by 5) to follow an offset that changes over a recording, keeping only windows whose peak is clear.

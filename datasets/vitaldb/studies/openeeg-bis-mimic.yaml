@@ -1,0 +1,32 @@
+id: openeeg-bis-mimic
+name: What a BIS-mimic project says about the index's smoothing
+summary: >-
+  The openeeg project reproduces the BIS index from the raw EEG and infers each case's smoothing setting: about 80% of
+  its cases come out at 15 s. Its alignment cannot serve as a timing reference.
+date: 2026-10-13
+status: current
+techniques: [prediction-test]
+methods: [source-review, delays-and-windows]
+devices: [bis]
+variables: [bis-index, bis-eeg]
+data: |
+  No VitalDB data were analysed here: the openeeg repository (commit bd476c5, 2 June 2026), its code and
+  documentation, were read. The figures quoted (about 80% of its cases at the 15 s smoothing setting) are the
+  project's own, from its VitalDB cases.
+background: |
+  The BIS index is the monitor's EEG features smoothed over a window the operator chooses, and VitalDB does not record
+  the setting.
+method: |
+  The project's code and documentation were read for how it infers the smoothing and how it aligns index and EEG.
+results: |
+  - **Smoothing setting:** inferred per case by smoothing its own unsmoothed prediction with each candidate and keeping
+    the closest match to the recorded index; about 80% of cases come out at 15 s. Modelled as an exponential
+    average, the index then trails the EEG by about (W − 1)/2 s: about 7 s at 15 s and 15 s at 30 s, plus processing.
+  - **Not a timing reference,** for three reasons: each 1 s feature row is paired with the index at the same second
+    while the EEG behind it covers 2–4 s later; the EEG is loaded onto a fixed 1/128 s grid that absorbs the BIS stamp
+    corrections; and the trained model's inputs include trailing 5–60 s means of its own score, so its output carries
+    an unknown lag.
+discussion: |
+  The atlas's own fit ([[study:bis-index-delay]]) uses no trained model and finds the 15 s setting in about half the
+  good fits. openeeg says nothing about device clocks, so the BIS clock link is unchanged.
+references: [openeeg]

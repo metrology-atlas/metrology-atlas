@@ -1,0 +1,15 @@
+id: numerics-not-front-stamped
+name: Monitor numerics describe the past, never the future
+summary: >-
+  Every monitor numeric describes a window of 3–30 s or more that ended 1–9 s before its stamp. None is stamped
+  before its data exist, so the stamps already respect the availability rule.
+status: established
+devices: [solar8000, primus, bis]
+variables: [solar8000-hr, solar8000-art-numerics, primus-numerics, bis-index, solar8000-spo2, solar8000-pleth-hr]
+studies: [numeric-derivation-pilot, numeric-delay-variability, bis-index-delay]
+consequence: |
+  Aligning a numeric with the waveform it came from means shifting it back by its delay and spreading it over its
+  window. Left at its stamp, it is safe for real-time models but late for physiology.
+handling: |
+  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] labels each numeric track with its typical delay and window (numeric_lag), and per-case labels
+  carry each case's own delay. Stored times are never moved.

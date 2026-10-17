@@ -1,0 +1,29 @@
+id: intraop-ppf
+name: Propofol bolus
+summary: Propofol bolus (clinical table).
+type: clinical
+source_name: intraop_ppf
+group: Clinical record/Drugs
+source: clinical_data.csv
+unit: mg
+value:
+  kind: 'model: fitted rounding model (value kind); posterior over the true value'
+  resolution: 'heaped: a mixture of rounding modes (see the value model)'
+  spread: vitaldb-resolution/spread.json#intraop_ppf
+  model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_ppf.model.json
+  status: measured
+  studies:
+  - value-model-intraop-ppf
+tags:
+- generated
+- vitaldb-resolution
+description: Single weight-based induction dose written as a preferred value. Zero in 3,719 of 6,043 GAs (TIVA is on the
+  pump tracks, not here).
+figures:
+- id: distribution
+  file: distributions/intraop-ppf.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 2,335 records, median 100 mg; 17 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of intraop_ppf.

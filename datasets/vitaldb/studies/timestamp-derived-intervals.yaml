@@ -1,0 +1,32 @@
+id: timestamp-derived-intervals
+name: Bias in charted intervals
+summary: |
+  Charted intervals are biased because each end is rounded with a different anchor, and their per-case uncertainty is large relative to short intervals.
+date: 2026-10-13
+status: current
+methods:
+- clinical-time
+- value-resolution
+background: |
+  - Anaesthesia end is recorded at the next mark (ceiling), op end at the previous one (floor), and both starts at the nearest mark.
+data: |
+  - Per-case posterior means from the four timestamp models in `clinical_data.csv`.
+method: |
+  - Each interval is the difference of two event posteriors, assumed independent given the device references.
+results: |
+  - Operation duration is charted about 2.5 min short.
+  - Anaesthesia duration is charted about 4.4 min long and emergence about 6.3 min long.
+  - Induction to incision is nearly unbiased (−0.5 min).
+  - The median posterior SD of an interval is 1.8–2.8 min, and the 90th percentile is 2.4–4.9 min. For a 15-min emergence, that is a large share of the value.
+discussion: |
+  - The API returns intervals as samples from the two event posteriors (`derived_samples`), not as charted differences.
+  - Cases with an excluded end return the status, not a distribution.
+limitations: |
+  - The two event posteriors are assumed independent given the device references.
+open_questions:
+  - title: "Heaping at 15 and 30 minutes in intervals"
+    kind: next step
+    summary: >-
+      Heaping at 15 and 30 minutes in the intervals is listed as a next check and not reported.
+tags:
+- from the resolution work

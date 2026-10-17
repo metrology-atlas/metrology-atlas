@@ -1,0 +1,5 @@
+id: phase-step-detection
+name: Phase-step detection
+summary: >-
+  Fit a regular train before and after a candidate break and test for a step in its phase, accepting only steps
+  without an intervening beat that could explain them.

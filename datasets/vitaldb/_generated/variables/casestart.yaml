@@ -1,0 +1,28 @@
+id: casestart
+name: Recording Start Time
+summary: Recording Start Time; Set to 0 for anonymization (clinical table).
+type: time
+source_name: casestart
+group: Clinical record/Times and durations
+source: clinical_data.csv
+unit: sec
+value:
+  kind: 'exact: exact count; point mass'
+  resolution: exact
+  step: 1
+  spread: vitaldb-resolution/spread.json#casestart
+tags:
+- generated
+- vitaldb-resolution
+description: Recording start; set to 0 for anonymisation.
+stamp_clock: recorder-pc
+coupling:
+  status: coupled
+  note: 'The value is itself a time: its value side and its time side are the same uncertainty.'
+figures:
+- id: distribution
+  file: distributions/casestart.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,388 records, median 0 sec; all shown.'
+  alt: Histogram of the recorded values of casestart.

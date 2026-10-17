@@ -1,0 +1,10 @@
+id: pacemaker-vs-snuadc
+name: Pacemaker against SNUADC
+summary: >-
+  At a fixed pacing rate the pacing interval, measured on the SNUADC sample count, agrees between stretches to
+  0.05–0.1 ms: the SNUADC sample stream is continuous apart from the resets and gaps.
+clock: pacemaker
+against: snuadc-sample
+correction:
+  rule: None; the pacemaker is never corrected. A phase step in its train marks a break in the SNUADC timeline.
+status: measured

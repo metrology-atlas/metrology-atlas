@@ -1,0 +1,6 @@
+id: vigilance
+name: Vigilance
+summary: 'Edwards Vigilance: continuous cardiac output.'
+type: monitor
+tags:
+- stub

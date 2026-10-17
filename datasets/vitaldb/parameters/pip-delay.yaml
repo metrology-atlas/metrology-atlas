@@ -1,0 +1,9 @@
+id: pip-delay
+name: Primus PIP delay
+quantity: Delay from the end of inspiration to the stamp of the Primus peak pressure.
+value: 4.6
+unit: s
+spread: {p10: 3.65, p90: 6.5}
+status: measured
+study: numeric-delay-variability
+about: [primus-numerics]

@@ -1,0 +1,22 @@
+id: pump-rates
+name: Infusion pump rates and volumes
+summary: Drug infusion rates and volumes from the pumps.
+type: numeric
+source_name: Orchestra/PPF20_RATE
+device: orchestra
+stamp_clock: recorder-pc
+timing:
+- id: pumps
+  name: as stamped
+  default: true
+  delay_s:
+  - 0.1
+  - 2.0
+  interval_s:
+  - 1.0
+  - 10.0
+  domain: pumps
+  status: estimated
+  evidence: 1 s records; propofol start -> BIS<60 132 s median, none negative (497 cases)
+tags:
+- stub

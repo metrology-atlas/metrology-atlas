@@ -1,0 +1,17 @@
+id: snuadc-step-vs-pc
+name: SNUADC (step mode) against the recorder PC
+summary: >-
+  In step mode the SNUADC stamps drift by tens of ppm and are pulled back by about half a second whenever the drift
+  reaches that size, about every two hours.
+clock: snuadc-sample
+against: recorder-pc
+modes: [step]
+rate: snuadc-step-rate
+correction:
+  rule: |
+    Triggered by drift, not by a timer: once the stamps are about 0.5 s ahead, the recorder pulls the track back.
+    The stamps show only −0.480 s of the true correction of about 0.498 s, because about 18 ms of signal is never
+    sampled ([[parameter:snuadc-reset-loss]]).
+  period: snuadc-step-period
+  size: snuadc-step-correction-size
+status: measured

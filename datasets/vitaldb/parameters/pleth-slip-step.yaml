@@ -1,0 +1,9 @@
+id: pleth-slip-step
+name: PPG slip size
+quantity: Step of the ECG→PPG delay at a frame slip.
+value: 32.3
+unit: ms
+spread: {q1: 30.4, q3: 34.8}
+status: measured
+study: ppg-sawtooth
+about: [pleth-content-vs-frames]

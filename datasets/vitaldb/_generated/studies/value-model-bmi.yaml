@@ -1,0 +1,15 @@
+id: value-model-bmi
+name: Body mass index, derived from its inputs
+summary: Body mass index computed from the posteriors of height, weight.
+date: 2026-10-14
+status: current
+methods:
+- value-resolution
+variables:
+- bmi
+model: vitaldb-resolution/vitaldb_resolution/data/models/bmi.model.json
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution

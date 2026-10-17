@@ -1,0 +1,26 @@
+id: dates-admission-discharge-los
+name: Admission, discharge and length of stay
+summary: |
+  Admission and discharge are dates at 1-day resolution, so length of stay is a derived triangular distribution, and discharge days show a weekly pattern rather than rounding.
+date: 2026-10-13
+status: current
+methods:
+- clinical-time
+- value-resolution
+data: |
+  - Admission and discharge dates for 6,388 cases. [[case:1563]] (1900 dates) is excluded.
+method: |
+  - Checked that discharge minus admission is a whole number of days, and looked at admission lead time and discharge day.
+results: |
+  - Discharge minus admission is a whole number of days in every case.
+  - Most patients were admitted 1 day (41%) or 2 days (38%) before surgery; 171 (2.7%) were admitted on the day of surgery.
+  - Median length of stay is 7 days (IQR 4–11). Twenty-six patients went home on the day of surgery.
+  - Discharges peak on postoperative day 1 (832) and again on day 7 (669, against 459 on day 6 and 377 on day 8).
+  - Thirteen stays longer than 115 days (maximum 223 days) are plausible and kept.
+discussion: |
+  - The day-7 peak probably reflects a weekly discharge routine. It is a real pattern in the dates, not rounding.
+  - No latent fit is needed. Given a recorded difference of n days, the true length of stay lies anywhere from n − 1 to n + 1 days, a triangular distribution peaked at n.
+limitations: |
+  - The time of day of admission is unknown within the date.
+tags:
+- from the resolution work

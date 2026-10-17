@@ -1,0 +1,9 @@
+id: eeg-ecg-offset
+name: EEG–ECG constant after the stamp model
+quantity: EEG minus ECG stamp for the same burst, left after the stamp model, per SNUADC mode.
+value: -0.803
+unit: s
+display: "−803 ms in step mode (117 cases); −690 ms in frequent-correction mode (29 cases)"
+status: measured
+study: snuadc-stamp-sawtooth
+about: [bis-vs-snuadc]

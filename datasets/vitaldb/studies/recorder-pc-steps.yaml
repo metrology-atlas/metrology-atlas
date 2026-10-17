@@ -1,0 +1,49 @@
+id: recorder-pc-steps
+name: Recorder PC clock steps and recording pauses
+summary: >-
+  A step of the recorder PC clock would move every device's stamps at once. Searching all 6,388 files for such
+  simultaneous jumps found none of 0.5 s or more; what moves everything together is recording pauses.
+date: 2026-10-17
+status: current
+methods: [stamp-reading]
+techniques: [coincident-jumps]
+clocks: [recorder-pc, utc, snuadc-sample, bis-clock]
+devices: [vital-recorder, solar8000, primus, snuadc, bis]
+data: |
+  All 6,388 files; 19,006 recording hours with both Solar8000 and Primus numerics.
+background: |
+  The link from the recorder PC to UTC is the only one in the timing graph that cannot be measured from the
+  signals, because the release shifts every date. But a step of the PC clock (a time synchronisation, a manual
+  change) would leave a trace: every record stamped after it moves by the same amount, whatever its device.
+  Numeric tracks such as the Solar8000 and Primus numerics have no device clock of their own, so they show such a
+  step most directly.
+method: |
+  For every file, the intervals between consecutive Solar8000 HR and Primus ETCO2 records were scanned for jumps
+  that appear in both at the same time, and the SNUADC and BIS waveform stamps were checked for a jump at the same
+  moment. A PC step shows in all of them; a device's own correction shows in one.
+results: |
+  - **No PC step of 0.5 s or more** in any file.
+  - **No backward steps.** No numeric track stamped by the PC (Solar8000, Primus, Orchestra, EV1000, Vigileo,
+    Vigilance, CardioQ) ever steps backwards. The only back-steps are in BIS numerics, in 9 files, which suggests
+    the BIS monitor stamps its own numerics.
+  - **Recording pauses explain the familiar gaps.** In 1,846 files (29%) there are 2,025 moments when every device
+    jumps forward together, by a median 19.6 s (p10–p90 15.7–29.8 s). Data are missing there, and the stamps
+    show it honestly.
+  - **Small simultaneous delays are not PC steps.** 25 delays of 0.5–0.9 s in 17 files hit both numerics with no
+    waveform jump, and are followed by an ordinary next SNUADC reset (−0.481 s) and ordinary BIS corrections. The
+    PC clock did not move; these are recorder stalls or shifts in polling.
+discussion: |
+  The PC–UTC link stays an assumption, but now a bounded one: whatever the time synchronisation does, it never
+  steps the clock by half a second or more. Steps smaller than that, and the gradual slewing Windows normally uses,
+  remain invisible.
+limitations: |
+  Detection is limited to steps of 0.5 s and above. A slow slew of the PC clock cannot be told apart from device
+  drift with these data.
+open_questions:
+  - title: "PC clock steps, not slews"
+    kind: assumption
+    summary: >-
+      The analysis assumes the recorder PC's clock corrects in steps. Slow slewing would look like device drift and
+      cannot be told apart from it with these data.
+code:
+  - vitaldb-bench/tools/pc_clock_steps.py

@@ -1,0 +1,32 @@
+id: value-model-intraop-crystalloid
+background: |
+  - Crystalloid volume (`intraop_crystalloid`) is a hand-entered intraoperative total.
+  - The first screen found 98% of values on multiples of 50 mL, which suggested bag sizes plus partial bags.
+  - In the end it is the simplest value variable so far.
+data: |
+  - 5,980 values; 408 missing (short cases, median 1.7 h against 3.1 h); no zeros; maximum 23,800 mL.
+  - Only 6 values are off the 10 mL grid, so the resolution is 10 mL.
+  - The fit uses 5,974 values on the 10 mL grid.
+method: |
+  - Log-spline latent with K = 6.
+  - Constant 100 and 50 mL propensities were compared with volume-dependent ones.
+  - 500 and 1,000 mL bag-size modes were added and tested.
+results: |
+  [[figure:observed-vs-model]]
+
+  - Values are written to the nearest 100 mL about half the time and to the nearest 50 mL the other half, the same at every volume.
+  - Volume-dependent propensities fit no better than constant ones (BIC 47,384 against 47,374).
+  - Bag-size modes do not help (BIC 47,416). There is no special heaping at bag sizes.
+  - A recorded multiple of 100 mL is uncertain by about ±50 mL; any other multiple of 50 by about ±25 mL.
+discussion: |
+  - Crystalloid volume is very strongly tied to case duration (Spearman 0.82).
+  - Conditioning the latent on duration would narrow posteriors considerably. This is a candidate extension for all volumes.
+limitations: |
+  - The latent does not yet use duration, so posteriors are wider than they need to be.
+open_questions:
+  - title: "Fit duration as a latent covariate"
+    kind: next step
+    summary: >-
+      Decided on 18 October: the volume models get anaesthesia duration as a latent covariate (the latent's
+      location rising with log duration), compared with the current fit by BIC. The refit is with the
+      vitaldb-resolution library.

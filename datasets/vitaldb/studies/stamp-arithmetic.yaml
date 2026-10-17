@@ -1,0 +1,60 @@
+id: stamp-arithmetic
+name: SNUADC stamp arithmetic
+summary: >-
+  Between corrections the SNUADC block stamps run −0.95 ppm against the sample count: each 0.2 s increment is about
+  0.19 µs short. This, not clock drift, is the "about −1 ppm" seen in frequent-correction mode.
+date: 2026-10-17
+status: current
+methods: [stamp-reading]
+clocks: [snuadc-sample, recorder-pc]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii]
+data: |
+  Six short-to-medium files (1.4–2.6 h), chosen at random; consistent with the frequent-correction rows and the
+  paced recordings in the rest of the atlas. Then a census of the record stamps of all 6,388 files (17 October;
+  [[code:vitaldb-bench/tools/snuadc_stamp_census.py]]): 12,583 stretches of at least 10 minutes between
+  corrections, 19,706 recording hours, in the 6,321 files with SNUADC whose records do not overlap throughout.
+method: |
+  For each record, the stamp minus the time given by the sample count, e = (stamp − start) × 500 − samples so far,
+  was fitted for slope within each segment between corrections.
+results: |
+  - **−0.954 ppm in every segment of the six files**, the same in step and frequent-correction mode.
+  - **Frequent-correction mode is not drifting.** Its "about −1 ppm" of stamps against the count is this
+    arithmetic; the real drift in that mode is under about 1 ppm.
+  - **The census holds it, with exceptions:** the median slope is −0.9535 ppm, and 89.5% of the recording hours
+    lie within 0.05 ppm of −0.954. But 747 files (12%) sit elsewhere, from about −0.90 to −0.55 ppm (median
+    −0.85), with no trend through the release.
+  - **Stamp-based loaders lose about 1.6 samples per hour** (32,020 in all): one about every 37 minutes, as
+    predicted.
+
+  [[figure:slopes]]
+  - **The paced recordings agree:** their pacing interval on stamp time and on the sample count differs by
+    0.8–1 ppm ([[study:paced-ecg]]).
+discussion: |
+  The likely cause is fixed-point arithmetic: a 0.2 s increment held at a resolution of 2⁻²⁰ s. That is unproven.
+  The vitaldb package places blocks by rounding their stamps up to a sample, so it overwrites one sample about every
+  35 minutes; placing samples by count, as the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] does, avoids it. Rates read from stamps carry the
+  −0.95 ppm, which is negligible beside their spread.
+limitations: |
+  What sets the slope in the 12% of files that differ is not known (a different recorder build, or a different
+  increment), and the cause of −0.954 itself (fixed-point arithmetic) is unproven.
+open_questions:
+  - title: "Why 12% of files run at a different slope"
+    kind: phenomenon
+    summary: >-
+      747 files sit between −0.90 and −0.55 ppm instead of −0.954, with no trend through the release. A different
+      recorder build or a different stamp increment are the obvious candidates; comparing these files' header
+      version, device list and correction mode with the rest would test it.
+  - title: "A fixed-point stamp behind −0.954 ppm"
+    kind: hypothesis
+    summary: >-
+      A 0.2 s increment held at a resolution of 2⁻²⁰ s fits, but is unproven; the recorder's source or one
+      controlled recording would settle it.
+references: []
+figures:
+  - id: slopes
+    theme: drift and resets
+    source: vitaldb-bench tools/snuadc_stamp_census.py
+    file: stamp-census-slopes.png
+    caption: Slope of record stamp minus sample count within each stretch between corrections, weighted by recording hours, for every file in the release.
+    alt: Histogram of stamp slopes in ppm; a sharp peak at −0.954 holds most recording hours, with a tail towards −0.70.

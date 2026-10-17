@@ -1,0 +1,40 @@
+id: bis-cardiac-artefact
+name: The cardiac artefact in the BIS EEG
+summary: >-
+  The BIS EEG carries a weak electrical trace of every heartbeat. Too weak for beat-by-beat matching, it shows clearly
+  when averaged on the ECG's R peaks, and gives a second SNUADC–BIS timing reference that agrees with the bursts to
+  about 16 ms.
+date: 2026-10-12
+status: current
+methods: [shared-events]
+techniques: [null-controls]
+clocks: [bis-clock, snuadc-sample]
+devices: [bis, snuadc]
+variables: [bis-eeg, snuadc-ecg-ii]
+data: 30 benchmark cases with BIS (a first attempt on 28), three 10-minute windows per channel each.
+background: |
+  Heartbeat interval matching aligns EEG with ECG when the EEG carries the heartbeat (Goodwin et al. 2023). A first
+  attempt found no usable heartbeat in the BIS EEG; it searched −0.3 to +0.5 s around each R peak on raw stamps,
+  while the same event is stamped about 0.8 s earlier in BIS.
+method: |
+  Both devices on stamp-model time; R-triggered averages of the EEG from −2 to +1 s, in three 10-minute windows per
+  channel per case; the peak lag compared with the burst-measured offset.
+results: |
+  - **A clear peak** (peak-to-noise ≥ 8) in 44 of 180 windows, in 13 of 30 cases; weaker peaks at the same lag in
+    many more. Median amplitude 4.3 µV.
+  - **Its lag matches the burst offset** to a median of −16 ms (p10–p90 −31 to +9 ms): electrical, near-simultaneous
+    with the R wave.
+  - **Single beats are too weak:** single-beat SNR 0.4 median, so beat-by-beat interval matching stays impractical.
+discussion: |
+  The averaged artefact is a second, independent SNUADC–BIS reference, including in cases with no bursts. It
+  supersedes the first attempt's conclusion that the BIS EEG carries no heartbeat.
+open_questions:
+  - title: "Why the artefact shows in only some cases"
+    kind: phenomenon
+    summary: >-
+      A clear averaged artefact appears in 13 of 30 cases. What decides whether it is visible (electrode placement,
+      signal quality, filtering) is not known.
+code:
+  - vitaldb-bench/tools/eeg_sync_pilot.py
+  - vitaldb-bench/tools/eeg_cardiac_recheck.py
+references: [goodwin2023]

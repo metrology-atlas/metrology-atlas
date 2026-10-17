@@ -1,0 +1,37 @@
+id: vitaldb-loader
+name: The vitaldb package's loading conventions
+summary: >-
+  The vitaldb Python package sets time zero from the tracks loaded, places waveform blocks by rounding their stamps
+  up to a sample, and lets overlapping blocks overwrite each other. Each choice moves or loses samples.
+date: 2026-10-17
+status: current
+techniques: [prediction-test]
+methods: [source-review, stamp-reading]
+clocks: [snuadc-sample, recorder-pc]
+devices: [vital-recorder, snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+data: |
+  [[software:vitaldb-python|vitaldb]] 1.7.2 (VitalFile and get_track_samples in utils.py); checked on 6 files and on the 482 arrhythmia
+  database cases; device start delays across all 6,388 files. Work of the R-peak timing session, consolidated here.
+method: |
+  The loader's code was read for how it sets time zero and places samples, and each behaviour reproduced on files:
+  subset against full loads, the stamp-minus-count error at each block, and the waveform rebuilt by sample count.
+results: |
+  - **Time zero follows the loaded tracks.** VitalFile(path, tracks) sets its start to the first record among those
+    tracks; with all tracks it is the file's first record (the EVENT track in every file). Device start delays after
+    the file's first record: SNUADC 1.56 s median (0.44–4.5 s; maximum 10,879 s), Primus 0.72 s, BIS 0.95 s.
+  - **Blocks are placed by rounding up.** Each wave record goes to sample index ceil((stamp − start) × rate). With
+    the stamps running −0.95 ppm against the count ([[study:stamp-arithmetic]]), each time the error crosses a whole
+    sample the next block is written one sample early and overwrites the last sample of the previous one: one real
+    sample lost about every 35 minutes, and everything after it 2 ms early on the array index. Rebuilt by count, the
+    2 ms phase steps disappear.
+  - **Overlaps overwrite.** At each SNUADC reset the overlapping blocks are written over each other, discarding about
+    0.48 s of signal besides the time jump; sorting by stamp instead scrambles the order
+    ([[study:reset-cluster-order]]).
+discussion: |
+  Clock rates measured on the package's array index read about +0.95 ppm high. Analyses that use the stamps directly
+  are unaffected. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] reads whole files, keeps every sample, places them by count and puts the reset
+  records in sampling order.
+code:
+  - vitaldb-python/vitaldb/utils.py
+references: [vitaldb-python]

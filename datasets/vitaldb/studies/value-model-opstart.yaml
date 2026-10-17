@@ -1,0 +1,30 @@
+id: value-model-opstart
+background: |
+  - Op start is a charted event time with a 1-minute chronon.
+  - Op start, op end and anaesthesia end share a 5-minute grid. Op start falls on a 5-minute clock mark in 92% of cases.
+data: |
+  - 6,387 op starts.
+  - One op start does not share the sub-minute offset of the other charted times in its case and is flagged `clock_offset_mismatch`.
+method: |
+  - The same approach as the anaesthesia times: the true op start is placed a log-spline offset after the recording start (K = 10).
+  - First cases get a clock-time prior, as for anaesthesia start.
+  - Nearest, floor and ceiling anchors were compared. 30- and 60-minute modes and effects of time of day and emergency status were tested.
+results: |
+  [[figure:observed-vs-model]]
+
+  - There is no 30- or 60-minute rounding, and no effect of time of day or emergency status.
+  - The anchor is nearest (floor is 14 BIC points worse, ceiling 101).
+  - First-case incisions cluster at 08:20–08:50; the clock-time prior is 1,120 BIC points better.
+  - Unlike anaesthesia start, there is no scheduled or nominal op start time.
+  - Op start is well centred: a rounded value is uncertain by ±2.5 min.
+discussion: |
+  - Through the package, the log-likelihood differs from the stored one by −10.6. The difference is not yet explained. The working explanation is that the fitter integrates the first-case clock prior on its own 0.1-min grid, about 0.007 per first-case record.
+limitations: |
+  - The package and stored log-likelihoods differ by 10.6 points, and the cause is not confirmed.
+open_questions:
+  - title: "The log-likelihood gap as grid resolution"
+    kind: hypothesis
+    summary: >-
+      Recomputed with the library, the op-start fit's log-likelihood is −18,073.75; the stored fit says −18,063.18.
+      A different latent grid resolution between fitting and evaluation would explain a gap of this size, but it has
+      not been tested.

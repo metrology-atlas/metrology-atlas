@@ -1,0 +1,8 @@
+id: primus
+name: Primus anaesthesia machine
+summary: 'Dräger Primus: airway pressure and CO2 waveforms at 62.5 Hz and ventilation numerics.'
+type: ventilator
+clocks:
+- primus-clock
+tags:
+- stub

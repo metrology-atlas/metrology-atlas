@@ -1,0 +1,27 @@
+id: value-model-intraop-crystalloid
+name: Rounding and heaping of intraoperative crystalloid
+summary: Recorded intraoperative crystalloid is a mixture of 3 rounding modes (100 mL, 50 mL, 10 mL (base)); the model gives
+  the true value's distribution for each record.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+variables:
+- intraop-crystalloid
+model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_crystalloid.model.json
+data: 5,974 records of intraop_crystalloid (VitalDB clinical_data.csv (intraop_crystalloid), positive values on the 10 mL
+  grid)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/intraop-crystalloid.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Every recorded value (blue lines) against what the fitted model predicts (orange dots): its rounding rules applied
+    to its true-value density. Heaps on round numbers are the rounding modes.'
+  alt: Spike histogram of recorded values with model predictions overlaid; spikes on round numbers.
+results: '[[figure:observed-vs-model]]'

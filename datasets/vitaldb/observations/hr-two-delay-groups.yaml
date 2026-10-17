@@ -1,0 +1,11 @@
+id: hr-two-delay-groups
+name: Solar8000 heart rate comes one poll early or late
+summary: >-
+  Heart rate reaches the recorder about 1.9 s or about 4.2 s after its window ends, one 2 s poll apart. The group
+  belongs to the recording PC and stays fixed through a case.
+status: established
+devices: [solar8000, vital-recorder]
+variables: [solar8000-hr]
+studies: [hr-delay-groups]
+consequence: A single HR delay is wrong by about 2 s in a third of cases.
+handling: The hr_delay_group label gives each case's group; the PC gives a prior for uncertain cases.

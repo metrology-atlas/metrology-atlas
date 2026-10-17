@@ -1,0 +1,61 @@
+id: loop-closure
+name: Closing loops in the timing graph
+summary: >-
+  Where two independent routes reach the same clock, the offsets around the loop must sum to zero. Three measured
+  loops close within their noise; the BIS loop closes up to a constant latency; the proposed EMR loop is not a loop
+  at all.
+date: 2026-10-13
+status: current
+methods: [shared-events]
+techniques: [null-controls]
+clocks: [snuadc-sample, bis-clock, primus-clock, cardioq-clock, recorder-pc, hospital-records]
+devices: [snuadc, bis, primus, cardioq, ev1000, vital-recorder, clinical-records]
+variables: [snuadc-art, cardioq-abp, ev1000-art-mbp, bis-eeg, primus-awp, emr-events]
+data: |
+  Four loops, each from data measured for another study:
+
+  - **Arterial pressure three ways:** the 15 cases with SNUADC, CardioQ and EV1000 arterial pressure; 14 had usable
+    30-minute EV1000 blocks (145 blocks).
+  - **BIS EEG:** the burst lags of 145 benchmark cases with BIS ([[study:shared-bursts]]) against both devices'
+    stamps.
+  - **Ventilation:** 57 large changes in the breath-matched Primus lag from [[study:ventilator-breath-matching]].
+  - **EMR clock and recorder clock:** the EMR times and the recorder EVENT track in all 6,388 cases.
+background: |
+  The links outward from UTC form a tree. Any further link between two nodes closes a loop, and a loop that does
+  not close means one of its links rests on a wrong assumption. Where two routes meet is where an assumption can be
+  tested rather than defended. With several loops, all links can be fitted together as a network adjustment, as in
+  survey levelling or clock ensembles.
+method: |
+  For each loop, the offset measured directly between two devices was compared with the sum of the offsets along
+  the other route:
+
+  - **Arterial pressure three ways:** EV1000 − SNUADC against (EV1000 − CardioQ) + (CardioQ − SNUADC), per
+    30-minute EV1000 block; EV1000 − CardioQ is measured without SNUADC.
+  - **BIS EEG:** the burst lag's ramps, steps and constant against both devices' own stamps.
+  - **Ventilation:** jumps in the breath-matched Primus lag against Primus stamp re-anchors; two physiological
+    arms (CVP; systolic pressure) against each other.
+  - **EMR clock and recorder clock:** the proposed offset from where entries cluster on 5-minute marks.
+results: |
+  | Loop | Result | Verdict |
+  |---|---|---|
+  | Arterial pressure three ways | 14 cases, 145 blocks: residual median +0.13 s (p10–p90 −0.97 to +1.18 s); within 1 s in 75%, 2 s in 96% | Closes, within the CardioQ's re-anchoring spread |
+  | BIS EEG | Drift within 25 ppm in 108 of 145 cases (r = 0.88); 79% of lag jumps on a stamp step (chance 12%); a constant −0.80 s (step mode) or −0.69 s (frequent mode) remains | Closes in drift and steps; the constant is a latency |
+  | Ventilation | 72% of 57 large lag changes fall on a Primus stamp jump; the physiological arms differ by 37–46 ppm | Partly closes; physiological arms too weak |
+  | EMR and recorder | Both arms are measured from the recorder's case start, so any offset cancels; the recorder EVENT track repeats the clinical table's times exactly | Degenerate: not a loop |
+discussion: |
+  The relative uncertainty between two signals depends only on the links between them and their nearest common
+  node; everything above that node is shared and cancels. The BIS constant belongs in the BIS link as a latency.
+  The EMR clock's offset cannot be separated from documentation lag without a time from outside the release.
+open_questions:
+  - title: "The BIS constant as processing latency"
+    kind: hypothesis
+    summary: >-
+      The loop closes in drift and steps but leaves −0.80 s (step mode) or −0.69 s (frequent mode). A processing
+      latency in the BIS is the working explanation; it fits the sign and size but has no direct evidence, and it
+      does not explain why the constant differs between modes.
+  - title: "The ventilation loop only partly closes"
+    kind: phenomenon
+    summary: >-
+      The ventilation loop only partly closes: its two physiological arms differ by 37–46 ppm.
+code:
+  - vitaldb-bench/tools/loop_closure_art.py

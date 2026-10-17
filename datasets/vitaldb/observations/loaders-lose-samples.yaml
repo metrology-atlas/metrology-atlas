@@ -1,0 +1,13 @@
+id: loaders-lose-samples
+name: Stamp-based loaders lose samples at overlaps
+summary: >-
+  Loaders that place samples by their stamps onto a grid overwrite samples where stamps overlap: about 0.48 s at
+  every SNUADC reset, and one sample about every 35 minutes from the stamp arithmetic.
+status: likely
+devices: [snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [stamp-arithmetic, reset-cluster-order, vitaldb-loader]
+consequence: |
+  The vitaldb package's to_numpy discards about half a second of signal at each reset, besides the time jump, and
+  sorting by stamp scrambles sample order at overlaps.
+handling: The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] keeps every sample and places them by count.

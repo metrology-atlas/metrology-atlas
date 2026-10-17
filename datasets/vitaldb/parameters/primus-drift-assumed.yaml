@@ -1,0 +1,8 @@
+id: primus-drift-assumed
+name: Primus drift used in the delay fits
+quantity: Drift of the Primus stamps set by hand in the numeric-delay fits and the planner.
+value: 115
+unit: ppm
+status: assumed
+about: [primus-vs-pc]
+notes: Contradicted by [[parameter:primus-drift-implied]]; under recheck.

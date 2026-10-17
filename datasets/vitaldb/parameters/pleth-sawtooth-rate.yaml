@@ -1,0 +1,8 @@
+id: pleth-sawtooth-rate
+name: PPG sawtooth rate
+quantity: Creep of the PPG content against the oximeter frames, fixed per setup.
+display: "18–52 ppm by setup"
+status: measured
+study: ppg-sawtooth
+about: [pleth-content-vs-frames, snuadc-pleth]
+headline: true

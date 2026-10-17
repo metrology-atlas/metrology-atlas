@@ -1,0 +1,144 @@
+id: vitaldb
+name: VitalDB metrology atlas
+summary: >-
+  Every recorded value in the VitalDB open dataset (6,388 surgical cases, PhysioNet release 1.0.0) as a
+  probability distribution over when it happened and what it was, with the studies that measured each part.
+description: |
+  A record in VitalDB is a pair: a recorded time and a recorded value. In the language of metrology, each record is
+  an indication of two **measurands**: when the thing it describes happened, and what its value was. Neither is
+  recorded exactly. The time comes from one of a dozen clocks that drift and are corrected in jumps, and often
+  describes a window that ended earlier; the value was rounded, sometimes heaped by hand, and measured by an
+  instrument with its own error.
+
+  For every variable, this atlas states the measurand, the **measurement model** that links it to the recorded
+  pair, and what is known about the measurand given a record, as a joint probability distribution over its true
+  time and true value (the multivariate case of the GUM, Supplement 2). Every part of the model carries its
+  evidence: the study it came from and how it was evaluated (measured from the data, or estimated and assumed).
+  With the distributions known, uncertainty can be propagated through any calculation on the data (the GUM,
+  Supplement 1). [Aim and terms](terms.md) states this aim in full and maps the atlas onto the international
+  vocabulary.
+
+  It is a metrology of recorded data: the measurements were made long ago, so each part of the model is
+  reconstructed from the records themselves.
+
+  **All clock rates are relative.** Each is measured against another clock that also drifts, and the page says
+  which. Every clock is linked, directly or through others, to the recorder PC ([[clock:recorder-pc]]); its link to
+  UTC cannot be observed in the release and
+  is assumed, so no time here is metrologically traceable to UTC: the chain is broken at its first link.
+overview: |
+  VitalDB records each operating room with one PC running Vital Recorder. Every device sends its data to that PC,
+  which stamps each record. The waveforms that matter most for timing come through SNUADC, a 500 Hz converter that
+  samples the patient monitor's analogue outputs (ECG, arterial pressure, plethysmogram, CVP); the BIS monitor,
+  the Primus anaesthesia machine and a handful of haemodynamic monitors send their own waveforms and numbers, each
+  on its own clock. The patient monitor's numbers (heart rate, pressures, SpO2) arrive as single values that
+  describe a window of signal which ended seconds before their stamp.
+
+  So a time in VitalDB can be off in two ways: the clock that made it drifts and is corrected in jumps, and the value
+  it is attached to describes an earlier interval. The chart below places every kind of time stamp on both axes.
+reference_clock: snuadc-sample
+reference: |
+  The working reference is **SNUADC stamp-model time**: the SNUADC sample clock, placed on the recorder PC's
+  timeline by the stamp model (drift and corrections fitted, the signal lost at each correction added back). Every
+  delay in the planner is measured against it. Its own error against the PC is a few milliseconds, and the PC's
+  error against UTC is assumed.
+figures:
+  - id: system-overview
+    file: system-overview-2026-10-12.png
+    caption: |
+      The devices and the measured timing links between them, as of 12 October 2026. A diagram generated from
+      the atlas itself will replace it; some links have been measured more precisely since (see
+      [[link:snuadc-step-vs-pc]] and the clock pages).
+    alt: >-
+      Boxes for SNUADC, BIS, the Primus ventilator and the Solar8000 monitor, joined by lines coloured by
+      confidence, each line labelled with the measured drift, correction period, offset and detection method.
+    placeholder: true
+utc_step:
+  node: Recorder PC clock
+  clock: recorder-pc
+  kind: sync
+  effect: >-
+    Windows time synchronisation to the hospital's time server every 8–24 h (assumed), drifting a few ppm in
+    between. Not observable in the release: dates are shifted to 2100. No step of 0.5 s or more was found.
+  offset_s: [0.003, 0.9]
+  status: assumed
+  link: recorder-pc-vs-utc
+  parameter: pc-utc-offset
+domains:
+  - id: reference
+    name: SNUADC stamp-model time (the working reference)
+    clock: snuadc-sample
+    drift_ppm: 0
+    drift_status: measured
+    note: Signals synchronised to the reference share it, so drift cancels between them.
+  - id: snuadc-raw
+    name: SNUADC raw record stamps
+    clock: snuadc-sample
+    note: A sawtooth of drift and half-second corrections, not a steady drift.
+  - id: bis
+    name: BIS clock
+    clock: bis-clock
+    drift_ppm: 23
+    drift_status: measured
+    note: Against the recorder PC; corrected on a fixed 8,192 s timer.
+  - id: primus
+    name: Primus clock
+    clock: primus-clock
+    drift_ppm: 115
+    drift_status: assumed
+    note: The 115 ppm is a set value; the Primus's own corrections suggest 1-11 ppm. Under recheck.
+  - id: solar8000
+    name: Solar8000 numerics
+    clock: solar8000-clock
+  - id: cardioq
+    name: CardioQ clock
+    clock: cardioq-clock
+  - id: ev1000
+    name: EV1000
+  - id: vigileo
+    name: Vigileo
+  - id: vigilance
+    name: Vigilance
+  - id: invos-fms
+    name: Invos and FMS
+  - id: pumps
+    name: Infusion pumps
+  - id: records
+    name: Clinical and lab records
+    clock: hospital-records
+references: [lee2022vitaldb, lee2022vitaldb-physionet, pollard2026physionet]
+reference_groups: [Metrology, Data and recording, Timing and synchronisation, Coarse data and heaping, Anthropometry,
+                   Pulse arrival time, The authors' earlier work, Software]
+figure_themes: [drift and resets, correction intervals, delay and window fits, distributions of measured parameters,
+                agreement and residuals, heaping, distributions of recorded values, example traces, schematics]
+variable_groups: [Waveforms, Numerics, Events, Times and durations, Patient, Operation and anaesthesia,
+                  Preoperative history, Airway and lines, Fluids and blood, Drugs, Outcome, Preoperative labs,
+                  Blood gas, Electrolytes and glucose, Haematology, Coagulation, Chemistry, Result times]
+pages:
+  - id: contributing
+    title: Contributing
+    file: contributing.md
+sources:
+  - software: vitaldb-resolution
+    folder: _sources/vitaldb-resolution
+    commit: e2376f45001924c408af6592d5c55f8eb64735ab
+    date: 2026-10-14
+    note: Registry and fitted value models. Refreshed by _import/resolution.py; never edited here.
+site:
+  title: VitalDB metrology atlas
+  copyright: "© 2026 Andrew J. Goodwin, University of Sydney · MIT licence (text and code)"
+records:
+  name: case
+  label: case {id}
+  max: 6388
+  policy: |
+    VitalDB is an open dataset (CC BY 4.0), and its case ids are public. The atlas names a case only where a study
+    discusses a specific example: an edge case, a recording that shows a mechanism clearly, or a comparison between
+    two cases. Population and group results, and figures that show a general principle, carry no case ids. Every
+    named case is listed here with the pages that discuss it, so each example can be opened and checked.
+forbidden_patterns:
+  - pattern: '(?i)\bcase\s*(?:id\s*)?#?\s*\d{1,4}\b'
+    why: name a case only deliberately, as [[case:1234]], so it is listed on the cases page
+  - pattern: '\bvitaldb-\d{4}\b'
+    why: name a case only deliberately, as [[case:1234]]
+  - pattern: '\b\d{4}\.vital\b'
+    why: name a case only deliberately, as [[case:1234]]

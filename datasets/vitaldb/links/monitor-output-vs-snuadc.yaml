@@ -1,0 +1,7 @@
+id: monitor-output-vs-snuadc
+name: Monitor output clock against SNUADC
+summary: The 240 Hz line in the monitor's analogue outputs runs −25 to −29 ppm against the SNUADC sample clock (6 files).
+clock: monitor-output-clock
+against: snuadc-sample
+rate: monitor-240hz-rate
+status: estimated

@@ -1,0 +1,12 @@
+id: solar8000-clock
+name: Solar8000 clock
+summary: The Solar8000 monitor's internal timing of its numeric windows.
+type: unknown
+nominal: Monitor numerics windows
+description: The Solar8000 monitor's internal timing of its numeric windows. The values are stamped by the recorder
+  on arrival, so only their delay is seen.
+tags:
+- stub
+utc_plan: 'No device clock is visible: the numbers are stamped by the PC on arrival. Their per-case delays behind
+  SNUADC are fixed within a case, which bounds the monitor''s drift. To strengthen: the monitor output clock (240
+  Hz line) measures the monitor against SNUADC directly.'

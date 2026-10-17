@@ -1,0 +1,5 @@
+id: sawtooth-fit
+name: Sawtooth fit
+summary: >-
+  Model a clock as a straight drift that is pulled back at correction events, and fit the rate from whole teeth
+  (the correction divided by the time since the previous one).

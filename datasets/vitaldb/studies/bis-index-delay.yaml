@@ -1,0 +1,34 @@
+id: bis-index-delay
+name: How the BIS index trails its EEG
+summary: >-
+  Modelling the BIS index as a lagged mix of EEG features shows a trailing average starting about 3 s after its EEG
+  window ends: about 16 s long in half the cases (the 15 s smoothing setting) and 32–61 s in most others. Half the
+  response weight is older than 30 s.
+date: 2026-10-13
+status: current
+methods: [delays-and-windows]
+devices: [bis]
+variables: [bis-index, bis-eeg]
+data: All 5,853 cases with a BIS module; 5,520 fitted, 3,297 good fits (median R² 0.81).
+method: |
+  EEG features at 1 Hz from BIS EEG1, each stamped at the end of its 2 s window (five band powers, total power,
+  SEF95, beta ratio, suppression). The index is a weighted sum of the features passed through a lag kernel over −10
+  to 120 s, fitted per case where the signal quality index is at least 50; the kernel is split into a trailing
+  boxcar (the fast part), a slow exponential tail and a floor. Index and EEG share the monitor's own stamps, so no
+  clock correction is needed. Checked on synthetic index values (15, 30 and 45 s windows come back as 15, 28 and 46 s)
+  and on the suppression ratio (a known ~63 s window, read as 77 s).
+results: |
+  - **Delay 3 s** from the EEG window's end (p10–p90 3–4 s), the same in every group.
+  - **15 s setting:** 1,578 of 3,297 good fits (48%) have a fast part of 13–17 s: about 16 s of EEG ending 3 s before
+    the stamp. 1,304 (40%) are longer, 32–61 s (median 50 s; less certain). Five PCs never show the 15 s window.
+  - **Most of the response is slow:** the fast part holds 16% of the kernel weight; half the weight is older than
+    30 s, 90% older than 97 s.
+discussion: |
+  Treat the index as an average of the EEG over roughly 15–40 s ending about 3 s before its stamp, with slow weight
+  beyond. It suits slow questions (depth of anaesthesia over minutes); anything faster needs features computed from
+  the EEG itself, which after synchronisation sits about 30 ms from SNUADC time. The 132 s propofol-to-BIS latency
+  ([[study:drug-effect-latency]]) includes this delay. The bis_smoothing label gives each case's group.
+code:
+  - vitaldb-bench/tools/bis_index_delay.py
+  - vitaldb-bench/tools/bis_smoothing_labels.py
+references: [pilge2006timedelay, rampil1998primer]

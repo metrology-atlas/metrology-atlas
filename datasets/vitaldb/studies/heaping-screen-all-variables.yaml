@@ -1,0 +1,46 @@
+id: heaping-screen-all-variables
+name: Heaping screen of all variables
+summary: |
+  Every hand-entered clinical value and every lab analyte was screened for mixed resolution and heaping, to decide which need a rounding model and which need only a registry entry.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - Every clinical-table field labelled "EMR" was entered by people. Only the vital-sign tracks were recorded automatically.
+  - Variables were ordered by how likely they are to be hand-entered and heaped.
+data: |
+  - `clinical_data.csv` (6,388 cases) and `lab_data.csv` (34 analytes, 928,448 results), plus the pre-operative copies (`preop_*`).
+method: |
+  - Clinical values: share of values on each anchor family against the flat expectation, plus an MWI-style index with a binomial threshold.
+  - Lab analytes: finest resolution (the finest number of decimal places held by at least 1% of values) and the coarser share. Because results are stored without trailing zeros, about 10% of values should look one step coarser at a single resolution.
+  - Whole-number analytes: preference at multiples of 10 and 5, per analyser, with expected counts from a local quadratic fit to the neighbouring values (skipping other multiples of 5). Ratio = observed ÷ expected; z is the Poisson z-score.
+results: |
+  - Heaped clinical values: urine output (91% end in 0), blood loss (85% multiples of 50), crystalloid (98% multiples of 50), colloid, height (21% whole centimetres, 10% expected) and weight.
+  - Age is not heaped: 19.2% end in 0 or 5 (20% expected), and last digits are flat.
+  - Red-cell and plasma units, ICU days and length of stay show no heaping.
+  - Lab analytes with decimals sit near the 10% coarser share. Exceptions: haematocrit (32.4%, two analysers), total bilirubin (6.5%), lactate (12.5%) and bicarbonate (7.9%).
+  - No whole-number analyte shows a preference for multiples of 5 or 10 once the shape of the distribution is allowed for.
+  - Sodium and SaO2 only look heaped, because 140, 135 and 95 sit at a peak or on a steep slope. Simulating a smooth peaked distribution gives deviations of the same size at the mode.
+discussion: |
+  - Apart from computed values, every lab analyte is single resolution per source and needs a registry entry, not a rounding model.
+  - Pre-operative copies behave like the lab data: platelets, glucose, AST, ALT and BUN show no heaping; pre-op PT % and sodium show the same artefacts. Pre-op PaO2 is the exception.
+limitations: |
+  - ESR, ammonia and creatinine clearance have too few results to judge (537–1,415).
+open_questions:
+  - title: "Bilirubin's low range"
+    kind: next step
+    summary: >-
+      Total bilirubin's coarser share is below 10%; the low-value range still needs checking.
+  - title: "Lactate by instrument or era"
+    kind: next step
+    summary: >-
+      Lactate shows a slight excess; it should be checked by instrument or era.
+  - title: "Analyte p as phosphorus"
+    kind: hypothesis
+    summary: >-
+      The analyte coded `p` (16,440 results) is missing from `lab_parameters.csv`. Its median of 3.2 (IQR 2.7–3.8,
+      p5–p95 1.9–5.0) fits phosphorus in mg/dL, the only common analyte with that range, but only the VitalDB team
+      can confirm it.
+tags:
+- from the resolution work

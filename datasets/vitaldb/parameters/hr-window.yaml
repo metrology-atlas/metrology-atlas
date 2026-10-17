@@ -1,0 +1,7 @@
+id: hr-window
+name: Solar8000 HR window
+quantity: Span of ECG the Solar8000 heart rate summarises (60 / median R–R, truncated).
+display: "about 6 s (best 6–8 s in both delay groups)"
+status: measured
+study: numeric-derivation-pilot
+about: [solar8000-hr]

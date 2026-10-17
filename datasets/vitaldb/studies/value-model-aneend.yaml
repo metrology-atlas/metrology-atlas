@@ -1,0 +1,38 @@
+id: value-model-aneend
+background: |
+  - Anaesthesia end is a charted event time with a 1-minute chronon.
+  - It is almost entirely rounded: 95% fall on a 5-minute clock mark, with clear 10-minute preference.
+data: |
+  - Anaesthesia ends from `clinical_data.csv`, modelled against the recording end.
+  - Excluded: the anaesthesia ends derived from an imputed op end (stored with floating-point noise), the 1900 placeholder in [[case:4476]], and two values outside the model range, [[case:3980]] (+720 min, probably a 12-hour clock error) and [[case:4959]] (+1,441 min, probably a date error).
+  - 2,037 anaesthesia ends (32%) fall after the end of recording. This is plausible, since monitors come off before handover, but these cannot be checked against the signals.
+method: |
+  - Anaesthesia end = recording end + G, with G a log-spline density (K = 8).
+  - Nearest, floor and ceiling anchors were compared by BIC.
+  - Modes at 5, 10, 30 minutes and the clock minute were fitted. Hour of day, emergency status and department were tested as covariates.
+results: |
+  [[figure:observed-vs-model]]
+
+  - Minutes :00, :10, :20, :30, :40 and :50 have 706–872 cases each, against 192–271 at the 5s. :00 and :30 are slightly higher (872 each).
+  - Rounded ends are written up to the next mark: ceiling beats nearest by 168 BIC points and floor by 782. An end charted as 11:30 means "finished by 11:30".
+  - Hour, emergency status and department made no difference.
+  - On average the true end is about 4 min before the charted end, so anaesthesia durations computed from charted times run long by a few minutes.
+discussion: |
+  - Ceiling rounding for anaesthesia end and floor rounding for op end together inflate charted emergence by about 6–7 min.
+  - Correction: an earlier fit did not exclude the derived ends, because their noise (about 10⁻⁶ s) slipped under the test threshold. The model was refitted without them and with a wider offset range; the conclusions are unchanged.
+  - Through the package, the log-likelihood differs from the stored one by +1,381.5. The two out-of-range records were left in the fit at probability 10⁻³⁰⁰ (−690.8 each). They are constants, so the parameters are unaffected.
+limitations: |
+  - The stored fit block (n = 6,256, log-likelihood −13,065.92) is stale: it was fitted with the two out-of-range records in. The package recomputes −11,684.41 on the 6,254 usable records. A refit, or at least a corrected fit block, is pending.
+  - Ends charted after the recording stops cannot be validated against the signals.
+open_questions:
+  - title: "Two out-of-range end times as 12-hour or date errors"
+    kind: hypothesis
+    summary: >-
+      Two anaesthesia-end records lie at 720 and 1,441 minutes, outside the modelled range. A 12-hour clock slip and
+      a one-day date error are the obvious explanations; neither is confirmed.
+  - title: "Refit without the two out-of-range records"
+    kind: next step
+    summary: >-
+      The stored fit (n = 6,256, log-likelihood −13,065.92) included the two out-of-range records and no longer
+      matches the library, which recomputes −11,684.41 on the 6,254 usable records. The fit needs rerunning without
+      them.

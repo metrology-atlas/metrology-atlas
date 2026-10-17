@@ -1,0 +1,27 @@
+id: value-model-intraop-ppf
+name: Rounding and heaping of propofol bolus
+summary: Recorded propofol bolus is a mixture of 3 rounding modes (preferred values, 50 mg, 10 mg (base)); the model gives
+  the true value's distribution for each record.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+variables:
+- intraop-ppf
+model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_ppf.model.json
+data: 2,328 records of intraop_ppf (VitalDB clinical_data.csv (intraop_ppf), non-zero values on the 10 mg grid with weight,
+  age and sex)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/intraop-ppf.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Every recorded value (blue lines) against what the fitted model predicts (orange dots): its rounding rules applied
+    to its true-value density. Heaps on round numbers are the rounding modes.'
+  alt: Spike histogram of recorded values with model predictions overlaid; spikes on round numbers.
+results: '[[figure:observed-vs-model]]'

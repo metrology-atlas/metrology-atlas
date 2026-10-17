@@ -1,0 +1,10 @@
+id: bis-rate
+name: BIS drift against the recorder PC
+quantity: Drift of the BIS EEG stamps against the recorder PC, per case, from whole teeth.
+value: 23
+unit: ppm
+spread: {p10: 17, p90: 47}
+status: measured
+study: snuadc-stamp-sawtooth
+about: [bis-vs-pc]
+headline: true

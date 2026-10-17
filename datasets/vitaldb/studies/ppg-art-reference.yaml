@@ -1,0 +1,28 @@
+id: ppg-art-reference
+name: Arterial pressure as a check on the PPG correction
+summary: >-
+  Arterial pressure is sampled by the same converter but has no frame and no sawtooth, so every PPG slip leaves
+  ECG→ABP unchanged. Against it, detected slips are 97–100% real and tier A leaves about 2 ms of drift mid-tooth.
+date: 2026-10-11
+status: current
+methods: [signal-borne-clocks, shared-events]
+techniques: [beat-matching, null-controls]
+clocks: [oximeter-frame-clock, snuadc-sample]
+devices: [snuadc, solar8000]
+variables: [snuadc-pleth, snuadc-art, snuadc-ecg-ii]
+data: 201 cases with an arterial line; an injected-sawtooth benchmark on 28 of them (84 runs).
+method: |
+  At every ECG→PPG slip, the step in ECG→ABP and in ABP→PPG was measured. A real slip is a one-frame step in ABP→PPG
+  with ECG→ABP unchanged; a tooth's creep shows as a slope in ABP→PPG that the correction should flatten.
+results: |
+  - **ART is clean:** raw ART peaks do not lock to the 33.3 ms frame (resultant 0.02, the same as the control).
+    Its median R-to-upstroke delay of 212 ms is physiological, so any arterial path delay is small.
+  - **At 351 ECG→PPG slips,** ECG→ABP steps by a median 0.4 ms and ABP→PPG by 32.6 ms. In 3% ECG→ABP also jumps by
+    more than 15 ms: physiological changes that had passed as slips.
+  - **Detected slips are real** in 97–100% of cases; slips inferred from ECG→PPG alone are real in only 62%.
+  - **Tier A leaves about 2 ms of drift mid-tooth** (an upper bound that includes physiology).
+discussion: |
+  Used in [[software:physiosync]] as an optional reference, arterial pressure raises confidence and rejects physiological jumps,
+  but adds little coverage.
+code:
+  - vitaldb-bench/tools/art_check.py

@@ -1,0 +1,20 @@
+id: aline2
+name: Site of arterial line (2)
+summary: Site of arterial line (2) (clinical table).
+type: clinical
+source_name: aline2
+group: Clinical record/Airway and lines
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/aline2.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 105 records in 4 categories.'
+  alt: Histogram of the recorded values of aline2.

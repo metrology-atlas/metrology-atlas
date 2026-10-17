@@ -1,0 +1,34 @@
+id: spo2-latency
+name: SpO2 and pulse rate latency from step events
+summary: >-
+  SpO2 cannot be recomputed from one plethysmogram, so its timing comes from events that change the PLETH abruptly.
+  SpO2 lags the recorded PLETH by about 4 s and then smooths over roughly 10–20 s.
+date: 2026-10-12
+status: current
+methods: [delays-and-windows]
+techniques: [null-controls]
+devices: [solar8000]
+variables: [solar8000-spo2, solar8000-pleth-hr, snuadc-pleth]
+data: 231 cases. Times are relative to the recorded PLETH, itself about 0.4 s behind the finger.
+results: |
+  | Event | Events | Result |
+  |---|---|---|
+  | Probe off (flat PLETH) | 139 | SpO2 blanks 0.6 s after pulse loss (IQR −0.4 to 1.9); first value 5.5 s after return |
+  | Low perfusion | 189 | SpO2 mostly freezes rather than blanking (about 55–70% of 5–20 s episodes) |
+  | Electrocautery | 3,132 | No effect: 2% reach the PLETH; SpO2 moves in 7% vs 5% at random |
+  | PLETH-only artefacts (motion) | 296 | SpO2 moves ≥ 2% after 34%; dip starts +4 s, deepest +8 s, recovers by ~25 s |
+  | NIBP cuff inflation | 991 | Not usable: only 4 occluded the oximeter arm |
+
+  PLETH_HR blanks and resumes at the same moments as SpO2: one module.
+discussion: |
+  These events time the oximeter's processing, not a true desaturation. The SpO2 window (10–20 s) is an estimate,
+  not a measurement.
+code:
+  - vitaldb-bench/tools/spo2_event_pilot.py
+figures:
+  - id: spo2-event-pilot
+    file: spo2-event-pilot.png
+    theme: delay and window fits
+    source: vitaldb-bench tools/spo2_event_plot.py
+    caption: SpO2 is blanked or frozen when the pulse is lost and returns about 5.5 s after the pulse comes back; PLETH artefacts move SpO2 and PLETH_HR within seconds.
+    alt: Grouped bars of blanked or frozen fractions, box plots of timings, and two event-averaged response curves.

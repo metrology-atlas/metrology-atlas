@@ -1,0 +1,24 @@
+id: shared-events
+name: One event, two clocks
+summary: >-
+  Find an event that two independently clocked signals both record, and read the offset between their clocks from
+  where each puts it.
+order: 2
+techniques: [windowed-cross-correlation, beat-matching, null-controls]
+description: |
+  **The idea.** Stamps say how a device drifts against the recorder, not where its time sits against another
+  device. For that, both devices must see the same event: an electrical burst reaching ECG and EEG electrodes at
+  once, a breath moving airway pressure and venous pressure, a heartbeat in two monitors' pressure traces, a drug's
+  effect following its infusion.
+
+  **What it gives.** The offset between two devices' stamps, followed through a recording: its constant part (a
+  latency), its ramps (the difference of the two drifts) and its steps (corrections). Where a third route exists,
+  the offsets must close around the loop, which tests every assumption on the way.
+
+  **How.** Turn each signal into something the event dominates (a band-power envelope, breath onsets, beat times);
+  cross-correlate in sliding windows, or match events one to one with a delay window around the expected level;
+  keep only windows with a clear, unique peak; repeat everything at random times as a control.
+
+  **Pitfalls.** Regular events (ventilation, steady heart rhythm) match one cycle away almost as well as at the right
+  lag. Physiology adds its own delay: a breath reaches the veins later than the airway, so the offset mixes clock
+  and body. Soft links such as drug onset only bound an offset, they do not measure it.

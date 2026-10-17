@@ -1,0 +1,9 @@
+id: oximeter-frames-vs-snuadc
+name: Oximeter frames against SNUADC
+summary: >-
+  The oximeter's 33.3 ms frame period is fixed per setup against the SNUADC sample clock, +24 to +84 ppm, and keeps
+  its phase through the sawtooth slips.
+clock: oximeter-frame-clock
+against: snuadc-sample
+rate: pleth-frame-clock-rate
+status: measured

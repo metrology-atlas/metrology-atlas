@@ -1,0 +1,16 @@
+id: oximeter-frame-clock
+name: Pulse oximeter frame clock
+summary: The oximeter module plays the plethysmogram out in 33.3 ms (30 Hz) frames on its own clock, fixed per recording
+  setup at +24 to +84 ppm against the SNUADC sample clock.
+type: oscillator
+nominal: 30 Hz output frames
+description: 'Two rates live inside the oximeter. The frame clock sets when the output changes; the PPG content
+  runs at a
+
+  slightly different rate against those frames, so a frame of lag builds up and one frame is repeated: the
+
+  sawtooth ([[link:pleth-content-vs-frames]]). Raw-sample PPG fiducials lock to the frame grid and reveal it.
+
+  '
+utc_plan: Measured against SNUADC two ways (fiducial frame locking, and the 30 Hz lines), then through SNUADC to
+  the PC. The PPG content's own drift against the frames (the sawtooth) is corrected tooth by tooth.

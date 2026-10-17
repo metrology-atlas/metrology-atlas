@@ -1,0 +1,28 @@
+id: lab-dt
+name: Lab timestamp (seconds from casestart)
+summary: Lab timestamp (seconds from casestart) (lab table).
+type: time
+source_name: lab_dt
+group: Laboratory/Result times
+source: lab_data.csv
+unit: sec
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 1 sec, floor
+  step: 1
+  anchor: floor
+  spread: vitaldb-resolution/spread.json#lab_dt
+tags:
+- generated
+- vitaldb-resolution
+description: 'Machine-generated per-specimen time, not the result time: central-lab panels are logged about 10 min or more
+  after the draw (specimen at the lab); blood gases 3-12 min after it (point-of-care entry or lab logging). The result is
+  known only after a turnaround the release does not record, so a lab value must not be used at this time (the availability
+  rule).
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+coupling:
+  status: coupled
+  note: 'The value is itself a time: its value side and its time side are the same uncertainty.'

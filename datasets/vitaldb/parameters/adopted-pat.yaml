@@ -1,0 +1,9 @@
+id: adopted-pat
+name: Adopted mean pulse arrival time
+quantity: R peak to finger PPG foot in anaesthetised adults, used to remove the PPG hardware delay.
+value: 270
+unit: ms
+display: "270 ms (plausible range 250–290 ms)"
+status: assumed
+study: ppg-offset-reference
+about: [snuadc-pleth]

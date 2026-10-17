@@ -1,0 +1,31 @@
+id: timestamp-clock-reconstruction
+name: Charted-time clock reconstruction
+summary: |
+  The absolute clock time of every event can be recovered from the admission date, which makes minute-of-hour distributions possible despite de-identification.
+date: 2026-10-13
+status: current
+methods:
+- clinical-time
+- value-resolution
+background: |
+  - All times are in seconds relative to case start, the recording start set to 0 for de-identification. Absolute clock times are removed.
+  - Admission is stored as a date, so its value is the time from midnight to recording start. That gives the clock time of recording start, and from it the clock time of every event.
+data: |
+  - `clinical_data.csv`: 6,375 cases with valid admission dates.
+method: |
+  - Checked that −adm is a whole number of minutes from midnight to recording start.
+  - Checked where reconstructed recording starts fall in the day, and whether charted events land on 5-minute clock marks.
+results: |
+  - −adm is a whole number of minutes in 6,373 of 6,375 cases. The exceptions, [[case:1342]] and [[case:5723]], are flagged `clock_uncertain`.
+  - Reconstructed recording starts cluster at 07:00–07:59 (1,634 cases) and run through the working day: 07:40 to 18:53 (5th–95th percentile), median 11:33.
+  - Op start falls on a 5-minute clock mark in 92% of cases, op end in 91% and anaesthesia end in 95%; anaesthesia start in only 52%.
+discussion: |
+  - The reconstruction holds, so the charted event times can be modelled on clock minutes as in the digit-preferencing manuscript.
+  - The API needs the case's admission date and recording start or end to place a charted time on the clock.
+
+  The same question from the timing side: [[study:case-clock]].
+limitations: |
+  - Admission and discharge are whole minutes from recording start, but only 1.5% are whole minutes from op start. They seem to have been computed from a recording start truncated to the minute.
+  - 93 charted times (92 op ends, 1 op start) do not share the sub-minute offset of the other charted times in their case, and are flagged `clock_offset_mismatch`.
+tags:
+- from the resolution work

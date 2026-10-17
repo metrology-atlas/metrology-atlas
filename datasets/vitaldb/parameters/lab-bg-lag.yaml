@@ -1,0 +1,9 @@
+id: lab-bg-lag
+name: Blood gas timestamp after the draw
+quantity: Time from the start of the arterial line access (the draw) to the blood gas lab timestamp.
+value: 7.2
+unit: min
+spread: {p10: 3.2, p90: 12.2, text: "two modes, 2–6 and 8–12 min"}
+status: measured
+study: lab-timestamp-meaning
+about: [lab-blood-gas]

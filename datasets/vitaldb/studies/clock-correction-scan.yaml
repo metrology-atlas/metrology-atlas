@@ -1,0 +1,80 @@
+id: clock-correction-scan
+name: Clock corrections in every file
+summary: >-
+  A scan of all 6,388 files for the jumps where the recorder re-synchronises a device's stamps. Each device type
+  has its own correction signature; only SNUADC and BIS correct clearly enough to measure their drift.
+date: 2026-10-11
+status: current
+methods: [stamp-reading, signal-continuity]
+techniques: [coincident-jumps, junction-scores, null-controls]
+clocks: [snuadc-sample, bis-clock, cardioq-clock, primus-clock, recorder-pc]
+devices: [snuadc, bis, cardioq, primus, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, bis-eeg, primus-co2]
+data: |
+  All 6,388 original .vital files of the release (102.4 GB), read with the shared reader. 1.4 CPU-hours; only
+  aggregates left the analysis machine.
+background: |
+  Between corrections, a device's waveform stamps advance by exactly the number of samples each record holds. A
+  correction shows as a jump at a record boundary. If the jump is a clock correction, its size divided by the time
+  since the previous one is the device's drift against the recorder PC.
+method: |
+  Each waveform track was split into runs of records that join to within half a sample. Runs shorter than 5 s
+  were folded into the boundary between the long runs either side (they come in bursts), leaving 94,152
+  boundaries. A boundary counted as a correction candidate when its jump was at most 2 s, it was not a step back in
+  time, and every other waveform track of the same device jumped by the same amount (within 2 ms) at the same
+  moment. Drift came only from a candidate whose previous boundary was also a candidate, so a case's first interval
+  was never used: drift = jump ÷ time since the previous correction, one duration-weighted median per case and
+  device.
+
+  Around candidate boundaries, and at random joins inside long runs as controls, a few seconds of ECG, arterial
+  pressure, plethysmogram, EEG and CO2 were kept, to test the beat interval and the sample-to-sample step across
+  each join.
+results: |
+  | Device | Candidates | Usable for drift | Typical jump | Signature |
+  |---|---|---|---|---|
+  | SNUADC | 3,878 | 818 | −0.487 s | A fixed pull-back of about 0.49 s, as one overlap or a burst of short records |
+  | BIS | 7,655 | 1,974 | +0.15 s (5–95%: +0.01 to +0.41 s) | The run is cut every 8,192 s; the gap at the cut is the drift since the last cut |
+  | CardioQ | 9,931 | 5 | spread across ±2 s | Irregular re-anchoring; not usable for drift |
+  | Primus | 66 | 2 | scattered | Waveforms come in sessions separated by long gaps |
+
+  - **A correction moves the whole device.** 13,955 of 13,958 sub-second SNUADC overlaps hit every SNUADC track
+    at the same moment by the same amount; for BIS, every one.
+  - **No time is lost at a SNUADC step, at this resolution.** Butting the samples together keeps the beat-to-beat
+    interval normal in 59% of ECG joins; inserting the jump as a real gap does so in only 17%.
+  - **The records inside the burst join badly.** At their joins the sample-to-sample step is larger than 95% of
+    normal steps in 60–96% of cases, against about 4% at ordinary joins. (Later explained: the records are written
+    out of order; see [[study:reset-cluster-order]].)
+  - **Small positive SNUADC gaps are real data loss**, not corrections.
+  - **Two other SNUADC behaviours.** 120 cases correct in small steps (−0.002 to +0.017 s every 15–50 min) and
+    never by 0.49 s; their stamps follow the PC. 1,066 cases of 2.5 h or longer have no correction at all.
+discussion: |
+  A correction can be recognised by its pattern (SNUADC's 0.484–0.492 s step, BIS's cut at 8,192 s), by every track
+  of the device jumping together, and by an implied rate that fits the case. Other jumps on these devices are
+  gaps or dropouts. Within a case the rate holds to about 0.2 ppm, so one rate per device per case is enough. The
+  drift values from this scan are wrong for some cases; the stamp sawtooth model
+  ([[study:snuadc-stamp-sawtooth]]) replaced them.
+limitations: |
+  The 2 s limit and the same-jump test can miss corrections during gaps. The cases with no correction at all are not
+  yet explained (slower units, a third recorder mode, or both).
+open_questions:
+  - title: "Recordings that never correct their clocks"
+    kind: phenomenon
+    summary: >-
+      Some recordings never correct their clocks within the 2 s test. Slower units, a third recorder mode, or both,
+      could explain it; their drift units and ports have not been compared with the rest.
+code:
+  - vitaldb-bench/tools/syncscan.py
+  - vitaldb-bench/tools/syncanalyze.py
+figures:
+  - id: sync-join-tests
+    file: sync-join-tests.png
+    theme: correction intervals
+    source: vitaldb-bench tools/sync_figures.py
+    caption: Continuity of the signal across corrections and other record boundaries, against boundaries with no correction.
+    alt: Five step-histogram panels comparing controls, correction candidates and other boundaries.
+  - id: sync-correction-jumps
+    file: sync-correction-jumps.png
+    theme: correction intervals
+    source: vitaldb-bench tools/sync_figures.py
+    caption: 'Size of the stamp jump at each clock correction: SNUADC steps back about 0.48 s or makes millisecond corrections; BIS jumps forward 0–0.5 s; CardioQ is broad.'
+    alt: Three stacked histograms of jump size in seconds, one per device.

@@ -1,0 +1,27 @@
+id: value-model-aneend
+name: How the anesthesia end time was charted
+summary: The charted anesthesia end time is a mixture of 4 ways of writing a clock time (ceiling_30min, ceiling_10min, ceiling_5min,
+  clock_minute), modelled as an offset from a device time.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+- clinical-time
+variables:
+- aneend
+model: vitaldb-resolution/vitaldb_resolution/data/models/aneend.model.json
+data: 6,256 records of aneend (clinical_data.csv)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/aneend.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'The minute past the hour of every charted time: the heaps on multiples of 5, and at the standard first-case
+    times, are the rounding modes the model fits.'
+  alt: Bar chart of charted times by minute past the hour, with tall bars on multiples of five.
+results: '[[figure:observed-vs-model]]'

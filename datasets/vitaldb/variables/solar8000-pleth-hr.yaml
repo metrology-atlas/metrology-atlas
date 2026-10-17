@@ -1,0 +1,23 @@
+id: solar8000-pleth-hr
+name: Solar8000 pulse rate (PLETH_HR)
+summary: Pulse rate from the oximeter, over about 12 beats.
+type: numeric
+source_name: Solar8000/PLETH_HR
+device: solar8000
+stamp_clock: recorder-pc
+unit: /min
+timing:
+- id: pleth-hr
+  name: as stamped
+  default: true
+  delay_s:
+  - 2.8
+  - 4.6
+  interval_s:
+  - 8.0
+  - 12.0
+  domain: solar8000
+  status: measured
+  evidence: delay 2.4-4.2 s + 0.4 s PLETH; ~12 beats
+tags:
+- stub

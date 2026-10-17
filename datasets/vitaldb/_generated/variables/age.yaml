@@ -1,0 +1,27 @@
+id: age
+name: Age
+summary: Age (clinical table).
+type: clinical
+source_name: age
+group: Clinical record/Patient
+source: clinical_data.csv
+unit: years
+value:
+  kind: 'age: completed years, top-coded and infant rules'
+  resolution: completed years; tenths for infants; top-coded
+  step: 1
+  anchor: floor
+  spread: vitaldb-resolution/spread.json#age
+tags:
+- generated
+- vitaldb-resolution
+description: Completed years; 19.2% end in 0 or 5 (20% expected), so no heaping. 8 values top-coded ">89"; 10 infants recorded
+  in tenths of a year.
+figures:
+- id: distribution
+  file: distributions/age.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,380 records, median 59 years; 53 outside the 0.5–99.5th percentiles are not
+    shown.'
+  alt: Histogram of the recorded values of age.

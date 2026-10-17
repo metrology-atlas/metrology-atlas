@@ -1,0 +1,36 @@
+id: value-registry-unmodelled
+name: Blood products, age and ICU days
+summary: |
+  Red-cell and plasma units, age and ICU days are not heaped and get registry entries with a few flags rather than rounding models.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+data: |
+  - Red-cell units: 352 non-zero, mostly 1–5 units. Plasma units: 129 non-zero, 1–52.
+  - Age: 6,380 numbers, 8 coded ">89".
+  - ICU days: 0 in 81%, 1 in 13%, up to 179.
+method: |
+  - Checked counts for smoothness and last digits for heaping.
+  - Cross-checked red-cell units against blood loss for unit errors, and ICU days against the hospital stay.
+results: |
+  - Red-cell units track blood loss (Spearman 0.68). Five values look like mL entered as units: 400 and 800, plus 50, 60 and 68 units with blood loss of 50–350 mL.
+  - The red-cell rule (value ≥ 50 units and blood loss < 1,000 mL) flags exactly those 5 entries and leaves 59 and 69 units with 28–30 L blood loss alone.
+  - Large plasma values go with very large blood loss and are not flagged.
+  - Age: 19.2% end in 0 or 5 (20% expected). 10 infants have ages in tenths of a year (0.3–0.8).
+  - 6 cases have more ICU days than the hospital stay (`order_violation`).
+discussion: |
+  - Blood products are exact counts. Probable mL entries are flagged, not converted, since the pack volume is unknown.
+  - ">89" is top-coded and returns an open interval from 90 (status `top_coded`).
+  - In-hospital death is binary and needs no model.
+limitations: |
+  - Whether ages are completed years (floor) or rounded cannot be tested from the data. Floor is kept as a working assumption.
+  - ICU days cannot be checked against ICU admission and discharge times, which are not in the dataset. Until confirmed it is a count with ±1 day uncertainty.
+open_questions:
+  - title: "The ICU-days counting rule"
+    kind: next step
+    summary: >-
+      The ICU-days counting rule (calendar days touched or completed 24 h) should be confirmed with the VitalDB
+      team.
+tags:
+- from the resolution work

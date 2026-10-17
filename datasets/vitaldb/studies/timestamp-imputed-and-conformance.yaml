@@ -1,0 +1,40 @@
+id: timestamp-imputed-and-conformance
+name: Imputed times, conformance failures and exclusion rules
+summary: |
+  About one in twelve op ends was set from the recording rather than charted, and a small set of times fail basic conformance checks; all are encoded as exclusion rules.
+date: 2026-10-13
+status: current
+methods:
+- clinical-time
+- value-resolution
+background: |
+  - Vital Recorder stops recording 10 minutes after the heart-rate and SpO2 signals disappear.
+  - Imputed times measure when monitoring stopped, not when surgery ended, and would bias any accuracy analysis towards agreement with the signals.
+data: |
+  - All charted times and dates in `clinical_data.csv`. The machine-readable rules are in `exclusion_rules.json`.
+method: |
+  - Checked gaps from op end to recording end, whole-second and whole-minute structure, event order, extreme values and placeholder dates.
+results: |
+  - 537 op ends (8.4%) fall 598–604 s before the end of the recording; most often 601 s (346 cases) or 602 s (129 cases). They are excluded as `imputed`.
+  - Anaesthesia ends derived from those op ends are stored with floating-point noise (e.g. 599.999999 s) and sit an exact multiple of 5 minutes after op end: 300 s (9 cases), 600 s (35), 900 s (9), 1,200 s (9) and others.
+  - Two dates default to 1900: [[case:4476]] (anaesthesia end) and [[case:1563]] (admission and discharge), near −3.69 × 10⁹ s.
+  - Op end comes after anaesthesia end in 52 cases and equals it in 108.
+  - Anaesthesia end is +720 min from recording end in [[case:3980]] (12-hour error?) and +1,441 min in [[case:4959]] (date error?).
+  - No case has op start before anaesthesia start, op end before op start, or anaesthesia end before anaesthesia start.
+discussion: |
+  - Anaesthesia end was most likely charted as an interval after op end and inherited the imputed op end.
+  - Excluded values return a status rather than a distribution; flagged values are fitted and returned with the flag.
+  - The 1900 dates are the "missing time stored as zero" bug from §5.5 of the review.
+limitations: |
+  - The derived anaesthesia ends were missed in an earlier fit, because their noise (about 10⁻⁶ s) slipped under the test threshold.
+open_questions:
+  - title: "Was op end imputed deliberately?"
+    kind: next step
+    summary: >-
+      Was op end imputed from recording end deliberately? This is to be asked of the VitalDB team.
+  - title: "Imputed op ends by department"
+    kind: next step
+    summary: >-
+      The imputed op ends have not yet been mapped by department.
+tags:
+- from the resolution work

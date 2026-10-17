@@ -1,0 +1,9 @@
+id: snuadc-event-inputs
+name: SNUADC has two event inputs
+summary: >-
+  The firmware sends two event-jack flags with every sample. If any case used them, they would be markers on the
+  SNUADC's own clock.
+status: open
+devices: [snuadc]
+studies: [snuadc-firmware]
+consequence: Not yet checked whether any release track carries them.

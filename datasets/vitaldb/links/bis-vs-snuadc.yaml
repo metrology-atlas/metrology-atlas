@@ -1,0 +1,11 @@
+id: bis-vs-snuadc
+name: BIS against SNUADC
+summary: >-
+  Measured directly from bursts seen in both the ECG and the EEG, independent of the recorder: −72 ppm, and a
+  constant offset of about −0.8 s left after both stamp models.
+clock: bis-clock
+against: snuadc-sample
+rate: bis-snuadc-rate
+correction:
+  rule: "Both devices' own corrections: SNUADC on its drift threshold, BIS on its 8,192 s timer."
+status: measured

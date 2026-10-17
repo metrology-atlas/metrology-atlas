@@ -1,0 +1,40 @@
+id: ev1000-art-mbp
+name: EV1000 mean arterial pressure
+summary: Mean arterial pressure from the EV1000 platform, updated every 20 s.
+type: numeric
+source_name: EV1000/ART_MBP
+device: ev1000
+stamp_clock: recorder-pc
+unit: mmHg
+timing:
+- id: ev1000-sync
+  name: after MAP alignment
+  default: true
+  delay_s:
+  - 0.25
+  - 2.4
+  interval_s:
+  - 20.0
+  - 20.0
+  domain: reference
+  status: measured
+  evidence: residual SD 0.25-2.4 s (p5-p95); three-way loop closes, median +0.13 s
+  corrected_delay_s:
+  - 0.9
+  - 3.25
+  correction: MAP alignment to SNUADC ART
+  corrects:
+  - ev1000
+- id: ev1000
+  name: as stamped
+  delay_s:
+  - 0.9
+  - 3.25
+  interval_s:
+  - 20.0
+  - 20.0
+  domain: ev1000
+  status: measured
+  evidence: 'from the end of an assumed 20 s window: median 1.6 s (p25 0.9, p95 3.2; 579 cases)'
+tags:
+- stub

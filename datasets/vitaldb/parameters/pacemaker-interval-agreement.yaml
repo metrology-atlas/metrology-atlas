@@ -1,0 +1,8 @@
+id: pacemaker-interval-agreement
+name: Pacing interval agreement between stretches
+quantity: How closely the pacing interval, measured on the SNUADC sample count, agrees between stretches of a case.
+display: "0.05–0.1 ms"
+status: measured
+study: paced-ecg
+about: [pacemaker, snuadc-sample]
+date: 2026-10-17

@@ -1,0 +1,9 @@
+id: bis-snuadc-rate
+name: BIS drift against SNUADC
+quantity: Slope of the ECG–EEG burst-offset ramps, independent of the recorder.
+value: -72
+unit: ppm
+spread: {q1: -82, q3: -54}
+status: measured
+study: shared-bursts
+about: [bis-vs-snuadc]

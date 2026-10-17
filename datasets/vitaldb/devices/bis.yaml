@@ -1,0 +1,8 @@
+id: bis
+name: BIS monitor
+summary: 'Medtronic BIS: raw EEG at 128 Hz and the BIS index.'
+type: monitor
+clocks:
+- bis-clock
+tags:
+- stub

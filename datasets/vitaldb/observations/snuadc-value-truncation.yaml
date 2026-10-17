@@ -1,0 +1,10 @@
+id: snuadc-value-truncation
+name: SNUADC values are truncated to the count below
+summary: >-
+  The SNUADC firmware truncates each calibrated value instead of rounding it, so every value sits half a count low on
+  average (about 0.5 mmHg for arterial pressure). Values clamp at counts 0 and 1023.
+status: likely
+devices: [snuadc]
+variables: [snuadc-art, snuadc-ecg-ii, snuadc-pleth]
+studies: [snuadc-firmware]
+consequence: A small constant bias, and clipping at the monitor's ±4 V output limits (arterial pressure near 400 mmHg).

@@ -1,0 +1,30 @@
+id: bis-index
+name: BIS index
+summary: The BIS depth-of-anaesthesia index, computed from a window of EEG.
+type: numeric
+source_name: BIS/BIS
+device: bis
+stamp_clock: bis-clock
+timing:
+- id: bis-num
+  name: as stamped
+  default: true
+  delay_s:
+  - 3.0
+  - 4.0
+  interval_s:
+  - 16.0
+  - 61.0
+  domain: bis
+  status: measured
+  evidence: 3-4 s after its EEG window ends; window 16 s (48%) or 32-61 s (40%); half the weight older than 30 s
+tags:
+- stub
+window:
+  name: Trailing average
+  parameter: bis-index-window
+  description: Set per case on the monitor; not recorded.
+delays:
+- name: From the EEG window end
+  parameter: bis-index-delay
+  description: The same in every smoothing group.

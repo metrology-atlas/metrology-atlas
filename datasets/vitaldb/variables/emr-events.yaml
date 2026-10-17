@@ -1,0 +1,59 @@
+id: emr-events
+name: Anaesthesia record events
+summary: Anaesthesia and operation start and end times in the clinical table.
+group: Clinical record/Times and durations
+type: event
+source_name: clinical_data times
+device: clinical-records
+stamp_clock: hospital-records
+timing:
+- id: emr5
+  name: 5-minute entries
+  default: true
+  delay_s:
+  - 150.0
+  - 600.0
+  interval_s:
+  - 300.0
+  - 300.0
+  domain: records
+  status: measured
+  evidence: 'rounded up: 90-290 s later than minute entries; ceiling kernel best in 11/11'
+- id: emr1
+  name: minute entries
+  delay_s:
+  - 30.0
+  - 300.0
+  interval_s:
+  - 60.0
+  - 60.0
+  domain: records
+  status: estimated
+  evidence: minute grid; documentation lag not yet measured
+tags:
+- stub
+chain:
+- node: Hospital records clock
+  clock: hospital-records
+  kind: sync
+  effect: The laboratory and anaesthesia record systems keep hospital time (KST). Their offset from UTC and from
+    the recorder PC is not observable in the release, which shifts every case to 2100.
+  status: assumed
+- node: Documentation
+  kind: processing
+  status: measured
+  effect: Entered in the anaesthesia record with a lag that is not measured separately; entries on a 5-minute mark
+    were rounded up to it, so the event lies in the 5 minutes before, about 2.5 min earlier on average.
+  offset_s:
+  - 0
+  - 300
+  parameter: emr-rounding
+  studies:
+  - emr-rounding
+- node: Stored clinical time
+  kind: stamping
+  status: measured
+  offset_s:
+  - 60
+  - 300
+  effect: On a 1-minute or 5-minute grid, relative to the case start.

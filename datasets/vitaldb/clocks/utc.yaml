@@ -1,0 +1,9 @@
+id: utc
+name: UTC
+summary: Coordinated Universal Time, the reference every chain of clocks in the atlas starts from.
+type: reference
+nominal: Civil time
+description: |
+  No clock in the release is tied to UTC directly. The recorder PC is synchronised to a hospital time server, and
+  the release shifts every date to the year 2100, so the offset of any VitalDB time from UTC is an assumption,
+  bounded by the PC's synchronisation ([[link:recorder-pc-vs-utc]]).

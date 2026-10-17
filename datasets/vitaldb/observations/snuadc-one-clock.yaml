@@ -1,0 +1,14 @@
+id: snuadc-one-clock
+name: All SNUADC channels share one clock
+summary: >-
+  Every SNUADC waveform track of a case (ECG leads, ART, PLETH, CVP) has the same first stamp, the same record
+  timing and the same corrections. They are stamped together.
+status: established
+clocks: [snuadc-sample]
+devices: [snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [clock-correction-scan, time-zeros, reset-cluster-order]
+consequence: |
+  Clock drift cancels between SNUADC channels: ECG, arterial pressure and plethysmogram line up to the sample, apart
+  from the analogue paths behind them. A beat-alignment check between two SNUADC leads tests sample packing, not
+  drift.

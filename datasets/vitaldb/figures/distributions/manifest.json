@@ -1,0 +1,929 @@
+{
+ "variables": {
+  "casestart": {
+   "file": "distributions/casestart.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 0.0,
+   "p05": 0.0,
+   "p995": 0.0,
+   "outside": 0
+  },
+  "case-end": {
+   "file": "distributions/case-end.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 9924.5,
+   "p05": 2356.74,
+   "p995": 35605.379999999976,
+   "outside": 64
+  },
+  "anestart": {
+   "file": "distributions/anestart.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": -583.0,
+   "p05": -3514.715,
+   "p995": 652.0399999999936,
+   "outside": 64
+  },
+  "opstart": {
+   "file": "distributions/opstart.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 2055.0,
+   "p05": 500.48,
+   "p995": 5526.55999999999,
+   "outside": 64
+  },
+  "aneend": {
+   "file": "distributions/aneend.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 9769.5,
+   "p05": 2218.635,
+   "p995": 35492.84999999996,
+   "outside": 64
+  },
+  "opend": {
+   "file": "distributions/opend.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 8877.0,
+   "p05": 1624.675,
+   "p995": 34123.2399999998,
+   "outside": 64
+  },
+  "adm": {
+   "file": "distributions/adm.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": -201060.0,
+   "p05": -3595955.4,
+   "p995": -52457.10000000027,
+   "outside": 64
+  },
+  "dis": {
+   "file": "distributions/dis.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 393240.0,
+   "p05": 11614.200000000003,
+   "p995": 6841439.39999997,
+   "outside": 64
+  },
+  "icu-days": {
+   "file": "distributions/icu-days.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 0.0,
+   "p05": 0.0,
+   "p995": 17.0,
+   "outside": 29
+  },
+  "death-inhosp": {
+   "file": "distributions/death-inhosp.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 2,
+   "shown": 2
+  },
+  "age": {
+   "file": "distributions/age.png",
+   "source": "clinical",
+   "n": 6380,
+   "median": 59.0,
+   "p05": 11.895,
+   "p995": 86.0,
+   "outside": 53
+  },
+  "sex": {
+   "file": "distributions/sex.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 2,
+   "shown": 2
+  },
+  "height": {
+   "file": "distributions/height.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 162.2,
+   "p05": 138.18699999999998,
+   "p995": 183.5,
+   "outside": 63
+  },
+  "weight": {
+   "file": "distributions/weight.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 60.5,
+   "p05": 30.687,
+   "p995": 99.95,
+   "outside": 63
+  },
+  "bmi": {
+   "file": "distributions/bmi.png",
+   "source": "clinical",
+   "n": 6388,
+   "median": 23.1,
+   "p05": 14.6,
+   "p995": 34.81949999999988,
+   "outside": 61
+  },
+  "asa": {
+   "file": "distributions/asa.png",
+   "source": "clinical",
+   "n": 6255,
+   "categories": 5,
+   "shown": 5
+  },
+  "emop": {
+   "file": "distributions/emop.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 2,
+   "shown": 2
+  },
+  "department": {
+   "file": "distributions/department.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 4,
+   "shown": 4
+  },
+  "optype": {
+   "file": "distributions/optype.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 11,
+   "shown": 11
+  },
+  "dx": {
+   "file": "distributions/dx.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 1038,
+   "shown": 12
+  },
+  "opname": {
+   "file": "distributions/opname.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 241,
+   "shown": 12
+  },
+  "approach": {
+   "file": "distributions/approach.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 3,
+   "shown": 3
+  },
+  "position": {
+   "file": "distributions/position.png",
+   "source": "clinical",
+   "n": 6194,
+   "categories": 10,
+   "shown": 10
+  },
+  "ane-type": {
+   "file": "distributions/ane-type.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 3,
+   "shown": 3
+  },
+  "preop-htn": {
+   "file": "distributions/preop-htn.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 2,
+   "shown": 2
+  },
+  "preop-dm": {
+   "file": "distributions/preop-dm.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 2,
+   "shown": 2
+  },
+  "preop-ecg": {
+   "file": "distributions/preop-ecg.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 27,
+   "shown": 12
+  },
+  "preop-pft": {
+   "file": "distributions/preop-pft.png",
+   "source": "clinical",
+   "n": 6388,
+   "categories": 9,
+   "shown": 9
+  },
+  "cormack": {
+   "file": "distributions/cormack.png",
+   "source": "clinical",
+   "n": 5553,
+   "categories": 5,
+   "shown": 5
+  },
+  "airway": {
+   "file": "distributions/airway.png",
+   "source": "clinical",
+   "n": 5973,
+   "categories": 3,
+   "shown": 3
+  },
+  "tubesize": {
+   "file": "distributions/tubesize.png",
+   "source": "clinical",
+   "n": 4919,
+   "categories": 12,
+   "shown": 12
+  },
+  "dltubesize": {
+   "file": "distributions/dltubesize.png",
+   "source": "clinical",
+   "n": 930,
+   "categories": 9,
+   "shown": 9
+  },
+  "lmasize": {
+   "file": "distributions/lmasize.png",
+   "source": "clinical",
+   "n": 102,
+   "categories": 3,
+   "shown": 3
+  },
+  "iv1": {
+   "file": "distributions/iv1.png",
+   "source": "clinical",
+   "n": 6313,
+   "categories": 11,
+   "shown": 11
+  },
+  "iv2": {
+   "file": "distributions/iv2.png",
+   "source": "clinical",
+   "n": 1437,
+   "categories": 11,
+   "shown": 11
+  },
+  "aline1": {
+   "file": "distributions/aline1.png",
+   "source": "clinical",
+   "n": 3463,
+   "categories": 9,
+   "shown": 9
+  },
+  "aline2": {
+   "file": "distributions/aline2.png",
+   "source": "clinical",
+   "n": 105,
+   "categories": 4,
+   "shown": 4
+  },
+  "cline1": {
+   "file": "distributions/cline1.png",
+   "source": "clinical",
+   "n": 1541,
+   "categories": 14,
+   "shown": 12
+  },
+  "cline2": {
+   "file": "distributions/cline2.png",
+   "source": "clinical",
+   "n": 60,
+   "categories": 10,
+   "shown": 10
+  },
+  "intraop-uo": {
+   "file": "distributions/intraop-uo.png",
+   "source": "clinical",
+   "n": 3684,
+   "median": 160.0,
+   "p05": 10.0,
+   "p995": 2011.4250000000038,
+   "outside": 24
+  },
+  "intraop-ebl": {
+   "file": "distributions/intraop-ebl.png",
+   "source": "clinical",
+   "n": 3976,
+   "median": 150.0,
+   "p05": 10.0,
+   "p995": 7518.75,
+   "outside": 28
+  },
+  "intraop-crystalloid": {
+   "file": "distributions/intraop-crystalloid.png",
+   "source": "clinical",
+   "n": 5980,
+   "median": 700.0,
+   "p05": 50.0,
+   "p995": 7011.394999999957,
+   "outside": 34
+  },
+  "intraop-ppf": {
+   "file": "distributions/intraop-ppf.png",
+   "source": "clinical",
+   "n": 2335,
+   "median": 100.0,
+   "p05": 40.0,
+   "p995": 160.0,
+   "outside": 17
+  },
+  "intraop-colloid": {
+   "file": "distributions/intraop-colloid.png",
+   "source": "clinical",
+   "n": 531,
+   "median": 500.0,
+   "p05": 10.0,
+   "p995": 1600.0,
+   "outside": 2
+  },
+  "intraop-rbc": {
+   "file": "distributions/intraop-rbc.png",
+   "source": "clinical",
+   "n": 352,
+   "median": 2.0,
+   "p05": 1.0,
+   "p995": 150.0950000000015,
+   "outside": 2
+  },
+  "intraop-ffp": {
+   "file": "distributions/intraop-ffp.png",
+   "source": "clinical",
+   "n": 129,
+   "median": 4.0,
+   "p05": 1.0,
+   "p995": 43.03999999999999,
+   "outside": 1
+  },
+  "intraop-ftn": {
+   "file": "distributions/intraop-ftn.png",
+   "source": "clinical",
+   "n": 1168,
+   "median": 100.0,
+   "p05": 20.0,
+   "p995": 200.0,
+   "outside": 3
+  },
+  "intraop-eph": {
+   "file": "distributions/intraop-eph.png",
+   "source": "clinical",
+   "n": 3211,
+   "median": 10.0,
+   "p05": 5.0,
+   "p995": 75.0,
+   "outside": 19
+  },
+  "intraop-phe": {
+   "file": "distributions/intraop-phe.png",
+   "source": "clinical",
+   "n": 844,
+   "median": 100.0,
+   "p05": 10.0,
+   "p995": 2252.699999999993,
+   "outside": 7
+  },
+  "intraop-ca": {
+   "file": "distributions/intraop-ca.png",
+   "source": "clinical",
+   "n": 868,
+   "median": 600.0,
+   "p05": 33.35,
+   "p995": 7496.9999999999345,
+   "outside": 10
+  },
+  "intraop-rocu": {
+   "file": "distributions/intraop-rocu.png",
+   "source": "clinical",
+   "n": 5942,
+   "median": 70.0,
+   "p05": 20.0,
+   "p995": 200.0,
+   "outside": 49
+  },
+  "intraop-mdz": {
+   "file": "distributions/intraop-mdz.png",
+   "source": "clinical",
+   "n": 80,
+   "median": 3.0,
+   "p05": 1.0,
+   "p995": 7.210000000000008,
+   "outside": 1
+  },
+  "intraop-epi": {
+   "file": "distributions/intraop-epi.png",
+   "source": "clinical",
+   "n": 89,
+   "median": 60.0,
+   "p05": 2.76,
+   "p995": 22779.200000000077,
+   "outside": 2
+  },
+  "alb": {
+   "file": "distributions/alb.png",
+   "source": "lab",
+   "n": 36629,
+   "median": 3.3,
+   "p05": 1.3,
+   "p995": 4.8,
+   "outside": 305
+  },
+  "alt": {
+   "file": "distributions/alt.png",
+   "source": "lab",
+   "n": 35918,
+   "median": 24.0,
+   "p05": 4.0,
+   "p995": 1385.0,
+   "outside": 342
+  },
+  "ammo": {
+   "file": "distributions/ammo.png",
+   "source": "lab",
+   "n": 864,
+   "median": 86.5,
+   "p05": 24.630000000000003,
+   "p995": 346.6999999999989,
+   "outside": 10
+  },
+  "aptt": {
+   "file": "distributions/aptt.png",
+   "source": "lab",
+   "n": 20542,
+   "median": 32.3,
+   "p05": 22.5,
+   "p995": 400.0,
+   "outside": 101
+  },
+  "ast": {
+   "file": "distributions/ast.png",
+   "source": "lab",
+   "n": 35919,
+   "median": 26.0,
+   "p05": 9.0,
+   "p995": 2057.689999999966,
+   "outside": 349
+  },
+  "be": {
+   "file": "distributions/be.png",
+   "source": "lab",
+   "n": 3911,
+   "median": 3.0,
+   "p05": 0.0,
+   "p995": 16.734999999999946,
+   "outside": 20
+  },
+  "bun": {
+   "file": "distributions/bun.png",
+   "source": "lab",
+   "n": 37213,
+   "median": 15.0,
+   "p05": 3.0,
+   "p995": 102.0,
+   "outside": 235
+  },
+  "ccr": {
+   "file": "distributions/ccr.png",
+   "source": "lab",
+   "n": 537,
+   "median": 72.0,
+   "p05": 0.0,
+   "p995": 227.1200000000008,
+   "outside": 3
+  },
+  "cl": {
+   "file": "distributions/cl.png",
+   "source": "lab",
+   "n": 40863,
+   "median": 103.0,
+   "p05": 86.0,
+   "p995": 118.0,
+   "outside": 336
+  },
+  "cr": {
+   "file": "distributions/cr.png",
+   "source": "lab",
+   "n": 37311,
+   "median": 0.78,
+   "p05": 0.2,
+   "p995": 12.98449999999997,
+   "outside": 369
+  },
+  "crp": {
+   "file": "distributions/crp.png",
+   "source": "lab",
+   "n": 28278,
+   "median": 3.31,
+   "p05": 0.01,
+   "p995": 31.266150000000017,
+   "outside": 142
+  },
+  "esr": {
+   "file": "distributions/esr.png",
+   "source": "lab",
+   "n": 1415,
+   "median": 37.0,
+   "p05": 2.0,
+   "p995": 120.0,
+   "outside": 6
+  },
+  "fib": {
+   "file": "distributions/fib.png",
+   "source": "lab",
+   "n": 18931,
+   "median": 301.0,
+   "p05": 52.0,
+   "p995": 687.0,
+   "outside": 187
+  },
+  "gfr": {
+   "file": "distributions/gfr.png",
+   "source": "lab",
+   "n": 36683,
+   "median": 92.3,
+   "p05": 3.7,
+   "p995": 312.6,
+   "outside": 358
+  },
+  "gluc": {
+   "file": "distributions/gluc.png",
+   "source": "lab",
+   "n": 35358,
+   "median": 121.0,
+   "p05": 61.0,
+   "p995": 357.0,
+   "outside": 346
+  },
+  "hb": {
+   "file": "distributions/hb.png",
+   "source": "lab",
+   "n": 43976,
+   "median": 10.9,
+   "p05": 6.2,
+   "p995": 16.2,
+   "outside": 428
+  },
+  "hco3": {
+   "file": "distributions/hco3.png",
+   "source": "lab",
+   "n": 14578,
+   "median": 25.4,
+   "p05": 10.6,
+   "p995": 41.4,
+   "outside": 135
+  },
+  "hct": {
+   "file": "distributions/hct.png",
+   "source": "lab",
+   "n": 58498,
+   "median": 33.0,
+   "p05": 17.2,
+   "p995": 49.0,
+   "outside": 550
+  },
+  "ica": {
+   "file": "distributions/ica.png",
+   "source": "lab",
+   "n": 17705,
+   "median": 1.13,
+   "p05": 0.77,
+   "p995": 1.56,
+   "outside": 168
+  },
+  "k": {
+   "file": "distributions/k.png",
+   "source": "lab",
+   "n": 55486,
+   "median": 4.0,
+   "p05": 2.7,
+   "p995": 6.1,
+   "outside": 516
+  },
+  "lac": {
+   "file": "distributions/lac.png",
+   "source": "lab",
+   "n": 14516,
+   "median": 1.2,
+   "p05": 0.3,
+   "p995": 15.0,
+   "outside": 15
+  },
+  "na": {
+   "file": "distributions/na.png",
+   "source": "lab",
+   "n": 55463,
+   "median": 138.0,
+   "p05": 121.0,
+   "p995": 151.0,
+   "outside": 504
+  },
+  "p": {
+   "file": "distributions/p.png",
+   "source": "lab",
+   "n": 16440,
+   "median": 3.2,
+   "p05": 1.2,
+   "p995": 7.7,
+   "outside": 153
+  },
+  "pco2": {
+   "file": "distributions/pco2.png",
+   "source": "lab",
+   "n": 14590,
+   "median": 41.0,
+   "p05": 21.0,
+   "p995": 81.0,
+   "outside": 130
+  },
+  "ph": {
+   "file": "distributions/ph.png",
+   "source": "lab",
+   "n": 14597,
+   "median": 7.4,
+   "p05": 7.09,
+   "p995": 7.59,
+   "outside": 125
+  },
+  "plt": {
+   "file": "distributions/plt.png",
+   "source": "lab",
+   "n": 43529,
+   "median": 199.0,
+   "p05": 17.0,
+   "p995": 683.0,
+   "outside": 428
+  },
+  "po2": {
+   "file": "distributions/po2.png",
+   "source": "lab",
+   "n": 14597,
+   "median": 150.0,
+   "p05": 30.0,
+   "p995": 526.0,
+   "outside": 144
+  },
+  "pt-pct": {
+   "file": "distributions/pt-pct.png",
+   "source": "lab",
+   "n": 21154,
+   "median": 85.0,
+   "p05": 17.0,
+   "p995": 132.0,
+   "outside": 195
+  },
+  "ptinr": {
+   "file": "distributions/ptinr.png",
+   "source": "lab",
+   "n": 21156,
+   "median": 1.11,
+   "p05": 0.85,
+   "p995": 4.28,
+   "outside": 180
+  },
+  "ptsec": {
+   "file": "distributions/ptsec.png",
+   "source": "lab",
+   "n": 21156,
+   "median": 12.6,
+   "p05": 9.7,
+   "p995": 48.24499999999971,
+   "outside": 198
+  },
+  "sao2": {
+   "file": "distributions/sao2.png",
+   "source": "lab",
+   "n": 14572,
+   "median": 99.0,
+   "p05": 47.0,
+   "p995": 100.0,
+   "outside": 72
+  },
+  "tbil": {
+   "file": "distributions/tbil.png",
+   "source": "lab",
+   "n": 36088,
+   "median": 0.8,
+   "p05": 0.2,
+   "p995": 26.85650000000023,
+   "outside": 281
+  },
+  "tprot": {
+   "file": "distributions/tprot.png",
+   "source": "lab",
+   "n": 36034,
+   "median": 6.0,
+   "p05": 3.4,
+   "p995": 8.2,
+   "outside": 304
+  },
+  "wbc": {
+   "file": "distributions/wbc.png",
+   "source": "lab",
+   "n": 43941,
+   "median": 8.2,
+   "p05": 1.01,
+   "p995": 34.185000000000144,
+   "outside": 439
+  },
+  "preop-hb": {
+   "file": "distributions/preop-hb.png",
+   "source": "clinical",
+   "n": 6047,
+   "median": 13.0,
+   "p05": 7.2,
+   "p995": 17.276999999999955,
+   "outside": 56
+  },
+  "preop-plt": {
+   "file": "distributions/preop-plt.png",
+   "source": "clinical",
+   "n": 6047,
+   "median": 235.0,
+   "p05": 36.230000000000004,
+   "p995": 570.539999999999,
+   "outside": 62
+  },
+  "preop-pt": {
+   "file": "distributions/preop-pt.png",
+   "source": "clinical",
+   "n": 5998,
+   "median": 101.0,
+   "p05": 29.0,
+   "p995": 136.0,
+   "outside": 55
+  },
+  "preop-aptt": {
+   "file": "distributions/preop-aptt.png",
+   "source": "clinical",
+   "n": 5986,
+   "median": 32.1,
+   "p05": 23.4925,
+   "p995": 63.914999999999964,
+   "outside": 60
+  },
+  "preop-na": {
+   "file": "distributions/preop-na.png",
+   "source": "clinical",
+   "n": 5765,
+   "median": 140.0,
+   "p05": 128.82,
+   "p995": 146.0,
+   "outside": 46
+  },
+  "preop-k": {
+   "file": "distributions/preop-k.png",
+   "source": "clinical",
+   "n": 5767,
+   "median": 4.2,
+   "p05": 3.1,
+   "p995": 5.6,
+   "outside": 46
+  },
+  "preop-gluc": {
+   "file": "distributions/preop-gluc.png",
+   "source": "clinical",
+   "n": 6010,
+   "median": 103.0,
+   "p05": 68.045,
+   "p995": 345.6399999999994,
+   "outside": 62
+  },
+  "preop-alb": {
+   "file": "distributions/preop-alb.png",
+   "source": "clinical",
+   "n": 6016,
+   "median": 4.2,
+   "p05": 2.2,
+   "p995": 5.0,
+   "outside": 41
+  },
+  "preop-ast": {
+   "file": "distributions/preop-ast.png",
+   "source": "clinical",
+   "n": 6022,
+   "median": 20.0,
+   "p05": 9.0,
+   "p995": 268.8949999999995,
+   "outside": 47
+  },
+  "preop-alt": {
+   "file": "distributions/preop-alt.png",
+   "source": "clinical",
+   "n": 6024,
+   "median": 18.0,
+   "p05": 4.0,
+   "p995": 531.0800000000017,
+   "outside": 53
+  },
+  "preop-bun": {
+   "file": "distributions/preop-bun.png",
+   "source": "clinical",
+   "n": 6023,
+   "median": 14.0,
+   "p05": 5.0,
+   "p995": 82.0,
+   "outside": 44
+  },
+  "preop-cr": {
+   "file": "distributions/preop-cr.png",
+   "source": "clinical",
+   "n": 6016,
+   "median": 0.78,
+   "p05": 0.37,
+   "p995": 12.485750000000035,
+   "outside": 59
+  },
+  "preop-ph": {
+   "file": "distributions/preop-ph.png",
+   "source": "clinical",
+   "n": 546,
+   "median": 7.401,
+   "p05": 6.94275,
+   "p995": 7.5665749999999985,
+   "outside": 6
+  },
+  "preop-hco3": {
+   "file": "distributions/preop-hco3.png",
+   "source": "clinical",
+   "n": 533,
+   "median": 24.3,
+   "p05": 15.366,
+   "p995": 31.5,
+   "outside": 4
+  },
+  "preop-be": {
+   "file": "distributions/preop-be.png",
+   "source": "clinical",
+   "n": 532,
+   "median": -0.1,
+   "p05": -11.469,
+   "p995": 7.872500000000014,
+   "outside": 6
+  },
+  "preop-pao2": {
+   "file": "distributions/preop-pao2.png",
+   "source": "clinical",
+   "n": 538,
+   "median": 95.95,
+   "p05": 15.870000000000001,
+   "p995": 250.37799999999993,
+   "outside": 6
+  },
+  "preop-paco2": {
+   "file": "distributions/preop-paco2.png",
+   "source": "clinical",
+   "n": 538,
+   "median": 39.5,
+   "p05": 21.442500000000003,
+   "p995": 60.49449999999998,
+   "outside": 6
+  },
+  "preop-sao2": {
+   "file": "distributions/preop-sao2.png",
+   "source": "clinical",
+   "n": 533,
+   "median": 97.0,
+   "p05": 20.8,
+   "p995": 100.0,
+   "outside": 4
+  }
+ },
+ "models": {
+  "anestart": {
+   "file": "models/anestart.png"
+  },
+  "opstart": {
+   "file": "models/opstart.png"
+  },
+  "aneend": {
+   "file": "models/aneend.png"
+  },
+  "opend": {
+   "file": "models/opend.png"
+  },
+  "height": {
+   "file": "models/height.png"
+  },
+  "weight": {
+   "file": "models/weight.png"
+  },
+  "intraop-uo": {
+   "file": "models/intraop-uo.png"
+  },
+  "intraop-ebl": {
+   "file": "models/intraop-ebl.png"
+  },
+  "intraop-crystalloid": {
+   "file": "models/intraop-crystalloid.png"
+  },
+  "intraop-ppf": {
+   "file": "models/intraop-ppf.png"
+  }
+ }
+}

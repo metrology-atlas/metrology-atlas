@@ -1,0 +1,28 @@
+id: lab-preop-pao2-decimal
+name: Pre-operative PaO2 decimal rule
+summary: |
+  Pre-operative PaO2 in the clinical table mixes 0.1 and 1 mmHg records, so its resolution is set per record by whether a decimal is present.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - The pre-operative lab copies (`preop_*` in `clinical_data.csv`) generally behave like the lab data.
+  - Pre-operative PaO2 is the exception: it is mixed resolution.
+data: |
+  - 538 pre-operative PaO2 values.
+method: |
+  - Screened the share of values ending in .0 against the 10% expected at a single 0.1 mmHg resolution.
+results: |
+  - 41% end in .0 against 10% expected, so about a third were recorded as whole numbers.
+discussion: |
+  - This looks like two sources again: probably two blood-gas analysers or a manual transcription step.
+  - It is a small field and can take the haematocrit approach: resolution by record, 0.1 or 1 mmHg according to whether a decimal is present.
+open_questions:
+  - title: "Why some PaO₂ records are whole numbers"
+    kind: phenomenon
+    summary: >-
+      Which of the two candidate explanations (two analysers or a manual transcription step) is behind the whole-
+      number records is not known.
+tags:
+- from the resolution work

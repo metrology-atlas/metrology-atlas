@@ -1,0 +1,42 @@
+id: primus-co2
+name: Capnogram (Primus)
+summary: Sidestream CO2 from the Primus at 62.5 Hz; the sampling line adds at least 1 s.
+type: waveform
+source_name: Primus/CO2
+device: primus
+stamp_clock: recorder-pc
+sample_clock: primus-clock
+rate_hz: 62.5
+unit: mmHg
+timing:
+- id: primus-sync
+  name: after breath matching
+  default: true
+  delay_s:
+  - 0.049
+  - 0.165
+  interval_s:
+  - 0.016
+  - 0.016
+  domain: reference
+  status: measured
+  evidence: +-49 ms median, p90 165 ms (20-case pilot)
+  corrected_delay_s:
+  - 0.43
+  - 4.0
+  correction: breath matching to SNUADC
+  corrects:
+  - primus-raw
+- id: primus-raw
+  name: raw stamps
+  delay_s:
+  - 0.43
+  - 4.0
+  interval_s:
+  - 0.016
+  - 0.016
+  domain: primus
+  status: measured
+  evidence: offset p5-p95 0.43-4.0 s incl. AWP-CVP physiology
+tags:
+- stub

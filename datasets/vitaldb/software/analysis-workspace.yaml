@@ -1,0 +1,13 @@
+id: analysis-workspace
+name: Analysis workspace
+summary: >-
+  One-off scripts kept on the analysis machine beside their per-case output. Not published; the useful ones move
+  into vitaldb-bench.
+visibility: unpublished
+local: ../../../../vitalDB/work
+description: |
+  Some checks were written as short scripts next to the per-case results they produce, because those results
+  may not leave the analysis machine. Their paths are listed so the work can be found again; they have no links.
+  A script that a study depends on should move into [[software:vitaldb-bench]] `tools/`, where it is reviewed and
+  published.
+related: [vitaldb-bench]

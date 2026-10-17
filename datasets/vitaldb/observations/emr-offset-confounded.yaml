@@ -1,0 +1,11 @@
+id: emr-offset-confounded
+name: The EMR clock's offset cannot be separated from documentation lag
+summary: >-
+  Both routes between the EMR clock and the recorder run through the case start, so any EMR clock offset cancels.
+  Without a time from outside the release it is confounded with how late entries are made.
+status: established
+clocks: [hospital-records, recorder-pc]
+devices: [clinical-records]
+variables: [emr-events]
+studies: [loop-closure, emr-rounding]
+consequence: "Only one constraint remains: entries rarely precede the device events they document."

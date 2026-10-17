@@ -1,0 +1,7 @@
+id: primus-drift-implied
+name: Primus drift implied by its corrections
+quantity: Drift of the Primus stamps against the recorder, from correction size over interval.
+display: "about 1–11 ppm"
+status: derived
+study: correction-periods
+about: [primus-vs-pc]

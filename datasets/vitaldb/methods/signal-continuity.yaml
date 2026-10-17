@@ -1,0 +1,22 @@
+id: signal-continuity
+name: Does the waveform run on?
+summary: >-
+  Test whether a waveform continues smoothly across a boundary (a record junction, a reset, a gap) to tell lost
+  samples from lost time, and to find samples written out of order.
+order: 4
+techniques: [junction-scores, null-controls]
+description: |
+  **The idea.** A sampled physiological waveform is smooth over a few samples. Where two records are joined, the
+  step from the last sample of one to the first of the next should look like any other step. A step too large for
+  the local slope means samples are missing or out of place; a slope that needs a gap of m samples to fit means time
+  passed with nothing sampled.
+
+  **What it gives.** Which boundaries hide data loss, which records are out of order (and the order that repairs
+  them), where unsampled time sits and how long it is, and spurious samples that carry no time.
+
+  **How.** Score each junction against an extrapolation of the samples before it, scaled by the signal's ordinary
+  sample-to-sample steps; try alternative orders; fit lines or quadratics either side of each sample boundary with
+  a time gap of 0 to m samples and keep the gap that fits best; compare with the same scores far from any boundary.
+
+  **Pitfalls.** Sensitivity depends on slope: a gap on the flat part of a pulse is invisible, so only a fraction of
+  events can be located. Use several channels and steep signals (arterial upstrokes, the plethysmogram).

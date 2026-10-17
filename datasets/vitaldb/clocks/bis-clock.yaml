@@ -1,0 +1,12 @@
+id: bis-clock
+name: BIS clock
+summary: The BIS monitor's own clock.
+type: oscillator
+nominal: 128 Hz EEG sample clock
+description: The BIS monitor's own clock. Its EEG stamps drift by about +23 ppm against the recorder PC and are
+  corrected on a fixed 8,192 s timer.
+tags:
+- stub
+utc_plan: 'Two routes, and they close: through its own stamps to the PC, and through shared bursts to SNUADC. A
+  constant latency (−0.80 s or −0.69 s by SNUADC mode) belongs in the link. To strengthen: use the cardiac artefact
+  where there are no bursts.'

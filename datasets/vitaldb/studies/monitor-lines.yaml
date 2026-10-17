@@ -1,0 +1,38 @@
+id: monitor-lines
+name: Monitor clocks in the waveforms' spectral lines
+summary: >-
+  Differences of the raw converter counts show lines from the monitor's analogue outputs: 240 Hz in arterial pressure
+  and plethysmogram, and a 30 Hz family in the plethysmogram alone. Each measures a monitor clock against SNUADC.
+date: 2026-10-17
+status: open
+methods: [signal-borne-clocks]
+clocks: [monitor-output-clock, oximeter-frame-clock, snuadc-sample]
+devices: [solar8000, snuadc]
+variables: [snuadc-art, snuadc-pleth, snuadc-ecg-ii]
+data: 6 short-to-medium files (1.4–2.6 h), chosen at random; work of the R-peak timing session, consolidated here.
+method: |
+  Integer counts were recovered from each track and the spectrum of their sample-to-sample changes searched for
+  lines. The 240 Hz line was demodulated in 10 s windows on the global sample index; its frequency came from a
+  zero-padded FFT with parabolic peak interpolation. The phase difference of ART and PLETH at that line gave their
+  skew.
+results: |
+  - **240 Hz in PLETH and ART** (weakly in ECG in 3 cases): −25.4 to −28.7 ppm against the SNUADC.
+  - **A 30 Hz family (30, 60, 90, 150 Hz) in PLETH only:** −30 to −73 ppm in frequency, that is +30 to +73 ppm in
+    period, matching the oximeter frame clock from fiducial locking ([[study:ppg-frame-clock]]).
+  - **ART leads PLETH by 0.31–0.39 ms** at 240 Hz in every case, consistent with the converter reading its channels
+    one after another.
+  - **Line frequencies group files by device:** two of the six share every line and are probably the same monitor
+    and converter.
+  - **No frame-slip sawtooth was seen** in the ART→PLETH lag of these six files, which conflicts with
+    [[study:ppg-sawtooth]]; a few slips per short file barely show in a jump histogram, and many stretches have a
+    paused sawtooth. To settle by running these files through [[software:physiosync]].
+discussion: |
+  A third, independent clock (the monitor's output stage) measured from the waveforms alone, and a blind way to
+  group recordings by device.
+open_questions:
+  - title: "Monitor clock lines in six files only"
+    kind: next step
+    summary: >-
+      The monitor clock lines were seen in six files; running these files through physiosync, and then a larger set,
+      would settle whether they are general.
+limitations: Six files.

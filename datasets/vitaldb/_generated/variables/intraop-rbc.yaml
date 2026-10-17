@@ -1,0 +1,23 @@
+id: intraop-rbc
+name: Intraoperative RBC transfusion
+summary: Intraoperative RBC transfusion (clinical table).
+type: clinical
+source_name: intraop_rbc
+group: Clinical record/Fluids and blood
+source: clinical_data.csv
+unit: Unit
+value:
+  kind: 'exact: exact count; point mass'
+  resolution: exact
+  spread: vitaldb-resolution/spread.json#intraop_rbc
+tags:
+- generated
+- vitaldb-resolution
+description: Unit count; counts fall smoothly, no heaping.
+figures:
+- id: distribution
+  file: distributions/intraop-rbc.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 352 records, median 2 Unit; 2 outside the 0.5–99.5th percentiles are not shown.'
+  alt: Histogram of the recorded values of intraop_rbc.

@@ -1,0 +1,20 @@
+id: dx
+name: Diagnosis
+summary: Diagnosis (clinical table).
+type: clinical
+source_name: dx
+group: Clinical record/Operation and anaesthesia
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/dx.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 6,388 records in 1038 categories (12 most common shown).'
+  alt: Histogram of the recorded values of dx.

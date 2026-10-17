@@ -1,0 +1,4 @@
+id: beat-matching
+name: Beat matching
+summary: >-
+  Pair beats seen by two signals one to one, using a delay window around the known level rather than nearest neighbours, which flip between beats when the lag is near half a beat.

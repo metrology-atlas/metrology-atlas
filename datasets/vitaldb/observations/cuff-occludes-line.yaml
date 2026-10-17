@@ -1,0 +1,13 @@
+id: cuff-occludes-line
+name: The blood pressure cuff often sits on the arterial line's arm
+summary: >-
+  Many "lost pulse" events in the arterial pressure are an NIBP cuff inflating on the same arm: the pulse fades and
+  pressure decays to 35–50 mmHg, then returns as the cuff cycle ends.
+status: established
+devices: [solar8000, snuadc]
+variables: [snuadc-art, solar8000-nibp]
+studies: [arterial-line-accesses]
+consequence: Cuff inflations disturb arterial timing as much as line accesses do.
+handling: '[[software:lineaccess]] labels them occlusions (art_line:occlusion), separately from accesses.'
+code:
+  - lineaccess

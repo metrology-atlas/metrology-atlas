@@ -1,0 +1,30 @@
+id: lab-computed-value-grids
+name: Computed lab values on reachable grids
+summary: |
+  PT %, INR and fibrinogen are computed from a finer measurement, so some integers are unreachable and a heaping screen misreads the comb as heaping.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - PT % and INR are calculated from PT seconds, measured to 0.1 s.
+  - Fibrinogen is computed from a clotting time in the same way.
+data: |
+  - Central-lab PT % (21,143 results screened) and fibrinogen (18,921), from `lab_data.csv`; pre-operative PT % from `clinical_data.csv`.
+method: |
+  - Whole-number heaping screen at multiples of 10 and 5, with expected counts from a local quadratic fit to neighbouring values.
+  - Inspection of which integers occur at all, and how often, against the local average.
+results: |
+  - PT % shows a ×10 ratio of 1.09 (z 4.0); fibrinogen a ×5 ratio of 1.27 (z 11.3).
+  - Each 0.1 s step moves PT % by roughly 1–2 points, so some integers can never occur (98 and 102 almost never appear) and their neighbours carry the extra counts.
+  - For fibrinogen, 44 integers between 150 and 450 mg/dL occur at less than 30% of the local average.
+  - Pre-operative PT % shows the same artefact.
+discussion: |
+  - This is not heaping, and fitting a rounding model would mistake it for one.
+  - PT % and INR should take their interval from PT seconds (±0.05 s mapped through the local PT–PT % relationship), and use the recorded PT seconds where present.
+  - Fibrinogen has no underlying time in the data, so its interval should be the local spacing of reachable values, estimated from the data, rather than ±0.5 mg/dL.
+  - The checklist now checks for unreachable values before reading excesses as heaping, and screens use a local smooth expectation, not neighbour means.
+limitations: |
+  - The fibrinogen interval has to be estimated from the data, because the clotting time is not recorded.
+tags:
+- from the resolution work

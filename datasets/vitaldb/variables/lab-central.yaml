@@ -1,0 +1,62 @@
+id: lab-central
+name: Central lab result time
+summary: Time stamp of a central laboratory result in the lab table.
+group: Laboratory/Result times
+type: event
+source_name: lab_data (central lab)
+device: clinical-records
+stamp_clock: hospital-records
+timing:
+- id: lab-central
+  name: lab timestamp
+  default: true
+  delay_s:
+  - 480.0
+  - 1440.0
+  interval_s:
+  - 1.0
+  - 1.0
+  domain: records
+  status: measured
+  evidence: ~8-24 min after the access (median ~14; weak); result after an unrecorded turnaround
+- id: lab-draw
+  name: draw time from arterial access
+  delay_s:
+  - 10.0
+  - 100.0
+  interval_s:
+  - 28.0
+  - 117.0
+  domain: records
+  status: estimated
+  evidence: access 28-117 s (p10-p90); matched 0-15 min (gas) or 0-30 min (central) before
+tags:
+- stub
+chain:
+- node: Hospital records clock
+  clock: hospital-records
+  kind: sync
+  effect: The laboratory and anaesthesia record systems keep hospital time (KST). Their offset from UTC and from
+    the recorder PC is not observable in the release, which shifts every case to 2100.
+  status: assumed
+- node: Blood draw
+  kind: processing
+  status: estimated
+  effect: Drawn (often not from the arterial line), sent to the central lab and logged there about 8–24 min later.
+  offset_s:
+  - 480
+  - 1440
+  parameter: lab-central-lag
+  studies:
+  - lab-timestamp-meaning
+- node: Result known
+  kind: processing
+  status: assumed
+  effect: The result follows an unrecorded turnaround.
+- node: Stored lab time
+  kind: stamping
+  status: measured
+  offset_s:
+  - 1
+  - 1
+  effect: Whole seconds, one time per specimen.

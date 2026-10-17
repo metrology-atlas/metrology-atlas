@@ -1,0 +1,11 @@
+id: snuadc-step-period
+name: SNUADC step-mode correction interval
+quantity: Time between successive step-mode corrections.
+value: 2.06
+unit: h
+spread: {p10: 1.7, p90: 2.31}
+status: measured
+study: snuadc-stamp-sawtooth
+about: [snuadc-step-vs-pc]
+date: 2026-10-17
+headline: true

@@ -1,0 +1,15 @@
+id: release-time-shift
+name: Every case starts at 2100-01-01 00:00 UTC
+summary: >-
+  The release shifts each case to the same start, removing the date and the time of day. Within a case all times
+  keep their spacing.
+status: established
+clocks: [recorder-pc, utc]
+devices: [vital-recorder]
+studies: [case-clock, recorder-pc-steps]
+consequence: |
+  No timing claim against UTC can be tested in the release, and time of day, weekday and season are hidden. The
+  time of day can be recovered to the minute from the admission date and EMR times.
+handling: The case clock ([[code:vitaldb-bench/vitaldb_bench/case_clock.py|vitaldb_bench.case_clock]]) recovers the time of day as KST.
+code:
+  - vitaldb-bench/vitaldb_bench/case_clock.py

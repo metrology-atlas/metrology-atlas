@@ -1,0 +1,30 @@
+id: hco3
+name: Bicarbonate
+summary: Bicarbonate (lab table).
+type: lab
+source_name: hco3
+group: Laboratory/Blood gas
+source: lab_data.csv
+unit: mmol/L
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 0.1 mmol/L, nearest
+  step: 0.1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#hco3
+tags:
+- generated
+- vitaldb-resolution
+description: 'Single resolution; last digit flat.
+
+
+  Its time is the lab system''s result time: see [[variable:lab-blood-gas]] and [[variable:lab-central]].'
+stamp_clock: hospital-records
+figures:
+- id: distribution
+  file: distributions/hco3.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 14,578 records, median 25.4 mmol/L; 135 outside the 0.5–99.5th percentiles are
+    not shown.'
+  alt: Histogram of the recorded values of hco3.

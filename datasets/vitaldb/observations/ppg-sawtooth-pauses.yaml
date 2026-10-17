@@ -1,0 +1,11 @@
+id: ppg-sawtooth-pauses
+name: The PPG sawtooth sometimes stops
+summary: >-
+  In some stretches, and some whole recordings, no frame slip comes although several were due. The delay there is
+  flat and the frame clock keeps running; what stops the content's drift is not known.
+status: open
+clocks: [oximeter-frame-clock]
+variables: [snuadc-pleth]
+studies: [ppg-sawtooth-pauses]
+consequence: "A stretch without slips is not automatically safe: some show slow drift or fast ramps instead."
+handling: Stretches that pass the paused-sawtooth test are labelled N (offset only).

@@ -1,0 +1,112 @@
+id: reset-cluster-order
+name: Records out of order at SNUADC resets, and where the lost time goes
+summary: >-
+  At every SNUADC reset the five records after it are written out of order: two continue the old timing and three
+  start the new. Put back in order, the waveform runs on with no samples missing; the 18–20 ms lost at each reset
+  goes missing inside the last old-timing record, and an extra zero sample follows.
+date: 2026-10-17
+status: current
+methods: [stamp-reading, signal-continuity]
+techniques: [junction-scores, null-controls]
+clocks: [snuadc-sample, recorder-pc]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+data: |
+  315 resets with the standard stamp pattern, then 392 resets in 174 of 182 step-mode cases with clock fits, in
+  every SNUADC channel. A census of the record stamps of all 6,388 files (17 October;
+  [[code:vitaldb-bench/tools/snuadc_stamp_census.py]]) then classified every place a record is stamped before the
+  previous one ends, in the 6,321 files whose records do not overlap throughout.
+background: |
+  The correction scan ([[study:clock-correction-scan]]) found that the records inside a reset join badly, and the
+  paced ECG ([[study:paced-ecg]]) that 17.7 ms of signal is lost at each reset with no samples missing at any
+  junction. The SNUADC firmware schedules each sample 2 ms after the last, or at once if it is late, so a stall
+  longer than 2 ms is never sampled.
+method: |
+  For each reset, the records were classified by stamp: on the old grid (the last record before the reset plus
+  0.2 s, 0.4 s) or on the new grid (the first early-stamped record plus 0.2 s, 0.4 s). Junction scores compared
+  file order with old-grid-then-new-grid order. With the records reordered and the zero sample removed, every
+  sample boundary within ±0.3 s of the cluster was tested for a time gap of m samples: the 20 samples either side
+  were fitted with one quadratic with the second side shifted by m, for m = 0 to 15, on the plethysmogram and
+  arterial pressure. Random windows far from resets were the control.
+results: |
+  - **The order:** two old-grid records, then three new-grid records, each in file order (usually file positions
+    1 and 3, then 0, 2 and 4). Every junction is then as smooth as an ordinary record boundary, no samples are
+    missing at any of them, and the stamps make one clean step back of −0.480 s.
+  - **The same clusters in every SNUADC channel**, and every sample survives. About 1 reset in 16 interleaves
+    differently and gives one record its neighbour's stamp; the same rule orders it (24 records restamped). 9 resets
+    were already in order.
+  - **One extra zero sample:** 335 of 392 resets hold one sample reading 0 in every channel at once. Lines fitted
+    either side meet as if it were not there (−0.97 samples, median), so it carries no time: a filler.
+  - **The lost time is in the last old-grid record.** 81 of 97 confident plethysmogram detections (m = 6–13) fall
+    in that record, against about 2 expected by chance; with arterial pressure, 99 of 392 resets show it there.
+    The gap is about 11 samples (IQR 10–12), at no fixed position, and always before the zero sample.
+  - **In every file (census):** 1,785 files write their reset clusters out of order (2,569 resets, 178 of them
+    with a repeated stamp), and 820 files write them already in order (988 resets). **No file does both**, which
+    points to two recorder or firmware versions. 12 backward steps of reset size match neither (left as written;
+    most are small interleaved steps of 8–12 ms), and 496 are small steps of the frequent-correction mode.
+  - **34 files must be excluded from the rule.** Their records overlap the next record far more often than resets
+    do (in 20 of them, 4–95% of all record junctions step back). There the rule matches 115,487 times by
+    coincidence and would scramble the signal. None of these files is in the current builds or clock fits; the
+    import needs a guard before a full build (see [[observation:snuadc-overlapping-records]]).
+
+  [[figure:reset-classes]]
+discussion: |
+  Sampling pauses for about 20 ms just before the recorder starts the new grid, and the time is never sampled; a
+  filler sample follows. With the filler counted, the true pause is about 19.7 ms, consistent with the 17.7 ms lost
+  on the sample count. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] now puts the records in sampling order
+  ([[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py|resets.py]]), and the clock fits use the same order. The zero sample is
+  still stored, and the loss is added at the end of the record rather than at its true point inside it.
+limitations: |
+  The gap is located only where the signal is steep (about one reset in four). The public firmware may not be the
+  version deployed. The census classifies by stamps alone; the 988 in-order resets were not checked in the signal.
+open_questions:
+  - title: "Two firmware versions behind the reset order"
+    kind: hypothesis
+    summary: >-
+      1,785 files write their reset clusters out of order and 820 in order, and no file does both. Two recorder or
+      firmware versions would explain the clean split, but nothing in the release shows which file ran which; file
+      headers and recording dates (hidden in the release) would tell.
+  - title: "34 files whose records overlap throughout"
+    kind: phenomenon
+    summary: >-
+      Their cause is unexplained ([[observation:snuadc-overlapping-records]]).
+  - title: "Twelve unmatched resets"
+    kind: phenomenon
+    summary: >-
+      Twelve unmatched resets have small interleaved steps of 8–12 ms. Whether they are resets of a different size
+      or something else is not known.
+  - title: "The filler sample"
+    kind: phenomenon
+    summary: >-
+      Why most resets hold one extra zero sample, a little after the gap, is not known.
+  - title: "A guard on the reorder rule for overlapping files"
+    kind: next step
+    summary: >-
+      The reorder rule matches 115,487 coincidental clusters in the 34 overlapping files. None of them are in the
+      current builds or fits, but before any full import the rule must detect these files and leave them alone, with
+      a test on one of them.
+  - title: "Census figures without the anomalous files"
+    kind: next step
+    summary: >-
+      The census summary now leaves out the 34 anomalous files and counts them separately. The figures made before
+      that change still include them, so they need re-exporting from the new summary, and the summary change needs
+      committing in vitaldb-bench.
+code:
+  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py
+  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/tests/test_resets.py
+  - vitaldb-bench/tools/clock_model_fit.py
+  - analysis-workspace/results/clock/scripts/gapscan.py
+  - analysis-workspace/results/clock/scripts/glitch.py
+figures:
+  - id: reset-classes
+    theme: drift and resets
+    source: vitaldb-bench tools/snuadc_stamp_census.py
+    file: reset-census-classes.png
+    caption: Every SNUADC reset in the release, by what the reset-order rule does with it (files with records overlapping throughout left out).
+    alt: Bar chart of reset counts by class; most resets are reordered by the standard rule, about a thousand were already in order, and twelve match neither.
+  - id: reset-unmatched
+    theme: drift and resets
+    source: vitaldb-bench tools/snuadc_stamp_census.py
+    file: reset-census-unmatched.png
+    caption: The stamp patterns of the twelve reset-sized backward steps the rule leaves as written (gaps between the next six records, in units of 10 ms).
+    alt: Horizontal bar chart of the most common stamp patterns among unmatched backward steps.

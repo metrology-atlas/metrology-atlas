@@ -1,0 +1,11 @@
+id: cardioq-vs-snuadc
+name: CardioQ against SNUADC
+summary: >-
+  Beats matched between the CardioQ's arterial pressure and SNUADC's put the CardioQ on the SNUADC timeline within
+  each re-anchored stretch (matched-beat MAD 0.24 s).
+clock: cardioq-clock
+against: snuadc-sample
+correction:
+  rule: One offset per stretch between CardioQ re-anchors, from beat matching.
+  size: cardioq-snuadc-lag
+status: measured

@@ -1,0 +1,25 @@
+id: preop-sao2
+name: Preoperative SpO2
+summary: Preoperative SpO2 (clinical table).
+type: clinical
+source_name: preop_sao2
+group: Laboratory/Preoperative labs
+source: clinical_data.csv
+unit: '%'
+value:
+  kind: 'uniform: single resolution; uniform over the rounding interval'
+  resolution: 0.1 %, nearest
+  step: 0.1
+  anchor: nearest
+  spread: vitaldb-resolution/spread.json#preop_sao2
+tags:
+- generated
+- vitaldb-resolution
+description: Pre-operative copy of a lab result; behaves like the lab data.
+figures:
+- id: distribution
+  file: distributions/preop-sao2.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 533 records, median 97 %; 4 outside the 0.5–99.5th percentiles are not shown.'
+  alt: Histogram of the recorded values of preop_sao2.

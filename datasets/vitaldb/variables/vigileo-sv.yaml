@@ -1,0 +1,22 @@
+id: vigileo-sv
+name: Vigileo SV, CO and SVV
+summary: Stroke volume, cardiac output and stroke volume variation.
+type: numeric
+source_name: Vigileo/SV
+device: vigileo
+stamp_clock: recorder-pc
+timing:
+- id: vigileo
+  name: as stamped
+  default: true
+  delay_s:
+  - 2.0
+  - 25.0
+  interval_s:
+  - 20.0
+  - 20.0
+  domain: vigileo
+  status: measured
+  evidence: 'SVV vs arterial PPV: aligned in 25 of 343 cases, |offset| 4.7 s median, p95 26 s'
+tags:
+- stub

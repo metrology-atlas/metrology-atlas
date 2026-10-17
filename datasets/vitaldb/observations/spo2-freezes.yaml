@@ -1,0 +1,9 @@
+id: spo2-freezes
+name: SpO2 freezes in low perfusion
+summary: >-
+  During low perfusion SpO2 mostly holds its last value rather than blanking (55–70% of 5–20 s episodes); when the
+  probe comes off it blanks within about a second.
+status: established
+variables: [solar8000-spo2, solar8000-pleth-hr]
+studies: [spo2-latency]
+consequence: A flat SpO2 is not proof of a stable saturation; check the PLETH.

@@ -1,0 +1,7 @@
+id: hr-truncated
+name: Solar8000 heart rate is truncated, not rounded
+summary: The Solar8000 heart rate drops its fraction (floor), in 24 of 24 pilot cases; the respiratory rate rounds.
+status: established
+variables: [solar8000-hr]
+studies: [numeric-derivation-pilot]
+consequence: A heart rate computed from R–R intervals reads about 0.7% higher unless it is truncated the same way.

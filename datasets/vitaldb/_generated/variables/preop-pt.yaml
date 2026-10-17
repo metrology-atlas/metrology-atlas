@@ -1,0 +1,23 @@
+id: preop-pt
+name: Preoperative PT
+summary: Preoperative PT (clinical table).
+type: clinical
+source_name: preop_pt
+group: Laboratory/Preoperative labs
+source: clinical_data.csv
+unit: '%'
+value:
+  kind: 'neighbours: computed value; interval to midpoints of neighbouring reachable values'
+  resolution: 'computed value: interval to the neighbouring reachable values'
+  spread: vitaldb-resolution/spread.json#preop_pt
+tags:
+- generated
+- vitaldb-resolution
+description: PT %, computed; uses the lab reachable values.
+figures:
+- id: distribution
+  file: distributions/preop-pt.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 5,998 records, median 101 %; 55 outside the 0.5–99.5th percentiles are not shown.'
+  alt: Histogram of the recorded values of preop_pt.

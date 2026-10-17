@@ -1,0 +1,10 @@
+id: snuadc-mode-setups
+name: The SNUADC correction mode belongs to setups, not dates
+summary: >-
+  The frequent-correction mode is confined to a few setups, can switch either way within a case, and marks a period
+  in at most one setup. It is not a global software change.
+status: established
+clocks: [snuadc-sample]
+devices: [snuadc]
+studies: [drift-units]
+consequence: The mode cannot date a recording, and must be read per case (or per stretch) before correcting.

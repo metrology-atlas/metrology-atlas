@@ -1,0 +1,6 @@
+id: cardioq-reanchor
+name: CardioQ re-anchoring interval
+quantity: Length of the stretches between CardioQ re-anchors.
+display: "at most about 300 s; about 40 re-anchors per case"
+status: measured
+about: [cardioq-vs-pc]

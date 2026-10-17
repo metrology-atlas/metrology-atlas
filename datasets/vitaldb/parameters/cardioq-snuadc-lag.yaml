@@ -1,0 +1,7 @@
+id: cardioq-snuadc-lag
+name: CardioQ stamps behind SNUADC
+quantity: Lag of the CardioQ arterial pressure stamps behind SNUADC arterial pressure, per stretch.
+display: "0.4–4.4 s (p5–p95); matched-beat MAD 0.24 s (24 cases)"
+status: measured
+study: rare-device-sync
+about: [cardioq-vs-snuadc]

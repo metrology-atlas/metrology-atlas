@@ -1,0 +1,15 @@
+id: snuadc-stamp-arithmetic
+name: SNUADC stamps run −0.95 ppm against the sample count
+summary: >-
+  Between corrections each 0.2 s record stamp increment is about 0.19 µs short: stamps run −0.95 ppm from the
+  sample count in 88% of files (both SNUADC modes). It is arithmetic, not clock drift. The other 12% sit between
+  −0.90 and −0.55 ppm.
+status: established
+devices: [snuadc, vital-recorder]
+studies: [stamp-arithmetic, paced-ecg, vitaldb-loader]
+consequence: |
+  Rates read from stamps include −0.95 ppm; the frequent-correction mode's "about −1 ppm" is this, not drift.
+  Placing samples by rounded stamps, as the vitaldb package does, overwrites one sample about every 35 minutes.
+handling: The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] places samples by count, so no sample is lost. The census of all files (17 October) confirmed it.
+code:
+  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py

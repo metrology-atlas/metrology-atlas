@@ -1,0 +1,37 @@
+id: numeric-clock-check
+name: SNUADC against the PC-stamped heart rate
+summary: >-
+  The Solar8000 heart rate is stamped by the recorder on arrival, so the delay from the ECG to it, on the ECG's raw
+  sample count, ramps at the SNUADC clock's rate: −65.3 ppm, against −66.7 ppm from the stamp model. Two independent
+  routes agree.
+date: 2026-10-17
+status: current
+methods: [shared-events]
+clocks: [snuadc-sample, recorder-pc]
+devices: [snuadc, solar8000]
+variables: [snuadc-ecg-ii, solar8000-hr]
+data: 66 step-mode cases without gaps (722 thirty-minute blocks); 7 frequent-correction cases without gaps.
+method: |
+  The delay from the ECG to the Solar8000 HR was measured in 30-minute blocks with the ECG on its raw sample count
+  and, separately, on the stamp-model line.
+results: |
+  - **On the sample count the delay ramps at −65.3 ± 3.9 ppm;** the stamp model gives −66.7 ppm median for the same
+    cases.
+  - **On the corrected line the ramp is −13.0 ± 4.0 ppm:** small, not quite zero. A residual to watch.
+  - **Frequent-correction cases are inconclusive** here (7 cases, 52 ± 40 ppm).
+  - **Per-case precision is poor:** block delays scatter by about 0.7 s, so this works pooled, not per case.
+discussion: |
+  A second, independent measure of the SNUADC–PC rate, through a device with no clock of its own.
+open_questions:
+  - title: "A residual of −13 ppm"
+    kind: phenomenon
+    summary: >-
+      On the corrected SNUADC line the ECG-to-HR delay still ramps by −13.0 ± 4.0 ppm. It may be the Solar8000's own
+      processing, an error in the stamp model's rate, or the PC; a larger run (all step-mode cases without gaps)
+      would narrow it.
+  - title: "Frequent-correction mode on more cases"
+    kind: next step
+    summary: >-
+      Frequent-correction mode is inconclusive on 7 cases (52 ± 40 ppm).
+code:
+  - vitaldb-bench/tools/numeric_clock_check.py

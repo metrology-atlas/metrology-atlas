@@ -1,0 +1,85 @@
+id: snuadc-art
+name: Arterial pressure (SNUADC)
+summary: Invasive arterial pressure, sampled by SNUADC at 500 Hz from the monitor's analogue output.
+type: waveform
+source_name: SNUADC/ART
+device: snuadc
+stamp_clock: recorder-pc
+sample_clock: snuadc-sample
+rate_hz: 500
+unit: mmHg
+timing:
+- id: snu-model
+  name: stamp-model time
+  default: true
+  delay_s:
+  - 0.0003
+  - 0.003
+  interval_s:
+  - 0.002
+  - 0.01
+  domain: reference
+  status: estimated
+  evidence: stamp-model residual; 100 Hz files 10 ms
+  corrects:
+  - snu-raw
+- id: snu-raw
+  name: raw stamps
+  delay_s:
+  - 0.01
+  - 0.48
+  interval_s:
+  - 0.002
+  - 0.002
+  domain: snuadc-raw
+  status: measured
+  evidence: sawtooth up to -480 ms (step mode corrections)
+tags:
+- stub
+chain:
+- node: SNUADC sample clock
+  clock: snuadc-sample
+  kind: clock
+  effect: SNUADC samples on its own crystal; the recorder stamps each 0.2 s record from its model of that clock.
+    In step mode the stamps drift (−62 ppm median) and are pulled back about 0.48 s whenever the drift reaches half
+    a second; in frequent-correction mode they stay within about 10 ms. The atlas's stamp model refits the line.
+  offset_s:
+  - 0.01
+  - 0.48
+  residual_s:
+  - 0.0003
+  - 0.003
+  drift: −62 ppm median in step mode, pulled back about every 2.06 h
+  status: measured
+  link: snuadc-step-vs-pc
+  studies:
+  - snuadc-stamp-sawtooth
+- node: Signal lost at resets
+  kind: correction
+  effect: At each step-mode reset about 18–20 ms of signal is never sampled, while every record still holds 100
+    samples. The stamp model adds the loss back at the end of the last record before the new grid; samples inside
+    that record can still be up to about 20 ms late.
+  offset_s:
+  - 0.0172
+  - 0.0182
+  residual_s:
+  - 0.0
+  - 0.02
+  status: measured
+  parameter: snuadc-reset-loss
+  studies:
+  - paced-ecg
+- node: Monitor analogue output
+  kind: transport
+  effect: The arterial pressure reaches SNUADC as the patient monitor's analogue output. Any delay inside the monitor
+    is common to the ECG and pressure channels and has not been measured.
+  status: assumed
+- node: Stored sample time
+  kind: stamping
+  effect: Sample j of a record sits at its stamp + j/500 s. Stamps run −0.95 ppm against the sample count (stamp
+    arithmetic), and the five records after each reset are written out of order; the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] puts them back
+    in sampling order.
+  offset_s:
+  - 0.002
+  - 0.002
+  status: measured

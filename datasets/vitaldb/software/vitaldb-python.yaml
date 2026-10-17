@@ -1,0 +1,11 @@
+id: vitaldb-python
+name: vitaldb (Python package)
+summary: The VitalDB project's own Python reader for .vital files, as published on PyPI.
+url: https://pypi.org/project/vitaldb/
+visibility: public
+language: Python
+description: |
+  The reader most users load VitalDB with. The [[study:vitaldb-loader]] study read its source (version 1.7.2,
+  `vitaldb/utils.py`) to see how it places samples in time. Code paths on this page refer to that version of the
+  package; there is no repository to link to, so they are shown as text.
+references: [vitaldb-python]

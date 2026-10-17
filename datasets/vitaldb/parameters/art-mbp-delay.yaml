@@ -1,0 +1,9 @@
+id: art-mbp-delay
+name: Solar8000 ART mean delay
+quantity: Delay from the end of the window to the stamp of the Solar8000 mean arterial pressure (EWMA ¼ per beat).
+value: 1.7
+unit: s
+spread: {p10: 1.0, p90: 2.5}
+status: measured
+study: numeric-delay-variability
+about: [solar8000-art-numerics]

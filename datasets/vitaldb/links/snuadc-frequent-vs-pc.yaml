@@ -1,0 +1,13 @@
+id: snuadc-frequent-vs-pc
+name: SNUADC (frequent-correction mode) against the recorder PC
+summary: >-
+  In frequent-correction mode the SNUADC stamps follow the PC, with small forward steps; the −0.95 ppm they show
+  against the sample count is stamp arithmetic.
+clock: snuadc-sample
+against: recorder-pc
+modes: [frequent]
+rate: snuadc-stamp-arithmetic
+correction:
+  rule: Small forward steps of +5 to +15 ms, about 0.2 per hour; never the 0.48 s pull-back of step mode.
+  size: snuadc-frequent-steps
+status: measured

@@ -1,0 +1,4 @@
+id: junction-scores
+name: Junction scores
+summary: >-
+  Score the step across a record junction against a linear extrapolation of the samples before it, scaled by the signal's ordinary sample-to-sample steps.

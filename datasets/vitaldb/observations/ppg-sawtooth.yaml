@@ -1,0 +1,17 @@
+id: ppg-sawtooth
+name: The ECG→PPG delay is a sawtooth
+summary: >-
+  Inside the oximeter the PPG content creeps 18–52 ppm against its 30 Hz frames; every 11–31 minutes a frame repeats
+  and the delay jumps up by 33 ms. The rate is fixed per recording setup.
+status: established
+clocks: [oximeter-frame-clock]
+devices: [solar8000, snuadc]
+variables: [snuadc-pleth]
+studies: [ppg-sawtooth, ppg-art-reference]
+consequence: |
+  Uncorrected, pulse arrival time from VitalDB carries a 0–33 ms sawtooth (about 9.5 ms RMS) on top of its hardware
+  delay; trends in PAT over tens of minutes can be the sawtooth, not physiology.
+handling: '[[software:physiosync]] removes it tooth by tooth; labels give each tooth''s confidence tier.'
+code:
+  - physiosync/physiosync/ecg_ppg.py
+  - physiosync/physiosync/labels.py

@@ -1,0 +1,24 @@
+id: solar8000-nibp
+name: Non-invasive blood pressure
+summary: Cuff blood pressure, recorded after each cuff cycle.
+type: numeric
+source_name: Solar8000/NIBP_MBP
+device: solar8000
+stamp_clock: recorder-pc
+unit: mmHg
+timing:
+- id: nibp
+  name: as stamped
+  default: true
+  delay_s:
+  - 20.0
+  - 40.0
+  interval_s:
+  - 30.0
+  - 40.0
+  domain: solar8000
+  status: measured
+  evidence: result 20-40 s after the cuff measurement
+tags:
+- stub
+references: [goodwin2021blood]

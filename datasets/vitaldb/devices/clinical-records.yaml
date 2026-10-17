@@ -1,0 +1,8 @@
+id: clinical-records
+name: Clinical records
+summary: 'The clinical table and lab table of the release: anaesthesia record, lab results, admission.'
+type: other
+clocks:
+- hospital-records
+tags:
+- stub

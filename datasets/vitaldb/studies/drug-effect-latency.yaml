@@ -1,0 +1,31 @@
+id: drug-effect-latency
+name: Drug effects as a clock check
+summary: >-
+  Infusion pumps, the rapid infuser and the cerebral oximeter share no waveform with the reference. Drug effects
+  that follow infusions at plausible delays (propofol to BIS in about 2 minutes, fluid to CVP in about 30 s) bound
+  their clocks to well within a minute of the recorder.
+date: 2026-10-13
+status: current
+methods: [shared-events]
+techniques: [null-controls]
+devices: [orchestra, fms, invos, bis, snuadc]
+variables: [pump-rates, fms-infusion, invos-rso2, bis-index]
+data: 1,529 cases (1,500 with Orchestra pumps, plus every FMS and Invos case). Every event type was also measured at random times with the same exclusions.
+background: |
+  Physiology is a soft link: a drug's onset has a known range, not a known value, so it bounds a clock offset
+  rather than measuring it. A response that comes before its cause would expose a clock error.
+results: |
+  | Event → response | Cases (events) | Responded (controls) | Latency p10 / p50 / p90 (s) | Verdict |
+  |---|---|---|---|---|
+  | Propofol start → BIS below 60 for 30 s | 497 (499) | 90% | 70 / 132 / 382; none ≤ 0 | Plausible |
+  | FMS flow over 100 mL/min → CVP rise ≥ 2 mmHg | 13 (67) | 84% (34%) | 3 / 32 / 129 | Plausible |
+  | FMS flow → MAP rise | 13 (68) | 90% (75%) | 2 / 34 / 136 | Weak |
+  | Remifentanil up → HR fall ≥ 3 bpm | 1,282 (1,691) | 93% (73%) | 26 / 110 / 274 | Weak |
+  | Phenylephrine or norepinephrine step → MAP rise | 27–32 | 63–71% (65–67%) | median 108–109 | Not distinguishable |
+  | Invos rSO2 against SpO2 | 30–31 | median r 0.13 | — | Uninformative |
+discussion: |
+  Propofol to BIS is the strongest check: arm-brain circulation plus effect-site equilibration fits 1–3 minutes, and
+  no response precedes its infusion. Vasopressor and remifentanil responses are matched too often at random times to
+  test a clock, and Invos has no usable shared signal.
+code:
+  - vitaldb-bench/tools/drug_effect_latency.py

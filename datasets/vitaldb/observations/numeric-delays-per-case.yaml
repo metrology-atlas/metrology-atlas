@@ -1,0 +1,10 @@
+id: numeric-delays-per-case
+name: Numeric delays are fixed within a case but differ between cases
+summary: >-
+  A numeric's delay does not drift through a recording, but 40–70% of its variance lies between cases. One delay per
+  case describes it; one delay for the whole dataset is wrong by up to about 2 s.
+status: established
+devices: [solar8000, primus]
+variables: [solar8000-hr, solar8000-art-numerics, primus-numerics]
+studies: [numeric-delay-variability]
+handling: Per-case delay labels (numeric_delay) with a standard error and a quality flag.

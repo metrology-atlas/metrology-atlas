@@ -1,0 +1,20 @@
+id: op-duration
+name: Operation duration
+summary: Operation duration (derived table).
+type: clinical
+source_name: op_duration
+group: Clinical record/Times and durations
+source: derived
+unit: min
+value:
+  kind: 'derived: computed from other variables'' posteriors'
+  resolution: derived from opstart, opend
+  inputs:
+  - opstart
+  - opend
+  formula: (opend - opstart) / 60
+  combination: difference of the two event posteriors, sampled independently given the device references
+  spread: vitaldb-resolution/spread.json#op_duration
+tags:
+- generated
+- vitaldb-resolution

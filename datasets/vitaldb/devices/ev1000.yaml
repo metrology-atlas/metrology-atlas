@@ -1,0 +1,6 @@
+id: ev1000
+name: EV1000
+summary: Edwards EV1000 haemodynamic platform.
+type: monitor
+tags:
+- stub

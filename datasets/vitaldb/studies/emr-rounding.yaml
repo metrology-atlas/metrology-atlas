@@ -1,0 +1,45 @@
+id: emr-rounding
+name: Anaesthesia record times are rounded up
+summary: >-
+  Anaesthesia start and end entered on a 5-minute mark sit 90–290 s later, against device markers, than entries typed
+  to the minute. Rounding up to the next 5 minutes fits every one of 11 markers better than rounding to the nearest
+  or down.
+date: 2026-10-12
+status: current
+methods: [clinical-time]
+techniques: [null-controls]
+clocks: [hospital-records, recorder-pc]
+devices: [clinical-records, orchestra, bis, primus, vital-recorder]
+variables: [emr-events, pump-rates, bis-index, primus-numerics]
+data: All 6,388 cases.
+background: |
+  The clinical table's anaesthesia and operation times come from the electronic anaesthesia record. Some are typed
+  to the minute, many fall on 5-minute marks. If 5-minute entries are rounded, the rounding direction decides where
+  the true event lies.
+method: |
+  Device markers on the recorder clock (propofol and remifentanil infusion start and stop, BIS below 60 or above 80,
+  ventilation and ETCO2 start and stop, recording end) were compared with the EMR time: D = marker − EMR time. Cases
+  were split by the recovered case clock into 5-minute entries (on an absolute 5-minute mark) and minute entries. The
+  minute group's D is the documentation lag; convolving it with each rounding kernel (nearest, floor, ceiling)
+  predicts the 5-minute group, scored by kernel-density log-likelihood.
+results: |
+  - **Every marker agrees in sign:** the 5-minute group's median shifts by −89 to −293 s against the minute group,
+    and all 11 confidence intervals exclude 0. Rounding up predicts −150 s, nearest 0 and floor +150.
+  - **Ceiling wins for all 11 markers,** with small margins at anaesthesia start (induction markers spread widely)
+    and large ones at anaesthesia end.
+  - **Shifts beyond −150 s** (median about −200 s) suggest 5-minute entries are also written a little later,
+    perhaps retrospectively.
+discussion: |
+  Read a 5-minute EMR time t as the interval (t − 300 s, t]: the event is estimated at t − 150 s (SD 87 s), and the
+  entry is known no earlier than t plus the documentation lag. Minute entries keep ±60 s. The clinical_time labels in
+  the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] carry these intervals. The extra ~50 s cannot be separated from rounding with these data.
+limitations: The two groups may come from different staff or workflows. Rounding is measured for anaesthesia start and end, and assumed for operation start and end.
+open_questions:
+  - title: "About 50 s more than rounding"
+    kind: phenomenon
+    summary: >-
+      The anaesthesia record times sit later than rounding alone explains. Documentation lag and an offset between
+      the EMR clock and the recorder cannot be separated with these data.
+code:
+  - vitaldb-bench/tools/emr_markers.py
+references: [rietveld2002rounding]

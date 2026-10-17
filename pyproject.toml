@@ -1,0 +1,25 @@
+[project]
+name = "metrology-atlas"
+version = "0.2.0"
+description = "A machine-readable metrology of a recorded dataset: every variable as a distribution over its true time and value, with the clocks, models and studies behind it; compiled to one JSON file and a website."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = ["pyyaml>=6"]
+
+[project.optional-dependencies]
+site = ["zensical"]
+test = ["pytest"]
+
+[project.scripts]
+metrology-atlas = "metrology_atlas.__main__:main"
+
+[build-system]
+requires = ["uv_build>=0.8,<0.10"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[tool.ruff]
+line-length = 120

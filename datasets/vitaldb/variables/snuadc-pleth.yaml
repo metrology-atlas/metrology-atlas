@@ -1,0 +1,101 @@
+id: snuadc-pleth
+name: Plethysmogram (SNUADC)
+summary: The pulse oximeter's plethysmogram, sampled by SNUADC at 500 Hz. It reaches SNUADC through the oximeter's
+  own 30 Hz frame clock and a hardware delay of about 0.4 s.
+type: waveform
+source_name: SNUADC/PLETH
+device: snuadc
+stamp_clock: recorder-pc
+sample_clock: snuadc-sample
+rate_hz: 500
+timing:
+- id: pleth
+  name: stamp-model time
+  default: true
+  delay_s:
+  - 0.37
+  - 0.4
+  interval_s:
+  - 0.002
+  - 0.033
+  domain: reference
+  status: measured
+  evidence: hardware delay 368-399 ms; 30 Hz frames
+tags:
+- stub
+chain:
+- node: SNUADC sample clock
+  clock: snuadc-sample
+  kind: clock
+  effect: SNUADC samples on its own crystal; the recorder stamps each 0.2 s record from its model of that clock.
+    In step mode the stamps drift (−62 ppm median) and are pulled back about 0.48 s whenever the drift reaches half
+    a second; in frequent-correction mode they stay within about 10 ms. The atlas's stamp model refits the line.
+  offset_s:
+  - 0.01
+  - 0.48
+  residual_s:
+  - 0.0003
+  - 0.003
+  drift: −62 ppm median in step mode, pulled back about every 2.06 h
+  status: measured
+  link: snuadc-step-vs-pc
+  studies:
+  - snuadc-stamp-sawtooth
+- node: Signal lost at resets
+  kind: correction
+  effect: At each step-mode reset about 18–20 ms of signal is never sampled, while every record still holds 100
+    samples. The stamp model adds the loss back at the end of the last record before the new grid; samples inside
+    that record can still be up to about 20 ms late.
+  offset_s:
+  - 0.0172
+  - 0.0182
+  residual_s:
+  - 0.0
+  - 0.02
+  status: measured
+  parameter: snuadc-reset-loss
+  studies:
+  - paced-ecg
+- node: Pulse oximeter module
+  kind: processing
+  effect: 'The oximeter filters the plethysmogram and plays it out about 0.4 s late (368–399 ms by setup), in 33.3
+    ms frames on its own clock. Its content runs 18–52 ppm against those frames, so one frame repeats every 11–31
+    min: a sawtooth in the delay.'
+  offset_s:
+  - 0.368
+  - 0.399
+  drift: 18–52 ppm against its frames; one 33.3 ms slip every 11–31 min
+  status: measured
+  clock: oximeter-frame-clock
+  studies:
+  - ppg-frame-clock
+  - ppg-sawtooth
+  - ppg-offset-reference
+  link: pleth-content-vs-frames
+  parameter: pleth-chain-delay
+- node: Frame slips corrected
+  kind: correction
+  effect: '[[software:physiosync]] detects the slips and removes the sawtooth; mid-tooth drift of 2–5 ms remains in trusted stretches.'
+  offset_s:
+  - 0.0
+  - 0.0333
+  residual_s:
+  - 0.0019
+  - 0.005
+  status: measured
+  studies:
+  - ppg-sawtooth
+  - ppg-art-reference
+- node: Monitor analogue output
+  kind: transport
+  effect: The plethysmogram leaves the monitor as an analogue output; any delay there is not measured.
+  status: assumed
+- node: Stored sample time
+  kind: stamping
+  effect: Sample j of a record sits at its stamp + j/500 s. Stamps run −0.95 ppm against the sample count (stamp
+    arithmetic), and the five records after each reset are written out of order; the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] puts them back
+    in sampling order.
+  offset_s:
+  - 0.002
+  - 0.002
+  status: measured

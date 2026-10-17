@@ -1,0 +1,49 @@
+id: value-model-anestart
+background: |
+  - Anaesthesia start is an event time copied from the EMR into the case file. Its chronon is 1 minute.
+  - The dataset paper (Lee et al., Sci Data 2022) says anaesthesia start and end are recorded at 5-minute intervals. That holds for anaesthesia end, but not for most anaesthesia starts.
+  - Of the gaps from anaesthesia start to op start, 48.4% are multiples of 5 min, against 20% by chance.
+data: |
+  - 6,387 anaesthesia starts from `clinical_data.csv`.
+  - The clock minute is reconstructed from the admission date (see the clock-reconstruction study). Two cases with an admission that is not a whole minute, [[case:1342]] and [[case:5723]], are flagged `clock_uncertain`.
+  - The charted start falls before recording start in 91.7% of cases (median 583 s).
+method: |
+  - Each charted time is a rounded version of a true time that sits a variable offset G before the device recording start, which is timed to the second.
+  - G has a log-spline density (K = 12). Tying the latent to the recording gives each case its own prior and makes the anchor of each mode identifiable.
+  - First cases (recording starting 06:30–09:00) also get a clock-time density for the true start, plus two nominal values (07:40 and 07:30).
+  - Nearest, floor and ceiling anchors were compared by BIC.
+  - Propensities were allowed to depend on first-case status, evening or night, and emergency status.
+results: |
+  [[figure:observed-vs-model]]
+
+  - Only 52% of starts fall on a 5-minute clock mark. Marks ending in 0 are favoured over those ending in 5, and :30 and :40 dominate.
+  - Of the 1,870 anaesthesia starts between 07:00 and 07:59, 420 are at exactly 07:40, which suggests a nominal first-case start time.
+  - Rounded starts are written to the nearest mark: nearest beats ceiling by 47 BIC points and floor by 289.
+  - The first-case clock-time density improves the model by 722 BIC points; almost no first case starts before 07:30.
+  - Evenings and nights round much more; emergencies round a little more to 5 min.
+  - The package reproduces the stored log-likelihood within 0.11 (JAX fitter vs engine grid).
+discussion: |
+  - A start recorded off the 5-minute grid is right to the minute.
+  - A rounded start is uncertain by ±2.5 or ±5 min, centred on the recorded time.
+  - A 07:40 or 07:30 start written for a first case may be off by 10 min or more; the recording start then carries most of the information.
+  - Because both starts use the nearest mark, induction to incision is nearly unbiased (−0.5 min).
+  - The API needs the case's recording start and admission date to place the value on the clock, plus emergency status.
+limitations: |
+  - The capture windows of the two nominal first-case values are not identifiable.
+  - The charted start sits a median of about 10 minutes before monitoring begins, so what it marks is unclear.
+open_questions:
+  - title: "Anaesthesia start ignores the 5-minute rule"
+    kind: phenomenon
+    summary: >-
+      Why does anaesthesia start not follow the 5-minute rule the paper describes? Were there two entry methods, or
+      a change of system partway through?
+  - title: "What event anaesthesia start marks"
+    kind: phenomenon
+    summary: >-
+      What event does charted anaesthesia start define, given that it falls before monitoring starts? This affects
+      which signal marker to compare it with.
+  - title: "Anaesthesia-start resolution by era and department"
+    kind: next step
+    summary: >-
+      Whether anaesthesia-start resolution changes with case ID (as a proxy for time) or department is listed as a
+      next check and not reported.

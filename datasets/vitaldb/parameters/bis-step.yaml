@@ -1,0 +1,9 @@
+id: bis-step
+name: BIS correction size
+quantity: Size of each BIS correction (forward).
+value: 0.155
+unit: s
+spread: {min: 0.083, max: 0.289}
+status: measured
+study: correction-periods
+about: [bis-vs-pc]

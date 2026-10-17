@@ -1,0 +1,37 @@
+id: value-intraop-colloid-containers
+name: Colloid container rules
+summary: |
+  Colloid is a mix of products given in whole containers that depend on the operation, so values are treated as container counts rather than rounded volumes.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+background: |
+  - The first screen showed that 500 mL bags dominate, with an odd peak at 35 mL.
+  - Colloid use varies by department (urology 27%, gynaecology 18%, general surgery 9%, thoracic 3%) but not over time.
+data: |
+  - 6,388 values, none missing, 5,857 zeros; 531 non-zero (8%), up to 1,900 mL.
+  - Colloid cases are long and bloody (median 5.3 h, EBL 600 mL, against 2.8 h and 100 mL).
+method: |
+  - Split the non-zero values by operation: liver transplant, kidney surgery (kidney transplant, donor and other nephrectomy) and other surgery.
+  - Matched each group's values to plausible container sizes.
+results: |
+  - Other surgery (339): dominated by 500 mL (202) and 1,000 mL (27), which fits whole 500 mL bags of synthetic colloid, with 250 mL as half a bag. There are also 60 values at 100–400 mL.
+  - Liver transplant (92 of 108 cases): spread evenly over 100, 200, 300, 400, 500 and beyond in steps of 100, which fits counts of 100 mL vials of 20% albumin.
+  - Kidney surgery (100): almost all 50 mL or less. Kidney transplants record 35 (55 of 64 non-zero) or 20; donor nephrectomies record 15–40.
+  - 10 odd values (75, 120, 380, 401, 503, 650, 1,001, 1,020 ×2, 1,050) fit no pattern and are probably typed exactly.
+discussion: |
+  - Values on a container grid are treated as exact counts (500 mL bags; 100 mL vials in liver transplant), with no rounding model.
+  - Partial amounts in other surgery (100–400, 250) are treated as estimated to the nearest 100 mL (±50 mL), flagged as possibly albumin vials.
+  - Odd values get native 1 mL resolution.
+  - No colloid container explains the kidney-surgery values.
+limitations: |
+  - The 100–400 mL values in other surgery could be partial bags or 100 mL albumin vials; the data cannot tell these apart.
+open_questions:
+  - title: "What the kidney-surgery colloid values record"
+    kind: phenomenon
+    summary: >-
+      What do the kidney-surgery values record: a different product, a fixed small dose, or albumin in grams? Until
+      confirmed, values of 50 mL or less are flagged `unit_uncertain` at native resolution. The VitalDB team or local protocols would settle it.
+tags:
+- from the resolution work

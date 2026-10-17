@@ -1,0 +1,20 @@
+id: cormack
+name: Cormack's grade
+summary: Cormack's grade (clinical table).
+type: clinical
+source_name: cormack
+group: Clinical record/Airway and lines
+source: clinical_data.csv
+value:
+  kind: 'not_applicable: categorical or identifier'
+tags:
+- generated
+- vitaldb-resolution
+description: Discrete category or device size; not a resolution question.
+figures:
+- id: distribution
+  file: distributions/cormack.png
+  theme: distributions of recorded values
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'Recorded values in the release: 5,553 records in 5 categories.'
+  alt: Histogram of the recorded values of cormack.

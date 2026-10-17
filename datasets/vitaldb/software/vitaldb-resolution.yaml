@@ -1,0 +1,16 @@
+id: vitaldb-resolution
+name: vitaldb-resolution
+summary: >-
+  Every recorded VitalDB time and value as a probability distribution of the true value: native resolution, or
+  a mixture of resolutions recovered from heaped data.
+repo: https://github.com/meshlab/vitaldb-resolution
+branch: main
+visibility: private
+local: ../../../vitaldb/vitaldb-resolution
+licence: MIT
+language: Python (numpy, scipy)
+description: |
+  Models are JSON files evaluated by one generic engine. For timing, it describes the resolution of each kind of
+  time stamp: the second axis of the accuracy-against-resolution chart.
+related: [vitaldb-bench]
+references: [harris2020numpy, virtanen2020scipy, mckinney2010pandas, jax2018github, pytest]

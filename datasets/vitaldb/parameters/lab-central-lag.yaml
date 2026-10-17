@@ -1,0 +1,7 @@
+id: lab-central-lag
+name: Central lab timestamp after the draw
+quantity: Time from the draw to the central-lab specimen timestamp.
+display: "about 8–24 min (median about 14; weak, mostly chance matches)"
+status: estimated
+study: lab-timestamp-meaning
+about: [lab-central]

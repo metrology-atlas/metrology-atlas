@@ -1,0 +1,27 @@
+id: value-model-opstart
+name: How the operation start time was charted
+summary: The charted operation start time is a mixture of 3 ways of writing a clock time (nearest_10min, nearest_5min, clock_minute),
+  modelled as an offset from a device time.
+date: 2026-10-13
+status: current
+methods:
+- value-resolution
+- clinical-time
+variables:
+- opstart
+model: vitaldb-resolution/vitaldb_resolution/data/models/opstart.model.json
+data: 6,387 records of opstart (clinical_data.csv)
+code:
+- vitaldb-resolution/vitaldb_resolution/engine.py
+tags:
+- generated
+- vitaldb-resolution
+figures:
+- id: observed-vs-model
+  file: models/opstart.png
+  theme: heaping
+  source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
+  caption: 'The minute past the hour of every charted time: the heaps on multiples of 5, and at the standard first-case
+    times, are the rounding modes the model fits.'
+  alt: Bar chart of charted times by minute past the hour, with tall bars on multiples of five.
+results: '[[figure:observed-vs-model]]'

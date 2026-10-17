@@ -1,0 +1,90 @@
+id: lab-timestamp-meaning
+name: What the lab timestamp marks
+summary: >-
+  VitalDB's lab time is a per-specimen timestamp: not the draw, and not the result. Blood gases are stamped 3–12
+  minutes after the draw, central-lab panels about 8–24 minutes after it, and the result follows a turnaround the
+  release does not record.
+date: 2026-10-13
+status: current
+methods: [clinical-time, value-resolution]
+techniques: [null-controls]
+clocks: [hospital-records]
+devices: [clinical-records, snuadc]
+variables: [lab-blood-gas, lab-central, snuadc-art]
+data: |
+  - `lab_data.csv`: 131,942 case-timestamp pairs.
+  - 1,440 cases with arterial pressure, for the check against the draw.
+  - For the panel comparisons: intra-operative central-lab panels (up to 30 min after anaesthesia end) with a blood
+    gas in the hour before: CBC 1,665, coagulation 1,539, chemistry 1,613.
+background: |
+  Until 13 October the lab time was treated as the result time, so a lab value counted as known at its timestamp.
+  If it marks something earlier than the result, any model that uses a lab value at its timestamp sees the future.
+
+  Lab times are machine timestamps at 1 s resolution: the seconds are spread evenly (about 1.7% each) and there is
+  no rounding to model. The question is only what event they mark.
+method: |
+  From the timestamps alone: whether all analytes of a panel share one time, how panels from one draw are spaced
+  and in what order, how long after a point-of-care blood gas the central-lab panels are stamped, when in the day
+  ward samples fall, and whether the minute of the hour heaps. From the draw: each group of lab samples matched to
+  the latest arterial line access before it (within 15 minutes for blood gases, 30 for other panels), against the
+  same lab times shifted 40–80 minutes as the control.
+results: |
+  - **One timestamp per specimen:** every analyte of a panel shares it to the second.
+  - **Not the result time:** panels run on different analysers from one draw are stamped seconds apart (75% of
+    CBC–chemistry pairs within 60 s), centred on zero, and each panel is equally likely to come first. A result
+    time would put chemistry consistently later.
+  - **After a blood gas,** central-lab panels are stamped a median of about 10 min later (a quarter within 5 min,
+    three-quarters within 15), the same for CBC, coagulation and chemistry.
+  - **Time of day and minute:** ward CBCs peak at 08:00–09:00, after the early-morning phlebotomy round; the minute
+    of the hour varies smoothly, with no spikes at 0 or 5.
+  - **Not the draw time:**
+
+  | Panel | Sample groups | Matched to an access | Lag from the access start to the timestamp | Above chance |
+  |---|---|---|---|---|
+  | Blood gas | 5,888 | 4,742 (81%) | p10 3.2 / median 7.2 / p90 12.2 min; modes at 2–6 and 8–12 min | 76% |
+  | Central lab | 1,837 | 618 (34%) | excess at 8–18 min, median about 14 min | 23% (weak) |
+discussion: |
+  Central-lab timestamps mark the specimen reaching or being registered at the lab: the 10 minutes after a blood
+  gas and the 8–18 minutes after a line access are the same transport delay seen from two starting points. Blood
+  gases seem to take two routes: a point-of-care analyser in theatre (about 4 minutes after the draw) and samples
+  sent on (about 9 minutes).
+
+  An earlier write-up from the resolution work (now merged here) put the blood-gas lag at "a few minutes at most".
+  The access matching measures it directly, and its figures stand: 3–12 minutes.
+
+  Place a lab value no earlier than its timestamp plus an assumed turnaround; treat the draw as 3–12 minutes (blood
+  gas) or roughly 8–30 minutes (central lab) before it. For the value side, lab times have a single resolution
+  (1 s, anchor floor). The lab_time labels now carry available_at = lab_time_plus_turnaround, and earlier work
+  that used lab values at their timestamp should be treated as possibly leaky.
+limitations: |
+  Central-lab matches are mostly chance (many central samples are not drawn from the arterial line), so their lag
+  is an estimate. The blood-gas-to-panel lag assumes the gas and the tubes are often drawn together. Result times
+  are not in the release, so turnaround cannot be measured.
+open_questions:
+  - title: "A firmer central-lab lag"
+    kind: next step
+    summary: >-
+      Most central-lab samples are not drawn from the arterial line, so their access matches are mostly chance and
+      their lag is only an estimate.
+  - title: "Turnaround after the timestamp"
+    kind: assumption
+    summary: >-
+      The release has no result times, so the turnaround from the lab timestamp to the result is assumed, not
+      measured.
+code:
+  - vitaldb-bench/tools/lab_draw_labels.py
+figures:
+  - id: lab-steps-example
+    file: lab-steps-example.png
+    theme: example traces
+    source: vitaldb-bench tools/lab_steps.py
+    records: [3255]
+    caption: In [[case:3255]] every lab draw time (blue) follows an arterial-line access (orange) by 3–5 minutes; the small panels show the high-pressure flush plateau before each recorded lab time.
+    alt: A long timing trace with orange and blue vertical lines above six arterial pressure panels, each with a spike a few minutes before the lab time.
+  - id: line-access-summary
+    file: line-access-summary.png
+    theme: distributions of measured parameters
+    source: ad hoc (no script in vitaldb-bench yet; to be regenerated by one)
+    caption: Lab timestamps fall 3–12 minutes after an arterial line access, in two modes; timing steps on the arterial side cluster at accesses.
+    alt: Histogram of minutes from access to lab time, and overlaid share histograms against random times.
+supersedes: [timestamp-lab-times-meaning]

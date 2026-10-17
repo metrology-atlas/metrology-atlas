@@ -1,0 +1,8 @@
+id: cardioq
+name: CardioQ
+summary: 'Deltex CardioQ oesophageal Doppler: pressure and flow waveforms.'
+type: monitor
+clocks:
+- cardioq-clock
+tags:
+- stub

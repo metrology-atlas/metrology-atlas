@@ -1,0 +1,14 @@
+id: lab-time-is-specimen
+name: The lab time is neither the draw nor the result
+summary: >-
+  VitalDB's lab timestamp marks the specimen (logged at the lab, or entered from a theatre analyser): minutes after the
+  draw and before the result, whose time is not recorded.
+status: established
+clocks: [hospital-records]
+devices: [clinical-records]
+variables: [lab-blood-gas, lab-central]
+studies: [lab-timestamp-meaning, arterial-line-accesses]
+consequence: |
+  A model that uses a lab value at its timestamp sees the future. The physiology it describes happened 3–30 minutes
+  earlier.
+handling: Lab labels carry available_at = lab time plus an assumed turnaround, and a lab_draw label marks the matched draw.

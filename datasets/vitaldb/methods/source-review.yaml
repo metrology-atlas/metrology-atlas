@@ -1,0 +1,17 @@
+id: source-review
+name: Reading the source
+summary: >-
+  Read firmware, manuals and loader code to explain a timing behaviour seen in the data, or to predict one to test.
+order: 7
+techniques: [prediction-test]
+description: |
+  **The idea.** Some timing behaviour is written down: in a device's firmware, a manual, or the code that loads the
+  data. Reading it explains a measurement and predicts the next test.
+
+  **What it gives.** Mechanisms: why time is lost at a stall, why channels are skewed, why a loader moves time zero.
+
+  **How.** Find the code path that produces or consumes the time stamps, state what it predicts, and test the
+  prediction in the data.
+
+  **Pitfalls.** The source may not be the version that was deployed, and documentation may describe settings rather
+  than what was used. A source is a hypothesis until the data agree.

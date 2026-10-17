@@ -1,0 +1,28 @@
+id: snuadc-sample
+name: SNUADC sample clock
+summary: The sample clock of the SNUADC acquisition board, which digitises ECG, arterial pressure, plethysmogram
+  and CVP at 500 Hz. The working reference for every waveform alignment.
+type: oscillator
+nominal: 500 Hz ADC sample clock
+modes:
+- id: step
+  name: Step mode
+  description: The recorder lets the stamps drift, then pulls the track back by about half a second once the drift
+    reaches that size. See [[link:snuadc-step-vs-pc]].
+- id: frequent
+  name: Frequent-correction mode
+  description: Stamps follow the PC closely, with occasional forward steps of 5–15 ms (about 0.2 per hour). The
+    real drift against the stamps is under about 1 ppm.
+description: 'All SNUADC channels share this clock: they start together and carry the same record timing. The public
+  firmware
+
+  of the board (an ATmega32U4 with a 16 MHz crystal) schedules each sample 2 ms after the last, or at once if it
+
+  is late, so a stall of more than 2 ms re-anchors the sample grid and the stalled time is never sampled. Whether
+
+  that firmware is the version deployed for VitalDB is not known.
+
+  '
+utc_plan: 'Measured to the recorder PC in both modes (stamp sawtooth, confirmed by the paced ECG and the PC-stamped
+  heart rate); from there the route rests on the assumed PC–UTC link. To strengthen: refit after the reset-order
+  fix, census the stamp arithmetic, explain the long recordings with no correction.'

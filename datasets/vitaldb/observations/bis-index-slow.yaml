@@ -1,0 +1,11 @@
+id: bis-index-slow
+name: The BIS index is slow
+summary: >-
+  The BIS index averages 15–60 s of EEG ending about 3 s before its stamp, with half its weight older than 30 s. It
+  cannot time anything faster than about a minute.
+status: established
+variables: [bis-index, bis-eeg]
+devices: [bis]
+studies: [bis-index-delay, openeeg-bis-mimic]
+consequence: Use features computed from the EEG itself for event timing; the index suits trends over minutes.
+handling: The bis_smoothing label gives each case's smoothing group.

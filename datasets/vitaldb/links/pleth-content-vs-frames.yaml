@@ -1,0 +1,14 @@
+id: pleth-content-vs-frames
+name: PPG content against the oximeter frames (the sawtooth)
+summary: >-
+  The PPG content runs 18–52 ppm against the oximeter's frames, fixed per setup. When a whole frame of lag has built
+  up, one frame is repeated: the delay steps up by 33.3 ms, then creeps down again.
+clock: oximeter-frame-clock
+against: snuadc-sample
+rate: pleth-sawtooth-rate
+correction:
+  rule: |
+    One repeated 33.3 ms frame whenever a frame of lag has built up (a slip). [[software:physiosync]] detects the slips in the
+    beat-matched ECG→PPG delay and removes the sawtooth tooth by tooth.
+  size: pleth-slip-step
+status: measured

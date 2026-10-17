@@ -1,0 +1,33 @@
+id: value-model-weight
+references:
+- khosla1964bodyweight
+- vivanti2013weight
+background: |
+  - Weight is mostly a mix of two scale resolutions rather than human rounding.
+  - About 30% of weights come from a scale that reads to 0.05 kg and the rest from one that reads to 0.1 kg; about 3% are whole kilograms written in.
+data: |
+  - 6,388 values, none missing or zero; 5 values finer than 0.05 kg are flagged off-grid.
+  - Fitted to adults, first case per patient (6,041). 137 of 237 repeat patients have the same weight in every case.
+  - 57 children get native resolution (flag `child_native_resolution`).
+method: |
+  - Digits were screened at the finest observed resolution (two decimals).
+  - Latent: log-t regression on sex and age (quadratic). The Student-t was compared with a log-normal.
+  - Each device resolution is a mode, and its share may depend on department.
+  - Tested: department effect on the scale share, a half-kilogram mode, and an emergency effect on whole kilograms.
+results: |
+  [[figure:observed-vs-model]]
+
+  - Median latent weight is 58.3 kg for a woman aged 40 and 68.2 kg for a man, about 8% lower at 75.
+  - The Student-t beats the log-normal by 66 BIC points.
+  - A department effect on the scale share improves BIC (77,941 to 77,930). The finer scale seems to be used mainly on general surgery wards.
+  - A half-kilogram mode and an emergency effect on whole kilograms did not help.
+  - The expected share of each two-decimal ending matches the data, and the engine reproduces the log-likelihood (−38,917.2 against −38,917.3).
+discussion: |
+  - The first screen suggested a 0.2 kg scale, because even tenths looked more common. That was an artefact: rounding .x5 values to one decimal sends them to the even neighbour. At two decimals there is no even-digit excess, and the hypothesis was dropped.
+  - The lesson went into the checklist: screen digits at the finest observed resolution only, never after rounding.
+  - Measured weights get SD 0.5% of body weight (Khosla & Billewicz 1964); inpatients weighed at the same time each day vary by 0.4 kg or less (Vivanti et al. 2013).
+  - Written-in weights are treated as self-reported: under-reported by 0.55 kg in men and 0.67 kg in women, SD about 2.7 kg (2018 Korea Community Health Survey).
+  - The API needs sex, age and department.
+limitations: |
+  - Clothing is not included in the measurement variability.
+  - Measurement variability comes from the literature, not from this dataset.

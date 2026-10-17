@@ -1,0 +1,47 @@
+id: solar8000-art-numerics
+name: Solar8000 ART and CVP numerics
+summary: Arterial and central venous pressure values from the Solar8000 monitor.
+type: numeric
+source_name: Solar8000/ART_MBP
+device: solar8000
+stamp_clock: recorder-pc
+unit: mmHg
+timing:
+- id: solar-lab
+  name: after the per-case delay label
+  default: true
+  delay_s:
+  - 0.055
+  - 0.4
+  interval_s:
+  - 3.0
+  - 8.0
+  domain: solar8000
+  status: measured
+  evidence: 'numeric_delay label SE p10-p90: ART 0.06-0.35 s, CVP 0.11-0.40 s (fixed within a case)'
+  corrected_delay_s:
+  - 0.3
+  - 4.7
+  correction: per-case delay label
+  corrects:
+  - solar-win
+- id: solar-win
+  name: as stamped
+  delay_s:
+  - 0.3
+  - 4.7
+  interval_s:
+  - 3.0
+  - 8.0
+  domain: solar8000
+  status: measured
+  evidence: 'delay from window end: ART 0.3-2.5 s, CVP 3.1-4.7 s; windows 3-6 s + 2 s poll'
+tags:
+- stub
+delays:
+- name: Mean arterial pressure
+  parameter: art-mbp-delay
+  description: EWMA ¼ per beat; systolic (median over 3 s) and diastolic (EWMA ½) are about 0.5 s shorter.
+- name: CVP
+  parameter: cvp-delay
+  description: Waveform mean over 4 s; the slowest Solar8000 numeric.

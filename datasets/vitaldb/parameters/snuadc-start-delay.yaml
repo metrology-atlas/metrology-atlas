@@ -1,0 +1,9 @@
+id: snuadc-start-delay
+name: SNUADC start after the file's first record
+quantity: Delay of the first SNUADC record after the file's first record of any track.
+value: 1.56
+unit: s
+spread: {text: "5–95%: 0.44–4.5 s; 99th percentile 12 s; maximum 10,879 s"}
+status: measured
+study: vitaldb-loader
+about: [loaded-subset-time-zero, snuadc-ecg-ii]

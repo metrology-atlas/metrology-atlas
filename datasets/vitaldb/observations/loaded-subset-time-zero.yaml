@@ -1,0 +1,12 @@
+id: loaded-subset-time-zero
+name: Time zero depends on the tracks loaded
+summary: >-
+  A file's time zero is its first record of any track. Loading only some tracks moves the zero to their first
+  record: seconds later, and up to hours.
+status: established
+devices: [vital-recorder]
+studies: [time-zeros, vitaldb-loader]
+consequence: |
+  Times "from the start" taken from different track subsets are not on one axis. The arrhythmia database's
+  annotations count from the full file's zero.
+handling: The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] reads whole files and keeps the full-file zero (vital_origin_s).

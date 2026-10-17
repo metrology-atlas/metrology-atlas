@@ -1,0 +1,9 @@
+id: cvp-delay
+name: Solar8000 CVP delay
+quantity: Delay from the end of the 4 s waveform-mean window to the stamp of the Solar8000 CVP.
+value: 3.8
+unit: s
+spread: {p10: 3.1, p90: 4.7}
+status: measured
+study: numeric-delay-variability
+about: [solar8000-art-numerics]

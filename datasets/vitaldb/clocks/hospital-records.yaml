@@ -1,0 +1,12 @@
+id: hospital-records
+name: Hospital records clock
+summary: The clocks of the anaesthesia record and the laboratory system, and the rounding of what was entered.
+type: software
+nominal: Clinical and laboratory systems
+description: The clocks of the anaesthesia record and the laboratory system, and the rounding of what was entered.
+  Not observable in the release except through events seen in the signals.
+tags:
+- stub
+utc_plan: 'Not observable: the clinical and lab times share the case start with the recorder, so any offset cancels,
+  and it is confounded with documentation lag. Signal-side events (drug effects, arterial draws) bound it to minutes.
+  To measure it needs a time from outside the release.'

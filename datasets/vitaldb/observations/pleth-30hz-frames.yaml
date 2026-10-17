@@ -1,0 +1,16 @@
+id: pleth-30hz-frames
+name: The plethysmogram is built in 30 Hz frames
+summary: >-
+  The SNUADC PLETH waveform comes from the oximeter in 33.3 ms frames, smoothed to 500 Hz. Its content changes once
+  per frame, on the oximeter's own clock, about 0.4 s after the finger.
+status: established
+clocks: [snuadc-sample]
+devices: [solar8000, snuadc]
+variables: [snuadc-pleth]
+consequence: |
+  Pulse arrival time from VitalDB's PLETH is about 0.4 s longer than physiology and carries a sawtooth of frame
+  slips; raw-sample PPG fiducials lock to the frame grid.
+handling: '[[software:physiosync]] removes the sawtooth; the planner shifts PLETH by its chain delay.'
+studies: [ppg-frame-clock, ppg-sawtooth, ppg-offset-reference, monitor-lines]
+code:
+  - physiosync/physiosync/frames.py
