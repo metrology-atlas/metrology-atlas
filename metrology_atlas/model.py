@@ -54,6 +54,7 @@ class Kind:
 STATUS = ("measured", "derived", "estimated", "assumed", "withdrawn", "superseded")
 OBS_STATUS = ("established", "likely", "open", "withdrawn")
 STUDY_STATUS = ("current", "draft", "open", "superseded", "withdrawn")
+ANCHOR_BASIS = ("tested", "convention", "assumption", "open")
 
 FIGURE = (
     Field("id", "str", required=True, help="Unique within its item; [[figure:id]] in the item's prose places it."),
@@ -99,6 +100,11 @@ VALUE = (
     Field("resolution", "str", help="Value resolution in words, e.g. '1 cm, often heaped to 5 cm'."),
     Field("step", "number", help="Native resolution step, in the variable's unit."),
     Field("anchor", "enum", choices=("nearest", "floor", "ceiling"), help="How the true value is rounded to the step."),
+    Field("anchor_basis", "enum", choices=ANCHOR_BASIS,
+          help="How the anchor (or, for a count, its counting rule) is known: tested on the data, a convention whose "
+               "effect is negligible, an assumption the data cannot test, or open. Unset means the dataset's "
+               "anchor_default applies."),
+    Field("anchor_note", "text", help="Why: the evidence, the convention, or what would settle it."),
     Field("accuracy", "text", help="Instrument or method error: how far the true value can be from the recorded one "
                                    "beyond resolution."),
     Field("accuracy_sd", "number", help="Accuracy as one standard deviation, in the variable's unit, when known."),
@@ -373,6 +379,12 @@ DATASET = (
     Field("summary", "str", required=True),
     Field("description", "text"),
     Field("overview", "text", help="Shown on the home page under 'System overview'."),
+    Field("notice", "text", help="Shown prominently at the top of the home page, e.g. that the atlas is a work in "
+                                 "progress."),
+    Field("anchor_default", "obj", fields=(
+        Field("basis", "enum", required=True, choices=ANCHOR_BASIS),
+        Field("note", "text", required=True),
+    ), help="Anchor basis for variables that state an anchor but no anchor_basis."),
     Field("reference", "text", help="What the working reference is; the planner's timings are against it."),
     Field("reference_clock", "ref", ref="clock", help="The clock of the working reference."),
     Field("figures", "objs", fields=FIGURE),

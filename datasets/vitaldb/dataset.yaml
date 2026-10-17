@@ -142,3 +142,12 @@ forbidden_patterns:
     why: name a case only deliberately, as [[case:1234]]
   - pattern: '\b\d{4}\.vital\b'
     why: name a case only deliberately, as [[case:1234]]
+notice: |
+  Studies are still being added and revised, some numbers rest on small runs, and
+  many questions are open. Every page says how its numbers are known. If you find something wrong, or can settle an
+  open question, please [contribute](contributing.md): corrections, better models and new studies are all welcome.
+anchor_default:
+  basis: convention
+  note: >-
+    Assumed to round to the nearest step, the usual rule for analyser results and charted numbers. Not tested; the
+    largest possible effect is half a step, small for most of these against the measurement's own error.

@@ -7,7 +7,8 @@
    "median": 0.0,
    "p05": 0.0,
    "p995": 0.0,
-   "outside": 0
+   "outside": 0,
+   "bin": null
   },
   "case-end": {
    "file": "distributions/case-end.png",
@@ -16,7 +17,8 @@
    "median": 9924.5,
    "p05": 2356.74,
    "p995": 35605.379999999976,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "anestart": {
    "file": "distributions/anestart.png",
@@ -25,7 +27,8 @@
    "median": -583.0,
    "p05": -3514.715,
    "p995": 652.0399999999936,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "opstart": {
    "file": "distributions/opstart.png",
@@ -34,7 +37,8 @@
    "median": 2055.0,
    "p05": 500.48,
    "p995": 5526.55999999999,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "aneend": {
    "file": "distributions/aneend.png",
@@ -43,7 +47,8 @@
    "median": 9769.5,
    "p05": 2218.635,
    "p995": 35492.84999999996,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "opend": {
    "file": "distributions/opend.png",
@@ -52,7 +57,8 @@
    "median": 8877.0,
    "p05": 1624.675,
    "p995": 34123.2399999998,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "adm": {
    "file": "distributions/adm.png",
@@ -61,7 +67,8 @@
    "median": -201060.0,
    "p05": -3595955.4,
    "p995": -52457.10000000027,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "dis": {
    "file": "distributions/dis.png",
@@ -70,7 +77,8 @@
    "median": 393240.0,
    "p05": 11614.200000000003,
    "p995": 6841439.39999997,
-   "outside": 64
+   "outside": 64,
+   "bin": null
   },
   "icu-days": {
    "file": "distributions/icu-days.png",
@@ -79,7 +87,8 @@
    "median": 0.0,
    "p05": 0.0,
    "p995": 17.0,
-   "outside": 29
+   "outside": 29,
+   "bin": 1.0
   },
   "death-inhosp": {
    "file": "distributions/death-inhosp.png",
@@ -95,7 +104,8 @@
    "median": 59.0,
    "p05": 11.895,
    "p995": 86.0,
-   "outside": 53
+   "outside": 53,
+   "bin": 1
   },
   "sex": {
    "file": "distributions/sex.png",
@@ -111,7 +121,8 @@
    "median": 162.2,
    "p05": 138.18699999999998,
    "p995": 183.5,
-   "outside": 63
+   "outside": 63,
+   "bin": 0.1
   },
   "weight": {
    "file": "distributions/weight.png",
@@ -120,7 +131,8 @@
    "median": 60.5,
    "p05": 30.687,
    "p995": 99.95,
-   "outside": 63
+   "outside": 63,
+   "bin": 0.05
   },
   "bmi": {
    "file": "distributions/bmi.png",
@@ -129,7 +141,8 @@
    "median": 23.1,
    "p05": 14.6,
    "p995": 34.81949999999988,
-   "outside": 61
+   "outside": 61,
+   "bin": 0.1
   },
   "asa": {
    "file": "distributions/asa.png",
@@ -306,7 +319,8 @@
    "median": 160.0,
    "p05": 10.0,
    "p995": 2011.4250000000038,
-   "outside": 24
+   "outside": 24,
+   "bin": 1.0
   },
   "intraop-ebl": {
    "file": "distributions/intraop-ebl.png",
@@ -315,7 +329,8 @@
    "median": 150.0,
    "p05": 10.0,
    "p995": 7518.75,
-   "outside": 28
+   "outside": 28,
+   "bin": null
   },
   "intraop-crystalloid": {
    "file": "distributions/intraop-crystalloid.png",
@@ -324,7 +339,8 @@
    "median": 700.0,
    "p05": 50.0,
    "p995": 7011.394999999957,
-   "outside": 34
+   "outside": 34,
+   "bin": null
   },
   "intraop-ppf": {
    "file": "distributions/intraop-ppf.png",
@@ -333,7 +349,8 @@
    "median": 100.0,
    "p05": 40.0,
    "p995": 160.0,
-   "outside": 17
+   "outside": 17,
+   "bin": 5.0
   },
   "intraop-colloid": {
    "file": "distributions/intraop-colloid.png",
@@ -342,7 +359,8 @@
    "median": 500.0,
    "p05": 10.0,
    "p995": 1600.0,
-   "outside": 2
+   "outside": 2,
+   "bin": 1
   },
   "intraop-rbc": {
    "file": "distributions/intraop-rbc.png",
@@ -351,7 +369,8 @@
    "median": 2.0,
    "p05": 1.0,
    "p995": 150.0950000000015,
-   "outside": 2
+   "outside": 2,
+   "bin": 1.0
   },
   "intraop-ffp": {
    "file": "distributions/intraop-ffp.png",
@@ -360,7 +379,8 @@
    "median": 4.0,
    "p05": 1.0,
    "p995": 43.03999999999999,
-   "outside": 1
+   "outside": 1,
+   "bin": 1.0
   },
   "intraop-ftn": {
    "file": "distributions/intraop-ftn.png",
@@ -369,7 +389,8 @@
    "median": 100.0,
    "p05": 20.0,
    "p995": 200.0,
-   "outside": 3
+   "outside": 3,
+   "bin": 5.0
   },
   "intraop-eph": {
    "file": "distributions/intraop-eph.png",
@@ -378,7 +399,8 @@
    "median": 10.0,
    "p05": 5.0,
    "p995": 75.0,
-   "outside": 19
+   "outside": 19,
+   "bin": 1.0
   },
   "intraop-phe": {
    "file": "distributions/intraop-phe.png",
@@ -387,7 +409,8 @@
    "median": 100.0,
    "p05": 10.0,
    "p995": 2252.699999999993,
-   "outside": 7
+   "outside": 7,
+   "bin": 3.0
   },
   "intraop-ca": {
    "file": "distributions/intraop-ca.png",
@@ -396,7 +419,8 @@
    "median": 600.0,
    "p05": 33.35,
    "p995": 7496.9999999999345,
-   "outside": 10
+   "outside": 10,
+   "bin": 10.0
   },
   "intraop-rocu": {
    "file": "distributions/intraop-rocu.png",
@@ -405,7 +429,8 @@
    "median": 70.0,
    "p05": 20.0,
    "p995": 200.0,
-   "outside": 49
+   "outside": 49,
+   "bin": 1.0
   },
   "intraop-mdz": {
    "file": "distributions/intraop-mdz.png",
@@ -414,7 +439,8 @@
    "median": 3.0,
    "p05": 1.0,
    "p995": 7.210000000000008,
-   "outside": 1
+   "outside": 1,
+   "bin": 0.5
   },
   "intraop-epi": {
    "file": "distributions/intraop-epi.png",
@@ -423,7 +449,8 @@
    "median": 60.0,
    "p05": 2.76,
    "p995": 22779.200000000077,
-   "outside": 2
+   "outside": 2,
+   "bin": null
   },
   "alb": {
    "file": "distributions/alb.png",
@@ -432,7 +459,8 @@
    "median": 3.3,
    "p05": 1.3,
    "p995": 4.8,
-   "outside": 305
+   "outside": 305,
+   "bin": 0.1
   },
   "alt": {
    "file": "distributions/alt.png",
@@ -441,7 +469,8 @@
    "median": 24.0,
    "p05": 4.0,
    "p995": 1385.0,
-   "outside": 342
+   "outside": 342,
+   "bin": 1
   },
   "ammo": {
    "file": "distributions/ammo.png",
@@ -450,7 +479,8 @@
    "median": 86.5,
    "p05": 24.630000000000003,
    "p995": 346.6999999999989,
-   "outside": 10
+   "outside": 10,
+   "bin": 1
   },
   "aptt": {
    "file": "distributions/aptt.png",
@@ -459,7 +489,8 @@
    "median": 32.3,
    "p05": 22.5,
    "p995": 400.0,
-   "outside": 101
+   "outside": 101,
+   "bin": 0.1
   },
   "ast": {
    "file": "distributions/ast.png",
@@ -468,7 +499,8 @@
    "median": 26.0,
    "p05": 9.0,
    "p995": 2057.689999999966,
-   "outside": 349
+   "outside": 349,
+   "bin": 1
   },
   "be": {
    "file": "distributions/be.png",
@@ -477,7 +509,8 @@
    "median": 3.0,
    "p05": 0.0,
    "p995": 16.734999999999946,
-   "outside": 20
+   "outside": 20,
+   "bin": 0.1
   },
   "bun": {
    "file": "distributions/bun.png",
@@ -486,7 +519,8 @@
    "median": 15.0,
    "p05": 3.0,
    "p995": 102.0,
-   "outside": 235
+   "outside": 235,
+   "bin": 1
   },
   "ccr": {
    "file": "distributions/ccr.png",
@@ -495,7 +529,8 @@
    "median": 72.0,
    "p05": 0.0,
    "p995": 227.1200000000008,
-   "outside": 3
+   "outside": 3,
+   "bin": 1
   },
   "cl": {
    "file": "distributions/cl.png",
@@ -504,7 +539,8 @@
    "median": 103.0,
    "p05": 86.0,
    "p995": 118.0,
-   "outside": 336
+   "outside": 336,
+   "bin": 1
   },
   "cr": {
    "file": "distributions/cr.png",
@@ -513,7 +549,8 @@
    "median": 0.78,
    "p05": 0.2,
    "p995": 12.98449999999997,
-   "outside": 369
+   "outside": 369,
+   "bin": 0.01
   },
   "crp": {
    "file": "distributions/crp.png",
@@ -522,7 +559,8 @@
    "median": 3.31,
    "p05": 0.01,
    "p995": 31.266150000000017,
-   "outside": 142
+   "outside": 142,
+   "bin": 0.01
   },
   "esr": {
    "file": "distributions/esr.png",
@@ -531,7 +569,8 @@
    "median": 37.0,
    "p05": 2.0,
    "p995": 120.0,
-   "outside": 6
+   "outside": 6,
+   "bin": 1
   },
   "fib": {
    "file": "distributions/fib.png",
@@ -540,7 +579,8 @@
    "median": 301.0,
    "p05": 52.0,
    "p995": 687.0,
-   "outside": 187
+   "outside": 187,
+   "bin": 0.2
   },
   "gfr": {
    "file": "distributions/gfr.png",
@@ -549,7 +589,8 @@
    "median": 92.3,
    "p05": 3.7,
    "p995": 312.6,
-   "outside": 358
+   "outside": 358,
+   "bin": 0.1
   },
   "gluc": {
    "file": "distributions/gluc.png",
@@ -558,7 +599,8 @@
    "median": 121.0,
    "p05": 61.0,
    "p995": 357.0,
-   "outside": 346
+   "outside": 346,
+   "bin": 1
   },
   "hb": {
    "file": "distributions/hb.png",
@@ -567,7 +609,8 @@
    "median": 10.9,
    "p05": 6.2,
    "p995": 16.2,
-   "outside": 428
+   "outside": 428,
+   "bin": 0.1
   },
   "hco3": {
    "file": "distributions/hco3.png",
@@ -576,7 +619,8 @@
    "median": 25.4,
    "p05": 10.6,
    "p995": 41.4,
-   "outside": 135
+   "outside": 135,
+   "bin": 0.1
   },
   "hct": {
    "file": "distributions/hct.png",
@@ -585,7 +629,8 @@
    "median": 33.0,
    "p05": 17.2,
    "p995": 49.0,
-   "outside": 550
+   "outside": 550,
+   "bin": 0.1
   },
   "ica": {
    "file": "distributions/ica.png",
@@ -594,7 +639,8 @@
    "median": 1.13,
    "p05": 0.77,
    "p995": 1.56,
-   "outside": 168
+   "outside": 168,
+   "bin": 0.01
   },
   "k": {
    "file": "distributions/k.png",
@@ -603,7 +649,8 @@
    "median": 4.0,
    "p05": 2.7,
    "p995": 6.1,
-   "outside": 516
+   "outside": 516,
+   "bin": 0.1
   },
   "lac": {
    "file": "distributions/lac.png",
@@ -612,7 +659,8 @@
    "median": 1.2,
    "p05": 0.3,
    "p995": 15.0,
-   "outside": 15
+   "outside": 15,
+   "bin": 0.1
   },
   "na": {
    "file": "distributions/na.png",
@@ -621,7 +669,8 @@
    "median": 138.0,
    "p05": 121.0,
    "p995": 151.0,
-   "outside": 504
+   "outside": 504,
+   "bin": 1
   },
   "p": {
    "file": "distributions/p.png",
@@ -630,7 +679,8 @@
    "median": 3.2,
    "p05": 1.2,
    "p995": 7.7,
-   "outside": 153
+   "outside": 153,
+   "bin": 0.1
   },
   "pco2": {
    "file": "distributions/pco2.png",
@@ -639,7 +689,8 @@
    "median": 41.0,
    "p05": 21.0,
    "p995": 81.0,
-   "outside": 130
+   "outside": 130,
+   "bin": 1
   },
   "ph": {
    "file": "distributions/ph.png",
@@ -648,7 +699,8 @@
    "median": 7.4,
    "p05": 7.09,
    "p995": 7.59,
-   "outside": 125
+   "outside": 125,
+   "bin": 0.01
   },
   "plt": {
    "file": "distributions/plt.png",
@@ -657,7 +709,8 @@
    "median": 199.0,
    "p05": 17.0,
    "p995": 683.0,
-   "outside": 428
+   "outside": 428,
+   "bin": 1
   },
   "po2": {
    "file": "distributions/po2.png",
@@ -666,7 +719,8 @@
    "median": 150.0,
    "p05": 30.0,
    "p995": 526.0,
-   "outside": 144
+   "outside": 144,
+   "bin": 1
   },
   "pt-pct": {
    "file": "distributions/pt-pct.png",
@@ -675,7 +729,8 @@
    "median": 85.0,
    "p05": 17.0,
    "p995": 132.0,
-   "outside": 195
+   "outside": 195,
+   "bin": 1.0
   },
   "ptinr": {
    "file": "distributions/ptinr.png",
@@ -684,7 +739,8 @@
    "median": 1.11,
    "p05": 0.85,
    "p995": 4.28,
-   "outside": 180
+   "outside": 180,
+   "bin": 0.01
   },
   "ptsec": {
    "file": "distributions/ptsec.png",
@@ -693,7 +749,8 @@
    "median": 12.6,
    "p05": 9.7,
    "p995": 48.24499999999971,
-   "outside": 198
+   "outside": 198,
+   "bin": 0.1
   },
   "sao2": {
    "file": "distributions/sao2.png",
@@ -702,7 +759,8 @@
    "median": 99.0,
    "p05": 47.0,
    "p995": 100.0,
-   "outside": 72
+   "outside": 72,
+   "bin": 1
   },
   "tbil": {
    "file": "distributions/tbil.png",
@@ -711,7 +769,8 @@
    "median": 0.8,
    "p05": 0.2,
    "p995": 26.85650000000023,
-   "outside": 281
+   "outside": 281,
+   "bin": 0.1
   },
   "tprot": {
    "file": "distributions/tprot.png",
@@ -720,7 +779,8 @@
    "median": 6.0,
    "p05": 3.4,
    "p995": 8.2,
-   "outside": 304
+   "outside": 304,
+   "bin": 0.1
   },
   "wbc": {
    "file": "distributions/wbc.png",
@@ -729,7 +789,8 @@
    "median": 8.2,
    "p05": 1.01,
    "p995": 34.185000000000144,
-   "outside": 439
+   "outside": 439,
+   "bin": 0.01
   },
   "preop-hb": {
    "file": "distributions/preop-hb.png",
@@ -738,7 +799,8 @@
    "median": 13.0,
    "p05": 7.2,
    "p995": 17.276999999999955,
-   "outside": 56
+   "outside": 56,
+   "bin": 0.1
   },
   "preop-plt": {
    "file": "distributions/preop-plt.png",
@@ -747,7 +809,8 @@
    "median": 235.0,
    "p05": 36.230000000000004,
    "p995": 570.539999999999,
-   "outside": 62
+   "outside": 62,
+   "bin": 1
   },
   "preop-pt": {
    "file": "distributions/preop-pt.png",
@@ -756,7 +819,8 @@
    "median": 101.0,
    "p05": 29.0,
    "p995": 136.0,
-   "outside": 55
+   "outside": 55,
+   "bin": 1.0
   },
   "preop-aptt": {
    "file": "distributions/preop-aptt.png",
@@ -765,7 +829,8 @@
    "median": 32.1,
    "p05": 23.4925,
    "p995": 63.914999999999964,
-   "outside": 60
+   "outside": 60,
+   "bin": 0.1
   },
   "preop-na": {
    "file": "distributions/preop-na.png",
@@ -774,7 +839,8 @@
    "median": 140.0,
    "p05": 128.82,
    "p995": 146.0,
-   "outside": 46
+   "outside": 46,
+   "bin": 1
   },
   "preop-k": {
    "file": "distributions/preop-k.png",
@@ -783,7 +849,8 @@
    "median": 4.2,
    "p05": 3.1,
    "p995": 5.6,
-   "outside": 46
+   "outside": 46,
+   "bin": 0.1
   },
   "preop-gluc": {
    "file": "distributions/preop-gluc.png",
@@ -792,7 +859,8 @@
    "median": 103.0,
    "p05": 68.045,
    "p995": 345.6399999999994,
-   "outside": 62
+   "outside": 62,
+   "bin": 1
   },
   "preop-alb": {
    "file": "distributions/preop-alb.png",
@@ -801,7 +869,8 @@
    "median": 4.2,
    "p05": 2.2,
    "p995": 5.0,
-   "outside": 41
+   "outside": 41,
+   "bin": 0.1
   },
   "preop-ast": {
    "file": "distributions/preop-ast.png",
@@ -810,7 +879,8 @@
    "median": 20.0,
    "p05": 9.0,
    "p995": 268.8949999999995,
-   "outside": 47
+   "outside": 47,
+   "bin": 1
   },
   "preop-alt": {
    "file": "distributions/preop-alt.png",
@@ -819,7 +889,8 @@
    "median": 18.0,
    "p05": 4.0,
    "p995": 531.0800000000017,
-   "outside": 53
+   "outside": 53,
+   "bin": 1
   },
   "preop-bun": {
    "file": "distributions/preop-bun.png",
@@ -828,7 +899,8 @@
    "median": 14.0,
    "p05": 5.0,
    "p995": 82.0,
-   "outside": 44
+   "outside": 44,
+   "bin": 1
   },
   "preop-cr": {
    "file": "distributions/preop-cr.png",
@@ -837,7 +909,8 @@
    "median": 0.78,
    "p05": 0.37,
    "p995": 12.485750000000035,
-   "outside": 59
+   "outside": 59,
+   "bin": 0.01
   },
   "preop-ph": {
    "file": "distributions/preop-ph.png",
@@ -846,7 +919,8 @@
    "median": 7.401,
    "p05": 6.94275,
    "p995": 7.5665749999999985,
-   "outside": 6
+   "outside": 6,
+   "bin": 0.001
   },
   "preop-hco3": {
    "file": "distributions/preop-hco3.png",
@@ -855,7 +929,8 @@
    "median": 24.3,
    "p05": 15.366,
    "p995": 31.5,
-   "outside": 4
+   "outside": 4,
+   "bin": 0.1
   },
   "preop-be": {
    "file": "distributions/preop-be.png",
@@ -864,7 +939,8 @@
    "median": -0.1,
    "p05": -11.469,
    "p995": 7.872500000000014,
-   "outside": 6
+   "outside": 6,
+   "bin": 0.1
   },
   "preop-pao2": {
    "file": "distributions/preop-pao2.png",
@@ -873,7 +949,8 @@
    "median": 95.95,
    "p05": 15.870000000000001,
    "p995": 250.37799999999993,
-   "outside": 6
+   "outside": 6,
+   "bin": 0.1
   },
   "preop-paco2": {
    "file": "distributions/preop-paco2.png",
@@ -882,7 +959,8 @@
    "median": 39.5,
    "p05": 21.442500000000003,
    "p995": 60.49449999999998,
-   "outside": 6
+   "outside": 6,
+   "bin": 0.1
   },
   "preop-sao2": {
    "file": "distributions/preop-sao2.png",
@@ -891,7 +969,8 @@
    "median": 97.0,
    "p05": 20.8,
    "p995": 100.0,
-   "outside": 4
+   "outside": 4,
+   "bin": 0.1
   }
  },
  "models": {

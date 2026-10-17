@@ -1,0 +1,9 @@
+id: age
+# Hand-written overlay on the generated file: anchor basis only.
+value:
+  anchor_basis: assumption
+  anchor_note: >-
+    Completed years (floor) is the convention for age, and the release documents only "years". The data support it
+    indirectly: adults are whole numbers, ten infants are recorded in tenths of a year, and ages over 89 are capped,
+    which looks like an exact age from the date of birth cut down rather than rounded. Floor against nearest is a
+    0.5-year shift in every value. The VitalDB team could confirm it.

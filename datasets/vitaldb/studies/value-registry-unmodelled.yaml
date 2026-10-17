@@ -27,10 +27,17 @@ limitations: |
   - Whether ages are completed years (floor) or rounded cannot be tested from the data. Floor is kept as a working assumption.
   - ICU days cannot be checked against ICU admission and discharge times, which are not in the dataset. Until confirmed it is a count with ±1 day uncertainty.
 open_questions:
-  - title: "The ICU-days counting rule"
-    kind: next step
+  - title: "How ICU days are counted"
+    kind: assumption
     summary: >-
-      The ICU-days counting rule (calendar days touched or completed 24 h) should be confirmed with the VitalDB
-      team.
+      The release does not say. The counts argue against calendar days touched (815 one-day stays against 98
+      two-day stays, where that rule would make 2 the commonest value), so the atlas reads them as nights in the
+      ICU or completed days, which the data cannot tell apart. The VitalDB team could settle it.
+  - title: "Age as completed years"
+    kind: assumption
+    summary: >-
+      Age is taken as completed years (floor). The release documents only "years"; whole-number adults, infants in
+      tenths of a year and the cap at 89 point to an exact age cut down, but the data cannot test it. Rounded age
+      would shift every value by half a year.
 tags:
 - from the resolution work

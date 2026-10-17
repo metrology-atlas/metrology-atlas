@@ -17,6 +17,8 @@ from metrology_atlas.model import KINDS, QUESTION_KIND_TITLES, QUESTION_KINDS, D
 
 OPEN_QUESTIONS_MARK = "<!-- atlas:open-questions -->"
 """In a free page, replaced by the list of open questions (all kinds except next steps)."""
+ANCHOR_ORDER = ("open", "assumption", "convention", "tested")
+ANCHOR_BASIS_LABEL = {"tested": "tested", "convention": "convention", "assumption": "assumption", "open": "open"}
 QUESTION_LABEL = {"phenomenon": "unexplained phenomenon", "hypothesis": "weakly supported hypothesis",
                   "assumption": "untestable assumption", "conflict": "conflict between studies",
                   "next step": "next step"}
@@ -502,6 +504,7 @@ class Site:
                            ("Native step", f"{v['step']} {s.get('unit') or ''}".strip() if v.get("step") else None),
                            ("Accuracy (1 SD)", f"{v['accuracy_sd']} {s.get('unit') or ''}".strip()
                             if v.get("accuracy_sd") is not None else None),
+                           ("Anchor", self.anchor_label(v)),
                            ("Status", v.get("status")), ("Studies", self.many("study", v.get("studies")))])
         if v.get("inputs") or v.get("formula"):
             out += self.sub("Derived from", (
@@ -510,9 +513,71 @@ class Site:
                 + (f"Uncertainty: {v['combination']}." if v.get("combination") else "")))
         if v.get("spread"):
             out += self.sub("In this release", self.spread_text(v["spread"], s.get("unit") or ""))
+        if self.anchor_label(v):
+            out += self.sub("Anchor", self.prose(self.anchor_basis(v)[1]) + " See [all anchors](../anchors.md).")
         out += self.sub("Accuracy", self.prose(v.get("accuracy")))
         if v.get("model"):
             out += self.sub("Value model", self.model_summary(v["model"]))
+        return out
+
+    def anchor_basis(self, v: dict) -> tuple[str | None, str]:
+        """The basis and note of a value's anchor, falling back to the dataset's default when only an anchor is given."""
+        if v.get("anchor_basis"):
+            return v["anchor_basis"], v.get("anchor_note") or ""
+        d = self.ds.meta.get("anchor_default") or {}
+        if v.get("anchor") and d:
+            return d["basis"], d["note"]
+        return None, ""
+
+    def anchor_label(self, v: dict) -> str | None:
+        basis, _ = self.anchor_basis(v)
+        if not (v.get("anchor") or basis):
+            return None
+        return f"{v.get('anchor') or 'counting rule'} ({ANCHOR_BASIS_LABEL[basis]})" if basis else v.get("anchor")
+
+    def anchors_page(self) -> str:
+        """Every anchor decision in one table, the unsettled ones first."""
+        rows = []
+        for vid, v in self.ds.items["variable"].items():
+            val = v.get("value") or {}
+            basis, note = self.anchor_basis(val)
+            if not (val.get("anchor") or basis):
+                continue
+            rows.append((ANCHOR_ORDER.index(basis) if basis in ANCHOR_ORDER else 9, v.get("group") or "", v["name"], vid,
+                         val, basis, note))
+        rows.sort(key=lambda r: r[:3])
+        n = {b: sum(1 for r in rows if r[5] == b) for b in ANCHOR_ORDER}
+        out = ("# Anchors\n\nA recorded value stands for an interval of true values. The **anchor** says where the "
+               "recorded value sits in that interval: at the nearest step (the interval is centred on it), at the "
+               "floor (the true value lies at or above it, as for completed years or a clock that truncates), or "
+               "at the ceiling. A wrong anchor shifts every value by up to half a step, always the same way, so "
+               "it biases averages rather than adding noise. For a count, the counting rule plays the same role.\n\n"
+               "Each anchor below has a basis:\n\n"
+               "- **Tested:** the data show it.\n"
+               "- **Convention:** the usual rule, not tested; its largest possible effect is half a step.\n"
+               "- **Assumption:** relied on, but the data in the release cannot test it; outside evidence could.\n"
+               "- **Open:** an alternative is plausible and could matter; the study says what would settle it.\n\n"
+               + ", ".join(f"{n[b]} {ANCHOR_BASIS_LABEL[b]}" for b in ANCHOR_ORDER if n[b]) + ". The unsettled ones "
+               "(open and assumption) come first. The anchors themselves are read from the value models' pinned "
+               "snapshot; the basis is the atlas's judgement and can be challenged like any other result "
+               "([how to contribute](contributing.md)).\n\n"
+               "| Variable | Group | Step | Anchor | Basis | Why |\n|---|---|---|---|---|---|\n")
+        default = (self.ds.meta.get("anchor_default") or {})
+        explicit = [r for r in rows if r[4].get("anchor_basis")]
+        rest = [r for r in rows if not r[4].get("anchor_basis")]
+        def step_of(vid, val):
+            return f"{val['step']:g} {self.ds.get('variable', vid).get('unit') or ''}".strip() if val.get("step") else "—"
+        for _, grp, _, vid, val, basis, note in explicit:
+            why = " ".join(self.prose(note).split()).replace("|", "\\|")
+            label = ANCHOR_BASIS_LABEL.get(basis, "—")
+            out += (f"| {self.a('variable', vid)} | {grp.split('/')[-1]} | {step_of(vid, val)} | "
+                    f"{val.get('anchor') or 'counting rule'} | {('**' + label + '**') if basis in ('open', 'assumption') else label} "
+                    f"| {why} |\n")
+        if rest:
+            out += (f"\n## The other {len(rest)}: the default\n\n{self.prose(default.get('note'))}\n\n"
+                    "| Variable | Group | Step | Anchor |\n|---|---|---|---|\n")
+            for _, grp, _, vid, val, basis, note in sorted(rest, key=lambda r: (r[1], r[2])):
+                out += f"| {self.a('variable', vid)} | {grp.split('/')[-1]} | {step_of(vid, val)} | {val.get('anchor')} |\n"
         return out
 
     def spread_text(self, ref: str, unit: str) -> str:
@@ -574,113 +639,133 @@ class Site:
         return out
 
     def measurement_space(self, i: str, s: dict) -> str:
-        """Where the true (time, value) can be, given a recorded pair: a schematic of the 2D density.
+        """Where the true value can lie, given a recorded one: vertical slices through the measurement space.
 
-        Across: true time minus stamp, from the default timing form (delay range plus the interval a value
-        describes). Up: true value minus recorded value, one band per rounding rule (opacity by its share) and the
-        instrument accuracy (±2 SD) when known. A variable whose value is itself a time puts its rules across.
+        A variable with a fitted model shows up to four worked examples (the distribution of true minus recorded,
+        averaged over every record with that recorded value) and a joint map of recorded against true, both read
+        from the pinned snapshot's slices.json. Any other variable shows one slice built from its rounding rules
+        and accuracy. The time side is given in a line of text below.
         """
         from metrology_atlas.readers import summarise
         v = s.get("value") or {}
         m = summarise(self.ds, v["model"]) if v.get("model") else None
-        unit = (m or {}).get("unit") or s.get("unit") or ""  # the model's unit is the one its rules are in
-        bands = []  # (lo, hi, weight, label) in value units
+        unit = (m or {}).get("unit") or s.get("unit") or ""
+        t = next((x for x in s.get("timing") or [] if x.get("default")), (s.get("timing") or [None])[0])
+        time_line = ""
+        if t:
+            lo, hi = -(t["delay_s"][1] + t["interval_s"][1]), -t["delay_s"][0]
+            time_line = (f"\n\n**Time side** ({t['name']}): the true time lies between {lo:g} s and {hi:g} s from the "
+                         "stamp: the delay range plus the interval one value describes.")
+        sl = self.slices(v)
+        if sl and sl.get("examples"):
+            return self.slice_examples(s, sl) + time_line
+        bands = []
         if m and m["modes"]:
             for md in m["modes"]:
-                if md["step"] is None:
-                    continue
-                st = float(md["step"])
-                lo, hi = {"ceiling": (-st, 0.0), "floor": (0.0, st)}.get(md["anchor"], (-st / 2, st / 2))
-                bands.append((lo, hi, md["weight"], f"{md['label']}"))
+                if md["step"] is not None:
+                    st = float(md["step"])
+                    lo, hi = {"ceiling": (-st, 0.0), "floor": (0.0, st)}.get(md["anchor"], (-st / 2, st / 2))
+                    bands.append((lo, hi, md["weight"]))
         elif v.get("step"):
             st = float(v["step"])
             lo, hi = {"ceiling": (-st, 0.0), "floor": (0.0, st)}.get(v.get("anchor") or "nearest", (-st / 2, st / 2))
-            bands.append((lo, hi, 1.0, f"resolution {st:g} {unit}"))
-        if not bands and v.get("spread"):
-            from metrology_atlas.readers import spread
-            sp = spread(self.ds, v["spread"]) or {}
-            w = (sp.get("width95") or {}).get("median")
-            c = (sp.get("mean_minus_recorded") or {}).get("median") or 0.0
-            if w:
-                bands.append((c - w / 2, c + w / 2, 1.0, "95% interval, median over records"))
+            bands.append((lo, hi, 1.0))
         acc = v.get("accuracy_sd") if v.get("accuracy_sd") is not None else (m or {}).get("accuracy_sd")
-        t = next((x for x in s.get("timing") or [] if x.get("default")), (s.get("timing") or [None])[0])
-        tbox = None
-        if t:
-            tbox = (-(t["delay_s"][1] + t["interval_s"][1]), -t["delay_s"][0], t["name"])
-        is_time = s.get("type") == "time"
-        if not bands and acc is None and not tbox:
-            return ""
-        W, H, L, R, T, B = 640, 300, 70, 20, 20, 46
+        if not bands and acc is None:
+            return time_line.strip()
+        xs = [b[0] for b in bands] + [b[1] for b in bands] + ([-3 * acc, 3 * acc] if acc else [])
+        a, b = min(xs + [0.0]), max(xs + [0.0])
+        pad = 0.15 * (b - a) or 1.0
+        grid = [a - pad + (b - a + 2 * pad) * k / 400 for k in range(401)]
+        tot = sum(w for _, _, w in bands) or 1.0
+        dens = []
+        for x in grid:
+            y = sum(w / tot / (hi - lo) for lo, hi, w in bands if lo <= x < hi and hi > lo)
+            if acc:
+                y = y if bands else math.exp(-x * x / (2 * acc * acc)) / (acc * math.sqrt(2 * math.pi))
+            dens.append(y)
+        shape = ("uniform" if len(bands) == 1 and not acc else "a mixture of uniforms" if bands and not acc
+                 else "normal" if not bands else "uniform, plus accuracy")
+        svg = self.slice_svg(grid, dens, f"true minus recorded ({unit})", None, 640, 220)
+        note = (f"*A vertical slice through the measurement space: how the true value is spread around any one "
+                f"recorded value. Its shape is {shape}"
+                + (", one block per rounding rule, weighted by how often it is used" if len(bands) > 1 else "")
+                + (f". The instrument accuracy ({acc:g} {unit} per SD) is not yet combined with the rounding here"
+                   if acc and bands else "") + ".*")
+        return f'<div class="ms-fig">{svg}</div>\n\n{note}{time_line}'
+
+    def slices(self, v: dict) -> dict | None:
+        """The model's worked examples, from slices.json next to the spread entry the value points at."""
+        from metrology_atlas.readers import spread
+        ref = v.get("slices") or (v.get("spread") or "").replace("spread.json", "slices.json")
+        return spread(self.ds, ref) if ref and "slices.json" in ref else None
+
+    def slice_svg(self, grid, dens, xlabel, title, W=300, H=190, zoom=False) -> str:
+        if zoom:   # each panel at its own scale: symmetric about zero, wide enough for 99.8% of the mass
+            dx = [b - a for a, b in zip(grid, grid[1:])] + [grid[-1] - grid[-2]]
+            mass = [y * d for y, d in zip(dens, dx)]
+            tot, c, lo, hi = sum(mass) or 1.0, 0.0, grid[0], grid[-1]
+            for x, mm in zip(grid, mass):
+                c += mm / tot
+                if c < 0.001:
+                    lo = x
+                if c < 0.999:
+                    hi = x
+            half = max(abs(lo), abs(hi), (grid[-1] - grid[0]) / 200) * 1.25
+            keep = [(x, y) for x, y in zip(grid, dens) if -half <= x <= half]
+            grid, dens = [-half] + [x for x, _ in keep] + [half], [0.0] + [y for _, y in keep] + [0.0]
+        L, R, T, B = 34, 10, 24 if title else 10, 34
         pw, ph = W - L - R, H - T - B
-        if is_time:  # the value is a time: its rules lie across, there is no value axis
-            xs = [b[0] for b in bands] + [b[1] for b in bands] or [-1, 1]
-            xu = unit or "s"
-        else:
-            xs = [tbox[0], tbox[1]] if tbox else [-1, 1]
-            xu = "s"
-        ys = ([b[0] for b in bands] + [b[1] for b in bands]) + ([-2 * acc, 2 * acc] if acc else []) or [-1, 1]
-        def span(vals):
-            lo, hi = min(vals + [0.0]), max(vals + [0.0])
-            pad = (hi - lo) * 0.15 or 1.0
-            return lo - pad, hi + pad
-        x0, x1 = span(xs)
-        y0, y1 = span(ys) if not is_time else (-1, 1)
+        x0, x1 = grid[0], grid[-1]
+        y1 = max(dens) * 1.08 or 1.0
         X = lambda x: L + (x - x0) / (x1 - x0) * pw  # noqa: E731
-        Y = lambda y: T + (y1 - y) / (y1 - y0) * ph  # noqa: E731
-        o = [f'<svg viewBox="0 0 {W} {H}" class="ms" role="img" aria-label="Measurement space of {s["name"]}">',
-             f'<rect x="{L}" y="{T}" width="{pw}" height="{ph}" class="ms-frame"/>']
-        if tbox and not is_time:  # time support, full height when the value side is unknown
-            a, b = X(tbox[0]), X(tbox[1])
-            o.append(f'<rect x="{min(a, b):.1f}" y="{T}" width="{max(abs(b - a), 2):.1f}" height="{ph}" class="ms-time"/>')
-        wmax = max([b[2] for b in bands] or [1]) or 1
-        for lo, hi, w, lab in bands:
-            op = 0.15 + 0.6 * (w / wmax)
-            if is_time:
-                a, b = X(lo), X(hi)
-                o.append(f'<rect x="{a:.1f}" y="{T + ph * .3:.1f}" width="{max(b - a, 2):.1f}" height="{ph * .4:.1f}" '
-                         f'class="ms-val" fill-opacity="{op:.2f}"><title>{lab}</title></rect>')
-                continue
-            xa, xb = (X(tbox[0]), X(tbox[1])) if tbox else (L, L + pw)
-            ya, yb = Y(hi), Y(lo)
-            o.append(f'<rect x="{min(xa, xb):.1f}" y="{ya:.1f}" width="{max(abs(xb - xa), 2):.1f}" '
-                     f'height="{max(yb - ya, 1.5):.1f}" class="ms-val" fill-opacity="{op:.2f}"><title>{lab}</title></rect>')
-        if acc and not is_time:
-            xa, xb = (X(tbox[0]), X(tbox[1])) if tbox else (L, L + pw)
-            o.append(f'<rect x="{min(xa, xb):.1f}" y="{Y(2 * acc):.1f}" width="{max(abs(xb - xa), 2):.1f}" '
-                     f'height="{Y(-2 * acc) - Y(2 * acc):.1f}" class="ms-acc"><title>accuracy ±2 SD</title></rect>')
-        if tbox or is_time:
+        Y = lambda y: T + (y1 - y) / y1 * ph  # noqa: E731
+        pts = " ".join(f"{X(x):.1f},{Y(y):.1f}" for x, y in zip(grid, dens))
+        o = [f'<svg viewBox="0 0 {W} {H}" class="ms" role="img" aria-label="{title or "slice"}">',
+             f'<rect x="{L}" y="{T}" width="{pw}" height="{ph}" class="ms-frame"/>',
+             f'<polygon points="{X(x0):.1f},{Y(0):.1f} {pts} {X(x1):.1f},{Y(0):.1f}" class="ms-val" fill-opacity=".35"/>']
+        if x0 < 0 < x1:
             o.append(f'<line x1="{X(0):.1f}" x2="{X(0):.1f}" y1="{T}" y2="{T + ph}" class="ms-zero"/>')
-        if not is_time and (bands or acc):
-            o.append(f'<line x1="{L}" x2="{L + pw}" y1="{Y(0):.1f}" y2="{Y(0):.1f}" class="ms-zero"/>')
-        for k in range(5):
-            xv = x0 + (x1 - x0) * k / 4
-            if tbox or is_time:
-                o.append(f'<text x="{X(xv):.1f}" y="{T + ph + 16}" class="ms-tick" text-anchor="middle">{xv:.3g}</text>')
-            if not is_time and (bands or acc):
-                yv = y0 + (y1 - y0) * k / 4
-                o.append(f'<text x="{L - 6}" y="{Y(yv) + 4:.1f}" class="ms-tick" text-anchor="end">{yv:.3g}</text>')
-        xl = ("true time minus recorded (" + xu + ")") if is_time else (
-            "true time minus stamp (s)" if tbox else "time: not recorded for this variable")
-        o.append(f'<text x="{L + pw / 2}" y="{H - 8}" class="ms-lab" text-anchor="middle">{xl}</text>')
-        if not is_time:
-            yl = f"true value minus recorded ({unit})" if bands or acc else "value side not yet described"
-            o.append(f'<text x="14" y="{T + ph / 2}" class="ms-lab" text-anchor="middle" '
-                     f'transform="rotate(-90 14 {T + ph / 2})">{yl}</text>')
-        o.append("</svg>")
-        legend = []
-        if tbox and not is_time:
-            legend.append(f'<span class="ms-key ms-key-time"></span> time support ({tbox[2]}): the delay range plus the '
-                          "interval one value describes")
-        if bands:
-            legend.append('<span class="ms-key ms-key-val"></span> ' + ("rounding rules" if len(bands) > 1 else "resolution")
-                          + " (darker: more of the records" + (", approximate" if m and any(x.get("approx") for x in m["modes"]) else "")
-                          + ")")
-        if acc and not is_time:
-            legend.append(f'<span class="ms-key ms-key-acc"></span> accuracy, ±2 SD ({acc:g} {unit} per SD)')
-        return ("<div class=\"ms-fig\">" + "".join(o) + '<div class="ms-legend">' + " · ".join(legend) + "</div></div>\n\n"
-                "*Schematic: where the true time and value can lie, given one recorded pair. Each part is drawn as "
-                "uniform over its range.*")
+        raw = (x1 - x0) / 4
+        mag = 10 ** math.floor(math.log10(raw))
+        step = next(m * mag for m in (1, 2, 2.5, 5, 10) if m * mag >= raw)
+        k = math.ceil(x0 / step)
+        while k * step <= x1 + 1e-12:
+            xv = 0.0 if abs(k * step) < step * 1e-6 else k * step
+            o.append(f'<text x="{X(xv):.1f}" y="{T + ph + 13}" class="ms-tick" text-anchor="middle">{xv:g}</text>')
+            k += 1
+        o.append(f'<text x="{L + pw / 2}" y="{H - 4}" class="ms-lab" text-anchor="middle">{xlabel}</text>')
+        if title:
+            o.append(f'<text x="{L}" y="15" class="ms-lab">{title}</text>')
+        o.append(f'<text x="12" y="{T + ph / 2}" class="ms-tick" text-anchor="middle" '
+                 f'transform="rotate(-90 12 {T + ph / 2})">density</text>')
+        return "".join(o) + "</svg>"
+
+    def slice_examples(self, s: dict, sl: dict) -> str:
+        unit, by = sl.get("unit") or "", sl.get("by", "recorded value")
+        panels, notes = [], []
+        for n, e in enumerate(sl["examples"], 1):
+            rec = e["recorded"] + ("" if by != "recorded value" else f" {unit}")
+            label = f"{n}. recorded {rec}" if by == "recorded value" else f"{n}. recorded at {rec} past the hour"
+            panels.append(self.slice_svg(e.get("grid") or sl["grid"], e["pdf"], f"true minus recorded ({unit})", label, zoom=True))
+            top = ", ".join(f"{k} {w:.0%}" for k, w in list(e["weights"].items())[:3] if w >= 0.01)
+            notes.append(f"**{rec}** ({e['why']}; {e['n']:,} records): mean {e['mean']:+.3g} {unit}, SD "
+                         f"{e['sd']:.3g} {unit}, 95% between {e['q'][0]:+.3g} and {e['q'][2]:+.3g}. Rounding: {top}.")
+        out = ('<div class="ms-fig ms-grid">' + "".join(panels) + "</div>\n\n"
+               f"*Vertical slices through the measurement space: how the true value is spread around a recorded "
+               f"one, for {len(panels)} recorded {'values' if by == 'recorded value' else 'minutes of the hour'} chosen "
+               f"to show the different cases. Each panel has its own scale. Each is averaged over every record with that "
+               f"{'value' if by == 'recorded value' else 'minute'} in the release, from the pinned model; groups of "
+               f"fewer than 20 records are not shown.*\n\n" + "\n".join(f"{k}. {x}" for k, x in enumerate(notes, 1)) + "\n")
+        if sl.get("joint"):
+            src = f"{self.base}figures/{sl['joint']}"
+            xl = "the recorded minute of the hour" if by != "recorded value" else "the recorded value"
+            out += (f'\n<figure markdown="span" id="fig-joint">\n  [![Joint map of recorded against true value for '
+                    f'{s["name"]}]({src})]({src})\n  <figcaption>Joint map: across, {xl}; up, the true value minus '
+                    f'the recorded one. Colour is the share of all probability in the release ({sl["records"]:,} '
+                    "records), on a log scale. Each column is a slice like those above; tall columns are values "
+                    "people round to, narrow ones values written as measured.</figcaption>\n</figure>\n")
+        return out
 
     def link(self, i: str, l: dict) -> str:
         r = self.rel["link"][i]
@@ -839,7 +924,7 @@ class Site:
                      "age": "Age", "colloid_rules": "Rule sets", "exact": "Exact",
                      "not_applicable": "Categories (no numeric value)"}.get(kind, kind)
             out += f"## {label}\n\n| Variable | Unit | Resolution | Model study |\n|---|---|---|---|\n" + "\n".join(rows[kind]) + "\n\n"
-        return out
+        return out.replace("\n## ", "\nEvery anchor decision, and which are unsettled, is on the [Anchors](anchors.md) page.\n\n## ", 1)
 
     # -- indexes -----------------------------------------------------------------------------------------------
     def kind_index(self, kind: str) -> str:
@@ -881,7 +966,11 @@ class Site:
     def home(self, json_name: str) -> str:
         m = self.ds.meta
         figs = {f["id"]: f for f in m.get("figures") or []}
-        out = f"---\nhide:\n  - navigation\n---\n\n# {m['name']}\n\n{m['summary']}\n\n{self.prose(m.get('description'))}\n\n"
+        out = f"---\nhide:\n  - navigation\n---\n\n# {m['name']}\n\n"
+        if m.get("notice"):
+            out += '!!! warning "Work in progress"\n\n' + "\n".join(
+                ("    " + l) if l else "" for l in self.prose(m["notice"]).strip().splitlines()) + "\n\n"
+        out += f"{m['summary']}\n\n{self.prose(m.get('description'))}\n\n"
         if m.get("overview") or "system-overview" in figs:
             out += "## System overview\n\n" + self.prose(m.get("overview")) + "\n\n"
             if "system-overview" in figs and "system-overview" not in self.placed:
@@ -1091,7 +1180,7 @@ class Site:
                 f"| **Time** | {clocks} [clocks](clocks/index.md) and {links} [links](links/index.md) between them; "
                 f"{chains} variables with a written chain from UTC, {timed} with timing against the working reference | "
                 "the interval each value describes, the stamp grids (chart below) |\n"
-                f"| **Value** | {acc} variables so far | {valued} variables, {models} with fitted rounding models "
+                f"| **Value** | {(str(acc) + ' variables so far') if acc else 'Not yet described for any variable: it needs the instruments\' calibration records ([why](studies/instrument-calibration.md))'} | {valued} variables, {models} with fitted rounding models "
                 "([Value](value.md)) |\n\n")
 
     def references_page(self) -> str:
@@ -1267,6 +1356,8 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
             entries[kind.name] = [f"{kind.folder}/index.md"] + [e for _, e in pages]
     site.start(None, base="")
     (docs / "value.md").write_text(site.value_page(), encoding="utf-8")
+    site.start(None, base="")
+    (docs / "anchors.md").write_text(site.anchors_page(), encoding="utf-8")
     (docs / "terms.md").write_text(TERMS_PAGE, encoding="utf-8")
     about = [{"Aim and terms": "terms.md"}]
     for pg in ds.meta.get("pages") or []:
@@ -1292,7 +1383,7 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     nav = [{"Home": "index.md"}, {"Variables": entries.pop("variable")},
            {"Time": ["time.md", {"Synchronisation planner": "planner.md"}, {"Clocks": entries.pop("clock")},
                      {"Clock links": entries.pop("link")}, {"Devices": entries.pop("device")}]},
-           {"Value": ["value.md"]},
+           {"Value": ["value.md", {"Anchors": "anchors.md"}]},
            {"Evidence": ["evidence.md", {"Open questions": "open-questions.md"}, {"Figures": "figures.md"}]
                         + ([{f"{rec_name.capitalize()}s discussed": "records.md"}] if rec_name else [])
                         + [{KINDS[k].title: entries.pop(k)}
@@ -1379,6 +1470,8 @@ ATLAS_CSS = """
 .ms-tick { font-size: 10px; fill: #616161; }
 .ms-lab { font-size: 11px; fill: #424242; }
 .ms-legend { font-size: .7rem; color: #555; margin-top: .25rem; }
+.ms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .5rem; }
+.ms-grid svg { max-width: 340px; }
 .ms-key { display: inline-block; width: .9em; height: .9em; vertical-align: -.1em; border-radius: 2px; }
 .ms-key-time { background: rgba(38,166,154,.25); border: 1px dashed #26a69a; }
 .ms-key-val { background: rgba(63,81,181,.5); }

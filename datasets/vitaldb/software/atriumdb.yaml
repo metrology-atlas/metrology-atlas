@@ -1,0 +1,24 @@
+id: atriumdb
+name: AtriumDB
+summary: >-
+  A database for high-frequency physiological signals from Laussen Labs at The Hospital for Sick Children, with a
+  Python SDK. It is the second store the VitalDB builds can be written to, beside TimeNet.
+url: https://pypi.org/project/atriumdb/
+licence: GPL-3.0 (the SDK)
+language: Python
+install: |
+  `pip install "atriumdb>=2.6"`, or install [[software:vitaldb-bench-atriumdb]], which pulls it in.
+description: |
+  The VitalDB work uses AtriumDB through its Python SDK: one AtriumDB device per VitalDB case, with the timing
+  model's labels. The group's approach to storing high-frequency signals is described in
+  [[reference:goodwin2020practical]].
+role: |
+  The VitalDB builds are meant to be exportable to either store: [[software:timenet]] or AtriumDB. TimeNet builds
+  are driven from [[software:vitaldb-bench]]. AtriumDB builds, with the same timing labels and the same fidelity
+  and performance checks, are in [[software:vitaldb-bench-atriumdb]], kept apart because the SDK's licence is GPL
+  and vitaldb-bench is MIT.
+
+  The 17 October rebuild with the reset reordering ([[observation:reset-records-out-of-order]]) covered the
+  TimeNet builds only; the AtriumDB builds were left as they were.
+related: [vitaldb-bench-atriumdb, timenet, vitaldb-bench]
+references: [atriumdb, goodwin2020practical]

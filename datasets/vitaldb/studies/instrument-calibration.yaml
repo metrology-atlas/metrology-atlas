@@ -1,0 +1,35 @@
+id: instrument-calibration
+name: Instrument accuracy and calibration
+summary: >-
+  The atlas describes how each value was recorded, but not yet how accurate the instrument behind it was. That needs
+  the calibration and quality-control records of every device, which are not in the release.
+date: 2026-10-18
+status: open
+methods: [value-resolution]
+background: |
+  A recorded value differs from the true one for two reasons: how it was written down (resolution: rounding,
+  heaping, sampling) and how well the instrument measured it (accuracy: bias, imprecision, drift between
+  calibrations). The atlas so far covers the first. For accuracy it has, at best, manufacturers' specifications,
+  and no variable yet carries an accuracy figure.
+data: None from the release. The VitalDB data hold the readings, not the instruments' calibration history.
+discussion: |
+  The hospital will have the records that would settle this: laboratory internal quality control and external
+  quality assessment for each analyser, biomedical engineering's calibration and maintenance logs for monitors,
+  pumps, ventilators and scales, and the dates and versions of each device in service. Summarised per device and
+  period, they would give each variable an accuracy term (a bias and an SD, and how they changed over time) to sit
+  beside its resolution model. Ideally they would be published in the same form as this atlas, so that each
+  variable's uncertainty is complete.
+limitations: |
+  Until such records are available, every value's uncertainty in the atlas is a lower bound: resolution only.
+open_questions:
+  - title: "Every instrument within its calibration"
+    kind: assumption
+    summary: >-
+      The atlas treats each instrument as accurate: no bias, no drift between calibrations, imprecision ignored. The
+      release cannot test this. Calibration and quality-control records for every measuring device used in the
+      VitalDB cases (laboratory analysers, monitors, infusion pumps, ventilators, scales and stadiometers) would
+      replace the assumption with a measured accuracy for each variable. This is beyond the scope of this work, but
+      the hospital will hold the records, and publishing them in a metrology atlas like this one would make every
+      variable's uncertainty complete.
+tags:
+- value side

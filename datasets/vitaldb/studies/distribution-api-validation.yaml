@@ -33,10 +33,13 @@ open_questions:
       back to uniform only where no latent is fitted; each result says which was used. A sketch on the urine latent
       shows why: uniform overstates a charted 1,000 mL (interval 750–1,250) by about 64 mL, while near the median
       the two agree to within a few mL.
-  - title: "Anchors still to confirm"
+  - title: "Record each anchor's basis in the registry"
     kind: next step
     summary: >-
-      Which "to confirm" anchors can be settled from documentation, and which need the data?
+      Settled on 18 October. Lab times, case end and analyser results are conventions whose largest effect is
+      negligible; admission and discharge are tested; age and the ICU-day count are assumptions the data cannot
+      test (both go to the VitalDB team); the volume models' nearest rounding stays open until floor rounding is
+      fitted. The Anchors page lists every decision. The registry should carry the basis too.
   - title: "Version each model separately"
     kind: next step
     summary: >-

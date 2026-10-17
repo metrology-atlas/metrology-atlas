@@ -5,7 +5,8 @@
 Writes, aggregates only:
 
 - figures/distributions/<variable id>.png: the recorded values of each clinical and lab variable in the release.
-  Numeric values at their recorded resolution (or finer bins when that would be too many), cut to the 0.5-99.5th
+  Numeric values one bar per possible recorded value, at the adopted resolution or the finest gap actually used
+  (coarser bins only when that would exceed 4,000), cut to the 0.5-99.5th
   percentiles with the counts outside stated; categories as bars (the 12 most common).
 - figures/models/<variable id>.png for each fitted value model: the recorded values against what the model
   predicts they should be (its rounding rules applied to its true-value density), so heaps show as spikes the
@@ -35,21 +36,45 @@ def atlas_id(name: str) -> str:
     return {"caseend": "case-end"}.get(name, re.sub(r"[^a-z0-9]+", "-", name.lower().replace("%", "-pct")).strip("-"))
 
 
+def finest_step(x) -> float | None:
+    """The smallest gap between distinct recorded values: the finest resolution actually used."""
+    u = np.unique(np.round(x[np.isfinite(x)], 6))
+    d = np.diff(u)
+    d = d[d > 1e-9]
+    return float(np.round(d.min(), 6)) if d.size else None
+
+
 def numeric_hist(ax, x, step, unit, plt):
+    """Counts at the variable's resolution, one bar per possible recorded value, so heaping shows as spikes.
+
+    The bin width is the adopted resolution (registry, or the model's base step), or else the finest gap between
+    recorded values. Only when that would give more than 4,000 bins (a time in seconds, say) are coarser bins used.
+    """
     x = x[np.isfinite(x)]
     lo, hi = np.percentile(x, [0.5, 99.5])
     inside = x[(x >= lo) & (x <= hi)]
-    if step and step > 0 and (hi - lo) / step <= 400:
-        edges = np.arange(np.floor(lo / step) * step - step / 2, hi + step, step)
+    step = step or finest_step(inside)
+    if step and step > 0 and (hi - lo) / step <= 4000:
+        k = np.round(inside / step).astype(np.int64)
+        k0 = k.min()
+        counts = np.bincount(k - k0)
+        centres = (np.arange(counts.size) + k0) * step
+        nz = counts > 0
+        if nz.sum() <= 150:
+            ax.bar(centres[nz], counts[nz], width=step * 0.8, color=INDIGO, linewidth=0)
+        else:
+            ax.vlines(centres[nz], 0, counts[nz], color=INDIGO, lw=0.7)
+        ax.set_ylim(0, counts.max() * 1.05)
+        binning = step
     else:
-        edges = np.histogram_bin_edges(inside, bins=120)
-    ax.hist(inside, bins=edges, color=INDIGO, linewidth=0)
+        ax.hist(inside, bins=np.histogram_bin_edges(inside, bins=120), color=INDIGO, linewidth=0)
+        binning = None
     ax.axvline(np.median(x), color=ORANGE, lw=1, ls="--", label=f"median {np.median(x):.4g}")
     ax.set_xlabel(f"recorded value ({unit})" if unit else "recorded value")
-    ax.set_ylabel("records")
+    ax.set_ylabel("records" + (f" per {binning:g} {unit}".rstrip() if binning else ""))
     ax.legend(frameon=False, fontsize=7)
     return {"n": int(x.size), "median": float(np.median(x)), "p05": float(lo), "p995": float(hi),
-            "outside": int(x.size - inside.size)}
+            "outside": int(x.size - inside.size), "bin": binning}
 
 
 def main(repo: str, release: str) -> None:
@@ -97,6 +122,12 @@ def main(repo: str, release: str) -> None:
                 plt.close(fig)
                 continue
             step = v.get("resolution") if isinstance(v.get("resolution"), (int, float)) else None
+            if step is None and v.get("model"):   # the model's base step: its record unit
+                try:
+                    mm = load_model(str(Path(repo) / "vitaldb_resolution/data/models" / v["model"]))
+                    step = getattr(mm, "spec", {}).get("record_unit") if not isinstance(mm, dict) else None
+                except Exception:  # noqa: BLE001
+                    step = None
             if v["type"] in ("timestamp", "device_time", "date"):
                 step = None
             info = numeric_hist(ax, xs, step, unit, plt)

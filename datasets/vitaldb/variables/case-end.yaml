@@ -21,3 +21,8 @@ timing:
   evidence: recording end rounded to 1 s (98.7% within 1 s)
 tags:
 - stub
+value:
+  anchor_basis: convention
+  anchor_note: >-
+    The recorder's clock in whole seconds; floor is how clocks truncate. The largest effect, 1 s, is negligible
+    against the timing uncertainties of the events it bounds.

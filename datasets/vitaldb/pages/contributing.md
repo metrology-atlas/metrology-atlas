@@ -113,7 +113,9 @@ Then in the atlas:
 7. Recompute how wide each variable's distributions are in the release:
    `python datasets/vitaldb/_import/resolution_spread.py <path to vitaldb-resolution> <VitalDB release folder>`
    (aggregates only; run it until it reports nothing left), then run the import in step 6 again so the variable
-   pages pick it up.
+   pages pick it up. For the fitted models, also redraw the worked examples and joint maps on the variable pages:
+   `python datasets/vitaldb/_import/value_slices.py <path to vitaldb-resolution> <VitalDB release folder>`
+   (aggregates only; it uses the snapshot's commit, never uncommitted changes; run it until nothing is left).
 8. Copy the commit and date from `SOURCE.yaml` into `sources:` in `dataset.yaml`, so every page states which
    version of the model it shows.
 9. Say what changed in a hand-written file for that model's study (for example
