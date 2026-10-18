@@ -2,7 +2,7 @@ id: value-model-opend
 name: How the operation end time was charted
 summary: The charted operation end time is a mixture of 4 ways of writing a clock time (floor_30min, floor_10min, floor_5min,
   clock_minute), modelled as an offset from a device time.
-date: 2026-10-13
+date: 2026-10-18
 status: current
 methods:
 - value-resolution

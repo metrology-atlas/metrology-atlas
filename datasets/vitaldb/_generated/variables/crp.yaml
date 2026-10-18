@@ -11,6 +11,8 @@ value:
   resolution: 0.01 mg/dL, nearest
   step: 0.01
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#crp
 tags:
 - generated

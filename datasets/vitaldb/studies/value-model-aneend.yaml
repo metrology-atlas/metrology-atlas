@@ -17,6 +17,9 @@ results: |
   - Rounded ends are written up to the next mark: ceiling beats nearest by 168 BIC points and floor by 782. An end charted as 11:30 means "finished by 11:30".
   - Hour, emergency status and department made no difference.
   - On average the true end is about 4 min before the charted end, so anaesthesia durations computed from charted times run long by a few minutes.
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): the two out-of-range records are excluded
+    (not corrected), and the stored and recomputed log-likelihoods now agree: the whole gap came from those two
+    records. The parameters are unchanged.
 discussion: |
   - Ceiling rounding for anaesthesia end and floor rounding for op end together inflate charted emergence by about 6–7 min.
   - Correction: an earlier fit did not exclude the derived ends, because their noise (about 10⁻⁶ s) slipped under the test threshold. The model was refitted without them and with a wider offset range; the conclusions are unchanged.
@@ -30,9 +33,3 @@ open_questions:
     summary: >-
       Two anaesthesia-end records lie at 720 and 1,441 minutes, outside the modelled range. A 12-hour clock slip and
       a one-day date error are the obvious explanations; neither is confirmed.
-  - title: "Refit without the two out-of-range records"
-    kind: next step
-    summary: >-
-      The stored fit (n = 6,256, log-likelihood −13,065.92) included the two out-of-range records and no longer
-      matches the library, which recomputes −11,684.41 on the 6,254 usable records. The fit needs rerunning without
-      them.

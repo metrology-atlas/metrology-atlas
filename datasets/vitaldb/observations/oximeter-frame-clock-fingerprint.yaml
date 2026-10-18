@@ -1,18 +1,23 @@
 id: oximeter-frame-clock-fingerprint
 name: The oximeter's frame clock is a fingerprint of the setup
 summary: >-
-  The rate of the oximeter's 30 Hz frame clock against the SNUADC sample clock is fixed per recording setup (+24 to
-  +84 ppm across setups) and repeats within about 2 ppm inside a recording, so it identifies the hardware a
+  The rate of the oximeter's 30 Hz frame clock against the SNUADC sample clock is fixed per recording setup (+7 to
+  +92 ppm across setups) and repeats within about 2 ppm inside a recording, so it identifies the hardware a
   recording was made on.
 status: established
 clocks: [oximeter-frame-clock, snuadc-sample]
 devices: [solar8000, snuadc]
 variables: [snuadc-pleth]
-studies: [ppg-frame-clock]
+studies: [ppg-frame-clock, setup-identification]
 description: |
   Found in 189 of 266 cases; the two halves of a recording agree within 2 ppm (median). Examples: +84 ppm (IQR
   82–88) for one SNUADC port in step mode, +39 ppm for the same port in frequent-correction mode, +72 and +24 ppm
   on two others. The same port giving two rates in the two modes shows that a port alone is not a setup.
+
+  A scan of 1,350 recordings on 18 October (up to 30 per PC key) found the frame clock in 656. Within a PC key, 89%
+  of them lie within 3 ppm of the key's median, against 19% within 3 ppm of the release's median; the key medians
+  run from +7 to +92 ppm ([[parameter:pleth-frame-clock-rate]], [[study:setup-identification]]). Two keys hold two
+  distinct rates, probably two oximeter modules on one PC.
 consequence: |
   A recording's frame clock can assign it to a setup without any port information, or split recordings that share
   a port number but were made on different hardware.

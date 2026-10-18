@@ -17,14 +17,10 @@ results: |
   - First-case incisions cluster at 08:20–08:50; the clock-time prior is 1,120 BIC points better.
   - Unlike anaesthesia start, there is no scheduled or nominal op start time.
   - Op start is well centred: a rounded value is uncertain by ±2.5 min.
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): the log-likelihood gap is explained. The old
+    fitter worked out the time-of-day prior on its own 0.1-minute grid; refitted with the library's likelihood the
+    model gains 33.2 in log-likelihood and the posteriors move by less than 0.03 minutes.
 discussion: |
   - Through the package, the log-likelihood differs from the stored one by −10.6. The difference is not yet explained. The working explanation is that the fitter integrates the first-case clock prior on its own 0.1-min grid, about 0.007 per first-case record.
 limitations: |
   - The package and stored log-likelihoods differ by 10.6 points, and the cause is not confirmed.
-open_questions:
-  - title: "The log-likelihood gap as grid resolution"
-    kind: hypothesis
-    summary: >-
-      Recomputed with the library, the op-start fit's log-likelihood is −18,073.75; the stored fit says −18,063.18.
-      A different latent grid resolution between fitting and evaluation would explain a gap of this size, but it has
-      not been tested.

@@ -21,7 +21,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parents[1]
 OUT = HERE / "_sources" / "vitaldb-resolution" / "spread.json"
-BUDGET = 140
+BUDGET = 90
 
 
 def agg(x) -> dict:

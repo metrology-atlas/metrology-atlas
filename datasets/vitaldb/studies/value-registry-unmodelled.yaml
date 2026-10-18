@@ -19,6 +19,10 @@ results: |
   - Large plasma values go with very large blood loss and are not flagged.
   - Age: 19.2% end in 0 or 5 (20% expected). 10 infants have ages in tenths of a year (0.3–0.8).
   - 6 cases have more ICU days than the hospital stay (`order_violation`).
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): ICU days carry the flag `icu_exceeds_postop`
+    where the count reaches the days from the case-day midnight to the discharge midnight (36 cases by the
+    library's definition; [[observation:icu-days-exceed-postop-stay]]), and the counting rule is recorded as
+    assumed.
 discussion: |
   - Blood products are exact counts. Probable mL entries are flagged, not converted, since the pack volume is unknown.
   - ">89" is top-coded and returns an open interval from 90 (status `top_coded`).

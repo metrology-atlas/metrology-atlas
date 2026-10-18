@@ -1,6 +1,6 @@
 id: icu-days
-name: Icu days
-summary: Icu days (clinical table).
+name: ICU days
+summary: ICU days (clinical table).
 type: clinical
 source_name: icu_days
 group: Clinical record/Outcome
@@ -9,11 +9,15 @@ unit: days
 value:
   kind: 'triangular_count: day count with ±1 uncertainty'
   resolution: whole days, counting rule unknown (±1)
+  anchor_basis: assumption
+  anchor_note: 815 one-day stays against 98 two-day stays argue against calendar days touched; read as nights or completed
+    days.
   spread: vitaldb-resolution/spread.json#icu_days
 tags:
 - generated
 - vitaldb-resolution
-description: Day count; counting rule unknown (calendar days touched or completed 24 h), so ±1 day.
+description: 'Day count, read as nights or completed days: 815 one-day stays against 98 two-day stays argue against calendar
+  days touched. The rule is an assumption, so ±1 day is kept.'
 figures:
 - id: distribution
   file: distributions/icu-days.png

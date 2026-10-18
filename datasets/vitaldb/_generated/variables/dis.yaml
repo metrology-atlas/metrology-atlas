@@ -11,6 +11,8 @@ value:
   resolution: 86400 sec, floor
   step: 86400
   anchor: floor
+  anchor_basis: tested
+  anchor_note: Discharge minus admission is a whole number of days in every case, so each value marks a midnight.
   spread: vitaldb-resolution/spread.json#dis
 tags:
 - generated

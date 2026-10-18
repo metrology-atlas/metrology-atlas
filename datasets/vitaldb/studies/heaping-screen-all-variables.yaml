@@ -31,18 +31,15 @@ results: |
     near the top ([[observation:lab-reporting-limits]]).
   - Two more analytes have reporting limits: aPTT at 400.0 s (226 results, 87 cases) and ESR at 2 mm/h (89
     results, 72 cases).
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): lactate at 15.0 and aPTT at 400.0 (and pre-
+    operative aPTT) are `top_coded`, ESR at 2 `bottom_coded`, and `p` is described as probably phosphorus
+    (unconfirmed).
 discussion: |
   - Apart from computed values, every lab analyte is single resolution per source and needs a registry entry, not a rounding model.
   - Pre-operative copies behave like the lab data: platelets, glucose, AST, ALT and BUN show no heaping; pre-op PT % and sodium show the same artefacts. Pre-op PaO2 is the exception.
 limitations: |
   - ESR, ammonia and creatinine clearance have too few results to judge (537–1,415).
 open_questions:
-  - title: "Reporting limits not yet in the registry"
-    kind: next step
-    summary: >-
-      Lactate is capped at 15.0 mmol/L, aPTT at 400.0 s and ESR floored at 2 mm/h. The registry treats them as
-      ordinary values; they should be top- or bottom-coded (an open interval beyond the limit), as age is above
-      89. The change is with the vitaldb-resolution library.
   - title: "Analyte p as phosphorus"
     kind: hypothesis
     summary: >-

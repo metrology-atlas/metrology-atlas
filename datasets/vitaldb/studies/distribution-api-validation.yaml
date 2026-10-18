@@ -19,34 +19,16 @@ results: |
   - The cache holds the whole dataset in about 214 MB. One iteration draws every value in about 20 ms for the cases and about 75 ms including all lab results.
   - At any number of knots, int16 has the same worst-case error as float32 and float64. The default is 1,024 knots in int16, with worst mean error 4.7 × 10⁻⁴ SD.
   - Knot placement mattered more than either. End knots at the support ends inflated the SD by up to 80 % at 256 knots; interior knots with tail-mean-preserving end knots cut the worst SD error to 1.1 % and 0.42 %.
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): each result's density within a rounding
+    interval comes from the fitted latent at call time (uniform only where no latent is fitted), and every result
+    names its density, model id, version and fit hash. The latent and uniform means differ by a few per cent of
+    the interval near the median and by 0.2–0.45 of its width at small values and at the edges. Models are
+    versioned (v1 archived and still loadable, `models.lock` per release), every stored log-likelihood now matches
+    the recomputed one, and the registry records each anchor's basis.
 discussion: |
   - The default's worst mean error is about 20 times smaller than the Monte Carlo standard error after 10,000 iterations.
   - Building the package surfaced new rules: two out-of-range anaesthesia ends, 93 clock-offset mismatches, child native resolution, and a revised red-cell rule.
 limitations: |
   - Where a posterior has a gap between two rounding windows, draws can land inside it. This is the large point-wise quantile error (0.8 SD at the 99th percentile at 1,024 knots); it barely moves the mean, SD or W1.
-open_questions:
-  - title: "Compute the within-interval density from the latent"
-    kind: next step
-    summary: >-
-      Decided on 18 October: the API computes the latent truncated to each component's interval when called
-      (closed form for a log-normal latent, with the case's duration where the model has that covariate), and falls
-      back to uniform only where no latent is fitted; each result says which was used. A sketch on the urine latent
-      shows why: uniform overstates a charted 1,000 mL (interval 750–1,250) by about 64 mL, while near the median
-      the two agree to within a few mL.
-  - title: "Record each anchor's basis in the registry"
-    kind: next step
-    summary: >-
-      Settled on 18 October. Lab times, case end and analyser results are conventions whose largest effect is
-      negligible; admission and discharge are tested; age and the ICU-day count are assumptions the data cannot
-      test (both go to the VitalDB team); the volume models' nearest rounding stays open until floor rounding is
-      fitted. The Anchors page lists every decision. The registry should carry the basis too.
-  - title: "Version each model separately"
-    kind: next step
-    summary: >-
-      Decided on 18 October: each model gets its own version, and a published model file is never edited. A refit
-      is a new version; old ones stay callable. Each file records a hash of its fitted numbers and what it was
-      fitted on. Each release ships a lock file listing every model's version and hash, and every API result names
-      the version that made it. The aim is that anyone can examine one model and propose a better version
-      alongside the current one. The change is with the vitaldb-resolution library.
 tags:
 - from the resolution work

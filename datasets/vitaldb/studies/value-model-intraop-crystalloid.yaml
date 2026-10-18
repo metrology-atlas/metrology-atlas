@@ -18,15 +18,11 @@ results: |
   - Volume-dependent propensities fit no better than constant ones (BIC 47,384 against 47,374).
   - Bag-size modes do not help (BIC 47,416). There is no special heaping at bag sizes.
   - A recorded multiple of 100 mL is uncertain by about ±50 mL; any other multiple of 50 by about ±25 mL.
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): anaesthesia duration is a covariate of the
+    latent volume (BIC better by 6,254). Department on the rounding propensities made the fit worse (BIC +22) and
+    is not used. Rounding to the nearest anchor beats floor rounding by BIC.
 discussion: |
   - Crystalloid volume is very strongly tied to case duration (Spearman 0.82).
   - Conditioning the latent on duration would narrow posteriors considerably. This is a candidate extension for all volumes.
 limitations: |
   - The latent does not yet use duration, so posteriors are wider than they need to be.
-open_questions:
-  - title: "Fit duration as a latent covariate"
-    kind: next step
-    summary: >-
-      Decided on 18 October: the volume models get anaesthesia duration as a latent covariate (the latent's
-      location rising with log duration), compared with the current fit by BIC. The refit is with the
-      vitaldb-resolution library.

@@ -1,9 +1,0 @@
-id: intraop-uo
-# Hand-written overlay on the generated file: anchor basis only.
-value:
-  anchor: nearest
-  anchor_basis: open
-  anchor_note: >-
-    The fitted heaping model rounds each record to the nearest anchor. Reading the last graduation passed (floor,
-    hypothesis H1) is as plausible for a volume and has not been fitted against it; a BIC comparison would settle it
-    ([[study:value-model-intraop-uo]]).

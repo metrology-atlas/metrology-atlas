@@ -11,6 +11,9 @@ value:
   resolution: completed years; tenths for infants; top-coded
   step: 1
   anchor: floor
+  anchor_basis: assumption
+  anchor_note: The release says only "years"; infants in tenths and the >89 cap point to an exact age cut down to completed
+    years.
   spread: vitaldb-resolution/spread.json#age
 tags:
 - generated

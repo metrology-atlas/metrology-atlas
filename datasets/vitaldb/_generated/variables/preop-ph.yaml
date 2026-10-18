@@ -10,6 +10,8 @@ value:
   resolution: 0.001 , nearest
   step: 0.001
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#preop_ph
 tags:
 - generated

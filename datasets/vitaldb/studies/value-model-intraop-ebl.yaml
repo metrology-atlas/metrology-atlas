@@ -24,6 +24,9 @@ results: |
   - Absolute modes beat relative modes decisively (AIC lower by more than 2,500). Relative modes cannot produce the 50 mL steps that dominate 100–999 mL.
   - Below 75 mL, about 40% of estimates go to the nearest of 10, 20, 30 or 50 mL, skipping 40. This captures both the 50 mL heap and the missing 40s.
   - Representative posteriors: a recorded 30 mL has 95% interval 25.5–39.5 mL; 50 mL, 26.5–73.5; 300 mL, 254.5–344.5; 1,000 mL, 779.5–1,188.5.
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): anaesthesia duration is a covariate of the
+    latent volume (BIC better by 1,751). Department on the rounding propensities made the fit worse (BIC +51) and
+    is not used. Rounding to the nearest anchor beats floor rounding by BIC.
 discussion: |
   - Relative precision of this kind is typical of a visual estimate, so every mode's propensity has to depend on magnitude, not just one.
   - A nominal "minimal loss" 50 mL component adds little once the preferred-value set is in (BIC within 4). The working model omits it.

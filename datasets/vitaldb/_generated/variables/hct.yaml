@@ -10,6 +10,8 @@ value:
   kind: 'source_dependent: resolution chosen by a covariate (analyser)'
   resolution: 'by analyser: cbc 0.1 %, blood_gas 1 %'
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#hct
 tags:
 - generated

@@ -1,14 +1,77 @@
 id: fluid-balance
 name: Intraoperative fluid balance as a distribution
 summary: >-
-  Fluids in minus fluids out, where every term is a heaped charted volume, as a distribution per case.
+  Fluids in minus fluids out, each a heaped charted volume, as a distribution per case: the recording alone makes a
+  balance uncertain by about ±60 mL, and by ±190 mL when the blood loss was written as a round 500 mL.
 side: value
-status: planned
+status: draft
 question: |
-  What was this patient's net fluid balance at the end of the operation?
+  What was this patient's net fluid balance at the end of the operation, and how precisely do the records say?
 why: |
-  Each volume is heaped on its own grid; their errors add up in the balance.
-variables: [intraop-crystalloid, intraop-colloid, intraop-rbc, intraop-ffp, intraop-ebl, intraop-uo]
+  The balance adds and subtracts four charted volumes, each heaped on its own grid: crystalloid on 100 and 50 mL
+  ([[study:value-model-intraop-crystalloid]]), blood loss on 50, 100 and 500 mL ([[study:value-model-intraop-ebl]]),
+  urine output on 50 and 100 mL ([[study:value-model-intraop-uo]]), colloid on container sizes
+  ([[study:value-intraop-colloid-containers]]). Their rounding errors add up.
+variables: [intraop-crystalloid, intraop-colloid, intraop-ebl, intraop-uo]
 studies: [value-model-intraop-crystalloid, value-model-intraop-ebl, value-model-intraop-uo, value-intraop-colloid-containers]
+data: |
+  The 2,639 cases with crystalloid, blood loss and urine output recorded and no blood products (the release gives
+  products in units, and the volume of a unit is not recorded). A recorded 0 counts as exactly 0.
+steps: |
+  1. For each case, draw 4,000 true values of each volume from the pinned vitaldb-resolution library (v0.6.0, model
+     version 2, with each volume conditioned on the case's anaesthesia duration).
+  2. Form crystalloid + colloid − blood loss − urine output for each draw.
+  3. Summarise each case by its median and a 95% interval, and split the variance between the four terms.
+results: |
+  **Three cases.** [[case:6156]] is a typical width: 170 to 291 mL. In [[case:4167]] the recorded balance is −100 mL
+  but the interval runs from −268 to +120 mL, so even its sign is uncertain. [[case:5253]] is wide because its blood
+  loss was written as 3,000 mL.
+
+  [[figure:fb-examples]]
+
+  **The cohort.** The median 95% interval is 116 mL wide (78 to 142 mL, 10th to 90th percentile). Crystalloid
+  contributes about 55% of the variance in the median case and blood loss 36%; urine output and colloid little. A
+  separate group of 117 cases is about 380 mL wide: 97 of them have a blood loss recorded as exactly 500 mL, which
+  the model reads as possibly rounded to the nearest 500. In 95 cases the interval spans zero. The medians of the
+  distributions sit within 1 mL of the recorded balance, so the rounding adds spread, not bias.
+
+  [[figure:fb-cohort]]
 takeaways: |
-  Planned.
+  - A computed fluid balance from charted volumes is uncertain by about ±60 mL from the recording alone, before any
+    error in estimating blood loss itself.
+  - Round blood losses (500, 1,000 mL) dominate the uncertainty where they occur.
+limitations: |
+  - Measurement error beyond rounding (estimating blood loss by eye, for one) is not included; it is larger.
+  - Cases with blood products are left out.
+open_questions:
+  - title: "Blood products in millilitres"
+    kind: assumption
+    summary: >-
+      The release gives red cells and plasma in units. A unit's volume (typically 250–350 mL for red cells) is not
+      recorded, so the balance leaves these cases out; an assumed range would bring them in with a wider
+      distribution.
+code:
+  - vitaldb-bench/examples/fluid_balance.py
+reproduce: |
+  ```
+  python examples/fluid_balance.py --resolution <vitaldb-resolution at the pinned commit> \
+      --root <VitalDB release> --out out/fb --figure 6156 4167 5253
+  ```
+figures:
+  - id: fb-examples
+    file: examples/fb-examples.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench examples/fluid_balance.py
+    records: [6156, 4167, 5253]
+    caption: >-
+      Fluid balance as a distribution (blue) against the recorded numbers' balance (dashed) in [[case:4167]],
+      [[case:5253]] and [[case:6156]].
+    alt: Three histograms of fluid balance; the first straddles zero, the second is centred near minus 900 mL with long tails, the third is between 150 and 300 mL.
+  - id: fb-cohort
+    file: examples/fb-cohort.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench examples/fluid_balance.py
+    caption: >-
+      2,639 cases without blood products. Left: 95% interval width against the recorded balance. Right: the widths;
+      the group near 380 mL has a blood loss written as a round 500 or 1,000 mL.
+    alt: A scatter with most points between 50 and 200 mL wide and a separate band near 380 mL, and a histogram with a main peak near 120 mL and a small one near 380 mL.

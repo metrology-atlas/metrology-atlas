@@ -2,7 +2,7 @@ id: value-model-anestart
 name: How the anesthesia start time was charted
 summary: The charted anesthesia start time is a mixture of 5 ways of writing a clock time (nominal_0740, nominal_0730, nearest_10min,
   nearest_5min, clock_minute), modelled as an offset from a device time.
-date: 2026-10-13
+date: 2026-10-18
 status: current
 methods:
 - value-resolution

@@ -127,8 +127,8 @@ pages:
 sources:
   - software: vitaldb-resolution
     folder: _sources/vitaldb-resolution
-    commit: e2376f45001924c408af6592d5c55f8eb64735ab
-    date: 2026-10-14
+    commit: bb03ddfc8acad2fed25fe51c378b3b0b6e7ad5ea
+    date: 2026-10-18
     note: Registry and fitted value models. Refreshed by _import/resolution.py; never edited here.
 site:
   title: VitalDB metrology atlas

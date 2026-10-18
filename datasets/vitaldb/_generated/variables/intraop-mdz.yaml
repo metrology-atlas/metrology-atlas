@@ -11,6 +11,8 @@ value:
   resolution: 0.5 mg, nearest
   step: 0.5
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Native recording unit, rounding to the nearest assumed; not tested (sparse or exact-count data).
   spread: vitaldb-resolution/spread.json#intraop_mdz
 tags:
 - generated

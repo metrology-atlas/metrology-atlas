@@ -1,12 +1,15 @@
 """The setup register on pages/setups.md, and per-setup values of the drift parameters.
 
-    python datasets/vitaldb/_import/setups.py <ports.jsonl> <units.csv>
+    python datasets/vitaldb/_import/setups.py <ports.jsonl> <units.csv> [<frame_clock_*.jsonl> ...]
 
 Inputs, both per case and kept on the analysis machine:
 
 - ``ports.jsonl``: each recording's devices and the serial (COM) port each was attached to, read from the device
   records of every .vital file;
-- ``units.csv``: the per-case SNUADC and BIS drift behind [[study:drift-units]].
+- ``units.csv``: the per-case SNUADC and BIS drift behind [[study:drift-units]];
+- optionally, the outputs of vitaldb-bench's ``tools/frame_an.py``: the oximeter's frame clock per case, kept where
+  the raw PPG peak locks to it (resultant at least 5 times the scan's median) and the recording's two halves agree
+  within 3 ppm.
 
 A setup is identified by its *PC key*: the ports of the four core devices (SNUADC, Solar8000, Primus, BIS). The
 script writes only aggregates, for keys with at least 5 cases with a drift: the register between the markers in
@@ -52,7 +55,21 @@ def by_key(df, val):
     return sorted(rows, key=lambda r: -r["n"])
 
 
-def main(ports_jsonl: str, units_csv: str) -> None:
+def load_frame(paths) -> dict:
+    out = {}
+    for path in paths:
+        for line in open(path, encoding="utf-8"):
+            r = json.loads(line)
+            ph = (r.get("phase") or {}).get("peak") or {}
+            a, h1, h2 = ph.get("all") or {}, ph.get("half1") or {}, ph.get("half2") or {}
+            if (a.get("r_best") and a.get("r_median") and a["r_best"] >= 5 * a["r_median"]
+                    and h1.get("best_ppm") is not None and h2.get("best_ppm") is not None
+                    and abs(h1["best_ppm"] - h2["best_ppm"]) <= 3):
+                out[int(r["case"])] = float(a["best_ppm"])
+    return out
+
+
+def main(ports_jsonl: str, units_csv: str, frame_paths=()) -> None:
     ports = {}
     for line in open(ports_jsonl, encoding="utf-8"):
         r = json.loads(line)
@@ -62,11 +79,14 @@ def main(ports_jsonl: str, units_csv: str) -> None:
     P = pd.DataFrame.from_dict(ports, orient="index")
     u = pd.read_csv(units_csv).set_index("case")
     d = P.join(u[["snuadc_drift_ppm", "bis_drift_ppm"]], how="left")
+    frame = load_frame(frame_paths)
+    d["frame_ppm"] = pd.Series(frame)
     d["mode"] = np.where(d.snuadc_drift_ppm < -20, "step", np.where(d.snuadc_drift_ppm.notna(), "frequent", None))
     step = d[d["mode"] == "step"].copy()
     step["pair"] = step.SNUADC_port + " + " + step.BIS_port
     c_port, c_pair, c_key = (closeness(step, "snuadc_drift_ppm", g) for g in ("SNUADC_port", "pair", "key"))
     b_port, b_key = closeness(d, "bis_drift_ppm", "BIS_port"), closeness(d, "bis_drift_ppm", "key")
+    f_key = closeness(d, "frame_ppm", "key") if frame else None
     keys = d.key.value_counts()
     with_key = int(d.key.notna().sum())
     out = [START, "",
@@ -80,29 +100,36 @@ def main(ports_jsonl: str, units_csv: str) -> None:
            f"| SNUADC, step mode | {c_port[0]:.0%} ({c_port[2]} ports) | {c_pair[0]:.0%} ({c_pair[2]} pairs) | "
            f"{c_key[0]:.0%} ({c_key[2]} keys) | {c_port[1]:.0%} |",
            f"| BIS | {b_port[0]:.0%} ({b_port[2]} ports) | — | {b_key[0]:.0%} ({b_key[2]} keys) | {b_port[1]:.0%} |",
+           *([f"| Oximeter frame clock | — | — | {f_key[0]:.0%} ({f_key[2]} keys) | {f_key[1]:.0%} |"] if frame else []),
            "", "**Setups with at least 20 recordings**, by PC key (SNUADC · Solar8000 · Primus · BIS port). Drifts "
            "are medians over the cases where they were measured.", "",
-           "| PC key | Recordings | SNUADC frequent mode | SNUADC step drift (ppm) | BIS drift (ppm) |",
-           "|---|---|---|---|---|"]
+           "| PC key | Recordings | SNUADC frequent mode | SNUADC step drift (ppm) | BIS drift (ppm) | Oximeter frame clock (ppm) |",
+           "|---|---|---|---|---|---|"]
     for key, n in keys[keys >= 20].items():
         g = d[d.key == key]
         m = g["mode"].dropna()
         sd, bd = g.loc[g["mode"] == "step", "snuadc_drift_ppm"].dropna(), g.bis_drift_ppm.dropna()
         out.append(f"| {key} | {n} | " + (f"{(m == 'frequent').mean():.0%} of {len(m)}" if len(m) else "—")
                    + " | " + (f"{sd.median():.1f} (n={len(sd)})" if len(sd) >= 3 else "—")
-                   + " | " + (f"{bd.median():.1f} (n={len(bd)})" if len(bd) >= 3 else "—") + " |")
+                   + " | " + (f"{bd.median():.1f} (n={len(bd)})" if len(bd) >= 3 else "—")
+                   + " | " + (f"{g.frame_ppm.dropna().median():+.0f} (n={g.frame_ppm.notna().sum()})"
+                              if g.frame_ppm.notna().sum() >= 3 else "—") + " |")
     out += ["", END]
     text = PAGE.read_text(encoding="utf-8")
     a, b = text.index(START), text.index(END) + len(END)
     PAGE.write_text(text[:a] + "\n".join(out) + text[b:], encoding="utf-8")
     GEN.mkdir(parents=True, exist_ok=True)
-    for pid, df, val in (("snuadc-step-rate", step, "snuadc_drift_ppm"), ("bis-rate", d, "bis_drift_ppm")):
+    jobs = [("snuadc-step-rate", step, "snuadc_drift_ppm"), ("bis-rate", d, "bis_drift_ppm")]
+    if frame:
+        jobs.append(("pleth-frame-clock-rate", d, "frame_ppm"))
+    for pid, df, val in jobs:
         doc = {"id": pid, "setup_key": "PC key: SNUADC · Solar8000 · Primus · BIS serial ports",
                "by_setup": by_key(df, val)}
         (GEN / f"{pid}.yaml").write_text("# Generated by _import/setups.py; do not edit.\n"
                                          + yaml.safe_dump(doc, sort_keys=False, allow_unicode=True), encoding="utf-8")
-    print({"snuadc": (c_port, c_pair, c_key), "bis": (b_port, b_key), "with_key": with_key, "keys": len(keys)})
+    print({"snuadc": (c_port, c_pair, c_key), "bis": (b_port, b_key), "frame": f_key, "with_key": with_key,
+           "keys": len(keys), "frame_cases": len(frame)})
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3:])

@@ -9,6 +9,10 @@ unit: mL
 value:
   kind: 'model: fitted rounding model (value kind); posterior over the true value'
   resolution: 'heaped: a mixture of rounding modes (see the value model)'
+  anchor: nearest
+  anchor_basis: tested
+  anchor_note: 'Nearest rounding preferred to floor (H1, last graduation passed) by BIC: 52 with the duration covariate,
+    25 without (same 3882 records; results/2026-10-18_refits_duration_zero.md).'
   spread: vitaldb-resolution/spread.json#intraop_ebl
   model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_ebl.model.json
   status: measured

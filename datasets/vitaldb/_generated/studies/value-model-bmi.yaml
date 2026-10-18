@@ -1,7 +1,7 @@
 id: value-model-bmi
 name: Body mass index, derived from its inputs
 summary: Body mass index computed from the posteriors of height, weight.
-date: 2026-10-14
+date: 2026-10-18
 status: current
 methods:
 - value-resolution

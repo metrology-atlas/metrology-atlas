@@ -2,20 +2,78 @@ id: urine-output-per-kg-per-hour
 name: Urine output in mL/kg/h as a distribution
 summary: >-
   Intraoperative urine output per kilogram per hour, from three rounded inputs, as a probability distribution per
-  case, and how often the 0.5 mL/kg/h threshold is uncertain.
+  case: one case in ten cannot be placed confidently on either side of 0.5 mL/kg/h.
 side: value
-status: planned
+status: draft
 question: |
   Was this patient's urine output below 0.5 mL/kg/h during the operation?
 why: |
-  Urine output, weight and anaesthesia duration are each rounded in their own way ([[study:value-model-intraop-uo]],
-  [[study:value-model-weight]], [[study:timestamp-derived-intervals]]). The ratio of rounded values has a spread
-  that can straddle a threshold.
+  The answer is a ratio of three recorded numbers, each rounded in its own way: urine output heaped on 50 and
+  100 mL ([[study:value-model-intraop-uo]]), weight on whole kilograms or a scale's 0.1 or 0.05 kg
+  ([[study:value-model-weight]]), and the anaesthesia start and end on 5- and 10-minute marks
+  ([[study:timestamp-derived-intervals]]). Computed from the recorded numbers, the rate is one number; the true rate
+  can lie on either side of a threshold.
 variables: [intraop-uo, weight, ane-duration]
-studies: [value-model-intraop-uo, value-model-weight, timestamp-derived-intervals]
+studies: [value-model-intraop-uo, value-model-weight, value-model-anestart, value-model-aneend, timestamp-derived-intervals]
+data: |
+  The 3,645 cases with a positive urine output, a weight and both anaesthesia times (39 more with a positive urine
+  output lack one of the others or have no distribution for it). Recorded zeros are left out until the zero rule is
+  in the library.
 steps: |
-  1. Draw the true urine output, weight and duration for each case from the library.
-  2. Form the ratio per draw; summarise each case by its distribution and P(below 0.5 mL/kg/h).
-  3. Show example distributions, and how many cases are confidently above, confidently below, or uncertain.
+  1. For each case, draw 4,000 true values of urine output, weight and anaesthesia duration from the pinned
+     vitaldb-resolution library (v0.6.0, model version 2: urine output conditioned on the case's anaesthesia
+     duration and department; `Registry.case_distribution`).
+  2. Form urine output / weight / duration in hours for each draw.
+  3. Summarise each case by its median, a 95% interval and P(rate < 0.5 mL/kg/h); class it as confidently below
+     (P > 0.95), confidently above (P < 0.05) or uncertain.
+  4. Compare with the single rate computed from the recorded numbers.
+results: |
+  **Four cases.** The distributions differ in width as much as in position. [[case:5111]] (100 mL, 66 kg, 190 min)
+  sits on the threshold with a wide distribution, because a recorded 100 mL may be anything from about 50 to 150 mL:
+  P(below 0.5) = 0.62, 95% interval 0.32 to 0.63 mL/kg/h. [[case:111]] is close to the threshold but confidently below; [[case:113]], with 320 mL
+  (written to the nearest 10), is narrow and confidently above.
+
+  [[figure:uo-examples]]
+
+  **The cohort.** Of 3,645 cases, 1,086 are confidently below 0.5 mL/kg/h, 2,178 confidently above, and 381 (10%)
+  uncertain. Nearly all the uncertain ones (365) have a recorded rate between 0.35 and 0.7, where they are a third
+  of the cases. Of the 1,276 cases the recorded numbers put below 0.5, 190 are not confidently below; of those they
+  put above, 191 are not confidently above. The 95% interval is 14% of the rate in the median case (4% to 73%, 10th to 90th
+  percentile); the widest are cases with a round urine output of 50 or 100 mL.
+
+  [[figure:uo-cohort]]
 takeaways: |
-  Planned.
+  - A threshold on a derived rate misclassifies cases near it in a way the recorded numbers cannot show. Report the
+    share that is uncertain, or carry P(below) into the analysis instead of a yes or no.
+  - Most of the uncertainty comes from urine output recorded as a round 50 or 100 mL; weight and duration add
+    little.
+limitations: |
+  - The three inputs are drawn independently; the duration's two ends share the anaesthesia record's clock.
+  - Recorded zeros (23 cases) are left out; the library's zero rule (v0.6.0) gives them a point mass and a flag, not
+    a rate.
+code:
+  - vitaldb-bench/examples/urine_output_rate.py
+reproduce: |
+  ```
+  python examples/urine_output_rate.py --resolution <vitaldb-resolution at the pinned commit> \
+      --root <VitalDB release> --out out/uo --figure 5111 111 113 305
+  ```
+figures:
+  - id: uo-examples
+    file: examples/uo-examples.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench examples/urine_output_rate.py
+    records: [111, 5111, 113, 305]
+    caption: >-
+      Urine output rate as a distribution in four cases: the distribution (blue), the rate from the recorded numbers
+      (dashed) and 0.5 mL/kg/h (orange). [[case:5111]] straddles the threshold; [[case:111]] is close to it but
+      confidently below; [[case:113]] and [[case:305]] are above.
+    alt: Four histograms of urine output rate; the second one is centred on the 0.5 line, the first lies just below it, the last two above it.
+  - id: uo-cohort
+    file: examples/uo-cohort.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench examples/urine_output_rate.py
+    caption: >-
+      3,645 cases. Left: P(true rate below 0.5 mL/kg/h) against the rate from the recorded numbers; grey cases are
+      uncertain. Right: width of the 95% interval relative to the median.
+    alt: A scatter that falls from 1 to 0 across 0.5 with a band of grey points around it, and a histogram of relative widths with peaks near 0.1, 0.25 and 0.75.

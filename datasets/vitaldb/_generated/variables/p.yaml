@@ -1,6 +1,7 @@
 id: p
-name: Not in lab_parameters.csv (probably phosphorus)
-summary: Not in lab_parameters.csv (probably phosphorus); confirm with the VitalDB team (lab table).
+name: 'Probably phosphorus (unconfirmed): not in lab_parameters.csv'
+summary: 'Probably phosphorus (unconfirmed): not in lab_parameters.csv; median 3.2, IQR 2.7-3.8, 5th-95th percentile 1.9-5.0,
+  consistent with inorganic phosphorus in mg/dL. Name kept as released. (lab table).'
 type: lab
 source_name: p
 group: Laboratory/Electrolytes and glucose
@@ -10,6 +11,8 @@ value:
   resolution: 0.1 , nearest
   step: 0.1
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#p
 tags:
 - generated

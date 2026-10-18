@@ -8,7 +8,7 @@ data: |
   - 3,707 non-missing values; 2,681 cases are blank.
   - 42% of cases have no urine output, probably because no catheter was placed. Cases without it are much shorter (median 1.8 h), so the latent distribution is conditional on catheterisation.
   - 15 values (0.4%) are not multiples of 5 mL. They are flagged `off_grid` and the resolution is overridden to 5 mL.
-  - The 23 exact zeros are set aside, to be modelled as a special value.
+  - The 23 exact zeros were set aside in the original fit; since v0.6.0 they have their own rule (see Results).
   - The fit uses the 3,669 positive values on the 5 mL grid.
 method: |
   - First screen: each value was placed in one of five nested groups by the coarsest anchor it sits on (100, 50, 10, 5 or 1 mL), and the shares were compared with a flat, no-rounding expectation.
@@ -31,6 +31,12 @@ results: |
     0%, urology 29% / 49% / 22% / 0%, general 23% / 21% / 47% / 8%, thoracic 14% / 14% / 59% / 13% (chi-squared p
     < 10⁻³⁰). Among values of 100 mL or more, the share on the 100 mL grid is 55% in gynaecology, 43% in urology,
     30% in general and 21% in thoracic surgery. Emergency and elective cases do not differ (p = 0.77).
+  - Since vitaldb-resolution v0.6.0 (18 October; model version 2): anaesthesia duration is a covariate of the
+    latent volume (BIC better by 926), and the rounding propensities depend on department (better by 87). Rounding
+    to the nearest anchor beats floor rounding (H1) by BIC, so the anchor is now tested. A recorded 0 has its own
+    rule: 9 zeros are flagged `zero_anuric` (creatinine above 2 mg/dL or ASA 6) and 14 `zero_unexplained`; for a
+    recorded 0 the latent still carries about 54% of the posterior weight, so only `zero_anuric` stands for
+    confirmed anuria.
 discussion: |
   - Rounding looks similar across volumes and across elective and emergency cases. This argues against strong device-graduation effects (H1).
   - Summing readings (H2) can explain multiples of 10, but not the extra 50 and 100 mL peaks. Those point to a charting preference (H3).
@@ -43,32 +49,12 @@ limitations: |
   - The volume slope for 50 mL rounding is poorly determined in simulation (median 0.19, 95% interval 0.07–1.65).
   - The nonparametric EM check was deferred, since K = 8 gives the same propensities. It would be run only if a reviewer asks.
   - Correction, 13 Oct: the fitting code let the 100 mL mode round small true volumes to 0, which zero-truncation then silently dropped. After the fix the posterior weights moved by 0.01 or less. `intraop_uo.model.json` holds the corrected fit.
-  - Within each component the density is not flat. Treating components as uniform is only an approximation.
+  - Within each component the density is not flat. Until v0.6.0 the components were treated as uniform; the density within an interval is now computed on demand from the latent.
 open_questions:
-  - title: "Urine charted to the nearest graduation"
-    kind: hypothesis
-    summary: >-
-      The model reads urine volumes as rounded to the nearest anchor, a charting preference (H3). Floor rounding,
-      reading the last graduation passed (H1), is as plausible and has not been fitted against it.
-  - title: "A special-value rule for the 23 zeros"
-    kind: next step
-    summary: >-
-      Decided on 18 October: zero is a recorded value with its own probability (23 of 3,707, 0.6%), kept out of
-      the latent and rounding fit. Each zero is flagged: `zero_anuric` where preoperative creatinine is above
-      2 mg/dL or ASA is 6 (9 cases, very likely a true zero), `zero_unexplained` otherwise (14 cases, normal
-      creatinine, possibly a blocked catheter or a 0 for "not measured"). Missing (2,681 cases, mostly short) stays
-      distinct from zero. The change is with the vitaldb-resolution library.
-  - title: "Fit duration as a latent covariate"
-    kind: next step
-    summary: >-
-      Decided on 18 October: the volume models get anaesthesia duration as a latent covariate (the latent's
-      location rising with log duration), compared with the current fit by BIC. The refit is with the
-      vitaldb-resolution library.
   - title: "Thoracic records are much finer than gynaecology's"
     kind: phenomenon
     summary: >-
       Thoracic surgery charts urine output mostly to 10 or 5 mL, gynaecology and urology mostly to 50 or 100 mL,
-      even at the same volumes. A urometer with fine graduations in some theatres and a drainage bag in others
-      would explain it, but which device each department used is not known. The model's propensities are
-      currently shared across departments; department as a covariate on the propensities would fix that, and era
-      cannot be tested because case IDs are random.
+      even at the same volumes. The model now lets the rounding propensities depend on department (it improves
+      BIC by 87), but why they differ is not known: a urometer with fine graduations in some theatres and a
+      drainage bag in others would explain it. The urology split rests on 41 records.

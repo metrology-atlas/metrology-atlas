@@ -1,6 +1,6 @@
 id: preop-ecg
-name: Preop ecg
-summary: Preop ecg (clinical table).
+name: Preoperative ECG
+summary: Preoperative ECG (clinical table).
 type: clinical
 source_name: preop_ecg
 group: Clinical record/Preoperative history

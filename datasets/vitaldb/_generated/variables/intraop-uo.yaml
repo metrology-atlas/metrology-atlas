@@ -9,6 +9,10 @@ unit: mL
 value:
   kind: 'model: fitted rounding model (value kind); posterior over the true value'
   resolution: 'heaped: a mixture of rounding modes (see the value model)'
+  anchor: nearest
+  anchor_basis: tested
+  anchor_note: 'Nearest rounding preferred to floor (H1, last graduation passed) by BIC: 383 with the duration covariate,
+    317 without (same 3630 records; results/2026-10-18_refits_duration_zero.md).'
   spread: vitaldb-resolution/spread.json#intraop_uo
   model: vitaldb-resolution/vitaldb_resolution/data/models/intraop_uo.model.json
   status: measured
@@ -22,6 +26,6 @@ figures:
   file: distributions/intraop-uo.png
   theme: distributions of recorded values
   source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
-  caption: 'Recorded values in the release: 3,684 records, median 160 mL; 24 outside the 0.5–99.5th percentiles are not
+  caption: 'Recorded values in the release: 3,707 records, median 160 mL; 19 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of intraop_uo.

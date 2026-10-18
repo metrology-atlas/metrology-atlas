@@ -315,11 +315,11 @@
   "intraop-uo": {
    "file": "distributions/intraop-uo.png",
    "source": "clinical",
-   "n": 3684,
+   "n": 3707,
    "median": 160.0,
-   "p05": 10.0,
-   "p995": 2011.4250000000038,
-   "outside": 24,
+   "p05": 0.0,
+   "p995": 1999.349999999979,
+   "outside": 19,
    "bin": 1.0
   },
   "intraop-ebl": {

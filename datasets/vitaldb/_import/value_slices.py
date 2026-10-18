@@ -87,33 +87,43 @@ def main(repo: str, release: str) -> None:
             continue
         if time.time() - t0 > BUDGET:
             break
-        ds = [d for i in range(0, len(clinical), 400) for d in reg.distributions(name, clinical.iloc[i:i + 400])]
         rows = clinical.to_dict("records")
-        ok = [(d, r) for d, r in zip(ds, rows) if getattr(d, "status", None) == "ok" and d.components]
+
+        def chunks():
+            """(row index, distribution) for every usable record, 400 rows at a time, so that the distributions (which
+            can hold large tables) are never all in memory at once."""
+            for i in range(0, len(clinical), 400):
+                for j, d in enumerate(reg.distributions(name, clinical.iloc[i:i + 400])):
+                    if getattr(d, "status", None) == "ok" and d.components:
+                        yield i + j, d
+
+        # pass 1: the support of every record, to fix one grid for the variable
+        ok, rec_l, lo_l, hi_l, unit = [], [], [], [], ""
+        for i, d in chunks():
+            x = float(d.recorded_value)
+            ok.append(i); rec_l.append(x); unit = unit or (d.unit or "")
+            lo_l.append(min(c.lower for c in d.components) - x)
+            hi_l.append(max(c.upper for c in d.components) - x)
         if not ok:
             done["variables"][name] = {"error": "no distributions"}
             continue
-        unit = ok[0][0].unit or ""
         scale, shown = (60.0, "min") if name in TIMES and unit in ("s", "sec") else (1.0, unit)
-        rec = np.array([float(d.recorded_value) for d, _ in ok])
-        lo = np.array([min(c.lower for c in d.components) for d, _ in ok]) - rec
-        hi = np.array([max(c.upper for c in d.components) for d, _ in ok]) - rec
-        a, b = np.percentile(lo, 0.5), np.percentile(hi, 99.5)
+        rec = np.array(rec_l)
+        a, b = np.percentile(np.array(lo_l), 0.5), np.percentile(np.array(hi_l), 99.5)
         pad = 0.05 * (b - a)
         edges = np.linspace(a - pad, b + pad, NG + 1)
         mids = (edges[:-1] + edges[1:]) / 2
+        # pass 2: each record's mass on the grid, grouped by recorded value (or minute of the hour)
         groups: dict = {}
         masses = []
-        for (d, r), x in zip(ok, rec):
-            if name in TIMES:
-                key = f":{clock_minute(x, r):02d}"
-            else:
-                key = f"{x:g}"
+        for k, (i, d) in enumerate(chunks()):
+            x, r = rec[k], rows[i]
+            key = f":{clock_minute(x, r):02d}" if name in TIMES else f"{x:g}"
             m = np.diff(d.cdf(x + edges))
             masses.append(m)
             g = groups.setdefault(key, {"n": 0, "mass": np.zeros(NG), "ent": [], "w": {}, "idx": []})
             g["n"] += 1
-            g["idx"].append(len(masses) - 1)
+            g["idx"].append(k)
             g["mass"] += m
             g["ent"].append(comp_entropy(d))
             for c in d.components:
@@ -156,14 +166,17 @@ def main(repo: str, release: str) -> None:
             half = max(abs(lo_), abs(hi_), (edges[-1] - edges[0]) / 400) * 1.3
             fe = np.linspace(-half, half, 402)
             fm = np.zeros(401)
-            for i in p["idx"]:
-                d, _ = ok[i]
-                fm += np.diff(d.cdf(rec[i] + fe))
+            sel = [ok[k] for k in p["idx"]]
+            for i in range(0, len(sel), 400):
+                part = sel[i:i + 400]
+                for k, d in zip(part, reg.distributions(name, clinical.iloc[part])):
+                    if getattr(d, "status", None) == "ok" and d.components:
+                        fm += np.diff(d.cdf(float(d.recorded_value) + fe))
             fm = fm / max(fm.sum(), 1e-12)
             p["fine"] = (((fe[:-1] + fe[1:]) / 2).tolist(), (fm / np.diff(fe)).tolist())
         # joint map: recorded value (or minute of the hour) across, true minus recorded up
         if name in TIMES:
-            xk = np.array([clock_minute(x, r) for (d, r), x in zip(ok, rec)])
+            xk = np.array([clock_minute(x, rows[i]) for i, x in zip(ok, rec)])
             xedges = np.arange(-0.5, 60.5, 1.0)
         else:
             xk = rec

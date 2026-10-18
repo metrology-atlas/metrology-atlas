@@ -11,6 +11,8 @@ value:
   resolution: 1 mmol/L, nearest
   step: 1
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#na
 tags:
 - generated

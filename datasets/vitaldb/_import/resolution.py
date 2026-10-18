@@ -65,6 +65,9 @@ GROUP = {name: g for g, names in _G.items() for name in names.split()}
 """Where each registry variable is listed on the site."""
 
 
+
+TITLE_FIX = {"icu_days": "ICU days", "preop_ecg": "Preoperative ECG"}   # registry descriptions without proper capitals
+
 def atlas_id(name: str) -> str:
     if name in ALIASES:
         return ALIASES[name]
@@ -102,6 +105,13 @@ def main(repo: str) -> None:
     shutil.copy2(repo / DATA / "registry.json", SNAP / DATA / "registry.json")
     for f in sorted((repo / DATA / "models").glob("*.json")):
         shutil.copy2(f, SNAP / DATA / "models" / f.name)
+    if (repo / DATA / "models" / "archive").is_dir():          # earlier versions of each model (from v0.6.0)
+        (SNAP / DATA / "models" / "archive").mkdir(parents=True, exist_ok=True)
+        for f in sorted((repo / DATA / "models" / "archive").glob("*.json")):
+            shutil.copy2(f, SNAP / DATA / "models" / "archive" / f.name)
+    for lock in (repo / "models.lock", repo / DATA / "models.lock", repo / DATA / "models" / "models.lock"):
+        if lock.is_file():
+            shutil.copy2(lock, SNAP / lock.relative_to(repo))
     (SNAP / "SOURCE.yaml").write_text(yaml.safe_dump({"software": "vitaldb-resolution", "commit": commit[0],
                                                       "date": dt.date.fromisoformat(commit[1])}, sort_keys=False), encoding="utf-8")
     full = json.loads((SNAP / DATA / "registry.json").read_text(encoding="utf-8"))
@@ -123,7 +133,8 @@ def main(repo: str) -> None:
             continue
         vid = atlas_id(name)
         title = (v.get("description") or "").split(";")[0].strip() or name.replace("_", " ")
-        title = title[0].upper() + title[1:]
+        title = title if title[1:2].isupper() else title[0].upper() + title[1:]   # keep "pH"
+        title = TITLE_FIX.get(name, title)
         timed = v["type"] in ("timestamp", "device_time", "date")
         item = {
             "id": vid, "name": title,
@@ -135,7 +146,9 @@ def main(repo: str) -> None:
             "unit": v.get("unit") or None,
             "value": {"kind": f"{v['method']}: {methods[v['method']]}" if v["method"] in methods else v["method"], "resolution": resolution_text(v),
                       "step": v.get("resolution") if isinstance(v.get("resolution"), (int, float)) else None,
-                      "anchor": v.get("anchor") if v.get("anchor") in ("nearest", "floor", "ceiling") else None},
+                      "anchor": v.get("anchor") if v.get("anchor") in ("nearest", "floor", "ceiling") else None,
+                      "anchor_basis": v.get("anchor_basis") if v.get("anchor_basis") in ("tested", "convention", "assumption", "open") else None,
+                      "anchor_note": v.get("anchor_note") or None},
             "tags": ["generated", "vitaldb-resolution"],
         }
         desc = [v["evidence"]] if v.get("evidence") else []

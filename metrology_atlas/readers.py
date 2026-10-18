@@ -33,7 +33,11 @@ def _sig(x: float) -> float:
 def vitaldb_resolution(model: dict) -> dict:
     """vitaldb-resolution model files (schema 0.3-0.4): sequential (stick-breaking) allocation to rounding modes."""
     res = model.get("resolution") or {}
-    if isinstance(res, dict):
+    rr = model.get("recorded_rounding") or {}
+    if not res and isinstance(rr, dict) and rr.get("resolution") is not None:   # derived models: rounding of the stored value
+        res_text = f"{rr['resolution']:g} ({rr.get('anchor') or 'nearest'}), as stored"
+        notes = []
+    elif isinstance(res, dict):
         eff = res.get("effective")
         res_text = res.get("observed")
         res_text = f"{res_text}" + (f" (modelled at {eff})" if eff not in (None, res.get("observed")) else "")
@@ -88,8 +92,14 @@ def vitaldb_resolution(model: dict) -> dict:
         notes.append("Derived: " + str(model.get("formula", "")))
     mv = model.get("measurement_variability")
     if isinstance(mv, dict) and isinstance(mv.get("measured"), dict):
-        notes.append(f"Measurement variability (beyond rounding): SD {mv['measured'].get('sd')} "
-                     f"{mv['measured'].get('unit', '')}, {mv.get('status', '')}.")
+        me = mv["measured"]
+        sd = (f"{me['sd']:g} {me.get('unit') or model.get('unit') or ''}".strip() if me.get("sd") is not None
+              else f"{100 * me['sd_relative']:g}% of the value" if me.get("sd_relative") is not None else "not given")
+        line = f"Measurement variability (beyond rounding): SD {sd}"
+        wi = mv.get("written_in")
+        if isinstance(wi, dict) and wi.get("sd") is not None:
+            line += f"; for written-in values, SD {wi['sd']:g} {wi.get('unit') or model.get('unit') or ''}".rstrip()
+        notes.append(line + (f" ({mv['status']})." if mv.get("status") else "."))
     return {
         "kind": kind, "unit": model.get("unit"), "resolution": res_text, "modes": modes, "latent": fam,
         "covariates": model.get("required_covariates") or [],

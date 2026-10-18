@@ -11,6 +11,8 @@ value:
   resolution: 1 sec, floor
   step: 1
   anchor: floor
+  anchor_basis: convention
+  anchor_note: Clock truncation to the whole second; at most 1 s, negligible.
   spread: vitaldb-resolution/spread.json#caseend
 tags:
 - generated

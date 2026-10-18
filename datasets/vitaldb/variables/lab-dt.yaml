@@ -1,7 +1,0 @@
-id: lab-dt
-# Hand-written overlay on the generated file: anchor basis only.
-value:
-  anchor_basis: convention
-  anchor_note: >-
-    A machine timestamp in whole seconds; floor is how clocks truncate. Nearest would move it by at most 0.5 s,
-    against a specimen-to-timestamp lag of minutes ([[study:lab-timestamp-meaning]]).

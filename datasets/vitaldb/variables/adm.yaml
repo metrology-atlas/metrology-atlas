@@ -1,7 +1,0 @@
-id: adm
-# Hand-written overlay on the generated file: anchor basis only.
-value:
-  anchor_basis: tested
-  anchor_note: >-
-    Discharge minus admission is a whole number of days in every case, so both values mark a midnight: the true time
-    is that day, at or after the recorded value.

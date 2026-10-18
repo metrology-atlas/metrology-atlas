@@ -11,6 +11,8 @@ value:
   resolution: 1 mcg/dL, nearest
   step: 1
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#ammo
 tags:
 - generated

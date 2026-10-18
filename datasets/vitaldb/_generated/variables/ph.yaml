@@ -1,5 +1,5 @@
 id: ph
-name: PH
+name: pH
 summary: pH (lab table).
 type: lab
 source_name: ph
@@ -10,6 +10,8 @@ value:
   resolution: 0.01 , nearest
   step: 0.01
   anchor: nearest
+  anchor_basis: convention
+  anchor_note: Laboratory results rounded to the last reported digit; at most half the last digit.
   spread: vitaldb-resolution/spread.json#ph
 tags:
 - generated

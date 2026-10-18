@@ -1,7 +1,7 @@
 id: pleth-frame-clock-rate
 name: Oximeter frame clock against SNUADC
 quantity: Frame period of the PLETH relative to the SNUADC sample clock, fixed per setup (period convention).
-display: "+24 to +84 ppm by setup (e.g. +84, IQR 82–88, for one port in step mode)"
+display: "+7 to +92 ppm by setup (medians over 42 PC keys); within 3 ppm of its setup's median in 89% of recordings"
 status: measured
 study: ppg-frame-clock
 about: [oximeter-frames-vs-snuadc]

@@ -10,6 +10,7 @@ techniques: [unit-mixture]
 devices: [vital-recorder, snuadc, bis, solar8000, primus]
 code:
   - vitaldb-bench/tools/setup_assign.py
+  - vitaldb-bench/tools/frame_an.py
 data: |
   The device records of all 6,388 .vital files (each device's serial port), and the per-case drifts of
   [[study:drift-units]].
@@ -33,21 +34,31 @@ results: |
   - **Assigned:** 517 of the 633 incomplete recordings get a key with a posterior of at least 0.9, among them
     468 of the 519 without a BIS; 33 more between 0.5 and 0.9. 51 match no complete key, most of them missing the
     Solar8000's port, and 32 stay below 0.5.
+  - **The oximeter frame clock** (18 October; [[code:vitaldb-bench/tools/frame_an.py]] on up to 30 complete
+    recordings per key and the 116 unassigned): 1,169 of 1,350 recordings had a usable ECG and PLETH stretch, and
+    the raw PPG peak locked to a frame clock, with both halves agreeing within 3 ppm, in 656. Within a key the
+    frame clock is a strong fingerprint: 88% of recordings lie within 3 ppm of their key's median, against 19% of
+    the release's median, and key medians range from +7 to +92 ppm. Two keys hold two clearly different rates
+    (interquartile ranges of 57–58 ppm), probably two oximeter modules on one PC.
+  - **With the frame clock added** to the assignment, 521 of the 633 incomplete recordings reach a posterior of
+    at least 0.9 (517 before), and those below 0.5 fall from 31 to 18. The gain is small because only 40 of the
+    incomplete recordings have a frame clock: most of the rest have no usable PLETH stretch or no lock. Validation
+    is unchanged within a percentage point.
 open_questions:
-  - title: "Assigning the last 116 recordings to a setup"
+  - title: "Assigning the last 112 recordings to a setup"
     kind: next step
     summary: >-
-      Done for most: 517 of the 633 recordings without a full key are assigned with a posterior of at least 0.9 (99%
-      right in validation). The remaining 116 (51 with no matching key, 65 below 0.9) need another fingerprint. Drift
-      exists only for recordings with clock corrections, and the all-file scan already supplies it for 61 of the 633;
-      the oximeter's frame clock, measured from the PLETH, is the one still to add, for these recordings and for enough
-      complete recordings per key to compare against.
+      Done for most: 521 of the 633 recordings without a full key are assigned with a posterior of at least 0.9 (99%
+      right in validation, with the frame clock added). The remaining 112 have no matching key (51) or no fingerprint
+      that separates their candidates; most lack a usable PLETH stretch for the frame clock. They take the release's
+      values until another fingerprint is found.
   - title: "Splitting a PC key into the units it carried"
     kind: next step
     summary: >-
-      A key is a PC's cabling, not its devices: the busiest key holds 755 recordings, and its SNUADC's and BIS's
-      drifts show more than one unit. Drift units and frame clocks could split a key into periods with one set of
-      devices, which is what the per-setup delays and rates really belong to.
+      A key is a PC's cabling, not its devices: the busiest key holds 755 recordings, its SNUADC's and BIS's
+      drifts show more than one unit, and two keys hold two distinct oximeter frame clocks. Drift units and
+      frame clocks could split a key into periods with one set of devices, which is what the per-setup delays
+      and rates really belong to.
   - title: "Do the ways of recognising a setup agree?"
     kind: next step
     summary: >-
@@ -72,5 +83,18 @@ open_questions:
       that share its other ports. Validation hides the BIS of recordings that had one, so it cannot test this; a
       BIS-free recording on a PC kept only for such cases would be assigned to the wrong setup. Clock
       fingerprints would test it.
+figures:
+  - id: setup-identification
+    file: setup-identification.png
+    theme: agreement and residuals
+    source: vitaldb-bench tools/setup_assign_figure.py
+    caption: >-
+      Left: with one core port hidden in turn from the 5,755 complete recordings, how often the top key is the
+      true one, against its posterior (bins of fewer than 10 left out; marker size grows with the bin). The
+      Solar8000 and Primus ports are almost always recovered; SNUADC and BIS are close to calibrated, with BIS
+      under-confident around 0.45. Right: the 633 recordings without a complete key, by the missing device. A
+      missing BIS is mostly settled; a missing Solar8000 mostly has no matching key.
+    alt: Left, a calibration plot of the share correct against the posterior for four devices. Right, horizontal
+      stacked bars of 633 recordings by missing device, coloured by how confidently a key was assigned.
 tags:
 - time side
