@@ -29,6 +29,10 @@ results: |
   - **Lab draws:** 76.6% follow an access within 15 minutes, against 26% for random times.
   - **Arterial-side timing steps cluster at line events:** 24% fall within 60 s of an access or occlusion, against
     4.5% at random. Cuff inflations disturb arterial timing as much as line accesses do.
+  - **Blood-gas stamps follow an access by two typical delays,** about 4 and about 9 minutes (median 410 s over 4,742
+    matched gases); random times in the same recordings show no such peak.
+
+  [[figure:arterial-line-accesses]]
 discussion: |
   The access is the best available estimate of a lab draw, and the lab_draw label marks it where one matched.
   Arterial timing (for example as a check on the PPG correction) should skip accesses and occlusions.
@@ -37,3 +41,15 @@ code:
   - lineaccess
   - vitaldb-bench/tools/line_access_scan.py
   - vitaldb-bench/tools/lab_draw_labels.py
+figures:
+  - id: arterial-line-accesses
+    file: arterial-line-accesses.png
+    theme: example traces
+    source: vitaldb-bench tools/line_access_figure.py
+    records: [1]
+    caption: >-
+      Left: arterial pressure around one detected access in [[case:1]]: the pulse is lost, the line is flushed (high
+      pressure from the bag), and the pulse returns. Right: time from the start of the latest access to each blood-gas
+      stamp (blue), against random times in the same recordings (grey; 30% of them have an access in the 15 minutes
+      before). Central-lab panels, stamped later, are left out.
+    alt: Left, an arterial pressure trace with three flush upstrokes to about 350 mmHg inside a shaded access. Right, a histogram with peaks near 220 s and 520 s above a flat grey control.

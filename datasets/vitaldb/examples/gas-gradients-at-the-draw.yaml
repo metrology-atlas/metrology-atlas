@@ -1,23 +1,114 @@
 id: gas-gradients-at-the-draw
 name: End-tidal to arterial CO2, and pulse oximetry against blood gas, at the right moment
 summary: >-
-  The gaps between monitor and blood-gas values, taken at the lab timestamp and at the matched blood draw.
+  PaCO2 − EtCO2 and SaO2 − SpO2 for 4,281 blood gases, with the monitor read when the blood was drawn rather than
+  at the lab stamp: a median CO2 gradient of 7 mmHg known to about ±0.8 mmHg per gas, and an oximetry gradient that
+  the 100% ceiling leaves unresolved for three gases in four.
 side: time
-status: planned
+status: draft
 question: |
-  How far apart are end-tidal and arterial CO2, and SpO2 and SaO2, when they are compared at the same moment?
+  How far apart are end-tidal and arterial CO2, and SpO2 and SaO2, when they are compared at the same moment, and
+  how precisely does the release say?
 why: |
   A blood-gas result's timestamp is 3–12 minutes after the draw ([[observation:lab-time-is-specimen]]). Comparing it
   with the monitor value at the timestamp compares two different moments; during a change in ventilation that adds
-  spread, and sometimes bias, to the gradient. The SpO2–SaO2 comparison follows [[reference:eytan2019revisiting]],
-  which compared bedside oximetry with arterial blood gases in critically ill children.
-variables: [lab-blood-gas, primus-co2, solar8000-spo2, snuadc-art]
+  spread, and sometimes bias, to the gradient. On the value side, every term is a whole number, and both SpO2 and
+  SaO2 stop at 100%. The SpO2–SaO2 comparison follows [[reference:eytan2019revisiting]], which compared bedside
+  oximetry with arterial blood gases in critically ill children.
+variables: [pco2, sao2, lab-blood-gas, primus-numerics, solar8000-spo2, snuadc-art]
 studies: [lab-timestamp-meaning, arterial-line-accesses, spo2-latency]
-observations: [lab-time-is-specimen]
+observations: [lab-time-is-specimen, numerics-not-front-stamped]
+data: |
+  Blood gases matched to exactly one arterial-line access in the 15 minutes before their lab stamp
+  (`lab_draw:single` in [[study:arterial-line-accesses]]): 4,281 gases in 1,349 cases, each with Primus end-tidal
+  CO2 and Solar8000 SpO2 in the recording. Gases with several candidate accesses (459) are left out.
 steps: |
-  1. For each blood gas, take the monitor value at the lab timestamp, and at the matched arterial-line access.
-  2. Compare the two gradient distributions, and their relation to how fast the monitor value was changing.
+  1. Take the start of the matched arterial-line access as the draw. The monitor value is the median of its readings
+     over ±60 s of that moment.
+  2. Draw 400 Monte Carlo samples per gas of:
+     - the draw time, uniform over the access (median 42 s long), plus the monitor's stamping delay (a numeric
+       describes a window that ended 1–9 s before its stamp; [[observation:numerics-not-front-stamped]]);
+     - each monitor reading's true value, uniform over ±0.5 of the whole number written; an SpO2 of 100 is
+       censored, so its true value is anywhere from 99.5 to 100;
+     - the lab value, from the pinned vitaldb-resolution library (v0.6.0), with SaO2 capped at 100.
+  3. Summarise each gradient by its median and 95% interval. Repeat with the draw time fixed (rounding only), and
+     with the single reading nearest the draw instead of the ±60 s median.
+  4. Compare the point gradient with the monitor read at the draw and at the lab stamp.
+results: |
+  **Two gases.** In [[case:136]] end-tidal CO2 falls sharply about 2½ minutes after the draw, just before the lab
+  stamp. Read at the draw, PaCO2 − EtCO2 is 6.0 mmHg (95% interval 5.2–6.8); read at the stamp it would be 11. In
+  [[case:16]] the CO2 gradient is the same either way (11 mmHg), but SpO2 is 100 at the draw: with SaO2 at 99, the
+  oximetry gradient runs from −1.2 to +0.7, and its sign is not known.
+
+  [[figure:bg-examples]]
+
+  **PaCO2 − EtCO2.** Median 7 mmHg (interquartile range 5–10; 5th–95th percentile 1–16). Reading the monitor at the
+  lab stamp instead of the draw leaves the cohort's distribution almost unchanged but moves an individual gas's
+  gradient by 3 mmHg or more in 11.5% of gases. Per gas, the median 95% interval is 1.57 mmHg wide; rounding alone
+  gives 1.54, so the uncertain draw time adds almost nothing once the monitor is averaged over ±60 s. Using the
+  single nearest reading instead widens the interval to 2.29 mmHg (up to 4.3 at the 95th percentile). Only 1.5% of
+  intervals include zero.
+
+  **SaO2 − SpO2.** Median 0 (interquartile range −0.8 to 0). SpO2 is 100 at the draw for 77% of gases and SaO2 is
+  100 for 47%. With SpO2 = 100 read as "99.5 to 100", the interval includes zero for half of all gases: the release
+  can say that the two agree to within a percentage point, but not which way they differ. Where SpO2 is below 100
+  (about 980 gases) the sign is mostly resolved: SpO2 is clearly above SaO2 in 45% of them and clearly below in 26%.
+
+  [[figure:bg-cohort]]
 takeaways: |
-  Planned. Feasible at scale: 14,590 blood-gas PaCO2 results in 3,483 cases, and both monitors' end-tidal CO2 in
-  98% of recordings.
+  - Pair a blood gas with the monitor at the estimated draw, not at the lab stamp: the cohort looks the same, but
+    about one gas in nine moves by 3 mmHg or more.
+  - Average the monitor over a minute or so around the draw; the single nearest reading adds more uncertainty than
+    the draw time does.
+  - SaO2 − SpO2 at high saturation is set by the 100% ceiling and the 1% grid, not by physiology; treat SpO2 = 100
+    as censored.
+limitations: |
+  - The match between a blood gas and an arterial-line access is evidence, not proof: 77% of gases had an access in
+    the window against 26% of random times. A wrong match is not part of the per-gas interval.
+  - The draw is taken to happen during the access; a sample drawn after the line was flushed and closed again
+    would be missed.
+  - The lab value's analyser error and the oximeter's stated accuracy (a few percentage points) are not included;
+    both are larger than the rounding.
+  - The vitaldb-resolution library gives a recorded SaO2 of 100 an upper bound of 100.475; the example caps it at
+    100.
+open_questions:
+  - title: "SaO2 above 100 in the library"
+    kind: next step
+    summary: >-
+      vitaldb-resolution treats a recorded SaO2 of 100 like any other whole number, with the true value up to
+      100.475. A cap at 100 (a top-coded value, like the other reporting limits) would fix this at the source.
+  - title: "Is SaO2 measured or calculated?"
+    kind: assumption
+    summary: >-
+      Many blood-gas analysers calculate SaO2 from PO2 and pH rather than measuring it by co-oximetry. Which was used
+      decides whether SaO2 − SpO2 compares two measurements or a measurement with a model.
+code:
+  - vitaldb-bench/examples/blood_gas_gradients.py
+reproduce: |
+  ```
+  python examples/blood_gas_gradients.py run --resolution <vitaldb-resolution at the pinned commit> \
+      --root <VitalDB release> --draws-csv lab_draw_labels.csv --out out/bg --cases 0:130   # repeat over chunks
+  python examples/blood_gas_gradients.py summarise --out out/bg --root <VitalDB release> \
+      --draws-csv lab_draw_labels.csv --figure 136-1 16-3
+  ```
+figures:
+  - id: bg-examples
+    file: examples/bg-examples.png
+    theme: example traces
+    source: vitaldb-bench examples/blood_gas_gradients.py
+    records: [136, 16]
+    caption: >-
+      End-tidal CO2 (top) and SpO2 (bottom) around a blood draw in [[case:136]] and [[case:16]]: the arterial-line
+      access (orange), the lab stamp (dashed) and the lab value at the draw (red). Titles give the gradient's median
+      and 95% interval.
+    alt: Four time-series panels. In the left column end-tidal CO2 drops sharply just before the lab stamp; in the right column SpO2 sits at 100 at the draw.
+  - id: bg-cohort
+    file: examples/bg-cohort.png
+    theme: agreement and residuals
+    source: vitaldb-bench examples/blood_gas_gradients.py
+    caption: >-
+      4,281 blood gases. Left: PaCO2 − EtCO2 with the monitor read at the estimated draw and at the lab stamp.
+      Middle: per-gas 95% interval width from rounding only, with the draw time added, and with the nearest single
+      reading. Right: SaO2 − SpO2 per gas, ranked, with SpO2 = 100 censored (red).
+    alt: A pair of overlapping histograms centred near 7 mmHg; histograms of interval widths peaking near 1.5 and 2.3 mmHg; a ranked plot of oximetry gradients in steps of one percentage point.
 references: [eytan2019revisiting]

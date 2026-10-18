@@ -62,6 +62,25 @@ results: |
     because real changes in PAT, tens of milliseconds as blood pressure changes, are larger than the sawtooth.
 
   [[figure:pat-cohort]]
+
+  **Before and after, as PAT values.** As stored, ECG-to-finger PAT is 716 ms in the median window (441–767 ms,
+  5th to 95th percentile), far beyond any physiological value: 99% of windows lie outside the 200–285 ms reported
+  for awake adults. After both steps the median is 272 ms (178–312 ms), and the distribution sits just above the
+  arterial-line PAT (223 ms), as a finger, further from the heart than the radial artery, should. Where the orange
+  peak sits is set by step 2 (every case's median goes to 0.27 s), so it is an assumption, not a result; its width
+  and its agreement with the arterial line are the evidence. 2.3% of corrected windows come out negative, where
+  the correction failed; they are left out of the figure. The adult range is provisional and still has to be
+  verified (see the open questions).
+
+  [[figure:pat-distribution]]
+
+  **Against the arterial line, window by window.** In the 66 cases with an arterial line, finger PAT as stored sits
+  494 ms above the arterial-line PAT in the median window; after both steps it sits 49 ms above it, the order
+  expected for a finger further from the heart than the radial artery. The stored cloud slopes with the arterial
+  PAT across cases, while the corrected one is flat: step 2 gives every case the same median, so differences between
+  patients are removed along with the device delay.
+
+  [[figure:pat-scatter]]
 takeaways: |
   - Never read the absolute ECG-to-PLETH PAT in VitalDB as physiology: it carries a device delay of about 0.4 s,
     which differs between [recording setups](../setups.md). Compare cases only after step 2, and treat the level as an assumption.
@@ -103,6 +122,14 @@ open_questions:
       Step 2 sets every case's mean PAT to 0.27 s, a population value for anaesthetised adults from studies that
       sampled ECG and PPG on one clock ([[study:ppg-offset-reference]]). Differences in true mean PAT between
       patients are therefore not measured; only changes within a case are.
+  - title: "What plausible PAT range should be shown for anaesthetised adults?"
+    kind: assumption
+    summary: >-
+      The figure shades 200–285 ms, the range of means in shared-clock studies of awake adults
+      ([[study:ppg-offset-reference]]). That is a range of study averages, not of individual windows (25% of
+      arterial-line windows fall outside it), and anaesthesia lengthens PAT by about 40 ms. A verified range for
+      adults under anaesthesia, ideally of individual values, is still needed; [[reference:ruffolo2025high]] gives
+      one for critically ill children.
   - title: "The maximum-likelihood smoother follows Ruffolo et al. in approach, not in detail"
     kind: next step
     summary: >-
@@ -141,3 +168,22 @@ figures:
       Middle: each case's stored median PAT; step 2 puts every case at 270 ms. Right: finger minus arterial PAT in the
       cases with an arterial line and a confidently corrected tooth, as stored and after step 1.
     alt: Three histograms; the left one barely narrows after step 1, the middle one shows stored medians around 700 ms with a few near 450 ms and a line at 270 ms, the right one narrows clearly after step 1.
+  - id: pat-distribution
+    file: examples/pat-distribution.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench examples/pulse_arrival_time.py
+    caption: >-
+      PAT in 30 s windows over 121 cases: ECG to finger as stored (grey) and after steps 1 and 2 (orange), and ECG to
+      the radial arterial line in the 66 cases with one (green). The shaded band is the 200–285 ms reported for awake
+      adults in shared-clock studies; it is provisional and still to be verified. Negative corrected values (2.3% of
+      windows) are left out.
+    alt: Three histograms on one axis; grey centred near 716 ms, orange near 272 ms and green near 223 ms, with a shaded band from 200 to 285 ms.
+  - id: pat-scatter
+    file: examples/pat-scatter.png
+    theme: agreement and residuals
+    source: vitaldb-bench examples/pulse_arrival_time.py
+    caption: >-
+      ECG-to-finger PAT against ECG-to-radial-artery PAT in the same 30 s windows (7,608 windows, 66 cases), as stored
+      (grey) and after steps 1 and 2 (orange); both axes start at zero, and the dashed line is equal PAT. Negative
+      corrected values are left out.
+    alt: A scatter with a grey cloud near 700 ms on the vertical axis and an orange cloud near 270 ms, just above the dashed equality line, both spread between 170 and 300 ms on the horizontal axis.

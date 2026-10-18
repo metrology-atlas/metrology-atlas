@@ -29,6 +29,10 @@ results: |
     and large ones at anaesthesia end.
   - **Shifts beyond −150 s** (median about −200 s) suggest 5-minute entries are also written a little later,
     perhaps retrospectively.
+  - **ETCO2 stop against anaesthesia end, as an example:** the 5-minute entries (6,010) sit left of the minute entries
+    (306), close to what rounding up predicts and far from rounding to the nearest or down, and further left still.
+
+  [[figure:emr-rounding]]
 discussion: |
   Read a 5-minute EMR time t as the interval (t − 300 s, t]: the event is estimated at t − 150 s (SD 87 s), and the
   entry is known no earlier than t plus the documentation lag. Minute entries keep ±60 s. The clinical_time labels in
@@ -43,3 +47,15 @@ open_questions:
 code:
   - vitaldb-bench/tools/emr_markers.py
 references: [rietveld2002rounding]
+
+figures:
+  - id: emr-rounding
+    file: emr-rounding.png
+    theme: heaping
+    source: vitaldb-bench tools/emr_markers.py
+    caption: >-
+      Left: ETCO2 stop minus the EMR anaesthesia end, for times typed to the minute (grey) and on a 5-minute mark
+      (blue), with the 5-minute group predicted from the minute group under each rounding rule. Right: for all 11
+      device markers, the shift of the 5-minute group's median against the minute group's, with its bootstrap 95%
+      interval; rounding up predicts −150 s, to the nearest 0 and down +150 s.
+    alt: Left, histograms with the blue 5-minute distribution shifted left of the grey minute distribution and closest to the red rounded-up prediction. Right, eleven intervals all left of zero, most around minus 200 s.
