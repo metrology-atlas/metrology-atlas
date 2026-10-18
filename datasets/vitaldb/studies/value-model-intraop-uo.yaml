@@ -27,6 +27,10 @@ results: |
   - A 25 mL mode is not needed: its fitted propensity goes to zero.
   - A recorded 50, 100 or 500 mL is uncertain by roughly ±20–40 mL. A recorded 160 mL is uncertain by only ±5 mL, because 160 can only come from the 5 and 10 mL modes.
   - A recorded 100 mL has only a 22% chance of having been read to 10 mL or finer.
+  - Grid of positive urine records by department (100 mL / 50 mL / 10 mL / 5 mL): gynaecology 40% / 33% / 27% /
+    0%, urology 29% / 49% / 22% / 0%, general 23% / 21% / 47% / 8%, thoracic 14% / 14% / 59% / 13% (chi-squared p
+    < 10⁻³⁰). Among values of 100 mL or more, the share on the 100 mL grid is 55% in gynaecology, 43% in urology,
+    30% in general and 21% in thoracic surgery. Emergency and elective cases do not differ (p = 0.77).
 discussion: |
   - Rounding looks similar across volumes and across elective and emergency cases. This argues against strong device-graduation effects (H1).
   - Summing readings (H2) can explain multiples of 10, but not the extra 50 and 100 mL peaks. Those point to a charting preference (H3).
@@ -60,8 +64,11 @@ open_questions:
       Decided on 18 October: the volume models get anaesthesia duration as a latent covariate (the latent's
       location rising with log duration), compared with the current fit by BIC. The refit is with the
       vitaldb-resolution library.
-  - title: "Propensities by department, emergency status and era"
-    kind: next step
+  - title: "Thoracic records are much finer than gynaecology's"
+    kind: phenomenon
     summary: >-
-      Heterogeneity of propensities by department, emergency status and case-ID era has been planned but not
-      reported.
+      Thoracic surgery charts urine output mostly to 10 or 5 mL, gynaecology and urology mostly to 50 or 100 mL,
+      even at the same volumes. A urometer with fine graduations in some theatres and a drainage bag in others
+      would explain it, but which device each department used is not known. The model's propensities are
+      currently shared across departments; department as a covariate on the propensities would fix that, and era
+      cannot be tested because case IDs are random.

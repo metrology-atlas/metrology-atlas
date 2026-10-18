@@ -27,7 +27,9 @@ open_questions:
     kind: next step
     summary: >-
       Was op end imputed from recording end deliberately? This is to be asked of the VitalDB team.
-  - title: "Imputed op ends by department"
+  - title: "Where the imputed op ends are"
     kind: next step
     summary: >-
-      The distribution of imputed op ends by department has not yet been mapped.
+      Mapped on 18 October: thoracic surgery and cases under sedation or spinal anaesthesia have far more
+      imputed op ends than the rest ([[observation:imputed-op-ends]]). The model already excludes them; analyses
+      that use op end should check whether their subgroup is one of these.

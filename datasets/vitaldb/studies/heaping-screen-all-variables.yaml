@@ -22,20 +22,27 @@ results: |
   - Lab analytes with decimals sit near the 10% coarser share. Exceptions: haematocrit (32.4%, two analysers), total bilirubin (6.5%), lactate (12.5%) and bicarbonate (7.9%).
   - No whole-number analyte shows a preference for multiples of 5 or 10 once the shape of the distribution is allowed for.
   - Sodium and SaO2 only look heaped, because 140, 135 and 95 sit at a peak or on a steep slope. Simulating a smooth peaked distribution gives deviations of the same size at the mode.
+  - Total bilirubin's low range (0.2–1.0 mg/dL, 22,240 results) shows no excess at any value: each count is
+    within about 10% of the mean of its neighbours. Its lower coarser share comes from the shape of the
+    distribution.
+  - Lactate is measured on the blood-gas analysers only (14,512 of 14,516 results share a timestamp with a pH),
+    so there is no second instrument to compare, and era cannot be tested. No value below 15 is heaped. Its excess
+    is a reporting limit: 317 results (28 cases) are exactly 15.0 mmol/L, against at most 16 for any other value
+    near the top ([[observation:lab-reporting-limits]]).
+  - Two more analytes have reporting limits: aPTT at 400.0 s (226 results, 87 cases) and ESR at 2 mm/h (89
+    results, 72 cases).
 discussion: |
   - Apart from computed values, every lab analyte is single resolution per source and needs a registry entry, not a rounding model.
   - Pre-operative copies behave like the lab data: platelets, glucose, AST, ALT and BUN show no heaping; pre-op PT % and sodium show the same artefacts. Pre-op PaO2 is the exception.
 limitations: |
   - ESR, ammonia and creatinine clearance have too few results to judge (537–1,415).
 open_questions:
-  - title: "Bilirubin's low range"
+  - title: "Reporting limits not yet in the registry"
     kind: next step
     summary: >-
-      Total bilirubin's coarser share is below 10%; the low-value range still needs checking.
-  - title: "Lactate by instrument or era"
-    kind: next step
-    summary: >-
-      Lactate shows a slight excess; it should be checked by instrument or era.
+      Lactate is capped at 15.0 mmol/L, aPTT at 400.0 s and ESR floored at 2 mm/h. The registry treats them as
+      ordinary values; they should be top- or bottom-coded (an open interval beyond the limit), as age is above
+      89. The change is with the vitaldb-resolution library.
   - title: "Analyte p as phosphorus"
     kind: hypothesis
     summary: >-

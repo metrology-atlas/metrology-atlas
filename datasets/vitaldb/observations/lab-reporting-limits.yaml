@@ -1,0 +1,21 @@
+id: lab-reporting-limits
+name: Three lab analytes stop at a reporting limit
+summary: >-
+  Lactate is capped at 15.0 mmol/L, aPTT at 400.0 s, and ESR does not go below 2 mm/h: the values at the limit stand
+  for "this or beyond", not for the number itself.
+status: likely
+devices: [clinical-records]
+variables: [lac, aptt, esr]
+studies: [heaping-screen-all-variables]
+description: |
+  | Analyte | Limit | Results at the limit | Cases | Most at any nearby value |
+  |---|---|---|---|---|
+  | Lactate | 15.0 mmol/L (top) | 317 | 28 | 16 |
+  | aPTT | 400.0 s (top) | 226 | 87 | 8 |
+  | ESR | 2 mm/h (bottom) | 89 | 72 | 32 |
+
+  Each limit holds many times more results than any neighbouring value, the pattern of an analyser's reportable
+  range rather than of physiology.
+consequence: |
+  Treated as exact numbers, these values understate the most abnormal results: a lactate of "15" may be 20.
+handling: Treat them as censored (an open interval beyond the limit), as the registry does for ages above 89.

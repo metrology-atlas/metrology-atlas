@@ -18,15 +18,14 @@ results: |
   - Anaesthesia duration is charted about 4.4 min long and emergence about 6.3 min long.
   - Induction to incision is nearly unbiased (−0.5 min).
   - The median posterior SD of an interval is 1.8–2.8 min, and the 90th percentile is 2.4–4.9 min. For a 15-min emergence, that is a large share of the value.
+  - Among positive intervals that are whole multiples of 5 minutes, the share on multiples of 15 is 32.5–33.3%
+    (33.3% expected) and on multiples of 30 is 16.6–19.0% (16.7% expected) for anaesthesia duration, operation
+    duration and induction to incision. Only anaesthesia duration has a small excess at 30 minutes, consistent
+    with the heaping of anaesthesia end at :00 and :30. Intervals add no heaping of their own.
 discussion: |
   - The API returns intervals as samples from the two event posteriors (`derived_samples`), not as charted differences.
   - Cases with an excluded end return the status, not a distribution.
 limitations: |
   - The two event posteriors are assumed independent given the device references.
-open_questions:
-  - title: "Heaping at 15 and 30 minutes in intervals"
-    kind: next step
-    summary: >-
-      Heaping at 15 and 30 minutes in the intervals is listed as a next check and not reported.
 tags:
 - from the resolution work

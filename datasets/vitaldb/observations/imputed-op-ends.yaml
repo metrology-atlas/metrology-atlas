@@ -1,0 +1,28 @@
+id: imputed-op-ends
+name: Op end was filled in from the recording end in 537 cases
+summary: >-
+  In 537 cases (8.4%) the op end is exactly 10 minutes before the end of the recording, so it was filled in rather
+  than charted. These cases are concentrated in thoracic surgery and under sedation or spinal anaesthesia.
+status: established
+clocks: [hospital-records]
+devices: [clinical-records]
+variables: [opend]
+studies: [timestamp-imputed-and-conformance, value-model-opend]
+description: |
+  The rule: recording end minus op end lies between 598 and 604 s. Shares by group:
+
+  | Group | Cases | Imputed |
+  |---|---|---|
+  | Thoracic surgery | 1,111 | 16.6% |
+  | General surgery | 4,930 | 6.9% |
+  | Gynaecology | 230 | 3.5% |
+  | Urology | 117 | 3.4% |
+  | Sedation | 72 | 41.7% |
+  | Spinal | 273 | 30.0% |
+  | General anaesthesia | 6,043 | 7.0% |
+  | Emergency | 782 | 9.8% |
+  | Elective | 5,606 | 8.2% |
+consequence: |
+  Op end, operation duration and emergence time are not measured in these cases, and leaving them out biases any
+  analysis towards general-anaesthesia, non-thoracic cases.
+handling: The value model returns status imputed for them; analyses should report how many cases they drop and from which groups.

@@ -21,6 +21,10 @@ results: |
   - Op end comes after anaesthesia end in 52 cases and equals it in 108.
   - Anaesthesia end is +720 min from recording end in [[case:3980]] (12-hour error?) and +1,441 min in [[case:4959]] (date error?).
   - No case has op start before anaesthesia start, op end before op start, or anaesthesia end before anaesthesia start.
+  - Op end equals recording end minus 10 minutes (598–604 s) in 537 of 6,388 cases (8.4%). By department:
+    thoracic 16.6% (184 of 1,111), general 6.9% (341 of 4,930), gynaecology 3.5%, urology 3.4%. By anaesthesia:
+    sedation 41.7% (30 of 72), spinal 30.0% (82 of 273), general 7.0%. By operation type it ranges from 15.2%
+    (minor resection) to 2.3% (breast). Emergency 9.8%, elective 8.2%. ([[observation:imputed-op-ends]])
 discussion: |
   - Anaesthesia end was most likely charted as an interval after op end and inherited the imputed op end.
   - Excluded values return a status rather than a distribution; flagged values are fitted and returned with the flag.
@@ -32,9 +36,12 @@ open_questions:
     kind: next step
     summary: >-
       Was op end imputed from recording end deliberately? This is to be asked of the VitalDB team.
-  - title: "Imputed op ends by department"
-    kind: next step
+  - title: "Why imputed op ends cluster in thoracic and non-general cases"
+    kind: phenomenon
     summary: >-
-      The imputed op ends have not yet been mapped by department.
+      Imputed op ends are twice as common in thoracic surgery as in general surgery, and four to six times as
+      common under sedation or spinal anaesthesia as under general anaesthesia. Cases without a charted op end
+      are not spread at random; why these groups lack one (a different charting workflow, a different person
+      recording, the operation's end not being marked) is not known, and the VitalDB team could say.
 tags:
 - from the resolution work

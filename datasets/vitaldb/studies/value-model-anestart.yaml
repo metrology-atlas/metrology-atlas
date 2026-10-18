@@ -22,6 +22,9 @@ results: |
   - The first-case clock-time density improves the model by 722 BIC points; almost no first case starts before 07:30.
   - Evenings and nights round much more; emergencies round a little more to 5 min.
   - The package reproduces the stored log-likelihood within 0.11 (JAX fitter vs engine grid).
+  - Anaesthesia start by department: 52–56% of charted minutes fall on a multiple of 5 (20% if unrounded) and
+    26–34% on a multiple of 10, with no clear difference between departments. Emergency cases are rounded slightly
+    more often (58.7% on a multiple of 5, against 51.2% for elective).
 discussion: |
   - A start recorded off the 5-minute grid is right to the minute.
   - A rounded start is uncertain by ±2.5 or ±5 min, centred on the recorded time.
@@ -42,8 +45,9 @@ open_questions:
     summary: >-
       What event does charted anaesthesia start define, given that it falls before monitoring starts? This affects
       which signal marker to compare it with.
-  - title: "Anaesthesia-start resolution by era and department"
-    kind: next step
+  - title: "No time axis for era effects"
+    kind: assumption
     summary: >-
-      Whether anaesthesia-start resolution changes with case ID (as a proxy for time) or department is listed as a
-      next check and not reported.
+      Resolution cannot be checked by era: case IDs are random (the release says so, and they are uncorrelated
+      with anything dated), and dates are removed. The models assume rounding habits were constant over the
+      years the data cover. Department makes no difference; emergency cases are rounded a little more often.
