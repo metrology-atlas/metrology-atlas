@@ -20,7 +20,7 @@ timing:
   - 0.033
   domain: reference
   status: measured
-  evidence: one global hardware delay (pat-offset-census), 0.37-0.445 s by fiducial; 30 Hz frames
+  evidence: one global hardware delay (pat-offset-census), 0.385 s (0.365-0.405 s with the adopted PAT's 250-290 ms range); 30 Hz frames
 tags:
 - stub
 chain:
@@ -58,12 +58,12 @@ chain:
   - paced-ecg
 - node: Pulse oximeter module
   kind: processing
-  effect: 'The oximeter filters the plethysmogram and plays it out about 0.4 s late (one delay for the release: about 0.37 s to the PPG foot, 0.445 s to the steepest upstroke), in 33.3
+  effect: 'The oximeter filters the plethysmogram and plays it out about 0.4 s late (one delay for the release: 0.385 s, with the adopted 0.27 s finger PAT; 0.365–0.405 s over its plausible range), in 33.3
     ms frames on its own clock. Its content runs 18–52 ppm against those frames, so one frame repeats every 11–31
     min: a sawtooth in the delay.'
   offset_s:
-  - 0.370
-  - 0.445
+  - 0.365
+  - 0.405
   drift: 18–52 ppm against its frames; one 33.3 ms slip every 11–31 min
   status: measured
   clock: oximeter-frame-clock

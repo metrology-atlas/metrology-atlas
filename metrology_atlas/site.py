@@ -54,7 +54,7 @@ class Site:
     def name(self, kind: str, id_: str) -> str:
         item = self.ds.get(kind, id_)
         if kind == "reference":
-            return id_
+            return short_citation(item.get("citation", "")) if item else id_ or id_
         return item.get("name", id_) if item else id_
 
     def href(self, kind: str, id_: str) -> str:
@@ -1502,7 +1502,19 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     return out
 
 
-_CHEM = re.compile(r"(?<![A-Za-z]/)(?<![\w`])(SaO|SpO|PaO|PaCO|PvO|PvCO|SvO|ScvO|FiO|FeO|EtO|EtCO|ETCO|FiCO|CO|O)2(?![\w`])")
+def short_citation(citation: str) -> str:
+    """'Eytan D, Mazwi ML, ... 2019 ...' -> 'Eytan et al. 2019' (inline reference text); empty if it cannot tell."""
+    head = citation.split(".")[0]
+    authors = [x.strip() for x in head.split(",") if x.strip()]
+    if not authors:
+        return ""
+    first = authors[0].split()[0] if " " in authors[0] else authors[0]
+    m = re.search(r"\b(1[89]\d\d|20\d\d)\b", citation)
+    who = first if len(authors) == 1 else (f"{first} and {authors[1].split()[0]}" if len(authors) == 2 else f"{first} et al.")
+    return f"{who} {m.group(1)}" if m else who
+
+
+_CHEM = re.compile(r"(?<![A-Za-z]/)(?<![\w`])(SaO|SpO|PaO|PaCO|PvO|PvCO|SvO|ScvO|FiO|FeO|EtO|EtCO|ETCO|FiCO|PCO|PO|CO|O)2(?![\w`])")
 _SKIP = re.compile(r"```.*?```|`[^`\n]*`|\]\([^)]*\)|<[^>\n]+>|https?://\S+", re.S)
 
 

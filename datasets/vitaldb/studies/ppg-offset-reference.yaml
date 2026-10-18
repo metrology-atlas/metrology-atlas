@@ -25,7 +25,8 @@ results: |
   - **For VitalDB** (adults under general anaesthesia, mean age about 58): about 270 ms, plausible range 250–290 ms.
   - **Hardware delay** with that value: about 385 ms over these 293 cases (to the PPG foot). Per-setup values of
     368–399 ms were reported here first; the full census ([[study:pat-offset-census]], 5,536 recordings) found no
-    difference between setups beyond ±15 ms, so one global delay is used.
+    difference between setups beyond ±15 ms and the same value, 385 ms (655 ms to the foot minus 270 ms), so one
+    global delay is used. The adopted value and the delay must use the same fiducial: 270 ms is to the foot.
 discussion: |
   The adopted value must use the same PPG point the software detects; the correction currently uses the steepest
   upstroke, which comes later than the foot. The offset is kept as its own label, one per recording, so it can be

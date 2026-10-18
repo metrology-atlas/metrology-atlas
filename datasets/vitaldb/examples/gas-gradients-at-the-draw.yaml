@@ -3,8 +3,8 @@ name: End-tidal to arterial CO₂, and pulse oximetry against blood gas, at the 
 summary: >-
   For 4,281 blood gases, reading the monitor when the blood was drawn rather than at the lab stamp makes changes in
   end-tidal CO₂ track changes in arterial CO₂ far better (within-patient correlation 0.74 against 0.54), and
-  agreement peaks exactly at the estimated draw. The oximetry comparison is mostly unresolved: the 100% ceiling hides
-  the gradient for three gases in four.
+  agreement peaks exactly at the estimated draw. Oximetry shows the same timing (agreement peaks at the draw), but the
+  100% ceiling hides the size of the oximetry gradient for three gases in four.
 side: time
 status: draft
 question: |
@@ -41,7 +41,8 @@ steps: |
      tests timing, not physiology.
   6. **Timing scan.** Repeat step 5 with the monitor read at every whole minute from 10 minutes before the start of
      the access to 15 minutes after it. If the draw estimate is right, agreement should peak at 0, not at the lab
-     stamp.
+     stamp. For oximetry, gases are chosen by the lab value (SaO₂ ≤ 98%, below the analyser's ceiling), never by the
+     monitor reading, so no offset is favoured, and a rank correlation is used, which treats SpO₂ = 100 as a tie.
 results: |
   **Two gases.** In [[case:136]] end-tidal CO₂ falls sharply about 2½ minutes after the draw, just before the lab
   stamp. Read at the draw, PaCO₂ − EtCO₂ is 6.0 mmHg (95% interval 5.2–6.8); read at the stamp it would be 11. In
@@ -63,6 +64,13 @@ results: |
   to land at the access.
 
   [[figure:bg-lagscan]]
+
+  **Oximetry shows the same timing.** In gases with SaO₂ ≤ 98% (881 gases, 379 within-patient pairs), the rank
+  correlation of changes in SaO₂ and SpO₂ peaks at the estimated draw (0.69) and falls to 0.34 at the lab stamp; the
+  95% intervals at the two moments do not overlap. Over all gases, with SpO₂ = 100 as ties, the peak is also at the
+  draw (0.51, against 0.32 at the stamp).
+
+  [[figure:bg-lagscan-spo2]]
 
   **PaCO₂ − EtCO₂ across patients.** Median 7 mmHg (interquartile range 5–10; 5th–95th percentile 1–16). Pooled over
   patients the two agree only moderately (correlation 0.61 at the draw, 0.50 at the stamp), because each patient has
@@ -91,8 +99,8 @@ results: |
   [[figure:bg-scatter]]
 takeaways: |
   - Pair a blood gas with the monitor at the estimated draw, not at the lab stamp. Pooled over patients the
-    difference is small, but within a patient the monitor tracks the blood gas much better at the draw (0.74 against
-    0.54), and agreement peaks there.
+    difference is small, but within a patient the monitor tracks the blood gas much better at the draw (CO₂: 0.74
+    against 0.54; oximetry below the ceiling: 0.69 against 0.34), and agreement peaks there for both.
   - Expect wide scatter between patients: PaCO₂ − EtCO₂ is a property of each patient (dead space), so one
     patient's gradient says little about another's.
   - Average the monitor over a minute or so around the draw; the single nearest reading adds more uncertainty than
@@ -114,12 +122,6 @@ open_questions:
     summary: >-
       vitaldb-resolution treats a recorded SaO₂ of 100 like any other whole number, with the true value up to
       100.475. A cap at 100 (a top-coded value, like the other reporting limits) would fix this at the source.
-  - title: "Does the draw time matter for oximetry too?"
-    kind: next step
-    summary: >-
-      The timing scan was run for CO₂ only. For oxygen, only gases with SpO₂ below 100 carry information, and choosing
-      them by the reading at any one moment favours that moment; selecting by SaO₂, or by SpO₂ over the whole window,
-      would avoid that. About 980 gases qualify, so the test may be underpowered.
   - title: "Is SaO₂ measured or calculated?"
     kind: assumption
     summary: >-
@@ -133,6 +135,9 @@ reproduce: |
       --root <VitalDB release> --draws-csv lab_draw_labels.csv --out out/bg --cases 0:130   # repeat over chunks
   python examples/blood_gas_gradients.py summarise --out out/bg --root <VitalDB release> \
       --draws-csv lab_draw_labels.csv --figure 136-1 16-3
+  python examples/blood_gas_gradients.py lagscan --root <VitalDB release> --draws-csv lab_draw_labels.csv \
+      --out out/bg --cases 0:140   # repeat over chunks: the monitor at every minute around the draw
+  python examples/blood_gas_gradients.py lagsummary --out out/bg   # change figure and timing scans
   ```
 figures:
   - id: bg-examples
@@ -183,4 +188,14 @@ figures:
       interval) and pooled over all gases (grey). Both peak at the estimated draw (0); the lab stamp falls at a
       median 7.2 minutes.
     alt: Two curves rising to a peak at zero minutes and falling on both sides; the within-patient curve peaks at 0.73.
+  - id: bg-lagscan-spo2
+    file: examples/bg-lagscan-spo2.png
+    theme: delay and window fits
+    source: vitaldb-bench examples/blood_gas_gradients.py
+    caption: >-
+      Within-patient rank correlation of changes in SaO₂ and SpO₂ with the oximeter read at each minute from 10
+      minutes before the start of the access to 15 minutes after: gases with SaO₂ ≤ 98% (blue, 95% interval) and all
+      gases (grey). Gases are chosen by the lab value, not the monitor, so no moment is favoured. Both peak at the
+      estimated draw.
+    alt: Two curves peaking at zero minutes; the blue one reaches about 0.69 and falls to about 0.3 by the lab stamp at 7.2 minutes.
 references: [eytan2019revisiting]

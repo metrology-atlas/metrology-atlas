@@ -1,7 +1,7 @@
 id: pleth-chain-delay
 name: PPG hardware delay
 quantity: Delay of the PLETH behind the finger, one value for the release (stored ECG-to-PLETH delay minus the adopted physiological PAT).
-display: "One global value: about 370 ms to the PPG foot, 445 ms to the steepest upstroke (with 270 ms adopted); setups differ by under ±15 ms"
+display: "385 ms, one global value (stored R-to-foot delay 655 ms minus an adopted 270 ms); setups differ by under ±15 ms"
 status: measured
 study: pat-offset-census
 about: [snuadc-pleth]
