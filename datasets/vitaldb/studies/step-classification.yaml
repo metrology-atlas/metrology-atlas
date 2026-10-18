@@ -1,0 +1,115 @@
+id: step-classification
+name: What each break in the stamps is
+summary: >-
+  Every step between waveform records in the release, sorted by mechanism: written twice, a SNUADC clock reset,
+  interleaved streams, a pause shared by every device, whole messages, less than a message, or a fraction of a
+  message beyond whole ones. A continuity test with controls shows which classes lose data: shared pauses
+  and most longer SNUADC gaps do; steps under one message, and SNUADC's lone one-message steps, mostly do not.
+date: 2026-10-19
+status: draft
+methods: [data-continuity, signal-continuity]
+techniques: [remainder-test, junction-scores, null-controls]
+clocks: [recorder-pc, snuadc-sample, bis-clock, primus-clock]
+devices: [vital-recorder, snuadc, primus, bis, cardioq]
+variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art, primus-co2, primus-awp, bis-eeg]
+code:
+  - vitaldb-bench/tools/step_classify.py
+  - vitaldb-bench/tools/step_classify_agg.py
+  - vitaldb-bench/tools/step_join_null.py
+data: |
+  All 6,388 recordings; every non-zero step between consecutive records of every waveform track (backward steps
+  capped at 3,000 per track, so backward counts are lower bounds; the number of recordings is exact). Controls: 40
+  random recordings, up to 200 ordinary junctions per track.
+background: |
+  [[study:record-messages-and-steps]] found far more backward steps than gaps, and gaps that are mostly not whole
+  messages. A step in the stamps can mean data lost, data written twice or out of order, or a clock correction
+  that moved the stamps and lost nothing. Each leaves a different trace in the stamps and in the samples either
+  side.
+method: |
+  - For every step: its size in messages and its remainder; whether record k+1 is identical to record k; whether
+    it continues record k−1 better than record k; whether another device has a gap of over 1 s within 1 s; and
+    **join_z**, the distance of the first sample after the step from a linear extrapolation of the last samples
+    before it, in units of the record's own median one-step prediction error.
+  - Classes, first match wins. Backward: **duplicate** (identical record); **reset** (SNUADC consecutive backward
+    steps that together step back 0.45–0.52 s: one step, or the five records written out of order at a reset,
+    [[observation:reset-records-out-of-order]]); **interleave** (continues record k−1, in a track with at least 50
+    such steps); **other backward**. Forward: **shared** (over 1 s, with another device stepping at the same
+    moment); **whole** (a whole number of messages, within half a sample); **sub-message**; **fractional**.
+  - **Controls for join_z.** At ordinary junctions (no step) and with one message cut out at the same junctions,
+    in 40 random recordings. If a class loses no data, its share of join_z < 3 should match the first control; if
+    it loses a message, the second.
+results: |
+  Counts in SNUADC ECG II (recordings in brackets); the other SNUADC channels are alike.
+
+  | class | steps | recordings |
+  |---|---:|---:|
+  | duplicate | 21,006 | 8 |
+  | reset | 15,988 | 2,546 |
+  | interleave | 34,431 | 24 |
+  | other backward | 5,364 | 500 |
+  | shared pause | 800 | 717 |
+  | whole messages | 554 | 381 |
+  | sub-message | 1,168 | 316 |
+  | fractional | 3,683 | 2,425 |
+
+  - **Backward steps are three things.** Duplicates and interleaving are confined to a few dozen recordings
+    ([[observation:duplicated-records]], [[observation:interleaved-records]]). Everywhere else SNUADC's backward
+    steps are its step-mode clock resets: 2,546 recordings, either one −0.49 s step or five records stepping
+    0.12 / 0.08 s that add up to it. About 500 recordings keep a few unexplained backward steps.
+  - **The continuity test separates the classes.** At ordinary junctions join_z < 3 in 92–95% of SNUADC steps;
+    with one message cut out, in 12–24%.
+    - Shared pauses and SNUADC fractional gaps lose data: shares near the cut-out control (SNUADC fractional 35–42%;
+      about 70% of them lose samples).
+    - SNUADC sub-message steps (2–20 ms, the frequent-mode corrections) and its lone one-message steps run on as
+      if nothing were missing (88–95%). The one-message steps tend to fall where the signal moves to the mid-scale
+      no-signal level.
+    - BIS sub-message steps run on (93%, like the control): the clock resynchronisations of
+      [[study:continuity-gaps-segments]] lose nothing. BIS fractional gaps (mostly 0.13–0.5 s) sit between the
+      controls (73%): roughly a third lose data.
+    - Primus AWP gaps of whole messages (80% of them 20–23 s, in steps of one message) run on almost like the
+      control (86% against 88%), yet the test is weak for AWP, whose 0.48 s records are often nearly flat. Whether
+      these 21 s gaps lose breaths is open.
+  - Seconds missing over the release in ECG II: about 196,700 s in fractional gaps, 70,200 s in shared pauses,
+    5,100 s in whole-message steps.
+
+  [[figure:step-classes]]
+discussion: |
+  The stamps alone say what kind of break each step is, and the samples say, on average, whether data were lost.
+  join_z judges a single step only weakly: losing a few samples, or a message on a flat stretch, does not show.
+  Per class, against the controls, it is clear. For a reader of the data: backward steps need reordering (resets,
+  interleaving) or deduplication, not gaps; sub-message steps are clock corrections; shared pauses and most SNUADC
+  gaps beyond one message are real gaps.
+limitations: |
+  - The controls come from 40 recordings; join_z's power depends on how steep the signal is near the step.
+  - Losses of a few samples (the SNUADC sub-message steps) are below what join_z can see;
+    [[observation:small-snuadc-gaps]] found from beat intervals that sub-second SNUADC gaps lose data, which this
+    test can neither confirm nor rule out at 2–20 ms.
+  - Backward steps were capped at 3,000 per track in the scan.
+open_questions:
+  - title: "Do Primus's 21 s gaps lose breaths?"
+    kind: next step
+    summary: >-
+      80% of AWP whole-message gaps are 20–23 s, not shared with other devices. A breath-level test (does the
+      breath timing jump by the gap?) and the ventilator's state around them would settle whether data or only
+      stamps are missing.
+  - title: "The remaining backward steps"
+    kind: next step
+    summary: >-
+      About 500 recordings per SNUADC channel and 3,850 for Primus AWP have backward steps none of the classes
+      explains, mostly of a few samples.
+  - title: "Fit the missing time"
+    kind: next step
+    summary: >-
+      For gaps that lose data, fit how many samples are missing ([[method:signal-continuity]]) rather than
+      testing only whether any are.
+figures:
+  - id: step-classes
+    file: step-classes.png
+    theme: data continuity
+    source: vitaldb-bench tools/step_classify_agg.py
+    caption: >-
+      Left: forward steps between records by class, log scales; dotted line at one message. Right: the share of
+      each class the waveform runs across (join_z < 3), against two controls: ordinary junctions with no step
+      (solid line) and the same junctions with one message cut out (dashed). Sub-message and lone one-message steps
+      sit at the no-loss control; shared pauses at the loss control; SNUADC fractional gaps close to it.
+    alt: Six rows; left, histograms of forward steps coloured by class; right, bar charts of the share of steps with join_z under 3, with two vertical reference lines.

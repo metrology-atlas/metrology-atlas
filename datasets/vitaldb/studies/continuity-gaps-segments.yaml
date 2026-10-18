@@ -1,0 +1,107 @@
+id: continuity-gaps-segments
+name: Gaps and unbroken segments in every waveform
+summary: >-
+  Every gap and every unbroken segment in the 6,388 recordings, per waveform. The curves are not smooth: a cliff
+  at about 18 s in every device marks the recorder's pauses, SNUADC segments stop at 5 hours, Primus and BIS
+  segments at about 2.2 hours, and BIS's short gaps grow with the time since the last one (clock
+  resynchronisations, not lost data).
+date: 2026-10-19
+status: draft
+methods: [data-continuity]
+techniques: [censored-durations, null-controls]
+clocks: [recorder-pc, snuadc-sample, bis-clock, primus-clock]
+devices: [vital-recorder, snuadc, primus, bis, cardioq]
+variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art, primus-co2, primus-awp, bis-eeg]
+code:
+  - vitaldb-bench/tools/signal_events.py
+  - vitaldb-bench/tools/signal_events_collect.py
+  - vitaldb-bench/tools/continuity_figs.py
+data: |
+  All 6,388 recordings; every waveform track (SNUADC ECG II, V5, PLETH, ART, CVP, FEM; Primus CO2 and AWP; BIS
+  EEG; CardioQ FLOW). A gap is any forward step in the stamps of more than 1.5 samples beyond the end of the
+  previous record; a segment is a stretch with no gap.
+background: |
+  Gaps that strike at random give a smooth distribution of gap lengths and of segment lengths. Any mechanism with
+  a length of its own (a restart, a periodic break, a buffer) shows as a cliff or a step. Before choosing how to
+  handle missing data, the question is which gaps are which.
+method: |
+  - Per recording and waveform, every gap (start, length) and every segment (start, length, and whether it ends
+    in a gap or at the edge of the recording) was cached (`signal_events.py`) and collected into one table.
+  - Cumulative counts (number longer than x) on log–log axes, for gaps and for segments; for segments, all,
+    interior only (a gap at both ends), and a Kaplan–Meier estimate with edge segments censored.
+  - Each gap's length against the time since the previous gap in the same track (or since the start).
+results: |
+  - **A cliff at about 18 s in every device** (ECG II: 1,968 gaps of 15–25 s, median 17.9 s; the same in PLETH,
+    ART, CVP, Primus and BIS). These are the recorder's pauses ([[observation:recording-pauses]]), common to
+    every device, not losses in any one signal. Above about 30 s the curve falls smoothly to gaps of hours.
+  - **A step at 0.2 s in SNUADC:** gaps of exactly one message.
+  - **SNUADC segments stop at 5 hours.** No interior segment is longer than 17,991 s (5 h minus about 9 s), and
+    many are exactly that long, each followed by an 18 s gap: the recorder appears to break the SNUADC stream
+    every 5 hours of unbroken recording.
+  - **Primus and BIS segments stop near 2.2 hours.** Primus AWP segments never exceed about 7,980 s; BIS segments
+    pile up at 7,500–8,500 s (2,584 of them).
+  - **BIS's short gaps are clock resynchronisations.** Sub-second BIS gaps grow in proportion to the time since the
+    previous gap: a median 30 ppm of the elapsed time (interquartile range 20–48 ppm), the BIS clock's drift
+    against the recorder (18–55 ppm by setup; [[observation:device-drift-by-setup]]). The stamps are stepped to
+    catch up; no samples are lost.
+  - **AWP has an arc of sub-second gaps** whose length plus the segment before it is about 0.5 s: bursts on a
+    0.5 s cycle, one Primus message.
+  - **CardioQ is fragmented throughout:** about 76 gaps per hour, median coverage 80%, with no structure beyond a
+    smooth curve.
+  - **SNUADC has a band of millisecond gaps right after a 0.2 s segment:** one record alone, then a small step.
+  - Most segments end with the recording, not with a gap, so the censored estimate stays high; the interior and
+    all-segment curves bracket it.
+
+  [[figure:continuity-gaps-ccdf]]
+
+  [[figure:continuity-segments-ccdf]]
+
+  [[figure:continuity-gap-vs-since]]
+discussion: |
+  Almost none of the structure is random. The largest groups of gaps are system events (pauses, periodic
+  breaks, resynchronisations) with lengths of their own, and the remaining smooth tail is a small share. The
+  forward gaps seen here are only part of the picture: the stamps also step backwards far more often
+  ([[study:record-messages-and-steps]]).
+limitations: |
+  - The gap rule looks forward only and ignores steps under 1.5 samples.
+  - The 5-hour and 2.2-hour breaks are inferred from the stamps; the recorder's own logs, if they exist, would
+    name them.
+open_questions:
+  - title: "What breaks the SNUADC stream every 5 hours?"
+    kind: next step
+    summary: >-
+      Check whether the 18 s gap after 17,991 s is shared by every device at that moment (a recorder event) or
+      only SNUADC (a device restart), and whether Primus and BIS's 2.2-hour limit is the same mechanism.
+  - title: "Which gaps lose data?"
+    kind: next step
+    summary: >-
+      Answered per class in [[study:step-classification]]: shared pauses and most SNUADC gaps beyond one message
+      lose data; sub-message steps and BIS resynchronisations do not.
+figures:
+  - id: continuity-gaps-ccdf
+    file: continuity-gaps-ccdf.png
+    theme: data continuity
+    source: vitaldb-bench tools/continuity_figs.py
+    caption: >-
+      Number of gaps longer than x, per waveform, log–log; dotted lines at 0.2 s, 1 s, 1 min and 1 h. Every
+      SNUADC, Primus and BIS signal has a cliff at about 18 s (the recorder's pauses); SNUADC also steps at 0.2 s
+      (one message). CardioQ falls smoothly from about 1 s.
+    alt: Ten log–log step curves of gap counts, most with a sharp cliff near 18 seconds and a smooth tail to hours.
+  - id: continuity-segments-ccdf
+    file: continuity-segments-ccdf.png
+    theme: data continuity
+    source: vitaldb-bench tools/continuity_figs.py
+    caption: >-
+      Number of unbroken segments longer than x, per waveform: all segments (grey), interior segments with a gap at
+      both ends (blue), and a Kaplan–Meier estimate with edge segments censored (orange). SNUADC interior segments
+      stop at 5 hours; Primus AWP and BIS segments stop near 2.2 hours.
+    alt: Ten log–log curves of segment counts; the blue SNUADC curves drop vertically at about 18,000 seconds, Primus and BIS at about 8,000 seconds.
+  - id: continuity-gap-vs-since
+    file: continuity-gap-vs-since.png
+    theme: data continuity
+    source: vitaldb-bench tools/continuity_figs.py
+    caption: >-
+      Each gap's length (x) against the time since the previous gap in the same track (y), counts on a log
+      colour scale. The column at 18 s is the recorder's pauses; BIS's diagonal band (short gaps growing with
+      the elapsed time) is clock resynchronisation; AWP's arc is gaps plus segments of 0.5 s.
+    alt: Ten heat maps; each has a dark column near 18 seconds; the BIS panel has a diagonal band from 10 ms at 1,000 seconds to 0.5 s at 10,000 seconds.

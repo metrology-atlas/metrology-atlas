@@ -1,0 +1,119 @@
+id: track-value-resolution
+name: Value resolution of every signal
+summary: >-
+  How finely every waveform and numeric track in the release records its values. The SNUADC waveforms are 10-bit
+  codes, though VitalRecorder's documentation describes the SNUADC as 12-bit; Primus waveforms use about 10 bits
+  of 12; BIS EEG is a 16-bit grid of 0.05 µV. Numerics are 32-bit floats on decimal grids of 1, 0.1, 0.01 or 0.001,
+  one per track; settings sit on coarser grids of 10 or 100.
+date: 2026-10-19
+status: draft
+methods: [value-resolution]
+devices: [snuadc, primus, bis, cardioq, solar8000, orchestra, ev1000, vigileo, vigilance]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, primus-co2, primus-awp, bis-eeg, bis-index, solar8000-hr,
+            solar8000-spo2, solar8000-art-numerics, solar8000-nibp, primus-numerics, pump-rates, ev1000-art-mbp,
+            vigileo-sv, vigilance-co]
+code:
+  - vitaldb-bench/tools/signal_events.py
+  - vitaldb-bench/tools/signal_events_agg.py
+  - vitaldb-bench/tools/record_scan.py
+  - vitaldb-bench/tools/numeric_agg.py
+references: [vitaldb-docs-devices, vitaldb-docs-config, vitaldb-docs-fileformat]
+data: |
+  All 6,388 recordings: every sample of every waveform track (a full histogram of stored values per track) and
+  every record of every numeric track (each distinct value with its count).
+background: |
+  A .vital file stores each track in a declared format with a gain and offset: measured value = offset + stored
+  value × gain ([[reference:vitaldb-docs-fileformat]]). Waveforms from converters are stored as integer codes;
+  numerics, and waveforms relayed from devices that send numbers, as 32-bit floats. The format says how many bits
+  are available, not how many the device used: that has to be read from the values.
+method: |
+  - **Waveforms.** One bin per stored code over the whole release. The resolution is the spacing of the codes; the
+    bits to store the observed span are the whole number of bits that hold every code between its ends. The range is taken between the 10⁻⁷ and 1 − 10⁻⁷
+    quantiles of the samples, widened to any code within 64 steps of the body, so that a handful of corrupt samples
+    cannot set it. The spacing is also read in 8 bands of equal sample count, which shows a scale that is not
+    uniform.
+  - **Numerics.** The share of records on each decimal grid (100, 10, 5, 1, 0.5, … 0.001), allowing a few units of
+    float32 rounding (a stored 0.1 reads 0.099999…). The resolution is the coarsest grid holding 99% of records;
+    the share on the next coarser grid shows heaping or a mixed resolution (by chance, about 1/2, 1/5 or 1/10).
+results: |
+  **Waveforms.** Two quantities are kept apart. The *observed span* is what the data show: the codes between the
+  lowest and highest values the signal reaches (on the step it uses), and the whole number of bits needed to store
+  that span. The *converter resolution* is an estimate of the device: it can be no less than the observed span, and
+  it is stated only with its evidence (all codes of a power-of-two range used, a documented value, or rare values
+  at the edge of a larger range).
+
+  | Track | Stored as | Step | Observed span (codes used) | Bits to store the span | Converter resolution (estimate) | Evidence |
+  |---|---|---|---|---:|---|---|
+  | SNUADC ECG II, V5 | uint16 | 0.00987 mV | 0–1023 (all 1,024) | 10 | 10 bits | every code of 0–1023 used, none above; documented as 12-bit |
+  | SNUADC ART, CVP, FEM | uint16 | 0.987 mmHg | 0–983 (848) | 10 | 10 bits | same converter as ECG |
+  | SNUADC PLETH | uint16 | 0.395 | 0–1023 (852) | 10 | 10 bits | same converter as ECG |
+  | Primus CO2 | uint16 | 0.1 mmHg as stored (0.075 fits) | 0–1564 (1,530); 8 samples to 4007 | 11 | probably 12 bits | rare values up to 4046 in CO2 and AWP, inside 0–4095 |
+  | Primus AWP | uint16 | 0.1 mbar | 0–1032 (1,010); 22 samples to 4046 | 11 | probably 12 bits | as CO2 |
+  | BIS EEG1, EEG2 | float32 | 0.05 µV | −1476.70 to +1800.05 (all 65,536); 400 corrupt samples | 16 | 16 bits | every code of a 2¹⁶ range used, none outside it |
+  | CardioQ FLOW | float32 | 1, 2 or 4 (segmented) | 0–1016 (509 values) | 9 as codes (10 as values) | unknown | a 9-bit segmented code ([[observation:cardioq-flow-segmented]]) |
+  | CardioQ ABP | float32 | 1 mmHg | −100 to 414 (497); 2 corrupt samples | 10 | unknown, at least 10 bits | whole mmHg, a display resolution rather than a converter |
+
+  - **SNUADC is 10-bit in the data, 12-bit in the documentation.** VitalRecorder's device list describes the SNUADC
+    as an 8-channel 12-bit, 500 Hz converter ([[reference:vitaldb-docs-devices]]). Every SNUADC channel in the
+    release stores codes 0–1023 and nothing above, so the stored values have 10 bits whatever the converter
+    delivers ([[observation:snuadc-ten-bit-codes]]).
+  - **One volt scale behind every SNUADC channel.** The SNUADC is configured with one gain per channel, from volts to
+    the physical unit ([[reference:vitaldb-docs-config]]). The stored gains are that gain times one fixed step of
+    0.0098746 V per code: ECG gain 1, ART, CVP and FEM gain 100, PLETH gain 40, and the offsets are −4.956 V times
+    the same gain. The converter therefore spans −4.956 to +5.156 V in 1,024 codes.
+  - Primus waveforms are stored in 16 bits but use about 10; their few samples near code 4,000 fit a 12-bit device
+    range (0–4095). Their stored gains are not all right: against the Primus's own numerics, CO2 fits only 0.075
+    mmHg per code and AWP only 0.1 mbar per code, so most recordings overstate CO2 by a third
+    ([[observation:primus-waveform-gains]]).
+  - The earlier summary counted 54.9 bits for BIS EEG and 16.5 for CardioQ ABP, set by a few corrupt samples;
+    with the robust range the observed spans need 16 and 10 bits.
+
+  **Numerics** (the full table, 150 tracks, is in the work folder: `numeric_resolution.csv`)
+
+  | Resolution | Tracks |
+  |---|---|
+  | 100 | Primus fresh-gas flow setting; N2O flow and N2O fractions (almost always 0) |
+  | 10 | FiO2 and tidal volume settings (Primus and Solar8000) |
+  | 1 | Solar8000 HR, pulse rate, SpO2, ART, CVP, PA, NIBP, ETCO2, FiO2, ventilator pressures and RR; Primus ETCO2, FiO2, pressures, RR, TV, gas flows; EV1000 / Vigileo SV, SVI, SVR; Vigilance volumes and SvO2; INVOS |
+  | 0.1 | Temperature; ST segments; minute volume; MAC and agent concentrations (kPa); compliance; inspiratory time; BIS index, SQI and SR; CO and CI (EV1000, Vigileo, Vigilance, CardioQ); EV1000 SVV; Orchestra target concentrations (CT) and the rates of most drugs |
+  | 0.01 | BIS SEF, EMG and total power; Primus TV setting (L, so 10 mL); Solar8000 gas 2 (94% on 0.1) |
+  | 0.001 | Orchestra volumes, plasma and effect-site concentrations (CP, CE), and the propofol and remifentanil rates |
+
+  - Each track has one resolution throughout; none mixes grids except Solar8000 gas 2 (94% on 0.1, the rest on
+    0.01) and Solar8000 FiO2 / FeO2 (0.08% off whole percent).
+  - The same quantity from two devices agrees: Primus and Solar8000 minute volume (0.1 L/min), TV (1 mL), and the
+    TV setting (0.01 L on the Primus, 10 mL on the Solar8000).
+  - Corrupt values appear in a few tracks: BIS SQI to −2.1 × 10⁸, BIS index to −1,333, Orchestra concentrations and
+    volumes to 10⁶, Primus mean airway pressure 4,000. They will be listed with the leads-off and no-signal codes.
+discussion: |
+  Recorded values are as fine as the stored codes or the decimal grid, not as fine as the storage format. For
+  waveforms, the step is the quantisation of the measurement (uniform within ±½ step, 1 SD = step/√12; truncated
+  rather than rounded in the SNUADC, [[observation:snuadc-value-truncation]]). For numerics, the grid is the
+  device's display resolution; whether the device rounded or truncated to it is known only for the Solar8000
+  heart rate (truncated) and respiratory rate (rounded) ([[observation:hr-truncated]]).
+limitations: |
+  - The documentation describes the current VitalRecorder; the release was recorded with earlier versions and
+    SNUADC hardware whose resolution may differ from the documented one.
+  - The decimal-grid test cannot tell whether a float numeric started as an integer count on a finer scale (a
+    device's own converter); that is a separate question.
+open_questions:
+  - title: "Why 10 bits from a 12-bit converter?"
+    kind: hypothesis
+    summary: >-
+      Either the SNUADC used in the release was a 10-bit design, or a 12-bit converter's readings are reduced to 10
+      bits before they are sent (which the observed truncation would fit). The SNUADC firmware or the VitalDB team
+      could settle it.
+  - title: "Rounding or truncation in each numeric"
+    kind: next step
+    summary: >-
+      Against the Primus's own waveforms (with the corrected gains), all 6,342 recordings favour rounding for ETCO2
+      (where round and floor differ, 77% of numerics match round, 18% floor), PIP (61% / 32%) and mean airway
+      pressure (62% / 28%). The match is not complete because the window does not reproduce the device's own
+      computation, so the result is "likely". The Solar8000 ART numerics cannot be tested this way: the
+      SNUADC copy of the arterial pressure differs from them by more than one step.
+  - title: "Integer codes behind float signals"
+    kind: next step
+    summary: >-
+      Signals sent as floats (BIS EEG, CardioQ, the numerics) may all start as integers from a converter of n bits,
+      scaled once. Recover the integer and the scale for each (BIS EEG already fits 16 bits of 0.05 µV; CardioQ FLOW
+      looks companded).

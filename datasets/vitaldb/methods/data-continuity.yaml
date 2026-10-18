@@ -1,0 +1,27 @@
+id: data-continuity
+name: Data continuity
+order: 4.5
+summary: >-
+  How completely each signal was recorded: where its gaps are, how long its unbroken stretches run, how it was
+  packaged into messages, and whether a break in the stamps lost data or only moved the clock.
+techniques: [censored-durations, remainder-test, junction-scores, null-controls]
+description: |
+  **The idea.** A recorder writes each signal as a run of messages (records), each a fixed number of samples with
+  one time stamp. Between two records the stamps should advance by exactly one message. Any other step is either
+  data lost, data written twice or out of order, or a clock correction that moved the stamps without losing a
+  sample. Each of these leaves its own signature, and the signatures can be told apart from the stamps and the
+  samples alone.
+
+  **What it gives.** For every waveform: its message size, the distribution of its gaps and of its unbroken
+  segments, which gaps are system events shared by every device, which are lost whole messages, which are clock
+  resynchronisations, and which recordings carry duplicated or interleaved records.
+
+  **How.** Distributions are shown as cumulative counts (the number of gaps or segments longer than x) on log–log
+  axes: losses that strike at random give a smooth curve, and a cliff or step marks a mechanism with its own
+  duration. Segments cut short by the end of a recording are censored, not ended by a gap. Gaps are folded modulo
+  the message length; whole lost messages pile up at zero. Gap length against the time since the previous gap
+  separates resynchronisations, which grow with the elapsed time, from losses, which do not.
+
+  **Pitfalls.** Backward steps outnumber forward ones by a hundred to one in some signals and are invisible to a
+  gap rule that only looks forward. One recording with a defect can dominate a count across the release, so
+  shares are reported per recording as well as in total.

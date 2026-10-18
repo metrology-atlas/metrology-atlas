@@ -1,0 +1,27 @@
+id: cardioq-flow-segmented
+name: CardioQ FLOW uses three scales (a segmented code)
+summary: >-
+  CardioQ FLOW values step by 1 from 0 to 255, by 2 from 256 to 510 and by 4 from 512 to 1016: 509 values, a 9-bit
+  code whose step doubles in each upper segment, as in µ-law and A-law companding or a small floating-point format
+  (an exponent and a 7-bit mantissa). Below 256, even values outnumber odd ones by 40 to 230 times.
+status: likely
+devices: [cardioq]
+studies: [track-value-resolution]
+consequence: |
+  The resolution depends on the value, so each sample's quantisation uncertainty does too: step 1 below 256, 2
+  from 256, 4 from 512 (1 SD = step/√12: 0.29, 0.58 and 1.15 units). Below 256 the even-value comb makes the
+  effective step mostly 2 (1 SD 0.58). A per-sample uncertainty model must take the step from the value, not one
+  step per track.
+handling: |
+  Not modelled yet. The FLOW unit and the device's encoding are not documented in the release; the Deltex
+  interface specification would settle both.
+figures:
+  - id: cardioq-flow-segmented
+    file: cardioq-flow-segmented.png
+    theme: distributions of recorded values
+    source: vitaldb-bench tools/value_obs_figs.py
+    caption: >-
+      Left: every stored CardioQ FLOW value over the 29 recordings, one line per value, log count. The spacing doubles at
+      256 and again at 512. Right: values 100–140: even values (blue) hold about a hundred times more samples than odd
+      ones (orange).
+    alt: "Left, a dense comb of lines from 0 to 1016 whose spacing widens at 256 and 512. Right, tall blue bars on even values and short orange bars on odd ones."

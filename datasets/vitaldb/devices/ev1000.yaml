@@ -4,3 +4,6 @@ summary: Edwards EV1000 haemodynamic platform.
 type: monitor
 tags:
 - stub
+docs:
+- title: 'VitalDB connection guide: Edwards EV-1000'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2Fconnection-guide%2Fdevices%2Fhemodynamic_monitors%2Fedwards_ev1000.md'

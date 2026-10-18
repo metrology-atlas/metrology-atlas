@@ -1,0 +1,5 @@
+id: remainder-test
+name: Remainder test
+summary: >-
+  Fold each gap modulo the signal's message duration: whole lost messages pile up at zero, while clock
+  corrections and partial losses spread over the whole interval.

@@ -108,7 +108,7 @@ domains:
 references: [lee2022vitaldb, lee2022vitaldb-physionet, pollard2026physionet]
 reference_groups: [Metrology, Data and recording, Timing and synchronisation, Coarse data and heaping, Anthropometry,
                    Pulse arrival time, The authors' earlier work, Software]
-figure_themes: [drift and resets, correction intervals, delay and window fits, distributions of measured parameters,
+figure_themes: [drift and resets, data continuity, correction intervals, delay and window fits, distributions of measured parameters,
                 agreement and residuals, heaping, distributions of recorded values, example traces, schematics]
 variable_groups: [Waveforms, Numerics, Events, Times and durations, Patient, Operation and anaesthesia,
                   Preoperative history, Airway and lines, Fluids and blood, Drugs, Outcome, Preoperative labs,

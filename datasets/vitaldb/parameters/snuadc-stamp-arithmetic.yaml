@@ -3,7 +3,7 @@ name: SNUADC stamp arithmetic
 quantity: Slope of the SNUADC block stamps against the sample count between corrections.
 value: -0.954
 unit: ppm
-spread: {n: 6, text: "6 files; census pending"}
+spread: {n: 6321, text: "census of 6,321 files (17 October): median −0.9535 ppm; 89.5% of recording hours within 0.05 ppm of −0.954; 747 files (12%) between −0.90 and −0.55 ppm"}
 status: measured
 study: stamp-arithmetic
 about: [snuadc-sample, snuadc-frequent-vs-pc]

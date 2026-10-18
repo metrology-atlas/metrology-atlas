@@ -109,8 +109,8 @@ open_questions:
     kind: next step
     summary: >-
       In 75 of 121 cases no tooth reached tier B, so the sawtooth stays in them. The likeliest causes, in order:
-      the example gives the fit no creep-rate prior, although the rate is fixed per setup ([[observation:ppg-
-      sawtooth]], the Recording setups page), so a tooth reaches tier A only if the recording has two
+      the example gives the fit no creep-rate prior, although the rate is fixed per setup
+      ([[observation:ppg-sawtooth]], the Recording setups page), so a tooth reaches tier A only if the recording has two
       full teeth that agree; 60-minute windows hold few full teeth (on up to 3 hours, cases with a confident
       tooth rose from 47% to 57% and confident teeth from 21% to 33%); tier C teeth (the most common) are fitted
       but not applied; and a simple PLETH fiducial produces false slips (some cases show 24–46 an hour against

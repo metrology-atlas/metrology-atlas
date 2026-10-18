@@ -1,0 +1,36 @@
+id: interleaved-records
+name: In some recordings two unrelated streams are interleaved in one track
+summary: >-
+  In 7 recordings 64–95% of the records alternate between two streams: each record continues the one two before it,
+  not the one before, and the two streams do not match each other. SNUADC and BIS in [[case:2219]], [[case:2379]],
+  [[case:2640]], [[case:4836]], [[case:5327]] and [[case:5617]]; SNUADC in [[case:1939]]. In [[case:94]],
+  [[case:945]], [[case:1132]], [[case:3195]] and [[case:5700]] 4–7% of SNUADC records interleave.
+status: open
+studies: [record-messages-and-steps]
+devices: [vital-recorder, snuadc, bis]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, bis-eeg]
+supersedes: [snuadc-overlapping-records]
+consequence: |
+  The timestamps alternate (13 / 187 ms or 23 / 177 ms between SNUADC records, pairs summing to one 0.2 s message), and
+  the file holds about twice as many samples as its time span allows. Read in file order, the track switches between two
+  signals every 0.2 s. Joining each record to the one two before gives two continuous signals (boundary jump 0 codes,
+  against 11 to the neighbouring record); their correlation is 0.10 and 0.01 in the two cases tested, with different
+  amplitudes, so they are not two copies of one signal. ECG II, ART and PLETH interleave together, and BIS does too, so
+  the recorder merged two sources. Which stream belongs to the patient is not known; in one case one stream's rhythm
+  matches the monitor's heart rate better.
+handling: |
+  Treat these tracks as unusable until the streams are separated and attributed. A single run of backward steps that
+  pair to one message marks an interleaved stretch.
+code:
+  - vitaldb-bench/tools/record_scan.py
+  - vitaldb-bench/tools/record_steps_collect.py
+figures:
+  - id: interleaved-records
+    file: interleaved-records.png
+    theme: data continuity
+    source: vitaldb-bench tools/value_obs_figs.py
+    caption: >-
+      One recording's SNUADC ECG II. Top: eight consecutive records in file order; the signal jumps at every 0.2 s
+      record boundary. Bottom: joining every other record gives two continuous ECG signals that differ in amplitude and
+      beat timing.
+    alt: "Top, an ECG trace with a step at every 0.2 s boundary. Bottom, two smooth ECG traces, blue and orange, with beats at different times."

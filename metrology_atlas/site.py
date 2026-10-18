@@ -68,6 +68,10 @@ class Site:
     def kind_of(self, id_: str, kinds=("clock", "device", "variable", "link", "parameter", "study")) -> str:
         return next(k for k in kinds if id_ in self.ds.items[k])
 
+    def summ(self, text: str | None) -> str:
+        """A one-line summary with its [[...]] references resolved (summaries go in tables and page heads)."""
+        return self.prose(text).replace("\n", " ").strip() if text else ""
+
     def prose(self, text: str | None) -> str:
         if not text:
             return ""
@@ -163,7 +167,7 @@ class Site:
         out = "| Observation | Status | Summary |\n|---|---|---|\n"
         for oid in ids:
             o = self.ds.get("observation", oid)
-            out += f"| {self.a('observation', oid)} | {o['status']} | {o['summary']} |\n"
+            out += f"| {self.a('observation', oid)} | {o['status']} | {self.summ(o['summary'])} |\n"
         return out
 
     def observation(self, i: str, o: dict) -> str:
@@ -192,7 +196,7 @@ class Site:
         out = "| Study | Date | Status | Summary |\n|---|---|---|---|\n"
         for sid in ids:
             s = self.ds.get("study", sid)
-            out += f"| {self.a('study', sid)} | {s['date']} | {s['status']} | {s['summary']} |\n"
+            out += f"| {self.a('study', sid)} | {s['date']} | {s['status']} | {self.summ(s['summary'])} |\n"
         return out
 
     def refs(self, ids) -> str:
@@ -201,7 +205,7 @@ class Site:
 
     def page(self, item: dict, glance: str, body: str) -> str:
         tags = item.get("tags")
-        head = f"# {item['name']}\n\n{item.get('summary', '')}\n\n"
+        head = f"# {item['name']}\n\n{self.summ(item.get('summary'))}\n\n"
         stub = ("!!! note \"Stub\"\n    Imported from the time-source table; the full page is still to be written.\n\n"
                 if tags and "stub" in tags else "")
         return head + stub + glance + body + self.rest_figures() + (f"\n*Tags: {', '.join(tags)}*\n" if tags else "")
@@ -242,7 +246,10 @@ class Site:
                 f"{self.a('clock', self.ds.get('variable', s)['stamp_clock'])} | "
                 f"{self.a('clock', self.ds.get('variable', s)['sample_clock']) if self.ds.get('variable', s).get('sample_clock') else '—'} |\n"
                 for s in r["variables"])
-        body = (self.section("Description", self.prose(d.get("description"))) + self.section("Variables", sig)
+        docs = "\n".join(f"- [{x['title']}]({x['url']})" for x in d.get("docs") or [])
+        body = (self.section("Description", self.prose(d.get("description")))
+                + self.section("Device documentation", docs) + self.section("Variables", sig)
+                + self.section("Scale factors and resolution", self.track_tables(d.get("tracks")))
                 + self.section("Parameters", self.params_table(r.get("parameters")))
                 + self.section("Observations", self.observations_table(r.get("observations")))
                 + self.section("Studies", self.studies_table(r.get("studies")))
@@ -250,6 +257,59 @@ class Site:
         return self.page(d, self.glance([("Type", d["type"]), ("Manufacturer", d.get("manufacturer")),
                                          ("Model", d.get("model")), ("Clocks", self.many("clock", d.get("clocks")))]),
                          body)
+
+    @staticmethod
+    def _num(x, digits: int = 7) -> str:
+        if x is None or x == "":
+            return "—"
+        if isinstance(x, (int, float)):
+            return f"{x:,.0f}" if float(x).is_integer() and abs(x) >= 1000 else f"{x:.{digits}g}"
+        return str(x)
+
+    def track_tables(self, tracks: list[dict] | None) -> str:
+        """Scale factors and resolution: waveforms (one row per stored configuration), then numerics."""
+        if not tracks:
+            return ""
+        n = self._num
+
+        def cell(t):
+            return self.prose(t).replace("\n", " ").strip() if t else "—"
+
+        out = []
+        wav = [t for t in tracks if t["kind"] == "waveform"]
+        num = [t for t in tracks if t["kind"] == "numeric"]
+        if wav:
+            rows = []
+            for t in wav:
+                corr = (f"**{n(t.get('corrected_gain'))} / {n(t.get('corrected_offset'))}**: {cell(t.get('correction'))}"
+                        if t.get("corrected_gain") is not None else "—")
+                rows.append(f"| `{t['track']}` | {t.get('unit') or '—'} | {t.get('format') or '—'} | {t.get('rate') or '—'} | "
+                            f"{n(t.get('gain'))} / {n(t.get('offset'))} | {n(t.get('recordings'))} | {corr} |\n")
+            out.append("**Waveform scale factors.** Physical value = offset + stored code × gain, one row per stored "
+                       "configuration. A factor shown wrong has its correction in **Corrected to**.\n\n"
+                       "| Track | Unit | Stored as | Rate | Gain / offset | Recordings | Corrected to |\n"
+                       "|---|---|---|---|---|---:|---|\n" + "".join(rows))
+            seen, rows = set(), []
+            for t in sorted(wav, key=lambda t: t.get("corrected_gain") is not None):  # an uncorrected row first
+                if t["track"] in seen:
+                    continue
+                seen.add(t["track"])
+                rows.append(f"| `{t['track']}` | {t.get('step') or '—'} | {t.get('span') or '—'} | {n(t.get('bits_to_store'))} | "
+                            f"{t.get('converter') or '—'} | {cell(t.get('evidence'))} |\n")
+            out.append("**Waveform resolution.** *Observed span* is what the data reach, and the whole bits needed to "
+                       "store it; *converter* is our estimate of the device's resolution (never less than the span), "
+                       "with its evidence. The step is in the physical unit, with the corrected gain where the stored one is wrong.\n\n"
+                       "| Track | Step | Observed span (codes used) | Bits to store span | Converter (estimate) | Evidence |\n"
+                       "|---|---|---|---:|---|---|\n" + "".join(rows))
+        if num:
+            rows = [f"| `{t['track']}` | {t.get('unit') or '—'} | {t.get('format') or '—'} | {t.get('rate') or '—'} | "
+                    f"{n(t.get('recordings'))} | {n(t.get('grid'))} | {n(t.get('coarser_share'), 2)} | "
+                    f"{cell(t.get('rounding'))} | {t.get('range') or '—'} | {cell(t.get('note'))} |\n" for t in num]
+            out.append("**Numerics.** Stored as floats with gain 1. *Grid* is the coarsest decimal step holding 99% of "
+                       "records; the share on the next coarser grid shows heaping (by chance about 1/2, 1/5 or 1/10).\n\n"
+                       "| Track | Unit | Stored as | Interval | Recordings | Grid | Share one step coarser | Rounding | "
+                       "Observed range | Note |\n|---|---|---|---|---:|---:|---:|---|---|---|\n" + "".join(rows))
+        return "\n\n".join(out)
 
     # -- a clock's route back to UTC ---------------------------------------------------------------------------
     STATUS_COST = {"measured": 1.0, "derived": 1.2, "estimated": 2.0, "assumed": 3.0, "superseded": 6.0, "withdrawn": 9.0}
@@ -889,13 +949,13 @@ class Site:
 
     def method(self, i: str, m: dict) -> str:
         r = self.rel["method"][i]
-        techs = "\n".join(f"- **{self.a('technique', t)}**: {self.ds.get('technique', t)['summary']}"
+        techs = "\n".join(f"- **{self.a('technique', t)}**: {self.summ(self.ds.get('technique', t)['summary'])}"
                           for t in m.get("techniques") or [])
         obs = sorted({o for st in r.get("studies", []) for o in self.rel["study"][st].get("observations", [])})
-        body = (self.section("The approach", self.prose(m.get("description")))
-                + self.section("Techniques", techs)
+        body = (self.section("Studies", self.studies_table(r.get("studies")))
                 + self.section("Observations from these studies", self.observations_table(obs))
-                + self.section("Studies", self.studies_table(r.get("studies")))
+                + self.section("The approach", self.prose(m.get("description")))
+                + self.section("Techniques", techs)
                 + self.section("References", self.refs(m.get("references"))))
         return self.page(m, self.glance([("Techniques", self.many("technique", m.get("techniques")))]), body)
 
@@ -910,7 +970,7 @@ class Site:
         note = {"planned": '!!! note "Planned"\n    Not yet worked through; the page says what it will show.\n\n',
                 "draft": '!!! info "Draft"\n    Worked through on a few cases; numbers may change.\n\n'}.get(e["status"], "")
         inputs = "".join(f"| {self.a('variable', v)} | {self.ds.get('variable', v).get('unit') or ''} | "
-                         f"{self.ds.get('variable', v)['summary']} |\n" for v in e.get("variables") or [])
+                         f"{self.summ(self.ds.get('variable', v)['summary'])} |\n" for v in e.get("variables") or [])
         if inputs:
             inputs = ("Each input links to its measurement page: how it is timed, how its value was recorded, and "
                       "how uncertain both are.\n\n| Input | Unit | What it is |\n|---|---|---|\n" + inputs)
@@ -939,7 +999,7 @@ class Site:
             return ""
         return "| Example | Side | Status | Summary |\n|---|---|---|---|\n" + "".join(
             f"| {self.a('example', x)} | {self.ds.get('example', x)['side']} | {self.ds.get('example', x)['status']} | "
-            f"{self.ds.get('example', x)['summary']} |\n" for x in ids)
+            f"{self.summ(self.ds.get('example', x)['summary'])} |\n" for x in ids)
 
     def software(self, i: str, w: dict) -> str:
         r = self.rel["software"][i]
@@ -965,7 +1025,7 @@ class Site:
             st = self.ds.get("study", sid)
             files = [split(c)[1] for c in st.get("code") or [] if split(c)[0] == i and split(c)[1]]
             uses += (f"| {self.a('study', sid)} | " + (", ".join(self.code_link(f"{i}/{f}") for f in files) or "—")
-                     + f" | {st['summary']} |\n")
+                     + f" | {self.summ(st['summary'])} |\n")
         if uses:
             uses = "| Study | Code | Summary |\n|---|---|---|\n" + uses
         mentions = [m.split(":", 1) for m in r.get("mentioned_in") or []]
@@ -1024,7 +1084,7 @@ class Site:
         out = f"# {k.title}\n\n{k.help}\n\n"
         if kind == "study":
             for mid, m in sorted(self.ds.items["method"].items(), key=lambda x: (x[1].get("order", 99), x[1]["name"])):
-                out += f"## {m['name']}\n\n{m['summary']} {self.a('method', mid, 'About this method')}\n\n"
+                out += f"## {m['name']}\n\n{self.summ(m['summary'])} {self.a('method', mid, 'About this method')}\n\n"
                 out += self.studies_table(self.rel["method"][mid].get("studies")).replace("](../studies/", "](") or "No studies yet.\n"
                 out += "\n"
             return out
@@ -1042,7 +1102,7 @@ class Site:
                                                               ("stamped" if item.get("stamp_clock") else "—"))
                         v = item.get("value") or {}
                         v = "model" if v.get("model") else ("resolution" if v.get("resolution") or v.get("step") else "—")
-                        out += f"| [{item['name']}]({id_}.md) | {t} | {v} | {item['summary']} |\n"
+                        out += f"| [{item['name']}]({id_}.md) | {t} | {v} | {self.summ(item['summary'])} |\n"
                     out += "\n"
             return out
         if kind == "observation":
@@ -1060,7 +1120,7 @@ class Site:
             return out + self.params_table(sorted(items, key=lambda p: items[p]["name"])).replace("](../parameters/", "](")
         out += "| | |\n|---|---|\n"
         for id_, item in sorted(items.items(), key=lambda x: x[1]["name"]):
-            out += f"| [{item['name']}]({id_}.md) | {item['summary']} |\n"
+            out += f"| [{item['name']}]({id_}.md) | {self.summ(item['summary'])} |\n"
         return out
 
     def home(self, json_name: str) -> str:
@@ -1070,7 +1130,7 @@ class Site:
         if m.get("notice"):
             out += '!!! warning "Work in progress"\n\n' + "\n".join(
                 ("    " + l) if l else "" for l in self.prose(m["notice"]).strip().splitlines()) + "\n\n"
-        out += f"{m['summary']}\n\n{self.prose(m.get('description'))}\n\n"
+        out += f"{self.summ(m['summary'])}\n\n{self.prose(m.get('description'))}\n\n"
         if m.get("overview") or "system-overview" in figs:
             out += "## System overview\n\n" + self.prose(m.get("overview")) + "\n\n"
             if "system-overview" in figs and "system-overview" not in self.placed:
@@ -1178,7 +1238,7 @@ class Site:
             out += f"| [{KINDS[k].title}]({KINDS[k].folder}/index.md) | {len(ds.items[k])} | {KINDS[k].help} |\n"
         out += "\n## Methods\n\n| Method | Studies | What it does |\n|---|---|---|\n"
         for mid, mth in sorted(ds.items["method"].items(), key=lambda x: (x[1].get("order", 99), x[1]["name"])):
-            out += f"| {self.a('method', mid)} | {len(self.rel['method'][mid].get('studies', []))} | {mth['summary']} |\n"
+            out += f"| {self.a('method', mid)} | {len(self.rel['method'][mid].get('studies', []))} | {self.summ(mth['summary'])} |\n"
         counts = {}
         for o in ds.items["observation"].values():
             counts[o["status"]] = counts.get(o["status"], 0) + 1
@@ -1498,7 +1558,16 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
         t2 = chem_subscripts(t)
         if t2 != t:
             f.write_text(t2, encoding="utf-8")
-    (out / "zensical.toml").write_text(chem_subscripts(_toml(ds.meta, nav)), encoding="utf-8")
+    brand = Path(__file__).resolve().parents[1] / "brand"
+    if brand.is_dir():
+        # the logo kit (light touch): favicon, and the line-only mark in the header
+        dst = docs / "assets" / "brand"
+        dst.mkdir(parents=True, exist_ok=True)
+        for f in ("icon/favicon.svg", "icon/favicon.ico", "png/apple-touch-icon.png", "logo/metrology-atlas-mark-mono-white.svg",
+                  "logo/metrology-atlas-mark-color.svg", "logo/metrology-atlas-logo-horizontal-color.svg"):
+            if (brand / f).is_file():
+                shutil.copy2(brand / f, dst / Path(f).name)
+    (out / "zensical.toml").write_text(chem_subscripts(_toml(ds.meta, nav, brand.is_dir())), encoding="utf-8")
     return out
 
 
@@ -1533,7 +1602,7 @@ def chem_subscripts(md: str) -> str:
     return "".join(out)
 
 
-def _toml(meta: dict, nav: list) -> str:
+def _toml(meta: dict, nav: list, brand: bool = False) -> str:
     q = json.dumps
     def navs(entries) -> str:
         parts = []
@@ -1561,10 +1630,16 @@ def _toml(meta: dict, nav: list) -> str:
         "[project.theme]",
         'features = ["navigation.tabs", "navigation.sections", "navigation.top", '
         '"navigation.indexes", "toc.follow", "search.highlight", "search.suggest"]',
+    ] + ([
+        'logo = "assets/brand/metrology-atlas-mark-color.svg"',
+        'favicon = "assets/brand/favicon.svg"',
+        "",
+    ] if brand else [
         "",
         "[project.theme.icon]",
         'logo = "lucide/clock"',
         "",
+    ]) + [
         "[project.theme.palette]",
         'scheme = "default"',
         'primary = "indigo"',

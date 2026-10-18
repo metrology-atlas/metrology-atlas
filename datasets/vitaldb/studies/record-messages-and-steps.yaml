@@ -1,0 +1,84 @@
+id: record-messages-and-steps
+name: Message sizes and the steps between records
+summary: >-
+  Every record in every waveform: SNUADC writes messages of 100 samples (0.2 s), Primus 30 (0.48 s), BIS 16
+  (0.125 s), CardioQ no fixed size. Backward steps outnumber gaps by about a hundred to one and come from a few
+  recordings with duplicated or interleaved records. Primus gaps are whole lost messages; most SNUADC and BIS gaps
+  are not.
+date: 2026-10-19
+status: draft
+methods: [data-continuity]
+techniques: [remainder-test]
+clocks: [recorder-pc, snuadc-sample, bis-clock, primus-clock]
+devices: [vital-recorder, snuadc, primus, bis, cardioq]
+variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art, primus-co2, primus-awp, bis-eeg]
+code:
+  - vitaldb-bench/tools/record_scan.py
+  - vitaldb-bench/tools/record_sizes_agg.py
+  - vitaldb-bench/tools/record_steps_collect.py
+  - vitaldb-bench/tools/record_steps_figs.py
+data: |
+  All 6,388 recordings; every waveform record (about 2.5 billion records). Run-length encoded record sizes and
+  every non-zero step (5.2 million) were cached per recording.
+background: |
+  Each record carries one stamp and a block of samples. The next record should start where the last one ended;
+  the step is the difference: step = start(k+1) − (start(k) + size(k) / rate). Positive steps are gaps, negative
+  steps overlaps. A device that sends fixed-size messages loses data in whole messages, so a gap that is not a
+  whole number of messages means a clock correction, or a loss with one.
+method: |
+  - Per track, the distribution of record sizes; the message is the modal size.
+  - Every step of 1 µs or more, forward and backward, histogrammed on a log scale.
+  - Remainder test: gaps longer than one message, folded modulo the message duration.
+results: |
+  - **Message sizes.** SNUADC: 100 samples at 500 Hz, 0.2 s (99.9% of records; a few 50-sample halves and about
+    300 rarer sizes). Primus: 30 samples at 62.5 Hz, 0.48 s. BIS: 16 samples at 128 Hz, 0.125 s (all but a
+    handful). CardioQ: no fixed size (about 2,500 distinct sizes, median about 117 samples, 0.65 s).
+  - **Backward steps dominate.** SNUADC ECG II: 761,225 backward against 6,205 forward; BIS EEG: 1.05 million
+    against 10,789; Primus AWP 101,805 against 20,397. They form a comb of discrete values from about 10 ms up
+    to one message, and 98% of SNUADC's are in 27 recordings. Two mechanisms explain them:
+    [[observation:duplicated-records]] (a whole message written twice with the same stamp: a step of exactly
+    −1 message) and [[observation:interleaved-records]] (two streams alternating in one track: steps in pairs
+    that sum to one message).
+  - **Primus gaps are whole messages.** Folded modulo 0.48 s, 11,000 of 14,989 AWP gaps sit at zero: lost
+    messages, with the stamps intact. CO2 has the same peak at zero plus a second near 0.43 of a message.
+  - **SNUADC and BIS gaps mostly are not.** Their remainders are spread almost evenly, with small peaks at 0 and
+    1 (whole messages) and, in BIS, a comb at multiples of 1/8 of a message (2 samples). Most of these gaps are
+    clock corrections or a loss combined with one ([[observation:small-snuadc-gaps]] shows that SNUADC's
+    sub-second gaps do lose data).
+  - CardioQ forward and backward steps are symmetric around one message: its stamps jitter by about a message.
+
+  [[figure:record-steps-magnitude]]
+
+  [[figure:record-steps-remainder]]
+discussion: |
+  A gap rule on the stamps alone sees only the forward steps, a small share of the irregularities. Knowing the
+  message size per device turns the stamps into a test: a whole number of messages is a loss, a remainder is a
+  clock correction. [[study:step-classification]] combines this with the samples on either side of each step.
+limitations: |
+  - Steps under 1 µs are not kept; float rounding of stamps makes some zero steps non-zero.
+  - The remainder test cannot separate a correction from a loss plus a correction.
+open_questions:
+  - title: "Lost data or a moved clock?"
+    kind: next step
+    summary: >-
+      For SNUADC and BIS gaps that are not whole messages, test whether the waveform continues across the gap
+      (no loss) or needs missing samples to fit ([[method:signal-continuity]]).
+figures:
+  - id: record-steps-magnitude
+    file: record-steps-magnitude.png
+    theme: data continuity
+    source: vitaldb-bench tools/record_steps_figs.py
+    caption: >-
+      Size of every non-zero step between records, forward (gaps, blue) and backward (overlaps, orange), log scale,
+      20 bins per decade; dotted lines at one sample and one message. Backward steps form a comb below one message
+      and outnumber gaps by about a hundred to one in SNUADC and BIS; Primus has a spike at exactly one message.
+    alt: Eight log-scale histograms; orange combs of backward steps between 10 ms and one message tower over the blue forward steps.
+  - id: record-steps-remainder
+    file: record-steps-remainder.png
+    theme: data continuity
+    source: vitaldb-bench tools/record_steps_figs.py
+    caption: >-
+      Gaps longer than one message, folded modulo the message duration. Primus AWP gaps are whole messages (all at
+      zero); CO2 has a second peak near 0.43; SNUADC and BIS remainders are spread evenly, with small peaks at 0 and
+      1 and, in BIS, a comb at eighths of a message.
+    alt: Eight histograms of gap remainders from 0 to 1; AWP is a single bar at 0; SNUADC and BIS are roughly flat.

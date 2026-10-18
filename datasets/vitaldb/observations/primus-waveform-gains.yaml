@@ -1,0 +1,51 @@
+id: primus-waveform-gains
+name: Primus waveform gains are wrong in every recording, for CO2 or for AWP
+summary: >-
+  Recordings store the Primus waveforms with one of three sets of scale factors. Checked against the Primus's own
+  ETCO2 and PIP numerics in all 6,388 recordings, CO2 fits only 0.075 mmHg per code and AWP only 0.1 mbar per code
+  with offset −20, so most recordings overstate CO2 by a third, and the others overstate AWP by about 3% (950
+  recordings) or understate it about fourfold (26).
+status: established
+devices: [primus]
+variables: [primus-co2, primus-awp, primus-numerics]
+studies: [track-value-resolution]
+references: [vitaldb-docs-fileformat]
+description: |
+  Whole release (19 October 2026), the waveform's maximum or mean over the 7–10 s before each numeric; the
+  median per recording of numeric ÷ waveform, then its median and 10th–90th percentiles over recordings:
+
+  | Waveform, stored scale | Recordings | As stored | Rescaled to 0.075 (CO2) or 0.1 / −20 (AWP) |
+  |---|---:|---|---|
+  | CO2 at 0.1 | 5,392 | ETCO2 0.748 (0.747–0.750) | 0.998 (0.995–1.000) |
+  | CO2 at 0.075 | 950 | ETCO2 0.998 (0.996–1.000) | (as stored) |
+  | AWP at 0.1 / −20 | 5,077 | PIP 0.994 (0.989–1.000) | (as stored) |
+  | AWP at 0.1064 / −22 | 910 | PIP 0.976 (0.965–0.992) | 0.995 (0.990–1.000) |
+  | AWP at 0.01 / 0 | 24 | PIP 4.49 (3.23–5.36) | 0.995 (0.989–1.000) |
+
+  0.748 is 0.075 / 0.1. Mean airway pressure agrees in the same way (0.992 to 0.993 after rescaling, in every
+  configuration). The code is tools/numeric_vs_wave.py in vitaldb-bench; the device page lists each configuration
+  with its corrected factors.
+consequence: |
+  In most recordings the CO2 waveform overstates CO2 by a third (a breath at ETCO2 35 mmHg peaks at about 47); in
+  950 recordings AWP reads about 3% high at typical pressures, and in 26 it reads about a quarter of the true value. Anything computed from these waveforms
+  (end-tidal values, capnogram shape, pressures) inherits the error; the Primus numerics are not affected.
+handling: |
+  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/scales.py|TimeNet import]]
+  stores the corrected factors by default (VITALDB_SCALE_FIX=on): CO2 0.075, AWP 0.1 / −20; the stored counts are
+  unchanged and the file's factors are kept in the Signal's metadata (scale_stored, scale_correction). The Primus
+  device page lists the corrected factors per configuration. Other readers (the vitaldb package, the raw file) still
+  use the stored factors.
+code:
+  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/scales.py
+  - vitaldb-bench/tools/numeric_vs_wave.py
+figures:
+  - id: primus-waveform-gains
+    file: primus-waveform-gains.png
+    theme: agreement and residuals
+    source: vitaldb-bench tools/value_obs_figs.py
+    caption: >-
+      Per recording, the median of the Primus numeric divided by the waveform's peak over the 7 s before it. Left:
+      ETCO2 against CO2: recordings stored with 0.1 sit at 0.75, those with 0.075 at 1; rescaled to 0.075, all sit at 1.
+      Right: PIP against AWP: 0.1064 / −22 sits about 2.5% low; rescaled to 0.1 / −20, all sit at 1. Ratios below 0.6
+      are drawn in the first bin.
+    alt: "Two log-count histograms of ratios; left, an orange peak at 0.75 and a blue peak at 1, with the rescaled outline at 1; right, overlapping peaks near 0.97 and 0.99 that move to 1 when rescaled."

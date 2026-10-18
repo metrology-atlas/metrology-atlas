@@ -6,3 +6,8 @@ clocks:
 - bis-clock
 tags:
 - stub
+docs:
+- title: 'VitalDB connection guide: Medtronic BIS VISTA'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2Fconnection-guide%2Fdevices%2Fbrain_monitors%2Fmedtronic_bis_vista.md'
+- title: 'VitalDB connection guide: Medtronic BIS A-2000'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2Fconnection-guide%2Fdevices%2Fbrain_monitors%2Fmedtronic_bis_a2000.md'

@@ -55,6 +55,25 @@
   citation: Lee H-C, Jung C-W. Vital Recorder – a free research tool for automatic recording of high-resolution time-synchronised
     physiological data from multiple anaesthesia devices. Sci Rep. 2018;8:1527.
   doi: 10.1038/s41598-018-20062-4
+- id: vitaldb-docs-config
+  group: Data and recording
+  citation: 'VitalDB. VitalRecorder configuration file (vr.conf) guide. VitalDB documentation. Accessed 19 October 2026.'
+  url: https://vitaldb.net/docs/?documentId=VitalRecorder%2FConfiguration_Guide.md
+  note: Current VitalRecorder (1.18.x); the release was recorded with earlier versions.
+- id: vitaldb-docs-devices
+  group: Data and recording
+  citation: 'VitalDB. VitalRecorder supported devices. VitalDB documentation. Accessed 19 October 2026.'
+  url: https://vitaldb.net/docs/?documentId=VitalRecorder%2FSupported_Devices.md
+  note: Current VitalRecorder (1.18.x); the release was recorded with earlier versions.
+- id: vitaldb-docs-manual
+  group: Data and recording
+  citation: 'VitalDB. VitalRecorder user manual. VitalDB documentation. Accessed 19 October 2026.'
+  url: https://vitaldb.net/docs/?documentId=VitalRecorder%2FUser_Manual.md
+  note: Current VitalRecorder (1.18.x); the release was recorded with earlier versions.
+- id: vitaldb-docs-fileformat
+  group: Data and recording
+  citation: 'VitalDB. Vital file format specification (format version 3). VitalDB documentation. Accessed 19 October 2026.'
+  url: https://vitaldb.net/docs/?documentId=VitalRecorder%2FVital_File_Format.md
 - id: snuadc
   group: Data and recording
   citation: 'VitalDB. SNUADC: firmware and hardware of the VitalDB analogue-to-digital converter. GitHub.'

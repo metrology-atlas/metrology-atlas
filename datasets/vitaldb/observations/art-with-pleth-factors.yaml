@@ -1,0 +1,21 @@
+id: art-with-pleth-factors
+name: Three ART tracks carry the PLETH conversion factors
+summary: >-
+  In [[case:818]], [[case:5175]] and [[case:5693]] the SNUADC/ART track holds arterial pressure, but its header gives the
+  PLETH conversion (0.394983 per code, offset −198.2504) instead of the ART one (0.987457 mmHg per code, offset
+  −495.626). Converted as stored, the pressure reads about 2.5 times too low.
+status: established
+variables: [snuadc-art, snuadc-pleth]
+devices: [snuadc]
+consequence: |
+  Read with the stored factors, the median arterial pressure in these cases is 28, 25 and 36 mmHg; read with the ART
+  factors it is 69, 62 and 89 mmHg, matching the monitor's own mean arterial pressure (Solar8000/ART_MBP: 70, 63 and 87
+  mmHg). The raw codes are an ordinary arterial waveform (medians 572, 565 and 592, against 578 for ART over the
+  release). None of the three cases has a SNUADC/PLETH track.
+handling: |
+  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/scales.py|TimeNet import]]
+  converts these three tracks with the ART factors (code × 0.987457 − 495.626 mmHg) by default
+  (VITALDB_SCALE_FIX=on) and keeps the stored factors in the metadata. With other readers, convert them by hand.
+  Across the release, the Solar8000 ART numerics are 2.35–2.38 × the waveform read with the stored factors, as
+  expected for arterial pressure stored with the PLETH factors. Found by the signal survey (every conversion
+  factor of every track).

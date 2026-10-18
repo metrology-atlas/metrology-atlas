@@ -1,0 +1,10 @@
+id: censored-durations
+name: Cumulative duration curves
+summary: >-
+  Plot the number of gaps or segments longer than x against x on log–log axes, with segments cut by the start or
+  end of a recording treated as censored; cliffs and steps mark mechanisms with a duration of their own.
+description: |
+  A histogram needs bins; the cumulative count does not, and keeps every value. Random losses give a smooth
+  curve, while a process with a fixed duration (a restart, a periodic break) gives a cliff at that duration.
+  Three versions of the segment curve bracket the truth: all segments, interior segments only (a gap at both
+  ends), and a Kaplan–Meier estimate that counts edge segments as censored.

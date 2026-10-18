@@ -4,3 +4,6 @@ summary: 'Edwards Vigileo: SV, CO and SVV.'
 type: monitor
 tags:
 - stub
+docs:
+- title: 'VitalDB connection guide: Edwards Vigileo'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2Fconnection-guide%2Fdevices%2Fhemodynamic_monitors%2Fedwards_vigileo.md'

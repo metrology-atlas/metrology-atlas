@@ -7,3 +7,10 @@ description: |
   Vital Recorder runs on a PC in each operating room. It stamps numeric records on arrival and stamps waveform
   records from its model of each device's timing, re-synchronising that model when it drifts too far.
 references: [lee2022vitaldb, lee2018vitalrecorder]
+docs:
+- title: 'VitalRecorder user manual'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2FUser_Manual.md'
+- title: 'VitalRecorder configuration guide'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2FConfiguration_Guide.md'
+- title: 'Vital file format'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2FVital_File_Format.md'

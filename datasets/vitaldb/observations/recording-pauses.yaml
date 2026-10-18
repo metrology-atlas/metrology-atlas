@@ -6,5 +6,5 @@ summary: >-
 status: established
 clocks: [recorder-pc]
 devices: [vital-recorder]
-studies: [recorder-pc-steps]
+studies: [recorder-pc-steps, continuity-gaps-segments]
 consequence: Gaps common to every device are recorder pauses, not clock steps; nothing needs correcting.

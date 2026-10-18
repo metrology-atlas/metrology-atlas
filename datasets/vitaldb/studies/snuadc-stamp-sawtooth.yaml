@@ -19,7 +19,7 @@ background: |
   difference of their clock rates; the corrections pull each device back towards the recorder's clock. Both are
   visible in the stamps alone ([[study:shared-bursts]]).
 method: |
-  [[code:physiosync/physiosync/stamps.py|[[software:physiosync]]'s stamp_clock]] takes each record's stamp minus the time given by the sample count. It estimates one rate
+  [[software:physiosync]]'s [[code:physiosync/physiosync/stamps.py|stamp_clock]] takes each record's stamp minus the time given by the sample count. It estimates one rate
   per recording from whole teeth (the drift each correction removes, divided by the time since the last), then one
   offset per stretch between real gaps; corrected_times places every sample on that line. VitalDB rules: SNUADC
   corrects downwards and BIS upwards, and steps the other way are gaps; a SNUADC track in frequent-correction mode

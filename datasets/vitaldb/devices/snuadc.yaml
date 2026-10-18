@@ -8,3 +8,8 @@ description: |
   sends them to Vital Recorder in 0.2 s records of 100 samples. Its records are stamped by the recorder, which
   models the board's timing (see [[clock:snuadc-sample]]).
 references: [lee2022vitaldb]
+docs:
+- title: 'VitalRecorder supported devices: VitalDB devices (SNUADC)'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2FSupported_Devices.md'
+- title: 'VitalRecorder configuration guide: ADC device settings'
+  url: 'https://vitaldb.net/docs/?documentId=VitalRecorder%2FConfiguration_Guide.md'

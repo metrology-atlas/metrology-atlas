@@ -1,0 +1,26 @@
+id: snuadc-ten-bit-codes
+name: SNUADC values are 10-bit codes, though the device is documented as 12-bit
+summary: >-
+  Every SNUADC channel in the release stores codes 0–1023 and nothing above: 10 bits, a step of 0.0098746 V. The
+  VitalRecorder device list describes the SNUADC as a 12-bit converter.
+status: open
+devices: [snuadc]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
+studies: [track-value-resolution]
+references: [vitaldb-docs-devices, vitaldb-docs-config]
+consequence: |
+  The resolution is the 10-bit step: 0.00987 mV for ECG, 0.987 mmHg for ART, CVP and FEM, 0.395 units for PLETH.
+  Anyone assuming the documented 12 bits would expect steps four times finer than the data hold.
+handling: |
+  The atlas uses the observed 10-bit step. Why the documented and stored resolutions differ is open: an older
+  10-bit SNUADC, or 12-bit readings reduced to 10 bits before transmission.
+figures:
+  - id: snuadc-ten-bit-codes
+    file: snuadc-ten-bit-codes.png
+    theme: distributions of recorded values
+    source: vitaldb-bench tools/value_obs_figs.py
+    caption: >-
+      Samples at each stored code over the whole release, one bin per code, for ECG II and ART. ECG reaches every code
+      from 0 to 1023 and piles up at both ends (clipping); no SNUADC channel has a code above 1023, where a 12-bit
+      converter would continue to 4095.
+    alt: "Two log-scale code histograms from 0 to about 1000; ECG reaches 1023 with a spike there; the region above 1023 is empty and shaded."

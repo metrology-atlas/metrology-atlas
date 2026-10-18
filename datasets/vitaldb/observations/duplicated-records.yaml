@@ -1,0 +1,32 @@
+id: duplicated-records
+name: Eight recordings store whole messages twice
+summary: >-
+  In 8 recordings 15–48% of the waveform records are byte-for-byte copies of the record before them, with the same
+  timestamp: [[case:15]], [[case:364]], [[case:1946]], [[case:3865]], [[case:4857]], [[case:5414]], [[case:5595]] and
+  [[case:5619]]. SNUADC, Primus and BIS are affected equally, so the recorder, not a device, wrote them twice.
+status: established
+studies: [record-messages-and-steps]
+devices: [vital-recorder, snuadc, primus, bis]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, primus-co2, primus-awp, bis-eeg]
+supersedes: [snuadc-overlapping-records]
+consequence: |
+  Read in file order, the duplicated messages play twice: a 0.2 s SNUADC record (0.48 s Primus, 0.125 s BIS) repeats,
+  the samples outrun the stamps, and anything that counts samples to keep time drifts. In [[case:5595]], 40% of every
+  device's records are copies (89,956 SNUADC records identical to the one before). Isolated single copies also occur in
+  about 500 other recordings (under 0.1% of their records).
+handling: |
+  Drop a record that is identical to the previous one and carries the same timestamp. The copies are found by the step
+  between records being exactly minus one message, then confirmed by comparing contents.
+code:
+  - vitaldb-bench/tools/record_scan.py
+  - vitaldb-bench/tools/record_steps_collect.py
+figures:
+  - id: duplicated-records
+    file: duplicated-records.png
+    theme: data continuity
+    source: vitaldb-bench tools/value_obs_figs.py
+    caption: >-
+      One recording's Primus AWP, 40 consecutive records. Left: the stamp interval between records alternates 0 and
+      0.48 s (one message). Right: twelve records drawn at their stamps; each second record (orange, drawn 0.6 higher so
+      both show) is an exact copy of the one before it.
+    alt: "Left, dots alternating between 0 and 0.48 s. Right, a breath pressure trace drawn twice, the orange copy offset slightly above the blue."

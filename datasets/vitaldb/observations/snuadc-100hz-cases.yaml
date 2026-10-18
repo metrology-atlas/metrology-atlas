@@ -1,0 +1,14 @@
+id: snuadc-100hz-cases
+name: Twelve recordings sample the SNUADC waveforms at 100 Hz
+summary: >-
+  In 12 of 6,388 recordings every SNUADC waveform (ECG II, ECG V5, PLETH, and ART or CVP where present) is stored at
+  100 Hz instead of 500 Hz: [[case:299]], [[case:803]], [[case:1150]], [[case:1693]], [[case:2362]], [[case:2920]],
+  [[case:4458]], [[case:4582]], [[case:5066]], [[case:6119]], [[case:6133]] and [[case:6375]].
+status: established
+variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art]
+devices: [snuadc]
+consequence: |
+  Methods that assume 500 Hz (fiducial timing, the sawtooth fit, filters designed for 500 Hz) give wrong times or
+  fail in these recordings; time resolution is 10 ms, not 2 ms. The conversion factors are the same as at 500 Hz.
+handling: Read the sample rate from each track's header rather than assuming 500 Hz; the PAT example and the census
+  skip recordings without 500 Hz ECG and PLETH. Found by the signal survey.

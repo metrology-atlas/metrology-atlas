@@ -7,3 +7,8 @@ spread: {p10: 15.7, p90: 29.8, text: "2,025 pauses in 1,846 files (29%)"}
 status: measured
 study: recorder-pc-steps
 about: [recorder-pc]
+notes: >-
+  The gap survey of every waveform ([[study:continuity-gaps-segments]], 19 October) puts the same pauses as a cliff
+  in the gap distribution of every SNUADC, Primus and BIS track: ECG II has 1,968 gaps of 15–25 s, median 17.9 s.
+  The two medians use different definitions: the survey counts gaps in one track (from the end of one record to the start of the next), while
+  this parameter counts moments when every device jumps together.
