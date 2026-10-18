@@ -1,0 +1,23 @@
+id: gas-gradients-at-the-draw
+name: End-tidal to arterial CO2, and pulse oximetry against blood gas, at the right moment
+summary: >-
+  The gaps between monitor and blood-gas values, taken at the lab timestamp and at the matched blood draw.
+side: time
+status: planned
+question: |
+  How far apart are end-tidal and arterial CO2, and SpO2 and SaO2, when they are compared at the same moment?
+why: |
+  A blood-gas result's timestamp is 3–12 minutes after the draw ([[observation:lab-time-is-specimen]]). Comparing it
+  with the monitor value at the timestamp compares two different moments; during a change in ventilation that adds
+  spread, and sometimes bias, to the gradient. The SpO2–SaO2 comparison follows [[reference:eytan2019revisiting]],
+  which compared bedside oximetry with arterial blood gases in critically ill children.
+variables: [lab-blood-gas, primus-co2, solar8000-spo2, snuadc-art]
+studies: [lab-timestamp-meaning, arterial-line-accesses, spo2-latency]
+observations: [lab-time-is-specimen]
+steps: |
+  1. For each blood gas, take the monitor value at the lab timestamp, and at the matched arterial-line access.
+  2. Compare the two gradient distributions, and their relation to how fast the monitor value was changing.
+takeaways: |
+  Planned. Feasible at scale: 14,590 blood-gas PaCO2 results in 3,483 cases, and both monitors' end-tidal CO2 in
+  98% of recordings.
+references: [eytan2019revisiting]

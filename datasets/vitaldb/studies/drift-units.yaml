@@ -44,6 +44,12 @@ open_questions:
     summary: >-
       Units are inferred from drift alone, and busy ports carried several units. The physical boards behind each
       unit are not identified.
+  - title: "Per-setup drift in the uncertainty models"
+    kind: next step
+    summary: >-
+      Drift is known per setup far better than over the release ([[observation:device-drift-by-setup]]), but the
+      clock domains, the planner and several parameters still quote one range for all recordings. They should
+      take a recording's setup when its ports are known, with the release range only as the fallback.
 code:
   - vitaldb-bench/tools/syncanalyze.py
 figures:

@@ -183,6 +183,14 @@
   citation: Goodwin AJ, Eytan D, Greer RW, Mazwi M, Thommandram A, Goodfellow SD, Assadi A, Jegatheeswaran A, Laussen PC.
     A practical approach to storage and retrieval of high-frequency physiological signals. Physiol Meas. 2020;41(3):035008.
   doi: 10.1088/1361-6579/ab7cb5
+  note: The storage approach behind AtriumDB.
+- id: eytan2019revisiting
+  group: The authors' earlier work
+  citation: Eytan D, Mazwi ML, Goodwin AJ, Goodfellow SD, Assadi A, Greer RW, Jegatheeswaran A, Laussen PC. Revisiting
+    oxygen dissociation curves and bedside measured arterial saturation in critically ill children. Intensive Care Med.
+    2019;45(12):1832-1834.
+  doi: 10.1007/s00134-019-05792-x
+  note: Pulse oximetry against arterial blood gas saturation at the bedside.
 - id: goodwin2021blood
   group: The authors' earlier work
   citation: 'Goodwin A, Mazwi ML, Somer J, Schwartz SM, McEwan A, Eytan D. Blood pressure in critically ill children: exploratory

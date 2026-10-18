@@ -1,0 +1,15 @@
+id: bolus-response-latency
+name: Time from a vasopressor bolus to the pressure response
+summary: >-
+  How quickly arterial pressure responds to a phenylephrine or ephedrine bolus, with the charted dose times' rounding
+  taken into account.
+side: both
+status: planned
+question: |
+  How long after a bolus does arterial pressure start to rise?
+why: |
+  Charted drug times are rounded, and the rounding is wider than the response latency.
+variables: [emr-events, snuadc-art]
+studies: [drug-effect-latency, emr-rounding, value-bolus-drug-doses]
+takeaways: |
+  Planned (stretch: bolus times are only in the event records).

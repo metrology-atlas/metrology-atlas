@@ -1,0 +1,16 @@
+id: regression-with-rounding
+name: A regression that carries rounding uncertainty through
+summary: >-
+  Postoperative creatinine change against intraoperative urine output (mL/kg/h), fitted once per draw from the
+  true-value distributions and compared with a naive fit on the recorded numbers.
+side: value
+status: planned
+question: |
+  Is lower intraoperative urine output associated with a larger postoperative rise in creatinine, and how sure are we?
+why: |
+  Rounded inputs act like measurement error: they flatten the slope (regression dilution) and the naive interval is
+  too narrow. Fitting on many draws from the true-value distributions, as in multiple imputation, propagates them.
+variables: [intraop-uo, weight, ane-duration, cr]
+studies: [value-model-intraop-uo, distribution-api-validation]
+takeaways: |
+  Planned; builds on [[example:urine-output-per-kg-per-hour]].

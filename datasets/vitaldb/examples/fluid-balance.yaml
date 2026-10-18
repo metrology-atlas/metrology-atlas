@@ -1,0 +1,14 @@
+id: fluid-balance
+name: Intraoperative fluid balance as a distribution
+summary: >-
+  Fluids in minus fluids out, where every term is a heaped charted volume, as a distribution per case.
+side: value
+status: planned
+question: |
+  What was this patient's net fluid balance at the end of the operation?
+why: |
+  Each volume is heaped on its own grid; their errors add up in the balance.
+variables: [intraop-crystalloid, intraop-colloid, intraop-rbc, intraop-ffp, intraop-ebl, intraop-uo]
+studies: [value-model-intraop-crystalloid, value-model-intraop-ebl, value-model-intraop-uo, value-intraop-colloid-containers]
+takeaways: |
+  Planned.

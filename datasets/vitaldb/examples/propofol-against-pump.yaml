@@ -1,0 +1,19 @@
+id: propofol-against-pump
+name: Charted propofol dose against the infusion pump
+summary: >-
+  The charted propofol bolus total against the volume the Orchestra pump records, as a check of the propofol heaping
+  model and as a dose in mg/kg with its uncertainty.
+side: value
+status: planned
+question: |
+  How close is the charted propofol dose to what the pump delivered?
+why: |
+  The charted dose is heaped ([[study:value-model-intraop-ppf]]). Where a pump also delivered propofol its volume is
+  recorded independently, which gives a rare check of a rounding model against an independent record.
+variables: [intraop-ppf, pump-rates, weight]
+studies: [value-model-intraop-ppf]
+takeaways: |
+  Planned, but weaker than hoped. The Orchestra propofol pump is in about half the recordings (458 of 846 sampled),
+  but only 2 of those 846 also have a charted propofol bolus: pump cases are infusions, and the charted total is
+  the manual bolus. The two records mostly describe different doses, so this needs the pump's own bolus deliveries,
+  not its total volume.

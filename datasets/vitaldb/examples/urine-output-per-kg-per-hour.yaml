@@ -1,0 +1,21 @@
+id: urine-output-per-kg-per-hour
+name: Urine output in mL/kg/h as a distribution
+summary: >-
+  Intraoperative urine output per kilogram per hour, from three rounded inputs, as a probability distribution per
+  case, and how often the 0.5 mL/kg/h threshold is uncertain.
+side: value
+status: planned
+question: |
+  Was this patient's urine output below 0.5 mL/kg/h during the operation?
+why: |
+  Urine output, weight and anaesthesia duration are each rounded in their own way ([[study:value-model-intraop-uo]],
+  [[study:value-model-weight]], [[study:timestamp-derived-intervals]]). The ratio of rounded values has a spread
+  that can straddle a threshold.
+variables: [intraop-uo, weight, ane-duration]
+studies: [value-model-intraop-uo, value-model-weight, timestamp-derived-intervals]
+steps: |
+  1. Draw the true urine output, weight and duration for each case from the library.
+  2. Form the ratio per draw; summarise each case by its distribution and P(below 0.5 mL/kg/h).
+  3. Show example distributions, and how many cases are confidently above, confidently below, or uncertain.
+takeaways: |
+  Planned.

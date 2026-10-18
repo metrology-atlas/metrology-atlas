@@ -1,0 +1,17 @@
+id: eeg-ecg-offset-by-mode
+name: The EEG–ECG offset is fixed by the SNUADC correction mode
+summary: >-
+  After the stamp model, BIS EEG still lags the SNUADC ECG by a constant: −803 ms in step mode and −690 ms in
+  frequent-correction mode, tight within a port or unit. The mode, a property of the setup, sets the constant.
+status: established
+clocks: [snuadc-sample, bis-clock]
+devices: [snuadc, bis]
+variables: [bis-eeg, snuadc-ecg-ii]
+studies: [snuadc-stamp-sawtooth, loop-closure]
+description: |
+  117 step-mode and 29 frequent-mode cases. Using the constant of the case's mode (leave-one-out) lines a typical
+  window up to 33 ms (median; p90 116 ms), against 38 ms (p90 154 ms) with one constant for all recordings and
+  16 ms with the case's own constant from cardiac artefact bursts. Why the constant differs between modes is open
+  ([[study:loop-closure]]).
+consequence: One EEG–ECG constant for all recordings is wrong by about 110 ms for the minority in frequent-correction mode.
+handling: The stamp model can apply the constant of the recording's mode instead of one for all; the setup register says which setups use frequent-correction mode.

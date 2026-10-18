@@ -1,0 +1,76 @@
+id: setup-identification
+name: Identifying the recording setup of every case
+summary: >-
+  Recognising which equipment made each recording, from its serial ports and, where those fall short, from clock
+  fingerprints, so that per-setup values can be used for every case.
+date: 2026-10-18
+status: open
+methods: [stamp-reading, signal-borne-clocks]
+techniques: [unit-mixture]
+devices: [vital-recorder, snuadc, bis, solar8000, primus]
+code:
+  - vitaldb-bench/tools/setup_assign.py
+data: |
+  The device records of all 6,388 .vital files (each device's serial port), and the per-case drifts of
+  [[study:drift-units]].
+background: |
+  Many timing parameters hold per setup ([Recording setups](../setups.md)). The PC key, the ports of the four core
+  devices, is complete for 90% of recordings and puts the SNUADC's drift within 3 ppm of its setup's median in 97% of
+  cases ([[observation:device-drift-by-setup]]).
+results: |
+  - Ports are recorded for almost every device (SNUADC 6,355 of 6,355, Solar8000 6,333 of 6,388, BIS 5,853 of 5,853).
+  - The PC key is complete for 5,755 recordings (90%) and takes 65 values; 37 of them have at least 20 recordings,
+    together 5,631.
+  - Most of the remaining 10% have no BIS.
+  - **Assignment by Bayes' rule** ([[code:vitaldb-bench/tools/setup_assign.py]]): the candidates are the
+    complete keys that agree on every core port a recording has; each is scored by how many recordings it has, by
+    the ports of the recording's other devices (Orchestra, EV1000, Vigileo and so on) and, where measured, by the
+    SNUADC's drift against the key's median.
+  - **Validation** on the complete recordings, hiding one core port at a time and scoring each recording without
+    itself: a hidden BIS port is recovered in 94% of recordings, and in 99% of the 5,117 assigned with a posterior
+    of at least 0.9; a hidden Solar8000 or Primus port in more than 99.7%; a hidden SNUADC port in 83% (99% of the
+    3,673 at 0.9 or more). Below 0.9 the posteriors are only roughly calibrated.
+  - **Assigned:** 517 of the 633 incomplete recordings get a key with a posterior of at least 0.9, among them
+    468 of the 519 without a BIS; 33 more between 0.5 and 0.9. 51 match no complete key, most of them missing the
+    Solar8000's port, and 32 stay below 0.5.
+open_questions:
+  - title: "Assigning the last 116 recordings to a setup"
+    kind: next step
+    summary: >-
+      Done for most: 517 of the 633 recordings without a full key are assigned with a posterior of at least 0.9 (99%
+      right in validation). The remaining 116 (51 with no matching key, 65 below 0.9) need another fingerprint. Drift
+      exists only for recordings with clock corrections, and the all-file scan already supplies it for 61 of the 633;
+      the oximeter's frame clock, measured from the PLETH, is the one still to add, for these recordings and for enough
+      complete recordings per key to compare against.
+  - title: "Splitting a PC key into the units it carried"
+    kind: next step
+    summary: >-
+      A key is a PC's cabling, not its devices: the busiest key holds 755 recordings, and its SNUADC's and BIS's
+      drifts show more than one unit. Drift units and frame clocks could split a key into periods with one set of
+      devices, which is what the per-setup delays and rates really belong to.
+  - title: "Do the ways of recognising a setup agree?"
+    kind: next step
+    summary: >-
+      Tabulate, per PC key, the drift units, the oximeter's frame clock, the PPG sawtooth rate and delay, the
+      correction mode and the heart-rate delay group, to see whether they name the same setups and where a key hides
+      two.
+  - title: "Does the value side depend on the setup?"
+    kind: next step
+    summary: >-
+      Only department has been tested for value-side habits (urine output is charted much more finely in thoracic
+      surgery). The PC key is a finer grouping: rounding habits, analysers and devices may follow the theatre.
+  - title: "One PC key, one PC"
+    kind: assumption
+    summary: >-
+      The register treats each PC key as one recorder PC. Two PCs cabled identically would share a key; the release
+      cannot show it directly, though [[study:hr-delay-groups]] found keys that separate their cases almost perfectly
+      (purity 0.90–0.97), and clock fingerprints could find exceptions.
+  - title: "Is a recording without a BIS on the same PC as its key's other recordings?"
+    kind: assumption
+    summary: >-
+      The assignment assumes that a recording made without a BIS used the same PC as the complete recordings
+      that share its other ports. Validation hides the BIS of recordings that had one, so it cannot test this; a
+      BIS-free recording on a PC kept only for such cases would be assigned to the wrong setup. Clock
+      fingerprints would test it.
+tags:
+- time side

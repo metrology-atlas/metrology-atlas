@@ -114,6 +114,13 @@ variable_groups: [Waveforms, Numerics, Events, Times and durations, Patient, Ope
                   Preoperative history, Airway and lines, Fluids and blood, Drugs, Outcome, Preoperative labs,
                   Blood gas, Electrolytes and glucose, Haematology, Coagulation, Chemistry, Result times]
 pages:
+  - id: setups
+    title: Recording setups
+    file: setups.md
+    section: Time
+  - id: how-it-was-made
+    title: How this atlas was made
+    file: how-it-was-made.md
   - id: contributing
     title: Contributing
     file: contributing.md
@@ -146,8 +153,18 @@ notice: |
   Studies are still being added and revised, some numbers rest on small runs, and
   many questions are open. Every page says how its numbers are known. If you find something wrong, or can settle an
   open question, please [contribute](contributing.md): corrections, better models and new studies are all welcome.
+
+  The studies, code and pages were developed with substantial assistance from an AI assistant (Claude, by
+  Anthropic), under the author's direction and review. Mistakes may remain; [how this atlas was
+  made](how-it-was-made.md) says more.
 anchor_default:
   basis: convention
   note: >-
     Assumed to round to the nearest step, the usual rule for analyser results and charted numbers. Not tested; the
     largest possible effect is half a step, small for most of these against the measurement's own error.
+examples_intro: |
+  Each worked example takes an analysis people commonly run on VitalDB and does it twice: once on the stored
+  numbers, and once with the atlas's corrections, timing on the time side, the rounding models on the value side.
+  Each page states the question, why the atlas changes the answer, the steps, and the code to rerun it, so the same
+  corrections can be carried into your own work. The time-side examples show what misaligned clocks do to derived
+  signals; the value-side examples show results as distributions instead of single numbers.

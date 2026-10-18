@@ -1,0 +1,18 @@
+id: ppv-by-breath
+name: Pulse pressure variation gated by ventilator breaths
+summary: >-
+  Pulse pressure variation computed per breath, with breath boundaries from the ventilator's airway pressure, before
+  and after the two devices' clocks are aligned.
+side: time
+status: planned
+question: |
+  How large is the respiratory variation in pulse pressure, breath by breath?
+why: |
+  Breath boundaries come from the Primus airway pressure and the pulses from the arterial line, on two device clocks.
+  The Primus drift is still disputed (1–11 ppm against 115 ppm, [[study:correction-periods]]); over an operation
+  that is enough to move boundaries by seconds and mix breaths.
+variables: [primus-awp, snuadc-art]
+studies: [ventilator-breath-matching, correction-periods]
+takeaways: |
+  Planned. Feasible at scale: Primus airway pressure and the SNUADC arterial waveform together in about 55% of
+  recordings (466 of 846 sampled).

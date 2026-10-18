@@ -261,6 +261,14 @@ KINDS: dict[str, Kind] = {
                 Field("date", "date"),
                 Field("notes", "text"),
                 Field("headline", "bool", help="Show on the home page among the key numbers."),
+                Field("setup_key", "str", help="What a setup is for this parameter's per-setup values, e.g. 'PC key'."),
+                Field("by_setup", "objs", fields=(
+                    Field("setup", "str", required=True),
+                    Field("value", "number", required=True),
+                    Field("q1", "number"), Field("q3", "number"),
+                    Field("n", "number"),
+                    Field("note", "str"),
+                ), help="The parameter per recording setup, where it is known per setup (see the Recording setups page)."),
             ),
             help="One number the atlas relies on, with its uncertainty and where it came from.",
         ),
@@ -315,6 +323,30 @@ KINDS: dict[str, Kind] = {
             "technique", "techniques", "Techniques",
             COMMON,
             help="A reusable building block that studies share.",
+        ),
+        Kind(
+            "example", "examples", "Worked examples",
+            COMMON + (
+                Field("side", "enum", required=True, choices=("time", "value", "both"),
+                      help="Which side of the measurement the example is about."),
+                Field("status", "enum", required=True, choices=("planned", "draft", "current")),
+                Field("question", "text", required=True, help="The analysis question, as a user would ask it."),
+                Field("why", "text", help="Why the atlas's findings change the answer."),
+                Field("variables", "refs", ref="variable", help="The variables it uses."),
+                Field("studies", "refs", ref="study", help="The studies whose results it relies on."),
+                Field("observations", "refs", ref="observation"),
+                Field("data", "text", help="Cases and signals used (aggregates, or named cases for figures)."),
+                Field("steps", "text", help="What the code does, step by step."),
+                Field("results", "text"),
+                Field("takeaways", "text", help="What a reader should do differently in their own analysis."),
+                Field("limitations", "text"),
+                Field("code", "strs", help="Scripts as software-id/path; the page tells readers how to rerun them."),
+                Field("reproduce", "text", help="The commands to rerun it."),
+                Field("open_questions", "objs", fields=QUESTION,
+                      help="Limitations still open and future work, one entry per question, each with its kind."),
+            ),
+            help="Common analyses worked through with and without the atlas's corrections, with code to reproduce "
+                 "them: where clock alignment or rounding changes the answer.",
         ),
         Kind(
             "software", "software", "Software",
@@ -379,6 +411,7 @@ DATASET = (
     Field("summary", "str", required=True),
     Field("description", "text"),
     Field("overview", "text", help="Shown on the home page under 'System overview'."),
+    Field("examples_intro", "text", help="Introduction at the top of the worked examples' index page."),
     Field("notice", "text", help="Shown prominently at the top of the home page, e.g. that the atlas is a work in "
                                  "progress."),
     Field("anchor_default", "obj", fields=(
@@ -412,6 +445,8 @@ DATASET = (
         Field("id", "str", required=True, help="Page file name without .md; must not clash with a kind's folder."),
         Field("title", "str", required=True),
         Field("file", "str", required=True, help="A Markdown file in the dataset's pages/ folder; [[kind:id]] works."),
+        Field("section", "enum", choices=("Time", "Value", "About"),
+              help="Navigation section the page is listed under (default About)."),
     ), help="Free pages (contributing, about ...), listed under About after the atlas's own 'Aim and terms'."),
     Field("site", "obj", fields=(Field("title", "str"), Field("repo_url", "str"), Field("copyright", "str"))),
     Field("records", "obj", fields=(

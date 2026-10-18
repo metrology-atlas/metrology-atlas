@@ -484,6 +484,7 @@ class Site:
                 + self.section("Parameters", self.params_table(r.get("parameters")))
                 + self.section("Observations", self.observations_table(r.get("observations")))
                 + self.section("Studies", self.studies_table(r.get("studies")))
+                + self.section("Worked examples", self.examples_table(r.get("examples")))
                 + self.section("References", self.refs(s.get("references"))))
         return self.page(s, self.glance([
             ("Name in the dataset", f"`{s['source_name']}`" if s.get("source_name") else None), ("Type", s["type"]),
@@ -514,7 +515,8 @@ class Site:
         if v.get("spread"):
             out += self.sub("In this release", self.spread_text(v["spread"], s.get("unit") or ""))
         if self.anchor_label(v):
-            out += self.sub("Anchor", self.prose(self.anchor_basis(v)[1]) + " See [all anchors](../anchors.md).")
+            out += self.sub("Anchor", self.prose(self.anchor_basis(v)[1]) + " See [what an anchor is](../terms.md#anchors) "
+                            "and [every variable's anchor](../anchors.md).")
         out += self.sub("Accuracy", self.prose(v.get("accuracy")))
         if v.get("model"):
             out += self.sub("Value model", self.model_summary(v["model"]))
@@ -535,6 +537,50 @@ class Site:
             return None
         return f"{v.get('anchor') or 'counting rule'} ({ANCHOR_BASIS_LABEL[basis]})" if basis else v.get("anchor")
 
+    @staticmethod
+    def anchors_figure() -> str:
+        """A schematic of the three anchors, and of a time window stamped at its end."""
+        W, L, R = 640, 150, 20
+        rows = [("nearest", -0.5, 0.5, "true value within half a step either side"),
+                ("floor", 0.0, 1.0, "true value at or above the record (completed years)"),
+                ("ceiling", -1.0, 0.0, "true value at or below the record"),
+                ("time window", -1.0, 0.0, "stamped at its end: the window lies before the stamp")]
+        H = 46 * len(rows) + 40
+        X = lambda v: L + (v + 1.6) / 3.2 * (W - L - R)  # noqa: E731
+        o = [f'<svg viewBox="0 0 {W} {H}" class="ms" role="img" aria-label="The three anchors, and a time window '
+             'stamped at its end">']
+        for k, (name, a, b, note) in enumerate(rows):
+            y = 22 + 46 * k
+            o.append(f'<text x="8" y="{y + 14}" class="ms-lab">{name}</text>')
+            o.append(f'<line x1="{L}" x2="{W - R}" y1="{y + 10}" y2="{y + 10}" class="ms-zero"/>')
+            for t in (-1.0, 0.0, 1.0):
+                o.append(f'<line x1="{X(t):.1f}" x2="{X(t):.1f}" y1="{y + 5}" y2="{y + 15}" class="ms-zero"/>')
+            cls = "ms-time" if name == "time window" else "ms-val"
+            op = "" if name == "time window" else ' fill-opacity=".35"'
+            o.append(f'<rect x="{X(a):.1f}" y="{y + 3}" width="{X(b) - X(a):.1f}" height="14" class="{cls}"{op}/>')
+            o.append(f'<circle cx="{X(0):.1f}" cy="{y + 10}" r="4.5" fill="#e65100"/>')
+            o.append(f'<text x="{X(0):.1f}" y="{y + 32}" class="ms-tick" text-anchor="middle">{note}</text>')
+        y = 22 + 46 * len(rows)
+        for t, lab in ((-1.0, "−1 step"), (0.0, "recorded value (or stamp)"), (1.0, "+1 step")):
+            o.append(f'<text x="{X(t):.1f}" y="{y + 4}" class="ms-tick" text-anchor="middle">{lab}</text>')
+        return '<div class="ms-fig">' + "".join(o) + "</svg></div>\n\n"
+
+    def anchors_concept(self) -> str:
+        """The anchors section of the Aim and terms page: what an anchor is, with the figure."""
+        return ("\n## Anchors\n\n" + self.anchors_figure()
+                + "A recorded value stands for an interval of true values. The **anchor** says where the recorded value "
+                "sits in that interval: at the nearest step (the interval is centred on it), at the floor (the true value "
+                "lies at or above it, as for completed years or a clock that truncates), or at the ceiling (at or below "
+                "it). A wrong anchor shifts every value by up to half a step, always the same way, so it biases averages "
+                "rather than adding noise. For a count, the counting rule plays the same role.\n\n"
+                "**Windows of time are always anchored at their end.** A value that summarises a stretch of time (an "
+                "averaged numeric, a duration, a beat-to-beat estimate over 30 s) is stamped when its window ends: the "
+                "data lie before the stamp, never after it, so no value is placed before the data it was made from "
+                "existed. The atlas keeps to this for every derived value, and its timing results say how far each "
+                "device's stamps depart from it.\n\n"
+                "Every variable's anchor, and whether it is tested, a convention, an assumption or open, is listed under "
+                "[Anchor decisions](anchors.md).\n")
+
     def anchors_page(self) -> str:
         """Every anchor decision in one table, the unsettled ones first."""
         rows = []
@@ -547,11 +593,8 @@ class Site:
                          val, basis, note))
         rows.sort(key=lambda r: r[:3])
         n = {b: sum(1 for r in rows if r[5] == b) for b in ANCHOR_ORDER}
-        out = ("# Anchors\n\nA recorded value stands for an interval of true values. The **anchor** says where the "
-               "recorded value sits in that interval: at the nearest step (the interval is centred on it), at the "
-               "floor (the true value lies at or above it, as for completed years or a clock that truncates), or "
-               "at the ceiling. A wrong anchor shifts every value by up to half a step, always the same way, so "
-               "it biases averages rather than adding noise. For a count, the counting rule plays the same role.\n\n"
+        out = ("# Anchor decisions\n\nEvery variable's anchor, and how well it is supported. What an anchor is, with a "
+               "figure, is under [Aim and terms](terms.md#anchors).\n\n"
                "Each anchor below has a basis:\n\n"
                "- **Tested:** the data show it.\n"
                "- **Convention:** the usual rule, not tested; its largest possible effect is half a step.\n"
@@ -796,7 +839,17 @@ class Site:
                 if x.get("parameter") == i:
                     used.append(f"- {x['name']} of {self.a('variable', sid)}")
         about = ", ".join(self.a(self.kind_of(x, ("clock", "device", "variable", "link", "observation")), x) for x in p["about"])
-        body = (self.section("Notes", self.prose(p.get("notes"))) + self.section("Used in", "\n".join(used)))
+        by = ""
+        if p.get("by_setup"):
+            u = p.get("unit") or ""
+            by = (f"Per recording setup ({p.get('setup_key') or 'setup'}; see [Recording setups]({self.base}setups.md)). "
+                  "For a recording whose setup is known, use its row: the spread within a setup is far smaller than "
+                  f"over all recordings.\n\n| Setup | Value ({u}) | IQR | Cases | Note |\n|---|---|---|---|---|\n" + "".join(
+                      f"| {r['setup']} | {r['value']:g} | "
+                      + (f"{r['q1']:g} to {r['q3']:g}" if r.get("q1") is not None else "—")
+                      + f" | {int(r['n']) if r.get('n') else '—'} | {r.get('note') or ''} |\n" for r in p["by_setup"]))
+        body = (self.section("By setup", by) + self.section("Notes", self.prose(p.get("notes")))
+                + self.section("Used in", "\n".join(used)))
         return f"# {p['name']}\n\n{p['quantity']}\n\n" + self.glance([
             ("Value", parameter_text(p)), ("Status", f"{p['status']}: {STATUS_NOTE[p['status']]}"),
             ("From", self.a("study", p["study"]) if p.get("study") else None), ("About", about),
@@ -825,6 +878,7 @@ class Site:
                 + self.section("Open questions", self.questions(s.get("open_questions")))
                 + self.section("Description", self.prose(s.get("description")))
                 + self.section("Model", self.model_summary(s["model"]) if s.get("model") else "")
+                + self.section("Worked examples", self.examples_table(r.get("examples")))
                 + self.section("Code", code) + self.section("References", self.refs(s.get("references"))))
         return note + self.page(s, self.glance([
             ("Date", str(s["date"])), ("Status", s["status"]), ("Methods", self.many("method", s["methods"])),
@@ -850,6 +904,41 @@ class Site:
                 + self.section("Studies", self.studies_table(r.get("studies")))
                 + self.section("References", self.refs(t.get("references"))))
         return self.page(t, self.glance([("Methods", self.many("method", r.get("methods")))]), body)
+
+    def example(self, i: str, e: dict) -> str:
+        note = {"planned": '!!! note "Planned"\n    Not yet worked through; the page says what it will show.\n\n',
+                "draft": '!!! info "Draft"\n    Worked through on a few cases; numbers may change.\n\n'}.get(e["status"], "")
+        inputs = "".join(f"| {self.a('variable', v)} | {self.ds.get('variable', v).get('unit') or ''} | "
+                         f"{self.ds.get('variable', v)['summary']} |\n" for v in e.get("variables") or [])
+        if inputs:
+            inputs = ("Each input links to its measurement page: how it is timed, how its value was recorded, and "
+                      "how uncertain both are.\n\n| Input | Unit | What it is |\n|---|---|---|\n" + inputs)
+        body = (self.section("The question", self.prose(e.get("question")))
+                + self.section("Inputs", inputs)
+                + self.section("Why the atlas changes the answer", self.prose(e.get("why")))
+                + self.section("Description", self.prose(e.get("description")))
+                + self.section("Data", self.prose(e.get("data")))
+                + self.section("Steps", self.prose(e.get("steps")))
+                + self.section("Results", self.prose(e.get("results")))
+                + self.section("Takeaways", self.prose(e.get("takeaways")))
+                + self.section("Limitations", self.prose(e.get("limitations")))
+                + self.section("Open questions and future work", self.questions(e.get("open_questions")))
+                + self.section("Studies it relies on", self.studies_table(e.get("studies")))
+                + self.section("Observations it relies on", self.observations_table(e.get("observations")))
+                + self.section("Reproduce it", self.code_list(e.get("code")) + "\n\n" + self.prose(e.get("reproduce")))
+                + self.section("References", self.refs(e.get("references"))))
+        return note + self.page(e, self.glance([
+            ("Side", e["side"]), ("Status", e["status"]), ("Variables", self.many("variable", e.get("variables"))),
+            ("Studies", self.many("study", e.get("studies"))),
+            ("Observations", self.many("observation", e.get("observations")))]), body)
+
+    def examples_table(self, ids) -> str:
+        ids = sorted(ids or [], key=lambda x: self.ds.get("example", x)["name"])
+        if not ids:
+            return ""
+        return "| Example | Side | Status | Summary |\n|---|---|---|---|\n" + "".join(
+            f"| {self.a('example', x)} | {self.ds.get('example', x)['side']} | {self.ds.get('example', x)['status']} | "
+            f"{self.ds.get('example', x)['summary']} |\n" for x in ids)
 
     def software(self, i: str, w: dict) -> str:
         r = self.rel["software"][i]
@@ -888,6 +977,7 @@ class Site:
                 + self.section("What is in it", parts)
                 + self.section("Studies that use it", uses)
                 + self.section("Observations it handles", self.observations_table(r.get("observations")))
+                + self.section("Worked examples", self.examples_table(r.get("examples")))
                 + self.section("Mentioned in", mentions)
                 + self.section("References", self.refs(w.get("references"))))
         return note + self.page(w, self.glance([
@@ -924,7 +1014,7 @@ class Site:
                      "age": "Age", "colloid_rules": "Rule sets", "exact": "Exact",
                      "not_applicable": "Categories (no numeric value)"}.get(kind, kind)
             out += f"## {label}\n\n| Variable | Unit | Resolution | Model study |\n|---|---|---|---|\n" + "\n".join(rows[kind]) + "\n\n"
-        return out.replace("\n## ", "\nEvery anchor decision, and which are unsettled, is on the [Anchors](anchors.md) page.\n\n## ", 1)
+        return out.replace("\n## ", "\nWhat an anchor is: [Aim and terms](terms.md#anchors). Every variable's anchor, and which are unsettled: [Anchor decisions](anchors.md).\n\n## ", 1)
 
     # -- indexes -----------------------------------------------------------------------------------------------
     def kind_index(self, kind: str) -> str:
@@ -956,6 +1046,15 @@ class Site:
             return out
         if kind == "observation":
             return out + self.observations_table(list(items)).replace("](../observations/", "](")
+        if kind == "example":
+            intro = self.prose((self.ds.meta.get("examples_intro") or ""))
+            out += (intro + "\n\n" if intro else "")
+            for side, title in (("time", "Time side: when clocks are misaligned"),
+                                ("value", "Value side: when inputs are rounded"), ("both", "Both sides")):
+                ids = [x for x, e in items.items() if e["side"] == side]
+                if ids:
+                    out += f"## {title}\n\n" + self.examples_table(ids).replace("](../examples/", "](") + "\n"
+            return out
         if kind == "parameter":
             return out + self.params_table(sorted(items, key=lambda p: items[p]["name"])).replace("](../parameters/", "](")
         out += "| | |\n|---|---|\n"
@@ -1106,16 +1205,17 @@ class Site:
         """Every open question of the given kinds, grouped by kind: a title linked to its study and the summary."""
         out = ""
         for kind in kinds or QUESTION_KINDS:
-            rows = sorted(((q, sid) for sid, st in self.ds.items["study"].items()
+            rows = sorted(((q, sid, src) for src in ("study", "example") for sid, st in self.ds.items.get(src, {}).items()
                            if st.get("status") not in ("superseded", "withdrawn")
                            for q in st.get("open_questions") or [] if q["kind"] == kind),
                           key=lambda x: x[0]["title"].lower())
             if not rows:
                 continue
             out += f"{heading} {QUESTION_KIND_TITLES[kind]}\n\n"
-            for q, sid in rows:
-                out += (f"- **[{q['title']}]({self.href('study', sid)}#open-questions)** · "
-                        f"*{self.name('study', sid)}*  \n  {self.prose(q['summary']).strip()}\n")
+            for q, sid, src in rows:
+                anchor = "open-questions" if src == "study" else "open-questions-and-future-work"
+                out += (f"- **[{q['title']}]({self.href(src, sid)}#{anchor})** · "
+                        f"*{self.name(src, sid)}*  \n  {self.prose(q['summary']).strip()}\n")
             out += "\n"
         return out
 
@@ -1358,8 +1458,10 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     (docs / "value.md").write_text(site.value_page(), encoding="utf-8")
     site.start(None, base="")
     (docs / "anchors.md").write_text(site.anchors_page(), encoding="utf-8")
-    (docs / "terms.md").write_text(TERMS_PAGE, encoding="utf-8")
+    site.start(None, base="")
+    (docs / "terms.md").write_text(TERMS_PAGE.rstrip() + "\n" + site.anchors_concept(), encoding="utf-8")
     about = [{"Aim and terms": "terms.md"}]
+    section_pages: dict[str, list] = {}
     for pg in ds.meta.get("pages") or []:
         site.start(None, base="")
         text = site.prose(ds.meta["_page_text"][pg["id"]])
@@ -1367,7 +1469,8 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
             text = text.replace(OPEN_QUESTIONS_MARK,
                                 site.question_list(("phenomenon", "hypothesis", "assumption", "conflict"), "###"))
         (docs / f"{pg['id']}.md").write_text(text, encoding="utf-8")
-        about.append({pg["title"]: f"{pg['id']}.md"})
+        section_pages.setdefault(pg.get("section") or "About", []).append({pg["title"]: f"{pg['id']}.md"})
+    about += section_pages.pop("About", [])
     site.start(None, base="")
     (docs / "time.md").write_text(site.time_page(), encoding="utf-8")
     site.start(None, base="")
@@ -1381,13 +1484,16 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
         site.start(None, base="")
         (docs / "records.md").write_text(site.records_page(), encoding="utf-8")
     nav = [{"Home": "index.md"}, {"Variables": entries.pop("variable")},
-           {"Time": ["time.md", {"Synchronisation planner": "planner.md"}, {"Clocks": entries.pop("clock")},
+           {"Time": ["time.md", *section_pages.get("Time", []), {"Synchronisation planner": "planner.md"}, {"Clocks": entries.pop("clock")},
                      {"Clock links": entries.pop("link")}, {"Devices": entries.pop("device")}]},
-           {"Value": ["value.md", {"Anchors": "anchors.md"}]},
-           {"Evidence": ["evidence.md", {"Open questions": "open-questions.md"}, {"Figures": "figures.md"}]
+           {"Value": ["value.md", *section_pages.get("Value", [])] if section_pages.get("Value") else "value.md"},
+           {"Evidence": ["evidence.md", {"Open questions": "open-questions.md"}, {"Anchor decisions": "anchors.md"},
+                         {"Figures": "figures.md"}]
                         + ([{f"{rec_name.capitalize()}s discussed": "records.md"}] if rec_name else [])
                         + [{KINDS[k].title: entries.pop(k)}
                            for k in ("study", "observation", "parameter", "method", "technique")]}]
+    if "example" in entries:
+        nav.append({KINDS["example"].title: entries.pop("example")})
     for k in list(entries):
         nav.append({KINDS[k].title: entries.pop(k)})
     nav.append({"References": "references.md"})

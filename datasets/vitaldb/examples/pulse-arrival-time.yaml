@@ -1,0 +1,143 @@
+id: pulse-arrival-time
+name: Pulse arrival time in two correction steps
+summary: >-
+  The time from the ECG R wave to the pulse at the finger, as stored, after the PLETH's sawtooth is removed, and
+  after its device offset is removed, smoothed by maximum likelihood, with the arterial line as the reference.
+side: time
+status: draft
+question: |
+  How long does the pulse take to travel from the heart to the finger, and how does that change through an
+  operation?
+why: |
+  Pulse arrival time (PAT) is a difference of two event times taken from two signals, so any delay or drift between
+  them goes straight into it. ECG and arterial pressure come through the same SNUADC converter and stay aligned
+  ([[observation:snuadc-one-clock]], [[study:ppg-art-reference]]). The PLETH does not, in two ways:
+
+  - **a sawtooth**: its delay behind the ECG creeps at 18–52 ppm and jumps back by one 33.3 ms frame at each slip,
+    every 11–31 minutes ([[observation:ppg-sawtooth]], [[study:ppg-sawtooth]]);
+  - **an offset**: the monitor delivers the PLETH about 0.4 s late ([[observation:ppg-hardware-delay]],
+    [[study:ppg-offset-reference]]).
+
+  Both look like physiology in a raw PAT series: the sawtooth as slow drifts and sudden jumps of tens of
+  milliseconds, the offset as a PAT almost three times too long, which also differs between recording setups.
+variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art]
+studies: [ppg-sawtooth, ppg-sawtooth-pauses, ppg-art-reference, ppg-offset-reference, ppg-frame-clock]
+observations: [ppg-sawtooth, ppg-hardware-delay, snuadc-one-clock, pleth-30hz-frames, fiducial-quantisation, ppg-sawtooth-pauses]
+data: |
+  60 minutes per case, starting 10 minutes into the overlap of ECG lead II and PLETH. The cohort is a random 120
+  of the recordings with both signals (97% of recordings have them: 817 of 846 sampled), plus [[case:5975]] for
+  the figure; 66 of the 121 also have a pulsatile arterial line, which serves as the reference.
+steps: |
+  1. **Fiducials.** R peaks in ECG lead II; the steepest upstroke after each R peak in the PLETH, and in the
+     arterial pressure where there is a line.
+  2. **Step 1, remove the sawtooth** ([[observation:ppg-sawtooth]]). `physiosync.fit_ecg_ppg_delay` fits the PLETH's
+     delay as an offset plus a sawtooth (creep at a fixed rate, reset by one 30 Hz frame at each slip), with the arterial upstrokes as the
+     reference where present. Each tooth gets a confidence tier; teeth below tier B are left as they are.
+     Subtracting only the sawtooth leaves the PAT at its stored level.
+  3. **Step 2, remove the offset** ([[observation:ppg-hardware-delay]]). Subtracting the offset as well puts the PAT at an adopted population mean of
+     0.27 s ([[study:ppg-offset-reference]]). The offset cannot be measured from a recording, so after this step
+     only changes in PAT are measured, not its level.
+  4. **Smooth by maximum likelihood**, after [[reference:ruffolo2025high]]: per 30 s window, the latent PAT that
+     maximises the likelihood of the window's beats under the recording's per-beat error model
+     (`physiosync.pat_measurement_model`: the PLETH fiducial's frame rounding or jitter, and the ECG's one-sample
+     rounding), evaluated by Monte Carlo, with a 2% floor for mis-detected beats. A median gives every beat the
+     same weight whatever its error; the likelihood weighs them by the error model and ignores outliers.
+results: |
+  **One case.** In [[case:5975]] the stored PAT (grey) is about 0.68 s and jumps back by one frame three times in
+  the hour (dotted). After step 1 (blue) the jumps and ramps are gone and the series has the same course as the
+  arterial PAT (green): the spread of finger minus arterial PAT, minute by minute, falls from 10.7 to 2.7 ms.
+  Step 2 (orange) moves the whole series down by 405 ms to the adopted level, without changing its shape.
+
+  [[figure:pat-case]]
+
+  **The cohort (121 cases).**
+
+  - *Offset (step 2).* The stored PAT's case median is 0.65–0.75 s in most cases; the offset removed is 443 ms in
+    the median case (397–477 ms, 10th to 90th percentile). Eight cases sit lower, at 0.44–0.54 s, and none of them
+    has a sawtooth the fit can resolve: probably another recording setup. Step 2 puts every case at 0.27 s.
+  - *Sawtooth (step 1).* A median of 4 slips an hour. At least one tooth was corrected with confidence (tier A or B)
+    in 46 of the 121 cases. Where there was also an arterial line (24 cases), the spread of finger minus arterial
+    PAT fell from a median of 13.0 to 9.8 ms per case, and improved in 19 of the 24; pooled over their windows,
+    from 13.7 to 9.8 ms. The within-case spread of PAT itself changes little (18.3 to 17.5 ms in the median case),
+    because real changes in PAT, tens of milliseconds as blood pressure changes, are larger than the sawtooth.
+
+  [[figure:pat-cohort]]
+takeaways: |
+  - Never read the absolute ECG-to-PLETH PAT in VitalDB as physiology: it carries a device delay of about 0.4 s,
+    which differs between [recording setups](../setups.md). Compare cases only after step 2, and treat the level as an assumption.
+  - Within a case, remove the sawtooth (step 1) before reading changes over minutes; otherwise slips appear as
+    sudden PAT changes of 33 ms.
+  - Check each tooth's tier: below B only the offset is removed, and the sawtooth is still there.
+  - Where an arterial line exists, ECG to arterial line is a PAT without either problem.
+limitations: |
+  - The beat detector is deliberately simple: 12% of 30 s windows lie more than 40 ms from their case's median,
+    mostly from mis-detected beats.
+  - 60 minutes of 121 cases; a full run belongs in the runbook.
+open_questions:
+  - title: "Most teeth cannot be corrected with confidence"
+    kind: next step
+    summary: >-
+      In 75 of 121 cases no tooth reached tier B, so the sawtooth stays in them. The likeliest causes, in order:
+      the example gives the fit no creep-rate prior, although the rate is fixed per setup ([[observation:ppg-
+      sawtooth]], the Recording setups page), so a tooth reaches tier A only if the recording has two
+      full teeth that agree; 60-minute windows hold few full teeth (on up to 3 hours, cases with a confident
+      tooth rose from 47% to 57% and confident teeth from 21% to 33%); tier C teeth (the most common) are fitted
+      but not applied; and a simple PLETH fiducial produces false slips (some cases show 24–46 an hour against
+      about 4). Setup priors and longer windows come first; the tier rules were tuned on injected sawtooths, not
+      on recordings.
+  - title: "Where the sawtooth stops"
+    kind: phenomenon
+    summary: >-
+      In some stretches no slip comes although several were due, and the delay is flat
+      ([[study:ppg-sawtooth-pauses]]). The model treats the stretch before and after a pause as creep then hold, of
+      unknown length, which leaves up to one frame of uncertainty there.
+  - title: "Eight cases with a shorter stored PAT and no resolvable sawtooth"
+    kind: phenomenon
+    summary: >-
+      Eight of 121 cases have a stored PAT of 0.44–0.54 s instead of about 0.7 s, and no tooth could be measured in
+      any of them. A different oximeter or recording path would explain both; the device list of these recordings
+      against the rest would show it.
+  - title: "The adopted 0.27 s"
+    kind: assumption
+    summary: >-
+      Step 2 sets every case's mean PAT to 0.27 s, a population value for anaesthetised adults from studies that
+      sampled ECG and PPG on one clock ([[study:ppg-offset-reference]]). Differences in true mean PAT between
+      patients are therefore not measured; only changes within a case are.
+  - title: "The maximum-likelihood smoother follows Ruffolo et al. in approach, not in detail"
+    kind: next step
+    summary: >-
+      The window length (30 s), the outlier floor (2%) and the error model's terms are this example's choices; the
+      estimator has not been checked against the original implementation, or against injected PAT changes of
+      known size.
+code:
+  - vitaldb-bench/examples/pulse_arrival_time.py
+  - physiosync/physiosync/ecg_ppg.py
+  - physiosync/physiosync/measurement.py
+reproduce: |
+  ```
+  python examples/pulse_arrival_time.py --root <VitalDB release> --cases 5975 --figure 5975 --out out/pat
+  python examples/pulse_arrival_time.py --root <VitalDB release> --cases <case ids> --out out/pat
+  python examples/pulse_arrival_time.py --out out/pat --cohort-figure
+  ```
+  with [[software:physiosync]] and the TimeNet VitalDB reader installed (see [[software:vitaldb-bench]]).
+references: [ruffolo2025high]
+figures:
+  - id: pat-case
+    file: examples/pat-case-5975.png
+    theme: example traces
+    source: vitaldb-bench examples/pulse_arrival_time.py
+    records: [5975]
+    caption: >-
+      Pulse arrival time in [[case:5975]], 30 s maximum-likelihood estimates over an hour, on one axis from zero:
+      ECG to finger as stored (grey), after step 1 removes the sawtooth (blue), after step 2 removes the offset
+      (orange), and ECG to the arterial line, which needs no correction (green). Dotted lines mark frame slips.
+    alt: Four lines on one axis; grey with a sawtooth and blue without it near 690 ms, orange near 270 ms and green near 180 ms, the last three with the same slow shape.
+  - id: pat-cohort
+    file: examples/pat-cohort.png
+    theme: delay and window fits
+    source: vitaldb-bench examples/pulse_arrival_time.py
+    caption: >-
+      121 cases with ECG and PLETH. Left: PAT in 30 s windows around each case's median, as stored and after step 1.
+      Middle: each case's stored median PAT; step 2 puts every case at 270 ms. Right: finger minus arterial PAT in the
+      cases with an arterial line and a confidently corrected tooth, as stored and after step 1.
+    alt: Three histograms; the left one barely narrows after step 1, the middle one shows stored medians around 700 ms with a few near 450 ms and a line at 270 ms, the right one narrows clearly after step 1.

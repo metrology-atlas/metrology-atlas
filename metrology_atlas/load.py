@@ -366,14 +366,18 @@ def derived(ds: Dataset) -> dict[str, dict[str, dict[str, list[str]]]]:
                 add(kind, x, "observations", oid)
         for x in o.get("supersedes") or []:
             add("observation", x, "superseded_by", oid)
+    for eid, e in ds.items.get("example", {}).items():
+        for kind, key in (("variable", "variables"), ("study", "studies"), ("observation", "observations")):
+            for x in e.get(key) or []:
+                add(kind, x, "examples", eid)
     for mid, m in ds.items["method"].items():
         for t in m.get("techniques") or []:
             add("technique", t, "methods", mid)
-    for kind in ("study", "observation"):
-        for id_, item in ds.items[kind].items():
+    for kind in ("study", "observation", "example"):
+        for id_, item in ds.items.get(kind, {}).items():
             for ref in item.get("code") or []:
                 if ref.split("/")[0] in ds.items["software"]:
-                    add("software", split(ref)[0], "studies" if kind == "study" else "observations", id_)
+                    add("software", split(ref)[0], {"study": "studies", "observation": "observations", "example": "examples"}[kind], id_)
     for (kind, id_) in ds.sources:
         if kind == "reference":
             continue

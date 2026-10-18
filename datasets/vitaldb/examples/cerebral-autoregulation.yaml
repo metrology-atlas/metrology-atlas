@@ -1,0 +1,17 @@
+id: cerebral-autoregulation
+name: A cerebral autoregulation index from arterial pressure and cerebral oxygenation
+summary: >-
+  A moving correlation between mean arterial pressure and INVOS cerebral oxygenation, and how lag between the two
+  devices changes it.
+side: time
+status: planned
+question: |
+  Does cerebral oxygenation follow arterial pressure passively (impaired autoregulation)?
+why: |
+  The index is a correlation over minutes; a lag between the two signals lowers it. INVOS keeps its own clock,
+  which the atlas so far bounds only to well within a minute of the recorder ([[study:drug-effect-latency]]).
+variables: [invos-rso2, snuadc-art]
+studies: [drug-effect-latency]
+takeaways: |
+  Planned, small: INVOS and an arterial waveform together in about 0.5% of recordings (4 of 846 sampled, about 30
+  cases in the release).
