@@ -15,13 +15,27 @@ from metrology_atlas.load import AtlasError, load
 from metrology_atlas.site import write_site
 
 
+def todo(ds) -> str:
+    """Maintainer's list of gaps, for the work plan; never published on the site."""
+    out = []
+    bare = sorted((st["name"], i) for i, st in ds.items["study"].items()
+                  if st.get("status") not in ("superseded", "withdrawn")
+                  and (not st.get("figures") or all(f.get("placeholder") for f in st["figures"])))
+    out.append(f"Studies without a figure ({len(bare)} of {len(ds.items['study'])}):")
+    out += [f"  - {name} ({i})" for name, i in bare]
+    planned = sorted((e["name"], i, e["status"]) for i, e in ds.items.get("example", {}).items() if e["status"] != "current")
+    out.append(f"Worked examples not yet current ({len(planned)}):")
+    out += [f"  - {name} ({i}): {st}" for name, i, st in planned]
+    return "\n".join(out)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="metrology-atlas")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("check", "json", "site"):
+    for name in ("check", "json", "site", "todo"):
         p = sub.add_parser(name)
         p.add_argument("dataset")
-        if name != "check":
+        if name not in ("check", "todo"):
             p.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     try:
@@ -34,6 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     counts = ", ".join(f"{len(v)} {k}" for k, v in ds.items.items() if v)
     if a.cmd == "check":
         print(f"ok: {counts}")
+    elif a.cmd == "todo":
+        print(todo(ds))
     elif a.cmd == "json":
         print(f"wrote {write_json(ds, a.out)} ({counts})")
     else:

@@ -1185,12 +1185,6 @@ class Site:
                 + ". Parameters: " + ", ".join(f"{n} {st}" for st, n in sorted(
                     {p["status"]: sum(1 for q in ds.items["parameter"].values() if q["status"] == p["status"])
                      for p in ds.items["parameter"].values()}.items(), key=lambda x: -x[1])) + ".\n")
-        bare = [i for i, st in sorted(ds.items["study"].items(), key=lambda x: x[1]["name"])
-                if not st.get("figures") or all(f.get("placeholder") for f in st["figures"])]
-        if bare:
-            out += (f"\n## Studies still without a figure\n\n{len(bare)} of {len(ds.items['study'])} studies have no "
-                    "figure yet (or only a placeholder). Each study should show at least one, made by the script that "
-                    "ran it.\n\n" + "\n".join(f"- {self.a('study', i)}" for i in bare) + "\n")
         return out
 
     def questions(self, qs) -> str:
