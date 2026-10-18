@@ -34,9 +34,11 @@ steps: |
      delay as an offset plus a sawtooth (creep at a fixed rate, reset by one 30 Hz frame at each slip), with the arterial upstrokes as the
      reference where present. Each tooth gets a confidence tier; teeth below tier B are left as they are.
      Subtracting only the sawtooth leaves the PAT at its stored level.
-  3. **Step 2, remove the offset** ([[observation:ppg-hardware-delay]]). Subtracting the offset as well puts the PAT at an adopted population mean of
-     0.27 s ([[study:ppg-offset-reference]]). The offset cannot be measured from a recording, so after this step
-     only changes in PAT are measured, not its level.
+  3. **Step 2, remove one global device delay** ([[observation:ppg-hardware-delay]]): 445 ms for every recording.
+     The stored ECG-to-PLETH delay has one peak over the whole release, at 715 ms, with no clusters by recording
+     setup and no shift along the case order ([[study:pat-offset-census]]); 445 ms is that minus an adopted mean
+     finger PAT of 0.27 s ([[study:ppg-offset-reference]]). Because the same delay comes off every case, differences
+     in PAT between patients are kept; only the absolute level rests on the adopted 0.27 s.
   4. **Smooth by maximum likelihood**, after [[reference:ruffolo2025high]]: per 30 s window, the latent PAT that
      maximises the likelihood of the window's beats under the recording's per-beat error model
      (`physiosync.pat_measurement_model`: the PLETH fiducial's frame rounding or jitter, and the ECG's one-sample
@@ -46,44 +48,51 @@ results: |
   **One case.** In [[case:5975]] the stored PAT (grey) is about 0.68 s and jumps back by one frame three times in
   the hour (dotted). After step 1 (blue) the jumps and ramps are gone and the series has the same course as the
   arterial PAT (green): the spread of finger minus arterial PAT, minute by minute, falls from 10.7 to 2.7 ms.
-  Step 2 (orange) moves the whole series down by 405 ms to the adopted level, without changing its shape.
+  Step 2 (orange) moves the whole series down by the global 445 ms, without changing its shape; the corrected finger
+  PAT then sits 56 ms above the arterial PAT in this case.
 
   [[figure:pat-case]]
 
   **The cohort (121 cases).**
 
-  - *Offset (step 2).* The stored PAT's case median is 0.65–0.75 s in most cases; the offset removed is 443 ms in
-    the median case (397–477 ms, 10th to 90th percentile). Eight cases sit lower, at 0.44–0.54 s, and none of them
-    has a sawtooth the fit can resolve: probably another recording setup. Step 2 puts every case at 0.27 s.
+  - *Global delay (step 2).* The stored PAT's case median is 0.65–0.75 s; step 2 subtracts 445 ms from every case,
+    so the corrected case medians keep their spread (median 272 ms, interquartile range 257–291 ms). Eight cases
+    have a stored median of 0.44–0.54 s: their pulses were paired with the wrong beat (fast heart rates or doubled
+    R peaks, with a 0.7 s delay longer than one RR interval; see [[study:pat-offset-census]]). They are left out of
+    the cohort figures, leaving 113.
   - *Sawtooth (step 1).* A median of 4 slips an hour. At least one tooth was corrected with confidence (tier A or B)
     in 46 of the 121 cases. Where there was also an arterial line (24 cases), the spread of finger minus arterial
     PAT fell from a median of 13.0 to 9.8 ms per case, and improved in 19 of the 24; pooled over their windows,
-    from 13.7 to 9.8 ms. The within-case spread of PAT itself changes little (18.3 to 17.5 ms in the median case),
+    from 13.7 to 9.8 ms. The within-case spread of PAT itself changes little (17.7 to 16.9 ms in the median case),
     because real changes in PAT, tens of milliseconds as blood pressure changes, are larger than the sawtooth.
 
   [[figure:pat-cohort]]
 
-  **Before and after, as PAT values.** As stored, ECG-to-finger PAT is 716 ms in the median window (441–767 ms,
-  5th to 95th percentile), far beyond any physiological value: 99% of windows lie outside the 200–285 ms reported
-  for awake adults. After both steps the median is 272 ms (178–312 ms), and the distribution sits just above the
-  arterial-line PAT (223 ms), as a finger, further from the heart than the radial artery, should. Where the orange
-  peak sits is set by step 2 (every case's median goes to 0.27 s), so it is an assumption, not a result; its width
-  and its agreement with the arterial line are the evidence. 2.3% of corrected windows come out negative, where
-  the correction failed; they are left out of the figure. The adult range is provisional and still has to be
+  **Before and after, as PAT values.** As stored, ECG-to-finger PAT is 718 ms in the median window (638–768 ms,
+  5th to 95th percentile), far beyond any physiological value: almost every window lies outside the 200–285 ms
+  reported for awake adults. After both steps the median is 273 ms (193–322 ms), and the distribution sits just
+  above the arterial-line PAT (223 ms), as a finger, further from the heart than the radial artery, should. Where
+  the orange peak sits overall rests on the adopted 0.27 s; its spread is measured, because one delay comes off
+  every case. 2.6% of corrected windows come out negative, where beats were mis-paired; they are left out of the
+  figure. The adult range is provisional and still has to be
   verified (see the open questions).
 
   [[figure:pat-distribution]]
 
-  **Against the arterial line, window by window.** In the 66 cases with an arterial line, finger PAT as stored sits
-  494 ms above the arterial-line PAT in the median window; after both steps it sits 49 ms above it, the order
-  expected for a finger further from the heart than the radial artery. The stored cloud slopes with the arterial
-  PAT across cases, while the corrected one is flat: step 2 gives every case the same median, so differences between
-  patients are removed along with the device delay.
+  **Against the arterial line, window by window.** In the 60 cases with an arterial line, finger PAT as stored sits
+  496 ms above the arterial-line PAT in the median window; after both steps it sits 51 ms above it, the order
+  expected for a finger further from the heart than the radial artery. Both clouds slope with the arterial PAT:
+  across cases, the corrected finger PAT follows the arterial PAT with a slope of 0.59 (correlation 0.53), exactly as
+  the stored one does, because a single global delay keeps the differences between patients. (An earlier version
+  of step 2 removed each case's own offset, which flattened the corrected cloud and threw those differences away.)
 
   [[figure:pat-scatter]]
 takeaways: |
-  - Never read the absolute ECG-to-PLETH PAT in VitalDB as physiology: it carries a device delay of about 0.4 s,
-    which differs between [recording setups](../setups.md). Compare cases only after step 2, and treat the level as an assumption.
+  - Never read the absolute ECG-to-PLETH PAT in VitalDB as physiology: it carries a device delay of about 0.45 s.
+    The delay is the same across recording setups and the case order, so one global value removes it and keeps
+    differences between patients; the absolute level still rests on an adopted mean finger PAT.
+  - Pair each pulse with its own beat: the stored delay (about 0.7 s) is longer than one RR interval at fast heart
+    rates, and a nearest-upstroke search then pairs one beat out.
   - Within a case, remove the sawtooth (step 1) before reading changes over minutes; otherwise slips appear as
     sudden PAT changes of 33 ms.
   - Check each tooth's tier: below B only the offset is removed, and the sawtooth is still there.
@@ -110,18 +119,19 @@ open_questions:
       In some stretches no slip comes although several were due, and the delay is flat
       ([[study:ppg-sawtooth-pauses]]). The model treats the stretch before and after a pause as creep then hold, of
       unknown length, which leaves up to one frame of uncertainty there.
-  - title: "Eight cases with a shorter stored PAT and no resolvable sawtooth"
-    kind: phenomenon
+  - title: "Pairing by the modal delay in the example itself"
+    kind: next step
     summary: >-
-      Eight of 121 cases have a stored PAT of 0.44–0.54 s instead of about 0.7 s, and no tooth could be measured in
-      any of them. A different oximeter or recording path would explain both; the device list of these recordings
-      against the rest would show it.
+      Eight of 121 cases were paired one beat out (fast heart rates or doubled R peaks) and are left out of the cohort
+      figures. The census pairs pulses by each segment's modal delay instead ([[study:pat-offset-census]]); using
+      that pairing here would bring them back.
   - title: "The adopted 0.27 s"
     kind: assumption
     summary: >-
-      Step 2 sets every case's mean PAT to 0.27 s, a population value for anaesthetised adults from studies that
-      sampled ECG and PPG on one clock ([[study:ppg-offset-reference]]). Differences in true mean PAT between
-      patients are therefore not measured; only changes within a case are.
+      The global delay is the release's median stored delay (715 ms) minus 0.27 s, a mean finger PAT for anaesthetised
+      adults from studies that sampled ECG and PPG on one clock ([[study:ppg-offset-reference]]). Differences between
+      patients and changes within a case are measured; the absolute level of every case moves with the adopted
+      value. It implies a finger-to-radial transit of about 50 ms, which a literature value could check.
   - title: "What plausible PAT range should be shown for anaesthetised adults?"
     kind: assumption
     summary: >-
@@ -156,26 +166,26 @@ figures:
     records: [5975]
     caption: >-
       Pulse arrival time in [[case:5975]], 30 s maximum-likelihood estimates over an hour, on one axis from zero:
-      ECG to finger as stored (grey), after step 1 removes the sawtooth (blue), after step 2 removes the offset
-      (orange), and ECG to the arterial line, which needs no correction (green). Dotted lines mark frame slips.
-    alt: Four lines on one axis; grey with a sawtooth and blue without it near 690 ms, orange near 270 ms and green near 180 ms, the last three with the same slow shape.
+      ECG to finger as stored (grey), after step 1 removes the sawtooth (blue), after step 2 removes the global
+      445 ms device delay (orange), and ECG to the arterial line, which needs no correction (green). Dotted lines mark frame slips.
+    alt: Four lines on one axis; grey with a sawtooth and blue without it near 690 ms, orange near 230 ms and green near 180 ms, the last three with the same slow shape.
   - id: pat-cohort
     file: examples/pat-cohort.png
     theme: delay and window fits
     source: vitaldb-bench examples/pulse_arrival_time.py
     caption: >-
-      121 cases with ECG and PLETH. Left: PAT in 30 s windows around each case's median, as stored and after step 1.
-      Middle: each case's stored median PAT; step 2 puts every case at 270 ms. Right: finger minus arterial PAT in the
+      113 cases with ECG and PLETH. Left: PAT in 30 s windows around each case's median, as stored and after step 1.
+      Middle: each case's median PAT as stored and after step 2 subtracts the global 445 ms; the spread is kept. Right: finger minus arterial PAT in the
       cases with an arterial line and a confidently corrected tooth, as stored and after step 1.
-    alt: Three histograms; the left one barely narrows after step 1, the middle one shows stored medians around 700 ms with a few near 450 ms and a line at 270 ms, the right one narrows clearly after step 1.
+    alt: Three histograms; the left one barely narrows after step 1, the middle one shows the same spread of case medians around 700 ms as stored and around 270 ms after step 2, the right one narrows clearly after step 1.
   - id: pat-distribution
     file: examples/pat-distribution.png
     theme: distributions of measured parameters
     source: vitaldb-bench examples/pulse_arrival_time.py
     caption: >-
-      PAT in 30 s windows over 121 cases: ECG to finger as stored (grey) and after steps 1 and 2 (orange), and ECG to
-      the radial arterial line in the 66 cases with one (green). The shaded band is the 200–285 ms reported for awake
-      adults in shared-clock studies; it is provisional and still to be verified. Negative corrected values (2.3% of
+      PAT in 30 s windows over 113 cases: ECG to finger as stored (grey) and after steps 1 and 2 (orange), and ECG to
+      the radial arterial line in the 60 cases with one (green). The shaded band is the 200–285 ms reported for awake
+      adults in shared-clock studies; it is provisional and still to be verified. Negative corrected values (2.6% of
       windows) are left out.
     alt: Three histograms on one axis; grey centred near 716 ms, orange near 272 ms and green near 223 ms, with a shaded band from 200 to 285 ms.
   - id: pat-scatter
@@ -183,7 +193,7 @@ figures:
     theme: agreement and residuals
     source: vitaldb-bench examples/pulse_arrival_time.py
     caption: >-
-      ECG-to-finger PAT against ECG-to-radial-artery PAT in the same 30 s windows (7,608 windows, 66 cases), as stored
+      ECG-to-finger PAT against ECG-to-radial-artery PAT in the same 30 s windows (7,081 windows, 60 cases), as stored
       (grey) and after steps 1 and 2 (orange); both axes start at zero, and the dashed line is equal PAT. Negative
       corrected values are left out.
     alt: A scatter with a grey cloud near 700 ms on the vertical axis and an orange cloud near 270 ms, just above the dashed equality line, both spread between 170 and 300 ms on the horizontal axis.

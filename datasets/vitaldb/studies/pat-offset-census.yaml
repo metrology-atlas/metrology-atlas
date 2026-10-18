@@ -1,0 +1,92 @@
+id: pat-offset-census
+name: One device delay for the PLETH across the release
+summary: >-
+  The stored ECG-to-PLETH delay was measured in 5,536 recordings. It has one peak (715 ms in the median recording;
+  finger minus arterial PAT 497 ms), no clusters by recording setup or SNUADC port, and no shift along the case
+  order: one global device delay fits the whole release, as Ruffolo et al. found in their own data.
+date: 2026-10-18
+status: current
+methods: [delays-and-windows, signal-borne-clocks]
+techniques: [beat-matching]
+clocks: [oximeter-frame-clock]
+devices: [snuadc, solar8000]
+variables: [snuadc-pleth, snuadc-ecg-ii, snuadc-art]
+code:
+  - vitaldb-bench/tools/pat_offset_census.py
+data: |
+  Every recording with ECG lead II and PLETH at 500 Hz (6,136 of 6,388); 5,536 passed the quality rule below, 2,900
+  of them with an arterial line. Setups are the PC keys of [[study:setup-identification]].
+background: |
+  The PLETH reaches the recorder about 0.4 s late ([[observation:ppg-hardware-delay]]). The PAT example first removed
+  each case's own offset, which also removed real differences in PAT between patients. Whether one delay fits every
+  recording, or one per setup or per epoch, decides how the delay can be removed without that loss.
+  [[reference:ruffolo2025high]] saw one global offset (two, over two epochs) in their own monitoring system.
+method: |
+  - Per recording, 8 segments of 2 minutes spread over the ECG–PLETH overlap from 10 minutes in. In each: R peaks,
+    one steepest upstroke per pulse in the PLETH (and in the arterial pressure where there is a line).
+  - **Pairing by the modal delay.** The stored delay (about 0.7 s) is longer than one RR interval at fast heart
+    rates, so a nearest-after search pairs pulses one beat out. All R-to-upstroke lags within 0.1–1.2 s are
+    histogrammed per segment; a constant delay makes one sharp peak, while pairings one beat out move with the RR
+    interval and smear. Each R peak then takes the upstroke nearest the mode.
+  - A segment counts if at least half of all lags lie within 20 ms of the mode and the per-beat spread (IQR) is at
+    most 30 ms; a recording needs 3 such segments. The per-case value is the median over its segments.
+  - Finger minus arterial PAT, beat by beat, removes most of the patient's own PAT, so its spread between recordings
+    shows the device delay's structure far more sharply than the finger PAT alone.
+results: |
+  - **One peak.** Stored ECG→PLETH delay: 715 ms in the median recording (interquartile range 699–730 ms). Finger
+    minus arterial PAT: 497 ms (484–510 ms; 5th–95th percentile 456–532 ms). Neither has a second cluster.
+  - **The setup explains almost nothing:** 4% of the variance of finger minus arterial PAT between recordings (PC
+    key, 57 keys) and 2% (SNUADC port). Every one of the 31 keys with at least 20 recordings has its median within
+    about ±15 ms of the global value, and each key's own spread is wider than the gaps between keys. The earlier
+    per-setup delays (368–399 ms, from 293 cases) were mostly sampling noise.
+  - **No epochs along the case order.** In 16 bins of 400 cases the median moves by at most 4 ms.
+  - **Stable within a recording:** from the first good segment to the last (2 hours apart in the median case) the
+    stored delay changes by −4 ms (interquartile range −24 to +16).
+  - **The stored delay keeps the patient's PAT:** per case, stored finger PAT correlates with arterial PAT (Spearman
+    0.56). Removing one global delay keeps that; removing each case's own offset destroys it.
+  - **The global delay:** 715 ms minus an adopted mean finger PAT of 270 ms ([[study:ppg-offset-reference]]) gives
+    445 ms, which implies a finger-to-radial transit of about 50 ms.
+
+  [[figure:pat-offset-census]]
+discussion: |
+  One delay fits the release, so PAT can be compared between patients after subtracting it. Only the absolute level
+  rests on an outside value, the adopted finger PAT. Case order is only a proxy for time (the release has no dates),
+  so an epoch change like Ruffolo et al.'s would show here only if case numbers follow recording order.
+limitations: |
+  - 600 recordings failed the quality rule, mostly at fast heart rates or with noisy ECG; if their delay differs,
+    the census would miss it.
+  - The adopted 270 ms is a finger-foot value from the literature, while this census (and the PAT example) uses the
+    steepest upstroke, which comes some tens of milliseconds after the foot. The global delay in upstroke terms is
+    therefore uncertain by that amount (see the open questions).
+  - The sawtooth adds up to one frame (33 ms) to the stored delay; averaged over a recording it is about the same in
+    every case and is part of the global value.
+open_questions:
+  - title: "Foot or steepest upstroke for the adopted PAT?"
+    kind: assumption
+    summary: >-
+      The adopted 270 ms is an R-to-finger-foot value; the stored delay here is measured to the steepest upstroke,
+      later than the foot. Matching the fiducials would raise the adopted value (and lower the global delay) by the
+      foot-to-upstroke time. The finger-minus-radial check (about 50 ms with 445 ms) would then grow, so the two
+      anchors pull in different directions and need reconciling.
+  - title: "Epochs in time"
+    kind: next step
+    summary: >-
+      Ruffolo et al. saw two offsets over two epochs. VitalDB has no recording dates; any other ordering of the cases
+      in time (software versions in the file headers, say) would allow a sharper test than the case number.
+  - title: "Recordings that failed the quality rule"
+    kind: next step
+    summary: >-
+      Fast heart rates and noisy ECG make the modal delay ambiguous. A beat-to-beat pairing that uses the ECG's RR
+      interval explicitly would bring most of the 600 back into the census.
+references: [ruffolo2025high]
+figures:
+  - id: pat-offset-census
+    file: pat-offset-census.png
+    theme: delay and window fits
+    source: vitaldb-bench tools/pat_offset_census.py
+    caption: >-
+      Left: per-recording median of the stored ECG→PLETH delay (grey, 5,536 recordings) and of finger minus arterial
+      PAT (blue, 2,900 with an arterial line); one peak each. Middle: finger minus arterial PAT per PC key (median and
+      interquartile range, 31 keys with at least 20 recordings) against the global 497 ms (±15 ms shaded). Right: bin
+      medians along the case order (bins of 400 cases) minus the overall median.
+    alt: Left, two single-peaked histograms near 497 and 715 ms. Middle, 31 short intervals all centred within 15 ms of a red line at 497 ms. Right, two flat lines within a few milliseconds of zero.

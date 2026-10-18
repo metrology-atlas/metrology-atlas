@@ -582,14 +582,15 @@ class Site:
                 "[Anchor decisions](anchors.md).\n")
 
     def anchors_page(self) -> str:
-        """Every anchor decision in one table, the unsettled ones first."""
+        """Every anchor decision in one table, the best-supported (tested) first."""
+        PAGE_ORDER = ("tested", "convention", "assumption", "open")
         rows = []
         for vid, v in self.ds.items["variable"].items():
             val = v.get("value") or {}
             basis, note = self.anchor_basis(val)
             if not (val.get("anchor") or basis):
                 continue
-            rows.append((ANCHOR_ORDER.index(basis) if basis in ANCHOR_ORDER else 9, v.get("group") or "", v["name"], vid,
+            rows.append((PAGE_ORDER.index(basis) if basis in PAGE_ORDER else 9, v.get("group") or "", v["name"], vid,
                          val, basis, note))
         rows.sort(key=lambda r: r[:3])
         n = {b: sum(1 for r in rows if r[5] == b) for b in ANCHOR_ORDER}
@@ -600,8 +601,8 @@ class Site:
                "- **Convention:** the usual rule, not tested; its largest possible effect is half a step.\n"
                "- **Assumption:** relied on, but the data in the release cannot test it; outside evidence could.\n"
                "- **Open:** an alternative is plausible and could matter; the study says what would settle it.\n\n"
-               + ", ".join(f"{n[b]} {ANCHOR_BASIS_LABEL[b]}" for b in ANCHOR_ORDER if n[b]) + ". The unsettled ones "
-               "(open and assumption) come first. The anchors themselves are read from the value models' pinned "
+               + ", ".join(f"{n[b]} {ANCHOR_BASIS_LABEL[b]}" for b in PAGE_ORDER if n[b]) + ". The tested ones, "
+               "the best supported, come first; the unsettled ones (assumption and open) last, in bold. The anchors themselves are read from the value models' pinned "
                "snapshot; the basis is the atlas's judgement and can be challenged like any other result "
                "([how to contribute](contributing.md)).\n\n"
                "| Variable | Group | Step | Anchor | Basis | Why |\n|---|---|---|---|---|---|\n")
@@ -1492,8 +1493,32 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
         nav.append({KINDS[k].title: entries.pop(k)})
     nav.append({"References": "references.md"})
     nav.append({"About": about})
-    (out / "zensical.toml").write_text(_toml(ds.meta, nav), encoding="utf-8")
+    for f in docs.rglob("*.md"):
+        t = f.read_text(encoding="utf-8")
+        t2 = chem_subscripts(t)
+        if t2 != t:
+            f.write_text(t2, encoding="utf-8")
+    (out / "zensical.toml").write_text(chem_subscripts(_toml(ds.meta, nav)), encoding="utf-8")
     return out
+
+
+_CHEM = re.compile(r"(?<![A-Za-z]/)(?<![\w`])(SaO|SpO|PaO|PaCO|PvO|PvCO|SvO|ScvO|FiO|FeO|EtO|EtCO|ETCO|FiCO|CO|O)2(?![\w`])")
+_SKIP = re.compile(r"```.*?```|`[^`\n]*`|\]\([^)]*\)|<[^>\n]+>|https?://\S+", re.S)
+
+
+def chem_subscripts(md: str) -> str:
+    """Gas names with a subscript 2 (SpO2 -> SpO₂, PaCO2 -> PaCO₂, CO2 -> CO₂) in page text and titles.
+
+    Code spans and blocks, link targets, HTML tags and URLs are left alone, and so are device track names such as
+    Primus/ETCO2 (a name after a slash), so identifiers keep the spelling of the data.
+    """
+    out, last = [], 0
+    for m in _SKIP.finditer(md):
+        out.append(_CHEM.sub(lambda g: g.group(1) + "₂", md[last:m.start()]))
+        out.append(m.group(0))
+        last = m.end()
+    out.append(_CHEM.sub(lambda g: g.group(1) + "₂", md[last:]))
+    return "".join(out)
 
 
 def _toml(meta: dict, nav: list) -> str:

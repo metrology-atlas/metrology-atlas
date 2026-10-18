@@ -2,7 +2,7 @@ id: ppg-offset-reference
 name: The PPG hardware delay and the adopted pulse arrival time
 summary: >-
   VitalDB's raw ECG→PPG pulse arrival time is about 0.4 s longer than physiology. Splitting it into a hardware delay
-  (368–399 ms by setup) and a physiological part needs an adopted value from studies that sampled ECG and PPG on one
+  (one value for the release; [[study:pat-offset-census]]) and a physiological part needs an adopted value from studies that sampled ECG and PPG on one
   clock: about 270 ms for anaesthetised adults.
 date: 2026-10-12
 status: current
@@ -23,7 +23,9 @@ results: |
     shared-clock value under anaesthesia.
   - **Anaesthesia lengthens PAT by about 40 ms** in monitor-based work (240 ms before induction, 279–284 ms after).
   - **For VitalDB** (adults under general anaesthesia, mean age about 58): about 270 ms, plausible range 250–290 ms.
-  - **Per-setup hardware delays** with that value: 368–399 ms (all recordings: 385 ms).
+  - **Hardware delay** with that value: about 385 ms over these 293 cases (to the PPG foot). Per-setup values of
+    368–399 ms were reported here first; the full census ([[study:pat-offset-census]], 5,536 recordings) found no
+    difference between setups beyond ±15 ms, so one global delay is used.
 discussion: |
   The adopted value must use the same PPG point the software detects; the correction currently uses the steepest
   upstroke, which comes later than the foot. The offset is kept as its own label, one per recording, so it can be

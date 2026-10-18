@@ -2,11 +2,12 @@ id: ppg-hardware-delay
 name: The PLETH arrives about 0.4 s late
 summary: >-
   Raw R-to-PPG-foot pulse arrival time in VitalDB has a median of 0.64–0.71 s, about 0.4 s more than physiology: the
-  monitor's buffering and filtering, 368–399 ms by setup.
+  monitor's buffering and filtering. One delay fits the whole release: no clusters by setup, SNUADC port or
+  case order ([[study:pat-offset-census]]).
 status: established
 variables: [snuadc-pleth]
 devices: [solar8000]
-studies: [ppg-offset-reference, ppg-sawtooth]
+studies: [ppg-offset-reference, ppg-sawtooth, pat-offset-census]
 consequence: |
   PAT and any ECG–PPG timing from VitalDB is mostly device delay unless that delay is removed. PLETH also lags ART by
   0.40–0.53 s, depending on the fiducial.

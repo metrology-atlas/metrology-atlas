@@ -36,7 +36,7 @@ date or a patient.
 
 | Quantity | Range across setups | Within a setup | Evidence |
 |---|---|---|---|
-| PLETH device delay | 368–399 ms | tight | [[observation:ppg-hardware-delay]], [[parameter:pleth-chain-delay]], [[study:ppg-offset-reference]] |
+| PLETH device delay | one global value (setups within ±15 ms) | none found | [[observation:ppg-hardware-delay]], [[parameter:pleth-chain-delay]], [[study:ppg-offset-reference]] |
 | PLETH sawtooth creep rate | 18–52 ppm | fixed | [[observation:ppg-sawtooth]], [[parameter:pleth-sawtooth-rate]], [[study:ppg-sawtooth]] |
 | Oximeter frame clock against the SNUADC | +7 to +92 ppm by setup | within 3 ppm in 89% of recordings | [[observation:oximeter-frame-clock-fingerprint]], [[parameter:pleth-frame-clock-rate]] |
 | SNUADC correction mode (step or frequent) | 0–68% frequent by port | mostly one mode | [[observation:snuadc-mode-setups]] |
