@@ -21,8 +21,7 @@ from __future__ import annotations
 
 import json
 
-from metrology_atlas.chart import AXES
-from metrology_atlas.chart import chart_forms
+from metrology_atlas.chart import AXES, chart_forms
 
 PAGE = r"""---
 hide:

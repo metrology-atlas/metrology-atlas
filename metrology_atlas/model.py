@@ -48,6 +48,7 @@ class Kind:
     help: str = ""
 
     def field(self, name: str) -> Field | None:
+        """The field of this kind with the given name, or None."""
         return next((f for f in self.fields if f.name == name), None)
 
 
@@ -432,6 +433,7 @@ class Dataset:
     """Things worth fixing that do not stop a build (for example code not yet committed)."""
 
     def get(self, kind: str, id_: str) -> dict | None:
+        """The item of a kind with the given id, or None."""
         return self.items.get(kind, {}).get(id_)
 
 

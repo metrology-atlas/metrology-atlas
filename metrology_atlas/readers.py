@@ -17,12 +17,13 @@ from __future__ import annotations
 
 import json
 import math
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 
-@lru_cache(maxsize=None)
+@cache
 def read_json(path: str) -> dict:
+    """Read a JSON file (UTF-8)."""
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 

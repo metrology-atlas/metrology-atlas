@@ -26,7 +26,7 @@ import yaml
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE.parents[1]))
-from metrology_atlas.readers import vitaldb_resolution as summarise  # noqa: E402
+from metrology_atlas.readers import vitaldb_resolution as summarise
 
 SNAP = HERE / "_sources" / "vitaldb-resolution"
 GEN = HERE / "_generated"
@@ -69,12 +69,14 @@ GROUP = {name: g for g, names in _G.items() for name in names.split()}
 TITLE_FIX = {"icu_days": "ICU days", "preop_ecg": "Preoperative ECG"}   # registry descriptions without proper capitals
 
 def atlas_id(name: str) -> str:
+    """The atlas id for a vitaldb-resolution variable name."""
     if name in ALIASES:
         return ALIASES[name]
     return re.sub(r"[^a-z0-9]+", "-", name.lower().replace("%", "-pct")).strip("-")
 
 
 def resolution_text(v: dict) -> str | None:
+    """A short text for a variable's resolution (step and rounding anchor), or None."""
     m, unit = v["method"], v.get("unit") or ""
     if m == "uniform" and v.get("resolution") is not None:
         return f"{v['resolution']:g} {unit}, {v.get('anchor', 'nearest')}".replace("  ", " ")
@@ -98,6 +100,7 @@ def resolution_text(v: dict) -> str | None:
 
 
 def main(repo: str) -> None:
+    """Snapshot vitaldb-resolution at `repo` into _sources and regenerate the variables and value-model studies."""
     repo = Path(repo).resolve()
     commit = subprocess.run(["git", "-C", str(repo), "log", "-1", "--format=%H %cs"], capture_output=True,
                             text=True, check=True).stdout.split()
@@ -159,9 +162,7 @@ def main(repo: str) -> None:
                         "[[variable:lab-central]].")
         if desc:
             item["description"] = "\n\n".join(desc)
-        if v["source"] == "lab":
-            item["stamp_clock"] = "hospital-records"
-        elif v["type"] == "timestamp":
+        if v["source"] == "lab" or v["type"] == "timestamp":
             item["stamp_clock"] = "hospital-records"
         elif v["type"] == "device_time":
             item["stamp_clock"] = "recorder-pc"
@@ -212,7 +213,7 @@ def main(repo: str) -> None:
                 "variables": [vid], "model": ref,
                 "data": f"{m['fit']['n']:,} records of {name}" + (f" ({m['fit']['source']})" if m["fit"].get("source") else "")
                         if m["fit"].get("n") else None,
-                "code": [f"vitaldb-resolution/vitaldb_resolution/engine.py"],
+                "code": ["vitaldb-resolution/vitaldb_resolution/engine.py"],
                 "tags": ["generated", "vitaldb-resolution"],
             }
             fm = figs["models"].get(vid)

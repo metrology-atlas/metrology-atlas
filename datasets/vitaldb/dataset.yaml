@@ -66,7 +66,7 @@ figures:
       Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
       second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
       Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
-      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 74 ms (Primus, whole-release
+      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 55 ms (Primus, whole-release
       medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
       and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
       pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is
@@ -84,7 +84,8 @@ figures:
       log scale; dashed lines mark the medians. Each link is checked by a signal both clocks record, which never
       enters the correction it tests. BIS against SNUADC, by electrocautery and muscle bursts in the ECG and the EEG:
       median 794 ms to 42 ms (2,737 recordings, 10-minute windows). Primus against SNUADC, by the breath cycle in
-      airway pressure and CVP: 378 ms to 74 ms (1,077 recordings; each window predicted from all the others).
+      airway pressure and CVP: 378 ms to 55 ms (1,067 recordings; each window predicted from all the others, a line
+      per stretch between AWP pauses).
       Primus against the PC, by PC-stamped PIP values: 450 ms to 238 ms (172 recordings, 30-minute blocks). The
       "before" for both Primus links has each recording's own offset removed, so it understates the raw error.
     alt: >-
@@ -193,6 +194,10 @@ forbidden_patterns:
   - pattern: '\b\d{4}\.vital\b'
     why: name a case only deliberately, as [[case:1234]]
 notice: |
+  **Pre-release, open for review (v0.1.0, October 2026).** This first public version accompanies a preprint and is
+  released for review by the community and the dataset's custodians ahead of a peer-reviewed journal version.
+  Comments are welcome as [issues or discussions](https://github.com/metrology-atlas/metrology-atlas) on GitHub.
+
   Studies are still being added and revised, some numbers rest on small runs, and
   many questions are open. Every page says how its numbers are known. If you find something wrong, or can settle an
   open question, please [contribute](contributing.md): corrections, better models and new studies are all welcome.

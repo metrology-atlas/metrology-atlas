@@ -2,8 +2,8 @@ id: ventilator-breath-matching
 name: The Primus ventilator against SNUADC, by breaths
 summary: >-
   Each breath shows in the Primus airway pressure and, through the chest, in SNUADC's central venous pressure.
-  Tracking that lag puts the Primus on the SNUADC timeline to about 74 ms over the whole release (49 ms in the
-  pilot). At scale it measures the Primus drifting a median +104 ppm against the recorder PC between its AWP
+  Tracking that lag puts the Primus on the SNUADC timeline to about 55 ms over the whole release, with a line
+  per stretch between its AWP pauses (49 ms in the pilot). At scale it measures the Primus drifting a median +104 ppm against the recorder PC between its AWP
   pauses, with steps at the pauses that do not reset it.
 date: 2026-10-12
 status: open
@@ -40,10 +40,13 @@ results: |
     built up in the stretch before (correlation 0.0): the pauses move the stamps but do not reset the drift.
   - **Accuracy over the whole release (19 October;
     [[code:vitaldb-bench/tools/primus_sync_accuracy.py]]).** Each 10-minute window predicted from all the others
-    (one slope and one offset per stretch): a median error of 74 ms (p90 259 ms, p95 390 ms) in 1,067 recordings
-    with CVP. The arterial mean pressure as a second reference is noisier (114 ms; p90 515 ms, 1,386 recordings),
+    (a slope and an offset in each stretch between AWP pauses): a median error of 55 ms (p90 187 ms, p95 284 ms)
+    in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording
+    ([[code:vitaldb-bench/tools/primus_pause_aware.py]]). The arterial mean pressure as a second reference is
+    noisier (83 ms; p90 343 ms, 1,384 recordings),
     sometimes a breath out; where both exist (462) their drifts differ by a median 49 ppm. An injected shift of
-    0.25 s and drift of 100 ppm (196 recordings) come back as 0.252 s and 99.6 ppm (medians).
+    0.25 s and drift of 100 ppm (196 recordings) come back as 0.252 s and 99.6 ppm (medians, one slope per
+    recording).
 
   [[figure:sync-demo-breath]]
 discussion: |
@@ -80,7 +83,7 @@ figures:
       Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
       second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
       Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
-      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 74 ms (Primus, whole-release
+      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 55 ms (Primus, whole-release
       medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
       and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
       pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is

@@ -43,6 +43,7 @@ def to_json(ds: Dataset) -> dict:
 
 
 def write_json(ds: Dataset, path: str | Path) -> Path:
+    """Write the whole atlas as one machine-readable JSON file and return its path."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(to_json(ds), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

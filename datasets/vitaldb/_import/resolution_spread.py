@@ -25,6 +25,7 @@ BUDGET = 90
 
 
 def agg(x) -> dict:
+    """Median and 10th/90th percentiles of the finite values."""
     x = np.asarray([v for v in x if v is not None and np.isfinite(v)], float)
     if not x.size:
         return {}
@@ -44,6 +45,7 @@ def _stats(d):
 
 
 def main(repo: str, release: str) -> None:
+    """Measure how wide each value model's distributions are across the release (aggregates only)."""
     import pandas as pd
 
     sys.path.insert(0, repo)

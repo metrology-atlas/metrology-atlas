@@ -37,6 +37,7 @@ MIN_N = 5
 
 
 def closeness(df, val, grp, tol=3.0):
+    """Share of recordings within `tol` of their group's median, against the release median."""
     g = df.dropna(subset=[val, grp])
     keep = g[grp].value_counts()
     g = g[g[grp].isin(keep[keep >= MIN_N].index)]
@@ -46,16 +47,18 @@ def closeness(df, val, grp, tol=3.0):
 
 
 def by_key(df, val):
+    """Median and quartiles of a value per setup key (groups with enough recordings)."""
     rows = []
     for key, g in df.dropna(subset=[val, "key"]).groupby("key"):
         s = g[val]
         if len(s) >= MIN_N:
             rows.append({"setup": key, "value": round(float(s.median()), 1), "q1": round(float(s.quantile(.25)), 1),
-                         "q3": round(float(s.quantile(.75)), 1), "n": int(len(s))})
+                         "q3": round(float(s.quantile(.75)), 1), "n": len(s)})
     return sorted(rows, key=lambda r: -r["n"])
 
 
 def load_frame(paths) -> dict:
+    """Oximeter frame-clock rates per recording from the given JSONL files."""
     out = {}
     for path in paths:
         for line in open(path, encoding="utf-8"):
@@ -70,6 +73,7 @@ def load_frame(paths) -> dict:
 
 
 def main(ports_jsonl: str, units_csv: str, frame_paths=()) -> None:
+    """Build the recording setups register and the per-setup rate overlays."""
     ports = {}
     for line in open(ports_jsonl, encoding="utf-8"):
         r = json.loads(line)

@@ -42,6 +42,22 @@ results: |
   | BIS EEG | Drift within 25 ppm in 108 of 145 cases (r = 0.88); 79% of lag jumps on a stamp step (chance 12%); a constant −0.80 s (step mode) or −0.69 s (frequent mode; −0.66 s over the whole release) remains | Closes in drift and steps; the constant is a latency |
   | Ventilation | 72% of 57 large lag changes fall on a Primus stamp jump; the physiological arms differ by 37–46 ppm | Partly closes; physiological arms too weak |
   | EMR and recorder | Both arms are measured from the recorder's case start, so any offset cancels; the recorder EVENT track repeats the clinical table's times exactly | Degenerate: not a loop |
+
+  **Network adjustment over the whole release (20 October).** Every measured link of every recording is now an edge
+  with a value and a standard error (2,077 recordings; [[code:vitaldb-bench/tools/clock_edges.py]]), and each
+  recording's clock network is adjusted by weighted least squares
+  ([[code:vitaldb-bench/tools/clock_reconcile.py]], on the dataset-independent [[code:physiosync/physiosync/network.py]]).
+  Its fundamental loops give the misclosures:
+
+  | Loop | Loops | Misclosure, median (p25–p75) | Share with abs(z) > 3 |
+  |---|---|---|---|
+  | BIS–SNUADC–PC (BIS steps, ECG–EEG bursts, SNUADC resets) | 253 | +1.3 ppm (−3.7 to +7.8) | 17% |
+  | Primus–PC, two routes (breath matching, PIP numerics) | 166 | −2.9 ppm (−48.9 to +46.7) | 5% |
+
+  Both close on average. The variance factors (2 to 5 by method; 1 would mean the stated standard errors are right)
+  show the standard errors are still too small, so single-recording flags are not yet trusted.
+
+  [[figure:loop-network-adjustment]]
 discussion: |
   The relative uncertainty between two signals depends only on the links between them and their nearest common
   node; everything above that node is shared and cancels. The BIS constant belongs in the BIS link as a latency.
@@ -59,3 +75,18 @@ open_questions:
       The ventilation loop only partly closes: its two physiological arms differ by 37–46 ppm.
 code:
   - vitaldb-bench/tools/loop_closure_art.py
+  - vitaldb-bench/tools/clock_edges.py
+  - vitaldb-bench/tools/clock_reconcile.py
+  - vitaldb-bench/tools/clock_reconcile_figs.py
+figures:
+  - id: loop-network-adjustment
+    file: loop-network-adjustment.png
+    theme: population results
+    source: vitaldb-bench tools/clock_reconcile_figs.py
+    caption: >-
+      Closing loops in the clock network. (A, B) Misclosures around the BIS and Primus loops. (C) Misclosures over
+      their stated standard errors, against the standard normal expected if those errors were right. (D) Variance
+      factor per method; 1 would mean the stated standard errors are correct.
+    alt: >-
+      Four panels: two histograms of misclosure centred near zero, one histogram of z with a dashed normal curve, and
+      a bar chart of variance factors between 2 and 5.2.

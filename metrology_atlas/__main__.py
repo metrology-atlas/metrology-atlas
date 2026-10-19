@@ -31,6 +31,7 @@ def todo(ds) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Command line: check, json, site or todo for a dataset folder; returns the exit code."""
     ap = argparse.ArgumentParser(prog="metrology-atlas")
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name in ("check", "json", "site", "todo"):

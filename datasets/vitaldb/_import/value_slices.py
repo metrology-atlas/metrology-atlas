@@ -19,12 +19,12 @@ budget; run until it reports nothing left.
 
 from __future__ import annotations
 
+import io
 import json
 import math
 import subprocess
 import sys
 import tarfile
-import io
 import time
 from pathlib import Path
 
@@ -42,6 +42,7 @@ ATLAS_ID = {}     # filled from the generated variables (source_name -> atlas id
 
 
 def pinned(repo: str, commit: str) -> Path:
+    """Extract vitaldb-resolution at the pinned commit (cached) and return its folder."""
     dest = Path.home() / "vr_pinned_" / commit[:10]
     if not (dest / "vitaldb_resolution").is_dir():
         dest.mkdir(parents=True, exist_ok=True)
@@ -57,12 +58,14 @@ def clock_minute(x: float, row: dict) -> int:
 
 
 def comp_entropy(d) -> float:
+    """Normalised entropy of a mixture's component weights (0: one component, 1: all equal)."""
     w = np.array([c.weight for c in d.components], float)
     w = w[w > 0] / w.sum()
     return float(-(w * np.log(w)).sum() / math.log(len(w))) if len(w) > 1 else 0.0
 
 
 def main(repo: str, release: str) -> None:
+    """Worked examples and joint maps of the fitted value models for the variable pages (aggregates only)."""
     import pandas as pd
     import yaml
 

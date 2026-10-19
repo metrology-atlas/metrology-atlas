@@ -141,7 +141,7 @@ figures:
       Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
       second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
       Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
-      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 74 ms (Primus, whole-release
+      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 55 ms (Primus, whole-release
       medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
       and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
       pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is

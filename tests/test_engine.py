@@ -1,7 +1,6 @@
 """The engine on a tiny made-up dataset, and on the shipped datasets."""
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest

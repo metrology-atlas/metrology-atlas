@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 import subprocess
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 CODE_XREF = re.compile(r"\[\[code:([^\]|\s]+)(?:\|([^\]]+))?\]\]")
@@ -23,13 +23,14 @@ def split(ref: str) -> tuple[str, str]:
 
 
 def local_root(ds, sw: dict) -> Path | None:
+    """The local checkout of a software item (its `local` path, relative to the dataset folder), if it exists."""
     if not sw.get("local"):
         return None
     root = (Path(ds.folder) / sw["local"]).resolve()
     return root if root.is_dir() else None
 
 
-@lru_cache(maxsize=None)
+@cache
 def _tracked(root: str) -> frozenset[str] | None:
     try:
         out = subprocess.run(["git", "-C", root, "ls-files", "-z"], capture_output=True, timeout=60, check=True)
@@ -53,6 +54,9 @@ def code_url(ds, ref: str) -> str | None:
 
 
 def check_code(ds, ref: str, where: str, problems: list[str], warnings: list[str]) -> None:
+    """Check one `software-id/path` code reference: known software, path present in the local checkout, committed;
+    appends to problems or warnings.
+    """
     name, path = split(ref)
     sw = ds.get("software", name)
     if sw is None:
@@ -83,5 +87,6 @@ def snapshot_path(ds, ref: str) -> Path | None:
 
 
 def source_of(ds, ref: str) -> dict | None:
+    """The pinned snapshot entry in dataset.yaml `sources` for the software a code reference names, if any."""
     name, _ = split(ref)
     return next((s for s in ds.meta.get("sources") or [] if s.get("software") == name), None)

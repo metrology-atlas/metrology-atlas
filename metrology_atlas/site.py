@@ -8,12 +8,12 @@ import re
 import shutil
 from pathlib import Path
 
+from metrology_atlas.chart import AXES, CHART_JS, chart_forms
 from metrology_atlas.code import CODE_XREF, code_url, split
 from metrology_atlas.compile import parameter_text, to_json
-from metrology_atlas.chart import AXES, CHART_JS, chart_forms
 from metrology_atlas.load import XREF, derived
-from metrology_atlas.planner import planner_page
 from metrology_atlas.model import KINDS, QUESTION_KIND_TITLES, QUESTION_KINDS, Dataset
+from metrology_atlas.planner import planner_page
 
 OPEN_QUESTIONS_MARK = "<!-- atlas:open-questions -->"
 """In a free page, replaced by the list of open questions (all kinds except next steps)."""
@@ -43,6 +43,10 @@ OBS_NOTE = {
 
 
 class Site:
+    """Renders every page of the atlas website as Markdown from a loaded dataset.
+
+    One instance per build. `start` sets the page being written (its item and its path back to the site root);
+    the per-kind methods (`clock`, `variable`, `study`, ...) return a page's Markdown."""
     def __init__(self, ds: Dataset) -> None:
         self.ds = ds
         self.rel = derived(ds)
@@ -52,20 +56,24 @@ class Site:
 
     # -- links -----------------------------------------------------------------------------------------------
     def name(self, kind: str, id_: str) -> str:
+        """Display name of an item (a short citation for a reference); the id if the item is missing."""
         item = self.ds.get(kind, id_)
         if kind == "reference":
             return short_citation(item.get("citation", "")) if item else id_ or id_
         return item.get("name", id_) if item else id_
 
     def href(self, kind: str, id_: str) -> str:
+        """Relative link from the current page to an item's page."""
         if kind == "reference":
             return f"{self.base}references.md#{id_}"
         return f"{self.base}{KINDS[kind].folder}/{id_}.md"
 
     def a(self, kind: str, id_: str, label: str | None = None) -> str:
+        """Markdown link to an item, labelled with its name unless a label is given."""
         return f"[{label or self.name(kind, id_)}]({self.href(kind, id_)})"
 
     def kind_of(self, id_: str, kinds=("clock", "device", "variable", "link", "parameter", "study")) -> str:
+        """Which kind an id belongs to, searching the given kinds in order."""
         return next(k for k in kinds if id_ in self.ds.items[k])
 
     def summ(self, text: str | None) -> str:
@@ -73,6 +81,9 @@ class Site:
         return self.prose(text).replace("\n", " ").strip() if text else ""
 
     def prose(self, text: str | None) -> str:
+        """Render atlas prose: `[[kind:id]]` and `[[code:...]]` references become links, named records become record
+        links.
+        """
         if not text:
             return ""
 
@@ -123,6 +134,7 @@ class Site:
         return "\n".join(out)
 
     def figure(self, f: dict) -> str:
+        """Markdown/HTML for one figure: the image (an interactive SVG as an object), caption and alt text."""
         src = f"{self.base}figures/{f['file']}"
         note = "<em>Placeholder figure.</em> " if f.get("placeholder") else ""
         caption = _inline_html(self.prose(f["caption"]).replace("\n", " "))
@@ -140,26 +152,32 @@ class Site:
                 f"  <figcaption>{note}{caption}</figcaption>\n</figure>")
 
     def start(self, item: dict | None, base: str = "../") -> None:
+        """Begin a page: set its item and its relative path to the site root, and reset the figures placed so far."""
         self.item, self.base, self.placed = item, base, set()
 
     def rest_figures(self) -> str:
+        """A Figures section with the item's figures not already placed inline."""
         rest = [f for f in (self.item or {}).get("figures", []) if f["id"] not in self.placed]
         return self.section("Figures", "\n\n".join(self.figure(f) for f in rest)) if rest else ""
 
     def many(self, kind: str, ids) -> str:
+        """Comma-separated links to several items of one kind, or a dash."""
         return ", ".join(self.a(kind, i) for i in ids or []) or "—"
 
     # -- building blocks ---------------------------------------------------------------------------------------
     def glance(self, rows: list[tuple[str, str]]) -> str:
+        """The at-a-glance table at the top of a page; empty rows are left out."""
         rows = [(k, v) for k, v in rows if v not in (None, "", "—")]
         if not rows:
             return ""
         return "| | |\n|---|---|\n" + "\n".join(f"| **{k}** | {v} |" for k, v in rows) + "\n"
 
     def section(self, title: str, body: str) -> str:
+        """A level-2 section, or nothing when the body is empty."""
         return f"\n## {title}\n\n{body.strip()}\n" if body and body.strip() not in ("", "—") else ""
 
     def params_table(self, ids) -> str:
+        """Table of parameters: value, status and the study each came from."""
         ids = list(ids or [])
         if not ids:
             return ""
@@ -171,6 +189,7 @@ class Site:
         return out
 
     def observations_table(self, ids) -> str:
+        """Table of observations, ordered by status then name."""
         ids = sorted(ids or [], key=lambda o: (OBS_ORDER.index(self.ds.get("observation", o)["status"]),
                                                self.ds.get("observation", o)["name"]))
         if not ids:
@@ -182,6 +201,7 @@ class Site:
         return out
 
     def observation(self, i: str, o: dict) -> str:
+        """The page for one observation."""
         r = self.rel["observation"][i]
         note = ""
         if o["status"] == "withdrawn":
@@ -201,6 +221,7 @@ class Site:
             ("Supersedes", self.many("observation", o.get("supersedes")))]), body)
 
     def studies_table(self, ids) -> str:
+        """Table of studies, newest first."""
         ids = sorted(ids or [], key=lambda s: str(self.ds.get("study", s)["date"]), reverse=True)
         if not ids:
             return ""
@@ -211,10 +232,12 @@ class Site:
         return out
 
     def refs(self, ids) -> str:
+        """Bulleted reference list with links to the references page."""
         return "\n".join(f"- {self.ds.get('reference', r)['citation']} [↗]({self.href('reference', r)})"
                          for r in ids or [])
 
     def page(self, item: dict, glance: str, body: str) -> str:
+        """Assemble a page: title, summary, stub note, at-a-glance table, body, remaining figures and tags."""
         tags = item.get("tags")
         head = f"# {item['name']}\n\n{self.summ(item.get('summary'))}\n\n"
         stub = ("!!! note \"Stub\"\n    Imported from the time-source table; the full page is still to be written.\n\n"
@@ -223,6 +246,7 @@ class Site:
 
     # -- pages per kind ----------------------------------------------------------------------------------------
     def clock(self, i: str, c: dict) -> str:
+        """The page for one clock: its modes, links, route to UTC and the variables it stamps."""
         r = self.rel["clock"][i]
         modes = "\n".join(f"- **{m['name']}** (`{m['id']}`): {self.prose(m.get('description'))}"
                           for m in c.get("modes") or [])
@@ -249,6 +273,7 @@ class Site:
                                          ("Kept by", self.many("device", r.get("devices")))]), body)
 
     def device(self, i: str, d: dict) -> str:
+        """The page for one device: its variables, clocks and scale factors."""
         r = self.rel["device"][i]
         sig = ""
         if r.get("variables"):
@@ -349,7 +374,7 @@ class Site:
                     walk(nxt, path + [(nxt, lid)], seen | {nxt})
 
         walk(start, [(start, None)], {start})
-        cost = lambda r: sum(self.STATUS_COST[self.ds.get("link", lid)["status"]] for _, lid in r[1:])  # noqa: E731
+        cost = lambda r: sum(self.STATUS_COST[self.ds.get("link", lid)["status"]] for _, lid in r[1:])
         return sorted(out, key=lambda r: (cost(r), len(r)))
 
     def _hop(self, lid: str) -> str:
@@ -376,6 +401,7 @@ class Site:
         return self._shared
 
     def utc_route(self, i: str, c: dict) -> str:
+        """How a clock is traced to UTC: each route through the timing graph, with the links on it."""
         if "utc" not in self.ds.items["clock"]:
             return self.prose(c.get("utc_plan"))
         if i == "utc":
@@ -422,7 +448,7 @@ class Site:
     def _bar(self, step: dict) -> str:
         x0, x1 = self.AX
         w, h = 240, 18
-        sx = lambda v: (math.log10(max(v, 10 ** x0)) - x0) / (x1 - x0) * w  # noqa: E731
+        sx = lambda v: (math.log10(max(v, 10 ** x0)) - x0) / (x1 - x0) * w
         out = f'<svg viewBox="0 0 {w} {h}" class="tc-bar" aria-hidden="true">'
         for k in range(x0, x1 + 1):
             out += f'<line x1="{sx(10 ** k):.1f}" x2="{sx(10 ** k):.1f}" y1="0" y2="{h}" class="tc-tick"/>'
@@ -477,6 +503,7 @@ class Site:
                 f'<div class="tc-txt"><div class="tc-meta">{meta}</div>{" ".join(bits)}</div></div>')
 
     def auto_chain(self, s: dict) -> list[dict]:
+        """A chain from UTC to a variable's stored stamp, derived from its default timing form when none is written."""
         t = next((x for x in s.get("timing") or [] if x.get("default")), (s.get("timing") or [None])[0])
         if t is None:
             return []
@@ -496,6 +523,7 @@ class Site:
         return steps
 
     def chain(self, s: dict) -> str:
+        """The chain section of a variable page: each step from UTC to the stored time stamp."""
         first = self.ds.meta.get("utc_step")
         steps = s.get("chain") or self.auto_chain(s)
         if not steps:
@@ -521,6 +549,7 @@ class Site:
         return f"**{x['name']}**{link}: {self.prose(x.get('description'))}"
 
     def variable(self, i: str, s: dict) -> str:
+        """The page for one variable: measurand, time side, value side, chain and evidence."""
         r = self.rel["variable"][i]
         delays = "\n".join(f"- {self._lag(x)}" for x in s.get("delays") or [])
         window = self._lag(s["window"]) if s.get("window") else ""
@@ -566,9 +595,11 @@ class Site:
             ("Rate", rate), ("Unit", s.get("unit"))]), body)
 
     def sub(self, title: str, body: str) -> str:
+        """A level-3 subsection, or nothing when the body is empty."""
         return f"\n### {title}\n\n{body.strip()}\n" if body and body.strip() not in ("", "—") else ""
 
     def value_side(self, s: dict) -> str:
+        """The value side of a variable page: resolution, accuracy and its value model, if any."""
         v = s.get("value") or {}
         if not v:
             return "Its value side is still to be described."
@@ -594,7 +625,8 @@ class Site:
         return out
 
     def anchor_basis(self, v: dict) -> tuple[str | None, str]:
-        """The basis and note of a value's anchor, falling back to the dataset's default when only an anchor is given."""
+        """The basis and note of a value's anchor, falling back to the dataset's default when only an anchor is given.
+        """
         if v.get("anchor_basis"):
             return v["anchor_basis"], v.get("anchor_note") or ""
         d = self.ds.meta.get("anchor_default") or {}
@@ -603,6 +635,7 @@ class Site:
         return None, ""
 
     def anchor_label(self, v: dict) -> str | None:
+        """How a variable's rounding interval sits around the recorded value, with the basis for it."""
         basis, _ = self.anchor_basis(v)
         if not (v.get("anchor") or basis):
             return None
@@ -617,7 +650,7 @@ class Site:
                 ("ceiling", -1.0, 0.0, "true value at or below the record"),
                 ("time window", -1.0, 0.0, "stamped at its end: the window lies before the stamp")]
         H = 46 * len(rows) + 40
-        X = lambda v: L + (v + 1.6) / 3.2 * (W - L - R)  # noqa: E731
+        X = lambda v: L + (v + 1.6) / 3.2 * (W - L - R)
         o = [f'<svg viewBox="0 0 {W} {H}" class="ms" role="img" aria-label="The three anchors, and a time window '
              'stamped at its end">']
         for k, (name, a, b, note) in enumerate(rows):
@@ -696,6 +729,7 @@ class Site:
         return out
 
     def spread_text(self, ref: str, unit: str) -> str:
+        """One sentence on how wide a value model's distributions are across the release."""
         from metrology_atlas.readers import spread
         sp = spread(self.ds, ref)
         if not sp:
@@ -713,6 +747,7 @@ class Site:
         return out
 
     def model_summary(self, ref: str) -> str:
+        """Summary of a pinned value model: its kind, fitted numbers and the snapshot it was read from."""
         from metrology_atlas.code import source_of
         from metrology_atlas.readers import summarise
         m = summarise(self.ds, ref)
@@ -816,6 +851,7 @@ class Site:
         return spread(self.ds, ref) if ref and "slices.json" in ref else None
 
     def slice_svg(self, grid, dens, xlabel, title, W=300, H=190, zoom=False) -> str:
+        """One small SVG panel of a distribution of the true value given a record (optionally zoomed to its mass)."""
         if zoom:   # each panel at its own scale: symmetric about zero, wide enough for 99.8% of the mass
             dx = [b - a for a, b in zip(grid, grid[1:])] + [grid[-1] - grid[-2]]
             mass = [y * d for y, d in zip(dens, dx)]
@@ -833,8 +869,8 @@ class Site:
         pw, ph = W - L - R, H - T - B
         x0, x1 = grid[0], grid[-1]
         y1 = max(dens) * 1.08 or 1.0
-        X = lambda x: L + (x - x0) / (x1 - x0) * pw  # noqa: E731
-        Y = lambda y: T + (y1 - y) / y1 * ph  # noqa: E731
+        X = lambda x: L + (x - x0) / (x1 - x0) * pw
+        Y = lambda y: T + (y1 - y) / y1 * ph
         pts = " ".join(f"{X(x):.1f},{Y(y):.1f}" for x, y in zip(grid, dens))
         o = [f'<svg viewBox="0 0 {W} {H}" class="ms" role="img" aria-label="{title or "slice"}">',
              f'<rect x="{L}" y="{T}" width="{pw}" height="{ph}" class="ms-frame"/>',
@@ -857,6 +893,7 @@ class Site:
         return "".join(o) + "</svg>"
 
     def slice_examples(self, s: dict, sl: dict) -> str:
+        """Worked examples of a value model: one panel per recorded value."""
         unit, by = sl.get("unit") or "", sl.get("by", "recorded value")
         panels, notes = [], []
         for n, e in enumerate(sl["examples"], 1):
@@ -883,6 +920,7 @@ class Site:
         return out
 
     def link(self, i: str, l: dict) -> str:
+        """The page for one clock link: correction rule, drift, period and size, with their evidence."""
         r = self.rel["link"][i]
         corr = l.get("correction") or {}
         pt = lambda p: self.a("parameter", p, parameter_text(self.ds.get("parameter", p))) if p else None
@@ -899,6 +937,7 @@ class Site:
             ("Corrected every", pt(corr.get("period"))), ("Correction size", pt(corr.get("size")))]), body)
 
     def parameter(self, i: str, p: dict) -> str:
+        """The page for one parameter: value, status, the study that produced it and where it is used."""
         used = []
         for lid, l in self.ds.items["link"].items():
             corr = l.get("correction") or {}
@@ -929,6 +968,7 @@ class Site:
             ("Date", str(p["date"]) if p.get("date") else None)]) + body
 
     def study(self, i: str, s: dict) -> str:
+        """The page for one study: status note, data, method, results, discussion, open questions and code."""
         r = self.rel["study"][i]
         note = ""
         if s["status"] in {"withdrawn", "superseded", "draft", "open"}:
@@ -959,6 +999,7 @@ class Site:
             ("Supersedes", self.many("study", s.get("supersedes")))]), body)
 
     def method(self, i: str, m: dict) -> str:
+        """The page for one method: its techniques, studies and the observations they produced."""
         r = self.rel["method"][i]
         techs = "\n".join(f"- **{self.a('technique', t)}**: {self.summ(self.ds.get('technique', t)['summary'])}"
                           for t in m.get("techniques") or [])
@@ -971,6 +1012,7 @@ class Site:
         return self.page(m, self.glance([("Techniques", self.many("technique", m.get("techniques")))]), body)
 
     def technique(self, i: str, t: dict) -> str:
+        """The page for one technique."""
         r = self.rel["technique"][i]
         body = (self.section("Description", self.prose(t.get("description")))
                 + self.section("Studies", self.studies_table(r.get("studies")))
@@ -990,6 +1032,7 @@ class Site:
         return '!!! abstract "Population and individual"\n\n' + "\n".join("    " + x for x in body.splitlines()) + "\n\n"
 
     def levels_table(self, ids) -> str:
+        """Table of how each worked example's error acts on a cohort and on each patient."""
         rows = [(x, self.ds.get("example", x)) for x in ids if self.ds.get("example", x).get("levels")]
         if not rows:
             return ""
@@ -1003,6 +1046,7 @@ class Site:
         return out + "\n"
 
     def example(self, i: str, e: dict) -> str:
+        """The page for one worked example."""
         note = {"planned": '!!! note "Planned"\n    Not yet worked through; the page says what it will show.\n\n',
                 "draft": '!!! info "Draft"\n    Worked through on a few cases; numbers may change.\n\n'}.get(e["status"], "")
         inputs = "".join(f"| {self.a('variable', v)} | {self.ds.get('variable', v).get('unit') or ''} | "
@@ -1031,6 +1075,7 @@ class Site:
             ("Observations", self.many("observation", e.get("observations")))]), body)
 
     def examples_table(self, ids) -> str:
+        """Table of worked examples."""
         ids = sorted(ids or [], key=lambda x: self.ds.get("example", x)["name"])
         if not ids:
             return ""
@@ -1039,6 +1084,7 @@ class Site:
             f"{self.summ(self.ds.get('example', x)['summary'])} |\n" for x in ids)
 
     def software(self, i: str, w: dict) -> str:
+        """The page for one software item: repository, visibility, role and the code the atlas links to."""
         r = self.rel["software"][i]
         note = ""
         if w.get("visibility") == "private":
@@ -1069,7 +1115,7 @@ class Site:
         if uses:
             uses = "| Study | Code | Summary |\n|---|---|---|\n" + uses
         mentions = [m.split(":", 1) for m in r.get("mentioned_in") or []]
-        mentions = "\n".join(f"- {KINDS[k].title[:-1] if KINDS[k].title.endswith('s') else KINDS[k].title}: "
+        mentions = "\n".join(f"- {KINDS[k].title.removesuffix('s')}: "
                              f"{self.a(k, x)}" for k, x in sorted(mentions, key=lambda m: (m[0], m[1])))
         repo = f"[{w['repo'].removeprefix('https://')}]({w['repo']})" if w.get("repo") else (
             "not yet released" if w.get("visibility") == "not yet released" else "not published")
@@ -1120,6 +1166,7 @@ class Site:
 
     # -- indexes -----------------------------------------------------------------------------------------------
     def kind_index(self, kind: str) -> str:
+        """The index page for one kind of item (studies grouped by method)."""
         k = KINDS[kind]
         items = self.ds.items[kind]
         out = f"# {k.title}\n\n{k.help}\n\n"
@@ -1149,7 +1196,7 @@ class Site:
         if kind == "observation":
             return out + self.observations_table(list(items)).replace("](../observations/", "](")
         if kind == "example":
-            intro = self.prose((self.ds.meta.get("examples_intro") or ""))
+            intro = self.prose(self.ds.meta.get("examples_intro") or "")
             out += (intro + "\n\n" if intro else "")
             for side, title in (("time", "Time side: when clocks are misaligned"),
                                 ("value", "Value side: when inputs are rounded"), ("both", "Both sides")):
@@ -1165,6 +1212,7 @@ class Site:
         return out
 
     def home(self, json_name: str) -> str:
+        """The home page: summary, notice, working reference, timing graph, synchronisation figures and citation."""
         m = self.ds.meta
         figs = {f["id"]: f for f in m.get("figures") or []}
         out = f"---\nhide:\n  - navigation\n---\n\n# {m['name']}\n\n"
@@ -1178,7 +1226,7 @@ class Site:
                 out += self.figure(figs["system-overview"]) + "\n\n"
                 self.placed.add("system-overview")
                 if figs["system-overview"].get("file") == "timing-graph.svg":
-                    from metrology_atlas.overview import overview_table  # noqa: PLC0415
+                    from metrology_atlas.overview import overview_table
                     out += ("??? info \"The links in the timing graph\"\n\n"
                             + "\n".join("    " + ln for ln in overview_table(
                                 self.ds, href=lambda kind, id_: f"{KINDS[kind].folder}/{id_}.md").splitlines())
@@ -1220,6 +1268,7 @@ class Site:
         return out
 
     def time_chart(self) -> str:
+        """The accuracy-against-resolution chart of every time stamp, with its data embedded."""
         if not any(s.get("timing") for s in self.ds.items["variable"].values()):
             return ""
         data = chart_forms(self.ds)
@@ -1280,7 +1329,7 @@ class Site:
         out += ("## Plan a multi-variable analysis\n\nThe [synchronisation planner](planner.md) takes the variables an "
                 "analysis combines and reports how well their times line up, how we know, and what window sizes keep "
                 "cross-modal features meaningful.\n\n"
-                f"The [devices](devices/index.md) that keep the clocks and produce the variables have pages of their own.\n")
+                "The [devices](devices/index.md) that keep the clocks and produce the variables have pages of their own.\n")
         return out
 
     def evidence_page(self) -> str:
@@ -1290,7 +1339,7 @@ class Site:
                "work each; they produce **parameters** (the numbers, each with its status and spread) and support "
                "**observations** (general facts about the data). Studies are grouped by **method**, the way they get "
                "at the answer, and share **techniques**.\n\n"
-               f"| | | |\n|---|---|---|\n")
+               "| | | |\n|---|---|---|\n")
         for k in ("study", "observation", "parameter", "method", "technique"):
             out += f"| [{KINDS[k].title}]({KINDS[k].folder}/index.md) | {len(ds.items[k])} | {KINDS[k].help} |\n"
         out += "\n## Methods\n\n| Method | Studies | What it does |\n|---|---|---|\n"
@@ -1332,6 +1381,7 @@ class Site:
         return out
 
     def open_questions_page(self) -> str:
+        """The open questions page, gathered from every study."""
         out = ("# Open questions\n\nWhat the studies left open, gathered from every study and grouped by kind: results "
                "nobody can yet explain, explanations the evidence only weakly supports, assumptions the data cannot "
                "test, and places where two studies disagree. The last group lists checks still to run and decisions "
@@ -1340,6 +1390,7 @@ class Site:
         return out + (body or "None recorded yet.\n")
 
     def records_page(self) -> str:
+        """The page listing every record (for VitalDB, case) named in the atlas, with the pages that name it."""
         rec = self.ds.meta.get("records") or {}
         name = rec.get("name", "record")
         rows = self.rel.get("record", {})
@@ -1392,10 +1443,11 @@ class Site:
                 f"| **Time** | {clocks} [clocks](clocks/index.md) and {links} [links](links/index.md) between them; "
                 f"{chains} variables with a written chain from UTC, {timed} with timing against the working reference | "
                 "the interval each value describes, the stamp grids (chart below) |\n"
-                f"| **Value** | {(str(acc) + ' variables so far') if acc else 'Not yet described for any variable: it needs the instruments\' calibration records ([why](studies/instrument-calibration.md))'} | {valued} variables, {models} with fitted rounding models "
+                f"| **Value** | {(str(acc) + ' variables so far') if acc else 'Not yet described for any variable: it needs the instruments’ calibration records ([why](studies/instrument-calibration.md))'} | {valued} variables, {models} with fitted rounding models "
                 "([Value](value.md)) |\n\n")
 
     def references_page(self) -> str:
+        """The references page, grouped, each entry with the pages that cite it."""
         out = ("# References\n\nEverything the atlas cites: standards, the data and how it was recorded, the literature "
                "behind each model, and the software the work was done with. Each entry lists the pages that cite it.\n\n")
         order = self.ds.meta.get("reference_groups") or []
@@ -1523,8 +1575,8 @@ def placed_variables(ds) -> dict[str, dict[str, list[tuple[str, dict]]]]:
     for id_, item in sorted(ds.items["variable"].items(), key=lambda x: x[1]["name"].lower()):
         sec, grp = variable_place(item)
         out.setdefault(sec, {}).setdefault(grp, []).append((id_, item))
-    key_s = lambda x: (SECTION_ORDER.index(x) if x in SECTION_ORDER else 99, x)  # noqa: E731
-    key_g = lambda x: (order.index(x) if x in order else 99, x)  # noqa: E731
+    key_s = lambda x: (SECTION_ORDER.index(x) if x in SECTION_ORDER else 99, x)
+    key_g = lambda x: (order.index(x) if x in order else 99, x)
     return {sec: {g: out[sec][g] for g in sorted(out[sec], key=key_g)} for sec in sorted(out, key=key_s)}
 
 
@@ -1540,7 +1592,7 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     (docs / "data" / json_name).write_text(json.dumps(to_json(ds), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     if (Path(ds.folder) / "figures").is_dir():
         # the timing graph is generated from the atlas on every build (and refreshed in the dataset's folder)
-        from metrology_atlas.overview import overview_svg  # noqa: PLC0415
+        from metrology_atlas.overview import overview_svg
         svg = overview_svg(ds, href=lambda kind, id_: f"../{KINDS[kind].folder}/{id_}.html")
         (Path(ds.folder) / "figures" / "timing-graph.svg").write_text(svg, encoding="utf-8")
         shutil.copytree(Path(ds.folder) / "figures", docs / "figures")
@@ -1645,7 +1697,7 @@ def short_citation(citation: str) -> str:
 
 
 _CHEM = re.compile(r"(?<![A-Za-z]/)(?<![\w`])(SaO|SpO|PaO|PaCO|PvO|PvCO|SvO|ScvO|FiO|FeO|EtO|EtCO|ETCO|FiCO|PCO|PO|CO|O)2(?![\w`])")
-_SKIP = re.compile(r"```.*?```|`[^`\n]*`|\]\([^)]*\)|<[^>\n]+>|https?://\S+", re.S)
+_SKIP = re.compile(r"```.*?```|`[^`\n]*`|\]\([^)]*\)|<[^>\n]+>|https?://\S+", re.DOTALL)
 
 
 def chem_subscripts(md: str) -> str:

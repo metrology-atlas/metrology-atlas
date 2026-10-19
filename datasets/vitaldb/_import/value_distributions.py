@@ -33,6 +33,7 @@ INDIGO, ORANGE, GREY = "#3f51b5", "#e65100", "#9e9e9e"
 
 
 def atlas_id(name: str) -> str:
+    """The atlas id for a vitaldb-resolution variable name."""
     return {"caseend": "case-end"}.get(name, re.sub(r"[^a-z0-9]+", "-", name.lower().replace("%", "-pct")).strip("-"))
 
 
@@ -78,6 +79,7 @@ def numeric_hist(ax, x, step, unit, plt):
 
 
 def main(repo: str, release: str) -> None:
+    """Draw the recorded-value distribution figures for the variable pages (aggregates only)."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -112,7 +114,7 @@ def main(repo: str, release: str) -> None:
             ax.set_xlabel("records")
             info = {"n": int(vc.sum()), "categories": int(vc.size), "shown": int(top.size)}
             title = f"{name}: {info['n']:,} records, {info['categories']} categories" + (
-                f" (12 most common shown)" if vc.size > 12 else "")
+                " (12 most common shown)" if vc.size > 12 else "")
         else:
             xs = pd.to_numeric(pd.Series(x), errors="coerce").to_numpy(float)
             if v.get("zero_status"):

@@ -40,7 +40,7 @@ def chart_forms(ds) -> dict:
         for t in s.get("timing") or []:
             for c in t.get("corrects") or []:
                 arrows.add((by_form[(sid, c)], by_form[(sid, t["id"])]))
-    lo = lambda v: math.log10(max(v, 1e-6))  # noqa: E731
+    lo = lambda v: math.log10(max(v, 1e-6))
     xs = [lo(v) for it in items.values() for v in it["delay"]]
     ys = [lo(v) for it in items.values() for v in it["interval"] if v > 0]
     ext = {"x": [math.floor(min(xs, default=-3)), math.ceil(max(xs, default=1) + 0.3)],

@@ -119,6 +119,9 @@ def link_rows(ds, g):
 
 
 def overview_svg(ds, root="utc", href=lambda kind, id_: ""):
+    """Draw the timing graph as an SVG: every clock below the clock it is measured against, links labelled with drift
+    and correction interval; `href` gives each box's link.
+    """
     g = graph(ds, root)
     clocks, xy, depth = g["clocks"], g["xy"], g["depth"]
     info = {r["id"]: r for r in link_rows(ds, g)}
@@ -213,7 +216,7 @@ def overview_table(ds, href=lambda kind, id_: "", root="utc") -> str:
     """Markdown table of the links, keyed by the figure's numbers."""
     g = graph(ds, root)
     rows = link_rows(ds, g)
-    name = lambda c: g["clocks"].get(c, {"name": c})["name"]  # noqa: E731
+    name = lambda c: g["clocks"].get(c, {"name": c})["name"]
     out = ["| # | Link | Clock | Against | Drift | Corrected every | Correction size | Status |",
            "|---:|---|---|---|---|---|---|---|"]
     for r in rows:

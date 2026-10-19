@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 sys.path.insert(0, sys.argv[1])
-from time_source_accuracy_figure import ENTRIES  # noqa: E402
+from time_source_accuracy_figure import ENTRIES
 
 D = Path(__file__).resolve().parents[1]
 
@@ -135,12 +135,14 @@ CLOCKS = {
 
 
 def write(path: Path, item: dict) -> None:
+    """Write a generated item as YAML, unless the file already exists."""
     if path.exists():
         return
     path.write_text(yaml.safe_dump(item, sort_keys=False, allow_unicode=True, width=110), encoding="utf-8")
 
 
 def form(entry: str, name: str, default: bool) -> dict:
+    """One timing form of a variable (delay and interval ranges, clock domain) from the time-source table."""
     e = ENTRIES[entry]
     f = {"id": entry.replace("_", "-"), "name": name}
     if default:

@@ -97,8 +97,8 @@ code:
   - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py
   - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/tests/test_resets.py
   - vitaldb-bench/tools/clock_model_fit.py
-  - analysis-workspace/results/clock/scripts/gapscan.py
-  - analysis-workspace/results/clock/scripts/glitch.py
+  - vitaldb-bench/tools/adhoc/reset_gapscan.py
+  - vitaldb-bench/tools/adhoc/reset_glitch.py
 figures:
   - id: reset-classes
     theme: drift and resets

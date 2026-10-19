@@ -65,10 +65,12 @@ def plain(v):
 
 
 def sig(x: float) -> float:
+    """Round to 6 significant figures."""
     return float(f"{x:.6g}")
 
 
 def waveform_units(root: Path) -> dict:
+    """Units of each waveform track, read from the signal survey's per-record metadata."""
     units = {}
     for f in sorted((root / "records").glob("*.npz"))[:200]:
         z = np.load(f)
@@ -81,6 +83,7 @@ def waveform_units(root: Path) -> dict:
 
 
 def main(root: Path) -> None:
+    """Write device track tables (gains, offsets, resolution) from the signal survey output in `root`."""
     meta = pd.concat([pd.read_parquet(f) for f in glob.glob(str(root / "tables" / "meta_*.parquet"))])
     meta = meta[~meta.track.str.contains("#")]
     meta["track"] = meta.track.str.replace("__", "/")
