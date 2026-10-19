@@ -32,7 +32,7 @@ jobs:
       - name: Check the dataset
         run: python -m metrology_atlas check datasets/vitaldb
       - name: Generate the site source
-        run: python -m metrology_atlas site datasets/vitaldb --out _site_src
+        run: python -m metrology_atlas site datasets/vitaldb --out _site_src --release
       - name: Build the site
         working-directory: _site_src
         run: zensical build
