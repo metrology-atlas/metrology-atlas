@@ -67,15 +67,22 @@ results: |
   - **Drift varies within a recording more than quantisation allows.** Between consecutive intervals of the same
     recording, BIS drift varies by a median 3.5 ppm (standard deviation; quarter of recordings above 8.6) and
     SNUADC by 1.2 ppm (above 12.7 in a quarter), against about 1.0 and 0.3 ppm from the stamp resolution. Some of
-    this may be the recorder PC's own corrections. In 93 recordings with overlapping BIS and SNUADC intervals the
-    deviations from each recording's median are correlated (r = −0.56). A shared recorder-PC correction would
-    correlate them, with a sign that depends on how each device's steps are defined; that is still to be checked,
-    so the correlation is not yet evidence either way.
+    this may be the recorder PC's own corrections.
+  - **But the BIS and SNUADC swings move in opposite directions.** In the 133 recordings with at least two
+    intervals of each device, each SNUADC interval's deviation from the recording's mean drift correlates with the
+    time-matched BIS deviation at r = −0.54 (288 intervals; with BIS intervals shuffled within each recording,
+    −0.01, 95% range −0.22 to 0.18). Both drifts are defined the same way (how much the PC's clock gains on the
+    device's), so a PC clock that ran fast for a while would raise both: a positive correlation. The negative one
+    points instead to something acting on the two oscillators in opposite directions (temperature acts on
+    crystals of different cuts with opposite signs), or to a coupling in how they are measured that is not yet
+    found. Within a recording the SNUADC drift swings more than the BIS drift (standard deviation 8.9 against
+    2.6 ppm).
   - **Primus: every 7,230 s, also on its own timer, and the AWP pauses belong to the cycle.** 8,077 corrections in
     4,529 recordings, each a whole number of 16 ms samples (one sample at 62.5 Hz) in either direction, often two
     at once; 7,230 s apart, or twice that. The 10,496 AWP pauses of 19–23.5 s in 5,502 recordings recur at the
     same interval, and where a correction lies within 60 s (69% of pauses) it follows the pause by about 21.6 s.
-    The CO2 track has no gap at the same moment in 90% of them ([[observation:primus-awp-pauses]]).
+    The CO2 track has no gap at the same moment in 90% of them, and the AWP data in the pause are lost, not
+    re-stamped: after each pause AWP still lines up with CO2 at the lag it had before ([[observation:primus-awp-pauses]]).
   - These cycles end the long segments: the BIS segments that pile up at 7,500–8,500 s and the Primus AWP segments
     that never exceed about 2 h ([[study:continuity-gaps-segments]]) are cut by the corrections and pauses.
 
@@ -92,12 +99,14 @@ limitations: |
   - Backward steps were capped at 3,000 per track in the step scan; the few recordings with more lose some resets.
   - All rates are against the recorder PC; none is traceable to UTC ([[link:recorder-pc-vs-utc]] is assumed).
 open_questions:
-  - title: "Is AWP data lost in the Primus pauses?"
-    kind: next step
+  - title: "Why does the SNUADC appear to speed up when the BIS slows down?"
+    kind: hypothesis
     summary: >-
-      The CO2 track carries on while AWP stops for about 21 s, and the AWP waveform appears to run on across the
-      pause ([[study:step-classification]]). Comparing AWP breaths with CO2 breaths before and after a pause will
-      show whether 21 s of AWP is missing or only its stamps jumped.
+      Within a recording, the SNUADC and BIS drift deviations against the recorder PC are anticorrelated (r = −0.54,
+      133 recordings; shuffled null −0.01), the opposite of what a shared PC excursion would give. Candidates: a
+      common factor acting on the two oscillators with opposite signs (temperature, on crystals of different cuts),
+      or a coupling in how the two drifts are measured. Test against each recording's time course (temperature
+      itself is not recorded; operating-room events and recording length are proxies) and in the joint clock model.
   - title: "How much of the drift spread is the recorder PC's?"
     kind: next step
     summary: >-

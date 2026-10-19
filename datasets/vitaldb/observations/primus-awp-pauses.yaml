@@ -3,14 +3,38 @@ name: The Primus AWP stops for about 21 s every 7,230 s
 summary: >-
   In 5,502 recordings the Primus airway-pressure waveform has gaps of 19–23.5 s (whole messages of 0.48 s, mostly
   21.12 s) that recur every 7,230 s, the Primus's correction interval; a clock correction follows about 21.6 s
-  after. The CO2 waveform carries on through 90% of them.
-status: likely
+  after. The CO2 waveform carries on through 90% of them. The 21 s of AWP are lost, not merely re-stamped.
+status: established
 clocks: [primus-clock]
 devices: [primus]
 variables: [primus-awp, primus-co2]
 studies: [device-correction-schedules, step-classification]
+code:
+  - vitaldb-bench/tools/correction_schedules.py
+  - vitaldb-bench/tools/primus_pause_test.py
+description: |
+  **Lost, not re-stamped.** CO2 and AWP come from the same device and the same breaths, so their breathing patterns
+  line up at a small, fixed lag. For each pause, that lag was measured in the 2 minutes before it (median 1 s), and
+  the correlation in the 2 minutes after it was compared at the same lag (as if AWP data were lost and the stamps
+  are right) and at the same lag plus the pause length (as if no data were lost and only the stamps jumped). In
+  9,122 pauses with data on both sides, 8,393 had AWP and CO2 correlated before the pause; in the 5,232 (3,552
+  recordings) whose breathing rhythm does not make the two answers look alike, 96% fit lost data (median
+  correlation 0.69 against −0.35).
+
+  [[figure:primus-awp-pauses]]
 consequence: |
-  An AWP gap of about 21 s is the Primus's two-hourly resynchronisation, not a disconnection or a random loss.
-  Whether the 21 s of AWP is missing, or only its stamps jumped, is open: the waveform appears to run on across the
-  pause.
-handling: Not handled yet; flagged as a periodic device event in the step classes.
+  An AWP gap of about 21 s is the Primus's two-hourly resynchronisation: about 21 s of airway pressure is never
+  recorded, and the stamps after it are right. It is not a disconnection, and nothing needs re-timing; CO2 covers
+  the same breaths.
+handling: Treat it as a real gap. Flagged as a periodic device event in the step classes.
+figures:
+  - id: primus-awp-pauses
+    file: primus-awp-pauses.png
+    theme: data continuity
+    source: vitaldb-bench tools/primus_pause_test.py
+    caption: >-
+      Each point is one AWP pause: after the pause, the correlation between AWP and CO2 at the lag measured before
+      it (vertical: AWP data lost) against the correlation at that lag plus the pause length (horizontal: only the
+      stamps jumped). Blue: pauses whose breathing rhythm separates the two answers (5,232); grey: pauses where the
+      rhythm makes them alike. Almost all blue points lie above the diagonal.
+    alt: A scatter of about 8,000 points; the blue ones form a broad band at a vertical correlation near 0.7 across horizontal values from −1 to 0.5, above the diagonal.

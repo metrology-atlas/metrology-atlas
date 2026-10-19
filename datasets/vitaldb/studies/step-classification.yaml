@@ -67,8 +67,9 @@ results: |
       [[study:continuity-gaps-segments]] lose nothing. BIS fractional gaps (mostly 0.13–0.5 s) sit between the
       controls (73%): roughly a third lose data.
     - Primus AWP gaps of whole messages (80% of them 20–23 s, in steps of one message) run on almost like the
-      control (86% against 88%), yet the test is weak for AWP, whose 0.48 s records are often nearly flat. Whether
-      these 21 s gaps lose breaths is open.
+      control (86% against 88%), yet the test is weak for AWP, whose 0.48 s records are often nearly flat. A
+      breath-level test against CO2 shows these gaps do lose about 21 s of AWP ([[observation:primus-awp-pauses]]):
+      for AWP, join_z cannot tell.
   - Seconds missing over the release in ECG II: about 196,700 s in fractional gaps, 70,200 s in shared pauses,
     5,100 s in whole-message steps.
 
@@ -86,12 +87,6 @@ limitations: |
     test can neither confirm nor rule out at 2–20 ms.
   - Backward steps were capped at 3,000 per track in the scan.
 open_questions:
-  - title: "Do Primus's 21 s gaps lose breaths?"
-    kind: next step
-    summary: >-
-      80% of AWP whole-message gaps are 20–23 s, not shared with other devices. A breath-level test (does the
-      breath timing jump by the gap?) and the ventilator's state around them would settle whether data or only
-      stamps are missing.
   - title: "The remaining backward steps"
     kind: next step
     summary: >-
