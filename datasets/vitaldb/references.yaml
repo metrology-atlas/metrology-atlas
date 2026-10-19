@@ -327,3 +327,28 @@
   note: Reported clock times heap on multiples of 5, 15, 30 and 60 minutes; rounding probabilities are fitted by
     maximum likelihood and Bayes' rule gives the distribution of the true time given the reported one. Also a
     Tinbergen Institute discussion paper (TI 01-110/3, 2001).
+- id: rubin1987multiple
+  group: Metrology
+  citation: Rubin DB. Multiple Imputation for Nonresponse in Surveys. New York; Wiley; 1987.
+  doi: 10.1002/9780470316696
+- id: cole2006mime
+  group: Metrology
+  citation: Cole SR, Chu H, Greenland S. Multiple-imputation for measurement-error correction. Int J Epidemiol.
+    2006;35(4):1074-1081.
+  doi: 10.1093/ije/dyl097
+- id: carroll2006measurement
+  group: Metrology
+  citation: Carroll RJ, Ruppert D, Stefanski LA, Crainiceanu CM. Measurement Error in Nonlinear Models. A Modern
+    Perspective. 2nd ed. Boca Raton; Chapman and Hall/CRC; 2006.
+  doi: 10.1201/9781420010138
+- id: kdigo2012aki
+  group: Data and recording
+  citation: Kidney Disease Improving Global Outcomes (KDIGO) Acute Kidney Injury Work Group. KDIGO clinical practice
+    guideline for acute kidney injury. Kidney Int Suppl. 2012;2(1):1-138.
+  doi: 10.1038/kisup.2012.1
+- id: michard2000ppv
+  group: Pulse arrival time
+  citation: Michard F, Boussat S, Chemla D, Anguel N, Mercat A, Lecarpentier Y, Richard C, Pinsky MR, Teboul JL.
+    Relation between respiratory changes in arterial pulse pressure and fluid responsiveness in septic patients
+    with acute circulatory failure. Am J Respir Crit Care Med. 2000;162(1):134-138.
+  doi: 10.1164/ajrccm.162.1.9903035

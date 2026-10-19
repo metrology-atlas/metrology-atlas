@@ -117,7 +117,8 @@ class Site:
         for name, paths in groups.items():
             sw = self.ds.get("software", name) or {}
             files = ", ".join(self.code_link(f"{name}/{p}") for p in paths if p)
-            where = "" if sw.get("repo") else " (not published)"
+            where = "" if sw.get("repo") else (" (not yet released)" if sw.get("visibility") == "not yet released"
+                                               else " (not published)")
             out.append(f"- **{self.a('software', name)}**{where}" + (f": {files}" if files else ""))
         return "\n".join(out)
 
@@ -1017,6 +1018,9 @@ class Site:
         if w.get("visibility") == "private":
             note = ('!!! info "Private repository"\n    Links into this repository work only for people who have been '
                     "given access to it.\n\n")
+        elif w.get("visibility") == "not yet released":
+            note = ('!!! info "Not yet released"\n    This repository will be made public later; until then its '
+                    "paths are shown, not linked.\n\n")
         elif not w.get("repo"):
             note = ('!!! info "Not published"\n    This code is kept on the analysis machine; paths are shown, '
                     "not linked.\n\n")
@@ -1041,7 +1045,8 @@ class Site:
         mentions = [m.split(":", 1) for m in r.get("mentioned_in") or []]
         mentions = "\n".join(f"- {KINDS[k].title[:-1] if KINDS[k].title.endswith('s') else KINDS[k].title}: "
                              f"{self.a(k, x)}" for k, x in sorted(mentions, key=lambda m: (m[0], m[1])))
-        repo = f"[{w['repo'].removeprefix('https://')}]({w['repo']})" if w.get("repo") else "not published"
+        repo = f"[{w['repo'].removeprefix('https://')}]({w['repo']})" if w.get("repo") else (
+            "not yet released" if w.get("visibility") == "not yet released" else "not published")
         body = (self.section("What it is", self.prose(w.get("description")))
                 + self.section("Its part in the atlas", self.prose(w.get("role")))
                 + self.section("Install", self.prose(w.get("install")))
@@ -1161,6 +1166,9 @@ class Site:
                     + "\n".join(f"- {self.ds.get('reference', r)['citation']}"
                                  + (f" doi:[{self.ds.get('reference', r)['doi']}](https://doi.org/{self.ds.get('reference', r)['doi']})"
                                     if self.ds.get('reference', r).get('doi') else "") for r in m["references"]) + "\n\n")
+            if any(pg["id"] == "data-and-licence" for pg in m.get("pages") or []):
+                out += ("The data's licence, what the atlas contains and how the atlas may be reused are on "
+                        "[Data and licence](data-and-licence.md).\n\n")
         heads = sorted(p for p, v in self.ds.items["parameter"].items() if v.get("headline"))
         if heads:
             out += "## Key numbers\n\n" + self.params_table(heads) + "\n"

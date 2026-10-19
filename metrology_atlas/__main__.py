@@ -3,6 +3,7 @@
     python -m metrology_atlas check datasets/vitaldb
     python -m metrology_atlas json  datasets/vitaldb --out build/vitaldb.metrology.json
     python -m metrology_atlas site  datasets/vitaldb --out build/vitaldb      (then: zensical build in that folder)
+    add --release to json/site for the public build: links into repositories that are not public are left out
 """
 
 from __future__ import annotations
@@ -37,6 +38,9 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("dataset")
         if name not in ("check", "todo"):
             p.add_argument("--out", required=True)
+        if name in ("json", "site"):
+            p.add_argument("--release", action="store_true",
+                           help="public build: software that is not public is shown as not yet released, unlinked")
     a = ap.parse_args(argv)
     try:
         ds = load(a.dataset)
@@ -45,6 +49,11 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     for w in ds.warnings:
         print(f"warning: {w}", file=sys.stderr)
+    if getattr(a, "release", False):
+        for w in ds.items.get("software", {}).values():
+            if w.get("visibility") in ("private", "unpublished"):
+                w.pop("repo", None)
+                w["visibility"] = "not yet released"
     counts = ", ".join(f"{len(v)} {k}" for k, v in ds.items.items() if v)
     if a.cmd == "check":
         print(f"ok: {counts}")

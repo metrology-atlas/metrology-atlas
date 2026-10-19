@@ -7,7 +7,7 @@ goes, the rules that apply everywhere, and the steps for the common cases.
 
 | You want to change | Repository | Licence |
 |---|---|---|
-| A page of this atlas: a variable, clock, study, observation, method ... | [[software:metrology-atlas]] (`datasets/vitaldb/`) | MIT |
+| A page of this atlas: a variable, clock, study, observation, method ... | [[software:metrology-atlas]] (`datasets/vitaldb/`) | CC BY 4.0 (text and figures); MIT (engine) |
 | A value model: rounding, heaping, a charted time | [[software:vitaldb-resolution]] | MIT |
 | An analysis script, the clock model, corrected times, builds, labels | [[software:vitaldb-bench]] | MIT |
 | AtriumDB builds and labels | [[software:vitaldb-bench-atriumdb]] | GPL-3.0-or-later |
@@ -36,7 +36,8 @@ no access is needed for that.
   Never state a number without its status and where it came from.
 - **History is kept, not overwritten.** When a result changes, the old study or observation is marked superseded,
   and the new one says what it supersedes.
-- Contributions are made under the repository's licence.
+- Contributions are made under the repository's licence; atlas text and figures are CC BY 4.0 (see
+  [Data and licence](data-and-licence.md)).
 
 ## Correcting or extending an atlas page
 

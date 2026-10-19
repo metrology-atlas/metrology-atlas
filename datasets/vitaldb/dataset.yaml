@@ -126,6 +126,9 @@ pages:
   - id: contributing
     title: Contributing
     file: contributing.md
+  - id: data-and-licence
+    title: Data and licence
+    file: data-and-licence.md
 sources:
   - software: vitaldb-resolution
     folder: _sources/vitaldb-resolution
@@ -134,7 +137,7 @@ sources:
     note: Registry and fitted value models. Refreshed by _import/resolution.py; never edited here.
 site:
   title: VitalDB metrology atlas
-  copyright: "© 2026 Andrew J. Goodwin, University of Sydney · MIT licence (text and code)"
+  copyright: "© 2026 Andrew J. Goodwin, University of Sydney · Text and figures CC BY 4.0 · Code MIT · Data: VitalDB (CC BY 4.0); see Data and licence"
 records:
   name: case
   label: case {id}

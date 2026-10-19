@@ -1,18 +1,102 @@
 id: ppv-by-breath
 name: Pulse pressure variation gated by ventilator breaths
 summary: >-
-  Pulse pressure variation computed per breath, with breath boundaries from the ventilator's airway pressure, before
-  and after the two devices' clocks are aligned.
+  Pulse pressure variation per ventilator breath, in 3,448 recordings: the ventilator's clock sits a median 1.8 s
+  off the arterial line's, which moves half of all breaths' values by a point or more and scatters where in the
+  breath the pulse pressure peaks; a recording's median PPV hardly changes.
 side: time
-status: planned
+status: draft
 question: |
-  How large is the respiratory variation in pulse pressure, breath by breath?
+  How large is the respiratory variation in pulse pressure, breath by breath, and how much does it depend on
+  putting the ventilator and the arterial line on one timeline?
 why: |
-  Breath boundaries come from the Primus airway pressure and the pulses from the arterial line, on two device clocks.
-  The Primus drift is still disputed (1–11 ppm against 115 ppm, [[study:correction-periods]]); over an operation
-  that is enough to move boundaries by seconds and mix breaths.
-variables: [primus-awp, snuadc-art]
-studies: [ventilator-breath-matching, correction-periods]
+  Pulse pressure variation (PPV) is the swing of arterial pulse pressure over one mechanical breath; above about
+  13% it predicts a response to fluid ([[reference:michard2000ppv]]). Computed breath by breath, it needs the
+  breath boundaries and the beats on one clock. In VitalDB the boundaries come from the Primus airway pressure
+  ([[variable:primus-awp]]) and the beats from the SNUADC arterial pressure ([[variable:snuadc-art]]), on two
+  device clocks that are each corrected against the recorder PC in their own way ([[link:primus-vs-pc]],
+  [[link:snuadc-step-vs-pc]]).
+variables: [primus-awp, snuadc-art, snuadc-ecg-ii]
+studies: [ventilator-breath-matching, correction-periods, snuadc-stamp-sawtooth, device-correction-schedules]
+observations: [primus-awp-pauses]
+data: |
+  Every recording with Primus airway pressure, SNUADC arterial pressure and ECG II and at least 100 mechanical
+  breaths: 3,448 of the 6,329 recordings with both devices, 9.4 million breaths. 1,061 of them also have SNUADC
+  central venous pressure (CVP), which the alignment needs.
+steps: |
+  1. Breath onsets from the Primus airway pressure on the Primus's own stamps (rising through 30% of the local
+     range, mechanical breaths only); beats from ECG II, with each beat's pulse pressure from the arterial pressure
+     and its time from the systolic peak.
+  2. Put the beats on three timelines: the **recorded** SNUADC stamps (the stamp sawtooth left in); the SNUADC
+     **stamp model** ([[study:snuadc-stamp-sawtooth]]); and the stamp model with the Primus **aligned** to the
+     SNUADC, by the lag between airway pressure and CVP in each 10-minute window
+     ([[study:ventilator-breath-matching]]), interpolated to each breath.
+  3. For each breath (2–10 s, at least 3 beats), PPV = (PPmax − PPmin) / mean(PPmax, PPmin). Per recording: the
+     median PPV, how many breaths change between timelines, and where in the breath pulse pressure peaks (a
+     first-harmonic fit over the recording).
+  4. Move the aligned breath onsets by −2 to +2 s and count the breaths whose PPV crosses 13%.
+results: |
+  **The ventilator is seconds off the arterial line.** On the stamp model, the airway pressure leads the CVP by a
+  median 1.8 s (p10–p90 0.6 to 5.1 s). The lag is not fixed within a recording: it moves by a median 1.5 s over the
+  recording and grows by a median +87 ppm (p10–p90 −49 to +229), the Primus's clock against the SNUADC's. That is
+  consistent with the two clocks' drifts against the recorder PC (Primus a few ppm, SNUADC about −63 ppm), not in
+  conflict with them: the two figures are against different clocks.
+
+  **Aligned, pulse pressure peaks where physiology says it should.** With the Primus aligned, the pulse-pressure
+  maximum comes a median 0.84 s after the breath onset, interquartile range 0.40 s, in the 544 recordings where the
+  breath explains enough of the pulse pressure to give a phase. On the recorded stamps the same phase is spread over
+  the whole breath (interquartile range 3.3 s), split into two groups by the wrap-around of the breath cycle.
+
+  **Breath by breath, the alignment matters; per recording, it does not.**
+
+  | Change of timeline | Breaths whose PPV changes by ≥ 1 point (median per recording) | Breaths crossing 13% | Recordings whose median PPV crosses 13% |
+  |---|---|---|---|
+  | Recorded stamps → stamp model (SNUADC sawtooth, p95 0.23 s) | 5% | 0.5% | 1 of 3,448 |
+  | Stamp model → Primus aligned | 53% | 6.7% | 3 of 1,061 (recorded → aligned) |
+
+  Moving the aligned onsets by 0.5 s puts about 2% of breaths on the other side of 13%, and 1 s about 4%; the
+  SNUADC's own sawtooth is too small to matter.
+
+  **Breaths lost.** The Primus airway pressure stops for about 21 s before each of its clock corrections
+  ([[observation:primus-awp-pauses]]); there are a median 0.66 gaps longer than 5 s per hour, and the breaths in
+  them have no PPV.
+
+  [[figure:ppv-by-breath]]
 takeaways: |
-  Planned. Feasible at scale: Primus airway pressure and the SNUADC arterial waveform together in about 55% of
-  recordings (466 of 846 sampled).
+  - For PPV breath by breath, or anything else that pairs ventilator events with beats, align the ventilator to
+    the arterial line first; the recorded stamps can be seconds apart, and the offset changes during the
+    recording. The CVP gives the alignment where it exists.
+  - A recording-level median PPV is robust to the misalignment: the beats' swing within a breath does not depend
+    on exactly where the breath starts.
+  - The phase of the pulse-pressure peak within the breath is a physiological check on the alignment: aligned
+    recordings agree to within a few hundred milliseconds.
+limitations: |
+  - The alignment uses the airway-pressure-to-CVP lag, which includes any physiological delay between the airway
+    and the central veins (small, but not zero); the aligned timeline is the CVP's, not the true breath onset.
+  - Recordings without CVP (69%) have no alignment here; the population lag (median 1.8 s) is a poor substitute,
+    because it varies so much between recordings. Aligning by the arterial pressure itself would be the next step,
+    tested against the CVP.
+  - Beats are found on ECG II; pulse pressure is the systolic peak minus the minimum just before the R wave, with
+    no beat-quality labels beyond plausibility limits. Breaths with arrhythmia, spontaneous effort or open chest
+    are not excluded.
+code:
+  - vitaldb-bench/examples/ppv_by_breath.py
+  - vitaldb-bench/examples/run_ppv_by_breath.sh
+  - vitaldb-bench/tools/vent_sync_pilot.py
+reproduce: |
+  ```
+  bash examples/run_ppv_by_breath.sh          # 8 parallel parts, about 25 minutes on a laptop
+  python examples/ppv_by_breath.py agg <work>/examples/ppv_by_breath/part_*.jsonl --out out/ppv
+  ```
+figures:
+  - id: ppv-by-breath
+    file: examples/ppv-by-breath.png
+    theme: agreement and residuals
+    source: vitaldb-bench examples/ppv_by_breath.py
+    caption: >-
+      Pulse pressure variation by ventilator breath. A: the share of breaths whose PPV crosses 13% when the
+      breath onsets are moved from the Primus-aligned timing (median and interquartile range over 1,061 recordings
+      with CVP). B: where in the breath the pulse pressure peaks, per recording, on the recorded stamps (grey),
+      the SNUADC stamp model (blue) and with the Primus aligned by CVP (orange). C: each recording's median PPV is
+      nearly the same on the recorded stamps as aligned.
+    alt: Left, a V-shaped curve rising from zero at no shift to about 8% at two seconds either way; middle, a sharp orange peak just under one second and broad grey and blue groups near minus two and plus two seconds; right, points on the identity line.

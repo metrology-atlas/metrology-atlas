@@ -1,16 +1,91 @@
 id: regression-with-rounding
 name: A regression that carries rounding uncertainty through
 summary: >-
-  Postoperative creatinine change against intraoperative urine output (mL/kg/h), fitted once per draw from the
-  true-value distributions and compared with a naive fit on the recorded numbers.
+  Acute kidney injury after surgery against intraoperative urine output (mL/kg/h), fitted once on the recorded
+  numbers and once per draw from the true-value distributions: the rounding moves 14% of cases across the oliguria
+  threshold, but widens the confidence interval of the cohort's regression by at most 4%.
 side: value
-status: planned
+status: draft
 question: |
-  Is lower intraoperative urine output associated with a larger postoperative rise in creatinine, and how sure are we?
+  Is lower intraoperative urine output associated with acute kidney injury after surgery, and how much of the
+  uncertainty in the answer comes from the rounding of the inputs?
 why: |
-  Rounded inputs act like measurement error: they flatten the slope (regression dilution) and the naive interval is
-  too narrow. Fitting on many draws from the true-value distributions, as in multiple imputation, propagates them.
-variables: [intraop-uo, weight, ane-duration, cr]
-studies: [value-model-intraop-uo, distribution-api-validation]
+  The exposure is a ratio of three rounded numbers ([[example:urine-output-per-kg-per-hour]]): urine output heaped
+  on 50 and 100 mL, weight, and anaesthesia times on 5- and 10-minute marks. Rounded inputs act like measurement
+  error ([[reference:carroll2006measurement]]): they can flatten a slope (regression dilution), and an interval
+  computed from the recorded numbers leaves their uncertainty out. Fitting the model once per draw from the
+  true-value distributions and combining the fits by Rubin's rules, as in multiple imputation
+  ([[reference:rubin1987multiple]]), carries it through.
+variables: [intraop-uo, weight, ane-duration, preop-cr, cr]
+studies: [value-model-intraop-uo, value-model-weight, value-model-anestart, value-model-aneend, timestamp-derived-intervals, distribution-api-validation]
+data: |
+  The 3,042 cases with a positive urine output, a weight, both anaesthesia times, a preoperative creatinine and at
+  least one creatinine in the 48 hours after the end of surgery. 225 (7.4%) have acute kidney injury by the KDIGO
+  creatinine criterion ([[reference:kdigo2012aki]]): the highest postoperative creatinine at least 0.3 mg/dL above
+  the preoperative value, or at least 1.5 times it. Postoperative creatinine is reported to 0.01 mg/dL and is used
+  as recorded.
+steps: |
+  1. For each case, draw 200 true values of urine output, weight, anaesthesia duration and preoperative creatinine
+     from the pinned vitaldb-resolution library (v0.6.0), and form the urine output rate for each draw.
+  2. Fit three unadjusted models on the recorded numbers (naive):
+     **A.** logistic, kidney injury against the rate (per 1 mL/kg/h, capped at 5);
+     **B.** logistic, kidney injury against oliguria (rate below 0.5 mL/kg/h);
+     **C.** linear, log of the highest postoperative over the preoperative creatinine against the rate.
+  3. Fit the same three models once per draw (kidney injury recomputed with that draw's preoperative creatinine),
+     and combine the 200 fits by Rubin's rules: the estimate is their mean, and the variance adds the spread
+     between draws to the mean within-fit variance.
+  4. Compare: the estimate, the 95% interval, and the share of the total variance that comes from the rounding
+     (the between-draw part).
+results: |
+  **No association, either way.** The models are unadjusted, so the clinical answer is not the point; it is the
+  same with and without the rounding:
+
+  | Model | Recorded numbers | Carried through (200 draws) | Share of variance from rounding |
+  |---|---|---|---|
+  | A. Odds ratio per 1 mL/kg/h | 1.05 (0.91 to 1.21) | 1.04 (0.90 to 1.20) | 0.7% |
+  | B. Odds ratio if oliguric | 0.94 (0.71 to 1.25) | 0.97 (0.72 to 1.31) | 6.3% |
+  | C. Log creatinine ratio per 1 mL/kg/h | −0.003 (−0.013 to 0.008) | −0.003 (−0.013 to 0.007) | 0.2% |
+
+  **Where the rounding shows.** In 413 of the 3,042 cases (14%) the draws put the rate on both sides of
+  0.5 mL/kg/h, so oliguria is not a fixed property of those cases. That is what widens model B's interval
+  (by 4%) and moves its estimate. With the rate as a number (A and C), each case's uncertainty is small
+  next to the spread of rates between cases, and the rounding adds almost nothing. The fit on the recorded numbers
+  in model A lies at the edge of the fits on the draws: rounding shifts it slightly, though far less than its
+  confidence interval. Kidney injury itself changes with the preoperative creatinine's rounding in only 7 cases.
+
+  [[figure:regression-rounding]]
 takeaways: |
-  Planned; builds on [[example:urine-output-per-kg-per-hour]].
+  - Carry rounding through a regression by fitting once per draw and combining with Rubin's rules; the fraction of
+    the variance that comes from the draws says how much the rounding matters for that question.
+  - A threshold is where rounding matters most: dichotomising the exposure (oliguria) gave rounding ten times the
+    weight it has with the rate as a number.
+  - For a cohort-level question with a continuous exposure, VitalDB's rounding is small next to the spread between
+    patients. For a decision about one patient near a threshold it is not
+    ([[example:urine-output-per-kg-per-hour]]).
+limitations: |
+  - The draws come from the distribution of the true value given the recorded one, without using the outcome. For
+    measurement-error correction the imputation should also condition on the outcome
+    ([[reference:cole2006mime]]); without it the combined slope is pulled slightly towards zero. Here the rounding
+    is small enough that this hardly matters.
+  - Unadjusted models, and creatinine-based kidney injury only (no urine criterion, no baseline other than the
+    preoperative value). The clinical question needs adjustment for case mix.
+  - The inputs are drawn independently; the duration's two ends share the anaesthesia record's clock.
+code:
+  - vitaldb-bench/examples/regression_with_rounding.py
+reproduce: |
+  ```
+  python examples/regression_with_rounding.py --resolution <vitaldb-resolution at the pinned commit> \
+      --root <VitalDB release> --out out/regression --draws 200
+  ```
+  Under a minute on a laptop.
+figures:
+  - id: regression-rounding
+    file: examples/regression-rounding.png
+    theme: agreement and residuals
+    source: vitaldb-bench examples/regression_with_rounding.py
+    caption: >-
+      Three regressions of kidney injury or creatinine change on urine output, each fitted 200 times on draws from
+      the true-value distributions (histogram of the 200 estimates), combined by Rubin's rules (blue, 95% interval)
+      and fitted once on the recorded numbers (grey). The draws' spread is narrow next to each interval, except for
+      the oliguria model (B), where 14% of cases cross the threshold between draws.
+    alt: Three panels each with a narrow histogram and two horizontal confidence-interval bars of nearly equal width; the middle panel's histogram is wider.

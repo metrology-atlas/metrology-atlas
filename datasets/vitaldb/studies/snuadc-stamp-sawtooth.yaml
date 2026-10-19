@@ -54,13 +54,35 @@ results: |
   - **Where both clocks have whole teeth** (377 recordings) the result matches the benchmark: within-recording SD
     18 ms, drift left 8.7 ms/h (median absolute slope). Against the step-mode constant, a typical window is off by
     35 ms (median; p90 135 ms).
-  - **Recordings with no SNUADC correction at all** (1,099) are the weak spot. The model reads them as
-    frequent-correction mode and gives the SNUADC no drift, but their EEG–ECG offset drifts by about −200 ms/h,
-    the step-mode drift (about −56 ppm against the BIS's +25): these are step-mode recordings that end before the
-    first reset. Their median error is 81 ms. Giving them their port's step-mode rate instead of zero should remove
-    most of it.
-  - Over all 2,714 recordings: a median error of 46 ms against the mode's constant and 22 ms against the
-    recording's own constant (p90 165 and 106 ms).
+  - **Recordings with no SNUADC correction at all** (1,099) were the weak spot. The first model read them as
+    frequent-correction mode and gave the SNUADC no drift, but their EEG–ECG offset drifted by a median of
+    −176 ms/h, the step-mode drift: these are step-mode recordings that end before the first reset.
+  - **Giving them their port's step-mode rate fixes most of it** (model2, rerun on every recording,
+    [[code:vitaldb-bench/tools/sa_corrected.py]]). For these 1,096 recordings:
+
+    | | Drift assumed 0 | Port's step-mode rate |
+    |---|---|---|
+    | Within-recording SD (median) | 62 ms | 25 ms |
+    | Drift left (median slope) | −176 ms/h | −11 ms/h |
+    | Drift left (median absolute slope) | 183 ms/h | 74 ms/h |
+    | Error against the mode's constant (median; p90) | 81; 208 ms | 63; 177 ms |
+
+    What is left is spread both ways (p10–p90 −135 to +122 ms/h): each recording's SNUADC drifts at its own rate,
+    not its port's median.
+  - **The same for the BIS (model3).** A BIS that makes no correction also got zero drift. Giving it its port's
+    median BIS rate against the recorder PC (+16 to +50 ppm by port, from the correction steps of the full
+    release, never from the bursts) fixes the 236 recordings where that happens:
+
+    | BIS with no correction | Recordings | Drift left (median), model2 → model3 | Within-recording SD |
+    |---|---|---|---|
+    | Shorter than the 8,192 s BIS timer | 202 | −92 → −16 ms/h | 21 → 17 ms |
+    | Longer | 34 | −66 → −14 ms/h | 32 → 28 ms |
+
+    Over all recordings the gain is small (within-recording SD 23.9 → 23.4 ms; median absolute slope 42.6 →
+    40.3 ms/h), because few recordings are affected.
+  - Over all 2,707 recordings with model2: a median error of 42 ms against the mode's constant and 18 ms against
+    the recording's own constant (p90 151 and 79 ms); within-recording SD 24 ms (first model: 46, 22, 165, 106 and
+    34 ms).
 
   [[figure:burst-validation-full]]
 discussion: |
@@ -74,9 +96,14 @@ open_questions:
   - title: "Recordings without a SNUADC correction"
     kind: next step
     summary: >-
-      1,099 recordings have no SNUADC correction, so the model gives the SNUADC zero drift; the bursts show they
-      drift like step mode (about −200 ms/h against the EEG). Give them the port's step-mode rate (or the census rate
-      of the setup), and keep zero only for recordings with the frequent mode's small steps.
+      Giving the 1,096 recordings without a SNUADC correction their port's step-mode rate removed most of their
+      drift (median −176 to −11 ms/h), but each still drifts at its own rate (p10–p90 −135 to +122 ms/h left). A
+      per-recording rate cannot come from the stamps: with no correction they carry no information about the
+      recorder PC (the census gives −1.0 ppm, the stamp arithmetic, for all of them). It needs a clock tied to the
+      PC that shares events with the SNUADC (bursts against a BIS with whole teeth, in 122 recordings; calibration,
+      so tested on held-out windows), or the setup's unit. Where the BIS has teeth the bursts imply the SNUADC
+      drifts about −36 ppm rather than −63, the fast-BIS, slow-SNUADC pattern of
+      [[study:device-correction-schedules]]'s open question.
   - title: "Recordings that change correction mode partway"
     kind: phenomenon
     summary: >-
@@ -115,6 +142,8 @@ figures:
       The stamp model checked with ECG–EEG bursts in every recording (19 October). Left: the constant left after the
       model, per recording, by SNUADC correction mode. Middle: the remaining timing error per 10-minute window,
       against the mode's constant (leave-one-out) and the recording's own. Right: the drift left over each
-      recording: near zero where both clocks were fitted from whole teeth (blue), about −200 ms/h where the SNUADC
-      made no correction and its drift was taken as zero (grey).
-    alt: Three panels; a sharp peak near −805 ms for step mode; two cumulative curves rising between 10 and 200 ms; a slope histogram with a blue peak at zero and a grey hump near −200 ms/h.
+      recording: near zero where both clocks were fitted from whole teeth (blue), and centred near zero, but wider,
+      where the SNUADC made no correction and was given its port's step-mode rate (grey; model3, which also gives a
+      BIS with no correction its port's rate). Before that change
+      the grey group sat near −176 ms/h.
+    alt: Three panels; a sharp peak near −805 ms for step mode; two cumulative curves rising between 10 and 200 ms; a slope histogram with a narrow blue peak at zero and wider orange and grey humps also centred at zero.
