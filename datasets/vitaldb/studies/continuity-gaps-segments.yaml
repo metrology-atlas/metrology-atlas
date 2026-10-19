@@ -16,6 +16,7 @@ code:
   - vitaldb-bench/tools/signal_events.py
   - vitaldb-bench/tools/signal_events_collect.py
   - vitaldb-bench/tools/continuity_figs.py
+  - vitaldb-bench/tools/continuity_sync.py
 data: |
   All 6,388 recordings; every waveform track (SNUADC ECG II, V5, PLETH, ART, CVP, FEM; Primus CO2 and AWP; BIS
   EEG; CardioQ FLOW). A gap is any forward step in the stamps of more than 1.5 samples beyond the end of the
@@ -60,6 +61,26 @@ results: |
   [[figure:continuity-segments-ccdf]]
 
   [[figure:continuity-gap-vs-since]]
+
+  **Before and after synchronisation.** Measured again at every record junction, on the stamps and on each device's
+  fitted stamp clock (6,322–6,342 recordings per signal; up to 28 per signal with broken record streams left out,
+  [[observation:duplicated-records]], [[observation:interleaved-records]], [[observation:snuadc-overlapping-records]]):
+
+  | Signal | Gaps ≥ 10 ms, as recorded → synchronised | Overlaps ≥ 10 ms, as recorded → synchronised |
+  |---|---|---|
+  | SNUADC (ECG II) | 5,621 → 8,850 | 14,825 → 29 |
+  | BIS EEG | 10,545 → 3,322 | 1,306 → 1,338 |
+  | Primus AWP | 20,260 → 15,485 | 7,291 → 1,679 |
+  | Primus CO2 | 3,799 → 3,798 | 1,675 → 67 |
+
+  Clock corrections look like gaps or overlaps on the stamps and vanish once the clock is fitted: the SNUADC's
+  resets and the reordered records around them (overlaps), the BIS's forward corrections of about 0.17 s (gaps),
+  and the Primus's small whole-sample steps. The SNUADC gains about 3,200 gaps, each the 17.7 ms its reset never
+  samples ([[observation:reset-signal-lost]]): signal really missing, which the stamps hide. Gaps of a second or more
+  are the same before and after: they are real. About 1,300 short BIS overlaps run against its correction
+  direction and are kept as breaks.
+
+  [[figure:continuity-sync]]
 discussion: |
   Almost none of the structure is random. The largest groups of gaps are system events (pauses, periodic
   breaks, resynchronisations) with lengths of their own, and the remaining smooth tail is a small share. The
@@ -103,3 +124,16 @@ figures:
       colour scale. The column at 18 s is the recorder's pauses; BIS's diagonal band (short gaps growing with
       the elapsed time) is clock resynchronisation; AWP's arc is gaps plus segments of 0.5 s.
     alt: Ten heat maps; each has a dark column near 18 seconds; the BIS panel has a diagonal band from 10 ms at 1,000 seconds to 0.5 s at 10,000 seconds.
+  - id: continuity-sync
+    file: continuity-sync.png
+    theme: data continuity
+    source: vitaldb-bench tools/continuity_sync.py
+    caption: >-
+      Gaps (solid) and overlaps (dotted) between consecutive records, as recorded (grey) and on each device's fitted
+      stamp clock (blue): the number at least each size. Where the lines part, a clock correction was showing as a gap
+      or an overlap; where they coincide, the gap is real. The SNUADC's new step at 17.7 ms is the signal each reset
+      loses. Recordings with broken record streams are left out.
+    alt: >-
+      Four log-log panels (SNUADC, BIS, Primus AWP, Primus CO2) of counts against size from 1 ms to 10,000 s. Grey and
+      blue gap lines coincide above about a second in every panel; below it the grey overlap lines for SNUADC, Primus
+      AWP and CO2 fall to a few dozen in blue, and the BIS's grey gap line drops by about two thirds.
