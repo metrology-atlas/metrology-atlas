@@ -57,9 +57,10 @@ open_questions:
   - title: "What sets the steps at the AWP pauses"
     kind: phenomenon
     summary: >-
-      At each AWP pause the Primus stamps step by up to about ±0.5 s relative to the SNUADC, by amounts unrelated to
-      the drift built up since the last pause. Whether they are re-anchoring to something other than the recorder PC,
-      breath mis-assignment after the gap, or both, is open.
+      Partly answered by [[study:primus-pause-steps]] (2,491 pauses): where CO2 carries on through the AWP pause
+      the stamps barely step (median −1 ms, p10–p90 −164 to +187 ms); the large steps, up to seconds, come where
+      CO2 stops too (26% of pauses). None undoes the drift built up. Open: what the stamps re-anchor to when both
+      waveforms stop.
   - title: "Separating the airway-to-CVP delay"
     kind: next step
     summary: >-

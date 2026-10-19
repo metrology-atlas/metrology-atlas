@@ -13,8 +13,8 @@ correction:
     that, often two at once; the first at any time after the Primus starts. The AWP waveform stops for about 21 s
     just before each correction and that AWP is lost ([[observation:primus-awp-pauses]]); CO2 carries on. Measured in
     4,529 recordings ([[study:device-correction-schedules]]). These steps imply only 1–11 ppm
-    ([[parameter:primus-drift-implied]]), far less than the drift: the stamps also step by up to about ±0.5 s at the
-    AWP pauses, by amounts unrelated to the drift built up ([[study:ventilator-breath-matching]]), so over a recording
+    ([[parameter:primus-drift-implied]]), far less than the drift: the stamps also step at the AWP pauses, by amounts unrelated to the drift built up: a median −1 ms
+    (p10–p90 −164 to +187 ms) where CO2 carries on, up to seconds where CO2 stops too ([[study:primus-pause-steps]]), so over a recording
     the Primus wanders from the PC by a median 1.5 s.
   period: primus-period
   size: primus-step

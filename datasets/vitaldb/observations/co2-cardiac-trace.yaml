@@ -1,0 +1,19 @@
+id: co2-cardiac-trace
+name: A heartbeat-locked trace in the CO2 waveform that ignores the Primus clock
+summary: >-
+  Averaged on the ECG's R peaks, the Primus CO2 waveform shows a heartbeat-locked signal in 60% of 10-minute
+  windows (30-recording pilot), tight to about 20 ms. Unlike the breath, its lag does not drift with the Primus clock:
+  it stays fixed on the SNUADC timeline.
+status: open
+clocks: [primus-clock, snuadc-sample]
+devices: [primus]
+variables: [primus-co2]
+studies: [airway-heartbeat-pilot]
+description: |
+  A cardiogenic oscillation in expired CO2 is physiological, but it would arrive on the Primus's stamps and drift
+  with them. A trace fixed to the SNUADC timeline suggests something timed outside the Primus clock: electrical
+  crosstalk from the ECG, or a component of the signal that is re-timed at the recorder. Neither has been tested.
+consequence: |
+  The trace cannot be used to time the Primus. An analysis that looks for cardiac effects in CO2 should expect a
+  heartbeat-locked component whose timing does not follow the Primus's other data.
+handling: None yet; flagged for anyone using CO2 at beat resolution.

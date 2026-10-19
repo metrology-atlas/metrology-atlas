@@ -9,6 +9,5 @@ description: The Primus anaesthesia machine's own clock. Its stamps are re-ancho
 tags:
 - stub
 utc_plan: 'Measured to the PC by breath matching through the SNUADC stamp model: +104 ppm within the stretches between
-  AWP pauses (p10–p90 +28 to +184, 178 recordings), with steps of up to about ±0.5 s at the pauses that do not reset the
-  drift. The small correction steps imply only 1–11 ppm and are not the clock rate. Open: what sets the steps at the
-  pauses; the airway-to-CVP physiological delay inside the measured lag.'
+  AWP pauses (p10–p90 +28 to +184, 178 recordings), with steps at the pauses that do not reset the drift: tens of ms where CO2 carries on, up to seconds where CO2
+  stops too ([[study:primus-pause-steps]]). The small correction steps imply only 1–11 ppm and are not the clock rate. Open: what re-anchors the stamps where CO2 stops too; the airway-to-CVP physiological delay inside the measured lag.'

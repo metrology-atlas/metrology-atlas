@@ -8,7 +8,7 @@ status: established
 clocks: [primus-clock]
 devices: [primus]
 variables: [primus-awp, primus-co2]
-studies: [device-correction-schedules, step-classification]
+studies: [device-correction-schedules, step-classification, primus-pause-steps]
 code:
   - vitaldb-bench/tools/correction_schedules.py
   - vitaldb-bench/tools/primus_pause_test.py
@@ -25,8 +25,8 @@ description: |
 consequence: |
   An AWP gap of about 21 s is the Primus's two-hourly resynchronisation: about 21 s of airway pressure is never
   recorded. It is not a disconnection, and CO2 covers the same breaths. Within the Primus nothing needs re-timing
-  (AWP keeps its lag to CO2), but against the recorder PC the stamps step at the pause by up to about ±0.5 s
-  (median −29 ms; [[study:ventilator-breath-matching]]), so a Primus–SNUADC offset fitted before a pause does not
+  (AWP keeps its lag to CO2), but against the recorder PC the stamps step at the pause: a median −1 ms (p10–p90 −164 to +187 ms) at the 74% of pauses where CO2
+  carries on, and by up to seconds at the 26% where CO2 stops too ([[study:primus-pause-steps]]), so a Primus–SNUADC offset fitted before a pause does not
   carry over to after it.
 handling: Treat it as a real gap. Flagged as a periodic device event in the step classes.
 figures:

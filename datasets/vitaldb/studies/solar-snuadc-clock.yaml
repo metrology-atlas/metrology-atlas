@@ -1,0 +1,80 @@
+id: solar-snuadc-clock
+name: The SNUADC clock through the Solar8000 numerics, whole release
+summary: >-
+  On the SNUADC's own sample count, the delay from the waveform to the PC-stamped Solar8000 heart rate and mean
+  arterial pressure ramps at the SNUADC's drift against the PC, measured without its stamps or resets. In recordings
+  with whole reset intervals it agrees with them (−63 ppm; median difference +1.5 ppm, 581 recordings). It is too
+  noisy per recording, and in recordings under about 4 h its rate is biased toward zero, so it cannot yet speak for
+  recordings without resets.
+date: 2026-10-19
+status: current
+methods: [shared-events, delays-and-windows]
+techniques: [windowed-cross-correlation]
+clocks: [snuadc-sample, recorder-pc, solar8000-clock]
+devices: [snuadc, solar8000, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art, solar8000-hr, solar8000-art-numerics]
+data: |
+  All 6,388 recordings were read; 50 had no 500 Hz ECG. A rate needs at least 4 usable 30-minute blocks over
+  1.5 h: 4,542 recordings for the combined rate (heart rate 4,447; mean arterial pressure 2,969). Reset-interval
+  rates for 581 of them come from the clock-network edge table; the shared-burst residuals of the adopted stamp model
+  (model3) for comparison.
+background: |
+  The Solar8000 computes heart rate and mean arterial pressure from the same ECG and arterial pressure that SNUADC
+  samples from its analogue outputs, and the recorder stamps each value on arrival with the PC clock. Within a
+  recording the numeric's delay behind the waveform is fixed ([[study:numeric-delay-variability]]). Placed on the
+  SNUADC's sample count, the waveform drifts against the PC at the SNUADC crystal's rate, and the delay ramps with it.
+  The 66-case pilot ([[study:numeric-clock-check]]) gave −65.3 ppm against −66.7 ppm from the stamp model.
+method: |
+  Two timelines per recording: the sample count (one offset per stretch between gaps, the 17.7 ms lost at each reset
+  added back, rate 0) and the adopted stamp model. On each, the numeric's delay was fitted per 30-minute block on a
+  0.05 s grid with the likelihood of [[study:numeric-delay-variability]], and a robust line (Theil–Sen) through the
+  block delays gave the rate; heart rate and mean arterial pressure were combined by inverse variance. Recordings
+  were grouped by SNUADC correction mode, and step-mode recordings by whether they have a whole reset interval.
+results: |
+  - **Where it can be checked, it closes:** in step-mode recordings with whole reset intervals the median is
+    −63 ppm, and against those recordings' own reset intervals the median difference is +1.5 ppm (p25–p75 −24 to
+    +36; 581 recordings; median |z| 1.11).
+  - **Per recording it is noisy:** a median standard error of 40 ppm from mean arterial pressure and 83 ppm from
+    heart rate.
+  - **It is biased toward zero in short recordings:** in every group the median rises toward 0 as recordings get
+    shorter (step mode without a whole reset interval: about +10 ppm under 2.5 h, −38 to −46 ppm over 4 h). A 30-minute
+    block ramps by only about 0.11 s at −63 ppm, two steps of the delay grid, and with few blocks the robust line
+    is pulled flat by tied delays and by the first block, which often sits apart.
+  - **The burst check disagrees with the short-recording medians:** on the adopted stamp model, the ECG–EEG burst lag
+    in recordings without a whole reset interval has a median slope of −7 ms/h (step mode, 906 recordings) and
+    +10 ms/h (no correction, 521), close to zero, so the port's step-mode rate the model gives them fits on average.
+
+  [[figure:solar-snuadc-rate]]
+discussion: |
+  A third route to the SNUADC's drift, beside the resets and the shared bursts, and the only one that needs neither
+  the SNUADC's stamps nor the BIS. Where resets exist it agrees with them, which closes a loop through the Solar8000.
+  Its group medians for shorter recordings are an artefact of the estimator, not evidence that those units run slow;
+  the burst residuals support the stamp model's choice of the port's rate. The question of the long recordings
+  that show no correction ([[observation:snuadc-long-uncorrected]]) remains open.
+limitations: |
+  Per-recording rates are too noisy to correct a single recording. The delay grid (0.05 s) and the 30-minute blocks
+  limit the estimator in short recordings. The Solar8000's delay occasionally steps; heart rate is truncated and
+  polled every 2 s.
+open_questions:
+  - title: "A finer estimator for short recordings"
+    kind: next step
+    summary: >-
+      Fitting the delay's slope directly in the likelihood (a delay that ramps within the recording), on a finer grid
+      and without the first block, would remove the bias toward zero and let this route test recordings with no
+      SNUADC reset.
+code:
+  - vitaldb-bench/tools/solar_snuadc_clock.py
+  - vitaldb-bench/tools/clock_route_figs.py
+figures:
+  - id: solar-snuadc-rate
+    file: solar-snuadc-rate.png
+    theme: population results
+    source: vitaldb-bench tools/clock_route_figs.py
+    caption: >-
+      The SNUADC's drift against the recorder PC through the Solar8000 numerics, median by recording length (bins with
+      at least 15 recordings). In recordings with whole reset intervals (blue) it reaches the resets' −63 ppm; in every
+      group the estimate rises toward zero as recordings get shorter, an artefact of the estimator rather than of the
+      clocks.
+    alt: >-
+      Three lines of median rate against recording length from 1.5 to 8 hours. All rise toward 0 ppm for short
+      recordings; the blue line for recordings with reset intervals settles near −63 ppm beyond 5 hours.

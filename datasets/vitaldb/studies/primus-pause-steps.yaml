@@ -1,0 +1,75 @@
+id: primus-pause-steps
+name: The Primus stamp step at each airway-pressure pause
+summary: >-
+  Measured directly at 2,491 pauses in 1,021 recordings: where CO2 carries on through the AWP pause (74%), the Primus
+  stamps barely step (median −1 ms, p10–p90 −164 to +187 ms, close to the no-pause controls); where CO2 stops too
+  (26%), they step by up to seconds. No step undoes the drift built up since the last pause.
+date: 2026-10-19
+status: current
+methods: [shared-events]
+techniques: [windowed-cross-correlation, null-controls]
+clocks: [primus-clock, snuadc-sample, recorder-pc]
+devices: [primus, snuadc]
+variables: [primus-awp, primus-co2]
+data: |
+  All 6,388 recordings were read; 1,021 had AWP, CVP, at least one AWP pause with enough breathing either side, and
+  at least 200 mechanical breaths. 2,491 of their 3,665 pauses were measurable; up to two control moments per
+  recording at least 25 minutes from any pause.
+background: |
+  At each AWP pause (about 21 s every 7,230 s; [[observation:primus-awp-pauses]]) the Primus stamps step against the
+  SNUADC. The 10-minute windows of [[study:ventilator-breath-matching]] see these steps only through fitted lines,
+  and windows that straddle a pause mix two lags.
+method: |
+  The airway-pressure-to-CVP lag in 2-minute windows (stepped by 1 minute) for 20 minutes before and after each gap,
+  with the SNUADC on its stamp model; a line on each side, and the step as their difference at the middle of the gap.
+  Recorded with each step: gap length, drift built up since the previous pause, the Primus's small whole-sample
+  corrections nearby, whether CO2 also stops, and whether a SNUADC reset falls within 20 minutes. Controls: the same
+  measurement where no pause is near.
+results: |
+  | Pauses | Count | Step, median (p10–p90) | Within 150 ms |
+  |---|---|---|---|
+  | CO2 carries on | 1,846 | −1 ms (−164 to +187) | 76% |
+  | CO2 stops too | 645 | −269 ms (−1,965 to +1,609) | 8% |
+  | Controls, no pause | | −10 ms (−144 to +162) | |
+
+  - **Unrelated to the drift built up** since the previous pause (r = −0.03; 0.3% of it taken back), to the gap's
+    length (r = −0.05) and to the small whole-sample corrections (r = 0.00).
+  - **A nearby SNUADC reset** does not enlarge the step (median |step| 87 ms with, 119 ms without).
+  - **Precision:** a median standard error of 37 ms per step.
+
+  [[figure:primus-pause-steps]]
+discussion: |
+  The regular AWP pause is not a clock correction in itself: when the CO2 stream carries on, the stamps keep their
+  timing. The large steps come when both waveforms stop, which looks like the recorder losing and re-opening the
+  Primus connection and re-anchoring its stamps to the PC. Even so, synchronisation is best with a fresh offset and
+  slope at every AWP pause, not only at breaks: predicting each 10-minute window from the others gives a median error
+  of 55 ms that way, against 82 ms with new lines only at breaks and 64 ms with lines joined at the regular pauses
+  (1,067 recordings, [[code:vitaldb-bench/tools/primus_pause_aware.py]]). The regular pauses are small steps on
+  average, but not small enough to ignore.
+limitations: |
+  The step includes any change in the physiological airway-to-CVP delay across the pause. Pauses within 20 minutes
+  of a recording's edge, or with too little breathing either side, are not measured.
+open_questions:
+  - title: "What the stamps re-anchor to when both waveforms stop"
+    kind: hypothesis
+    summary: >-
+      Steps of up to seconds come where AWP and CO2 stop together. A re-opened connection re-anchoring the stamps to
+      the PC's arrival time is the working explanation; the recorder's message log around those gaps would test it.
+code:
+  - vitaldb-bench/tools/primus_pause_steps.py
+  - vitaldb-bench/tools/primus_co2_gaps.py
+  - vitaldb-bench/tools/primus_pause_aware.py
+  - vitaldb-bench/tools/clock_route_figs.py
+figures:
+  - id: primus-pause-steps
+    file: primus-pause-steps.png
+    theme: population results
+    source: vitaldb-bench tools/clock_route_figs.py
+    caption: >-
+      The Primus stamp step at each AWP pause against the SNUADC, measured from 20 minutes of breath-matched lag
+      either side. Blue: pauses where CO2 carries on (1,846), almost all within the spread of the no-pause controls
+      (grey band, p10–p90). Orange: pauses where CO2 stops too (645), spread over seconds; values beyond ±2 s are
+      gathered at the edges.
+    alt: >-
+      Two histograms of step size from −2 to +2 s. The blue one is a tall narrow peak at zero inside a grey band of
+      about ±150 ms; the orange one is flat across the whole range with spikes at both edges.

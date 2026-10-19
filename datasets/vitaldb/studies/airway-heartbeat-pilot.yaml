@@ -1,0 +1,33 @@
+id: airway-heartbeat-pilot
+name: The heartbeat in the Primus airway signals
+summary: >-
+  A pilot in 30 recordings for a heartbeat-locked route from the Primus to the SNUADC. Airway pressure shows the
+  heartbeat in 9% of windows only. CO2 shows a heartbeat-locked trace in 60% of windows, tight to 20 ms, but its lag
+  does not follow the Primus drift, so it cannot time the Primus. Closed as a clock route.
+date: 2026-10-19
+status: current
+methods: [shared-events]
+techniques: [template-beat-timing, null-controls]
+clocks: [primus-clock, snuadc-sample]
+devices: [primus, snuadc]
+variables: [primus-awp, primus-co2, snuadc-ecg-ii]
+data: 30 ventilated recordings with AWP, CO2, ECG and CVP, chosen across setups; 1,608 (AWP) and 1,604 (CO2) windows.
+method: |
+  R peaks on the ECG's stamp-model timeline. AWP and CO2 high-passed at 0.6 Hz, the breath-locked shape subtracted
+  and expiration masked; an R-triggered average per window, its lag tracked from window to window. A control
+  triggers on R times jittered by up to half a beat; the peak-to-noise ratio (PNR) is against it. The breath-matched
+  (CVP) lag of the same windows gives the Primus drift to compare with.
+results: |
+  | Signal | Windows with PNR ≥ 5 | Lag scatter (MAD) | Slope against breath slope |
+  |---|---|---|---|
+  | AWP | 9% | 22 ms | r = 0.02 (9 stretches) |
+  | CO2 | 60% | 20 ms | r = −0.02 (56 stretches); median difference −114 ppm |
+
+  The CO2 trace is flat on the SNUADC timeline, while the Primus drifts by about +104 ppm against it.
+discussion: |
+  The CO2 waveform carries a clear heartbeat-locked signal, but it does not move with the Primus clock, so it is not
+  a Primus timing route ([[observation:co2-cardiac-trace]]). Airway pressure carries too little cardiac signal once
+  the breath shape is removed.
+limitations: A 30-recording pilot; the jitter control guards against breath-heart coupling but not every artefact.
+code:
+  - vitaldb-bench/tools/airway_heartbeat_pilot.py

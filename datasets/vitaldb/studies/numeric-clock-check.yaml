@@ -28,7 +28,8 @@ open_questions:
     summary: >-
       On the corrected SNUADC line the ECG-to-HR delay still ramps by −13.0 ± 4.0 ppm. It may be the Solar8000's own
       processing, an error in the stamp model's rate, or the PC; a larger run (all step-mode cases without gaps)
-      would narrow it.
+      would narrow it. The whole-release run ([[study:solar-snuadc-clock]]) cannot settle it: per recording it is too noisy, and
+      in recordings under about 4 h its rate is biased toward zero.
   - title: "Frequent-correction mode on more cases"
     kind: next step
     summary: >-
