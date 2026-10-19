@@ -36,6 +36,12 @@ results: |
   distributions sit within 1 mL of the recorded balance, so the rounding adds spread, not bias.
 
   [[figure:fb-cohort]]
+levels:
+  error: random
+  population: >-
+    The distributions' medians sit within 1 mL of the recorded balance: the rounding adds no bias to a cohort's mean.
+  individual: >-
+    Each balance is uncertain by about ±60 mL, by about ±190 mL with a round 500 mL blood loss; in 95 cases even its sign is unknown.
 takeaways: |
   - A computed fluid balance from charted volumes is uncertain by about ±60 mL from the recording alone, before any
     error in estimating blood loss itself.

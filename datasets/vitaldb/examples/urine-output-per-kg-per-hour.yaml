@@ -42,6 +42,12 @@ results: |
   percentile); the widest are cases with a round urine output of 50 or 100 mL.
 
   [[figure:uo-cohort]]
+levels:
+  error: random
+  population: >-
+    The rounding adds spread but almost no bias: the median of the distributions sits within a hair of the recorded rate.
+  individual: >-
+    381 of 3,645 patients (10%) cannot be placed confidently on either side of 0.5 mL/kg/h; with a round 50 or 100 mL, many more.
 takeaways: |
   - A threshold on a derived rate misclassifies cases near it in a way the recorded numbers cannot show. Report the
     share that is uncertain, or carry P(below) into the analysis instead of a yes or no.

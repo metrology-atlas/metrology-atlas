@@ -97,6 +97,12 @@ results: |
   questions).
 
   [[figure:bg-scatter]]
+levels:
+  error: systematic
+  population: >-
+    Pooled over patients, reading the monitor at the lab stamp instead of the draw changes the gradient's distribution little.
+  individual: >-
+    Within a patient, the stamp is always about 7 minutes late, a systematic shift: the monitor tracks the blood gas far worse there (CO₂ change correlation 0.54 against 0.74).
 takeaways: |
   - Pair a blood gas with the monitor at the estimated draw, not at the lab stamp. Pooled over patients the
     difference is small, but within a patient the monitor tracks the blood gas much better at the draw (CO₂: 0.74

@@ -977,6 +977,31 @@ class Site:
                 + self.section("References", self.refs(t.get("references"))))
         return self.page(t, self.glance([("Methods", self.many("method", r.get("methods")))]), body)
 
+    ERROR_KIND = {"random": "Random: cancels over a cohort", "systematic": "Systematic: does not cancel",
+                  "both": "Both: part cancels, part does not"}
+
+    def levels_box(self, lv) -> str:
+        """The example's effect on a cohort and on one patient, as a box after the results."""
+        if not lv:
+            return ""
+        body = (f"**{self.ERROR_KIND[lv['error']]}.**\n\n| | |\n|---|---|\n"
+                f"| **The cohort** | {self.prose(lv['population']).strip().replace(chr(10), ' ')} |\n"
+                f"| **Each patient** | {self.prose(lv['individual']).strip().replace(chr(10), ' ')} |\n")
+        return '!!! abstract "Population and individual"\n\n' + "\n".join("    " + x for x in body.splitlines()) + "\n\n"
+
+    def levels_table(self, ids) -> str:
+        rows = [(x, self.ds.get("example", x)) for x in ids if self.ds.get("example", x).get("levels")]
+        if not rows:
+            return ""
+        out = ("## Population and individual\n\nThe same measurement error can vanish from a cohort's estimate and still "
+               "decide one patient's value or label. Errors that are independent and symmetric cancel over many "
+               "patients; systematic ones do not.\n\n| Example | Error | The cohort | Each patient |\n|---|---|---|---|\n")
+        for x, e in sorted(rows, key=lambda r: r[1]["name"]):
+            lv = e["levels"]
+            out += (f"| [{e['name']}]({x}.md) | {lv['error']} | {self.summ(lv['population'])} | "
+                    f"{self.summ(lv['individual'])} |\n")
+        return out + "\n"
+
     def example(self, i: str, e: dict) -> str:
         note = {"planned": '!!! note "Planned"\n    Not yet worked through; the page says what it will show.\n\n',
                 "draft": '!!! info "Draft"\n    Worked through on a few cases; numbers may change.\n\n'}.get(e["status"], "")
@@ -992,6 +1017,7 @@ class Site:
                 + self.section("Data", self.prose(e.get("data")))
                 + self.section("Steps", self.prose(e.get("steps")))
                 + self.section("Results", self.prose(e.get("results")))
+                + self.levels_box(e.get("levels"))
                 + self.section("Takeaways", self.prose(e.get("takeaways")))
                 + self.section("Limitations", self.prose(e.get("limitations")))
                 + self.section("Open questions and future work", self.questions(e.get("open_questions")))
@@ -1130,7 +1156,7 @@ class Site:
                 ids = [x for x, e in items.items() if e["side"] == side]
                 if ids:
                     out += f"## {title}\n\n" + self.examples_table(ids).replace("](../examples/", "](") + "\n"
-            return out
+            return out + self.levels_table(list(items))
         if kind == "parameter":
             return out + self.params_table(sorted(items, key=lambda p: items[p]["name"])).replace("](../parameters/", "](")
         out += "| | |\n|---|---|\n"

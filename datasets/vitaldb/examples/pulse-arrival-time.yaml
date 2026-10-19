@@ -90,6 +90,12 @@ results: |
   of step 2 removed each case's own offset, which flattened the corrected cloud and threw those differences away.)
 
   [[figure:pat-scatter]]
+levels:
+  error: systematic
+  population: >-
+    A device delay of about 0.39 s sits in every stored PAT: a cohort mean is wrong by that much until it is removed.
+  individual: >-
+    The PLETH sawtooth adds slips of 33 ms within each patient; removing it lowers the spread against the arterial line from 13.0 to 9.8 ms.
 takeaways: |
   - Never read the absolute ECG-to-PLETH PAT in VitalDB as physiology: it carries a device delay of about 0.39 s.
     The delay is the same across recording setups and the case order, so one global value removes it and keeps

@@ -54,14 +54,38 @@ results: |
   confidence interval. Kidney injury itself changes with the preoperative creatinine's rounding in only 7 cases.
 
   [[figure:regression-rounding]]
+
+  **Does the threshold matter?** Moving the oliguria threshold from 0.2 to 1.5 mL/kg/h changes how many cases
+  cross it between draws (6% to 14%), but never gives the rounding more than a small share of a cohort's
+  uncertainty:
+
+  | Threshold (mL/kg/h) | Oliguric (recorded) | Cases crossing between draws | Rounding's share of the variance: prevalence | Rounding's share of the variance: odds ratio |
+  |---|---|---|---|---|
+  | 0.2 | 7.2% | 8% | 11% | 5% |
+  | 0.3 | 15.9% | 12% | 11% | 8% |
+  | 0.5 | 35.5% | 14% | 8% | 6% |
+  | 0.75 | 55.1% | 12% | 5% | 5% |
+  | 1.0 | 67.7% | 10% | 5% | 5% |
+  | 1.5 | 83.1% | 6% | 4% | 4% |
+
+  Nor do the subgroups where the rounding is worst: among cases with a round 50 or 100 mL (200 mL or less), 42%
+  cross 0.5 between draws, yet the rounding is still only 18% of the variance of their prevalence. Each case's
+  error is independent and nearly symmetric, so over hundreds of cases it cancels; for one case it does not
+  ([[example:oliguria-labels]]).
+levels:
+  error: random
+  population: >-
+    Carried through 200 draws, the rounding is under 8% of the variance at any threshold: the cohort's answer does not change.
+  individual: >-
+    14% of patients sit on both sides of 0.5 mL/kg/h between draws, which is what the cohort averages over.
 takeaways: |
   - Carry rounding through a regression by fitting once per draw and combining with Rubin's rules; the fraction of
     the variance that comes from the draws says how much the rounding matters for that question.
   - A threshold is where rounding matters most: dichotomising the exposure (oliguria) gave rounding ten times the
     weight it has with the rate as a number.
-  - For a cohort-level question with a continuous exposure, VitalDB's rounding is small next to the spread between
-    patients. For a decision about one patient near a threshold it is not
-    ([[example:urine-output-per-kg-per-hour]]).
+  - For a cohort-level question VitalDB's rounding is small next to the spread between patients, whatever the
+    threshold, because independent errors cancel; only a systematic error would not. For a label or decision per
+    patient it matters ([[example:oliguria-labels]], [[example:urine-output-per-kg-per-hour]]).
 limitations: |
   - The draws come from the distribution of the true value given the recorded one, without using the outcome. For
     measurement-error correction the imputation should also condition on the outcome

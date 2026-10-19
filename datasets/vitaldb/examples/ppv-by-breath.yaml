@@ -62,6 +62,12 @@ results: |
   them have no PPV.
 
   [[figure:ppv-by-breath]]
+levels:
+  error: systematic
+  population: >-
+    Each recording's median PPV hardly moves (3 of 1,061 cross 13%).
+  individual: >-
+    The ventilator sits a median 1.8 s off the arterial line: 53% of breaths' PPV changes by a point or more, and the pulse-pressure peak lands anywhere in the breath.
 takeaways: |
   - For PPV breath by breath, or anything else that pairs ventilator events with beats, align the ventilator to
     the arterial line first; the recorded stamps can be seconds apart, and the offset changes during the
