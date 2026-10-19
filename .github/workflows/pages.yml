@@ -1,0 +1,56 @@
+# Build the VitalDB atlas and publish it to GitHub Pages (https://vitaldb.metrology-atlas.org).
+# The build job runs on every push and pull request as a check; the deploy job runs only for main,
+# and only once the repository is public (GitHub Pages is not available for private repositories on the free plan).
+# Custom domain: set it in Settings > Pages; a CNAME file is not used with an Actions deployment.
+name: Atlas site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install pyyaml pytest "zensical==0.0.70"
+      - name: Tests
+        run: python -m pytest -q
+      - name: Check the dataset
+        run: python -m metrology_atlas check datasets/vitaldb
+      - name: Generate the site source
+        run: python -m metrology_atlas site datasets/vitaldb --out _site_src
+      - name: Build the site
+        working-directory: _site_src
+        run: zensical build
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: _site_src/site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && !github.event.repository.private
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

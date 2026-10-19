@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "metrology-atlas: a machine-readable metrology of a recorded dataset"
+authors:
+  - family-names: Goodwin
+    given-names: "Andrew J."
+    affiliation: "School of Biomedical Engineering, The University of Sydney"
+    orcid: "https://orcid.org/0000-0002-2776-7039"
+abstract: "A machine-readable metrology of a recorded dataset: every variable as a distribution over its true time and value, with the clocks, models and studies behind it; compiled to one JSON file and a website. Includes the VitalDB atlas as its first dataset."
+license: MIT
+repository-code: "https://github.com/metrology-atlas/metrology-atlas"
+url: "https://vitaldb.metrology-atlas.org"
+keywords:
+  - "metrology"
+  - "measurement uncertainty"
+  - "physiological signals"
+  - "clock synchronisation"
+  - "data quality"
+  - "VitalDB"

@@ -1,0 +1,34 @@
+{
+  "title": "metrology-atlas: a machine-readable metrology of a recorded dataset",
+  "upload_type": "software",
+  "description": "A machine-readable metrology of a recorded dataset: every variable as a distribution over its true time and value, with the clocks, models and studies behind it; compiled to one JSON file and a website. Includes the VitalDB atlas as its first dataset.",
+  "creators": [
+    {
+      "name": "Goodwin, Andrew J.",
+      "affiliation": "School of Biomedical Engineering, The University of Sydney",
+      "orcid": "0000-0002-2776-7039"
+    }
+  ],
+  "license": "mit",
+  "keywords": [
+    "metrology",
+    "measurement uncertainty",
+    "physiological signals",
+    "clock synchronisation",
+    "data quality",
+    "VitalDB"
+  ],
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/metrology-atlas/metrology-atlas",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://vitaldb.metrology-atlas.org",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
+    }
+  ]
+}

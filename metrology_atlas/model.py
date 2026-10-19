@@ -480,7 +480,7 @@ DATASET = (
         Field("section", "enum", choices=("Time", "Value", "About"),
               help="Navigation section the page is listed under (default About)."),
     ), help="Free pages (contributing, about ...), listed under About after the atlas's own 'Aim and terms'."),
-    Field("site", "obj", fields=(Field("title", "str"), Field("repo_url", "str"), Field("copyright", "str"))),
+    Field("site", "obj", fields=(Field("title", "str"), Field("url", "str"), Field("repo_url", "str"), Field("copyright", "str"))),
     Field("records", "obj", fields=(
         Field("name", "str", required=True, help="Word used in references, e.g. 'case' for [[case:1234]]."),
         Field("label", "str", help="How a reference reads, with {id}; default '<name> {id}'."),

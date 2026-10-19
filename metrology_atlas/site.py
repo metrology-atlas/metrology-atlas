@@ -1734,6 +1734,8 @@ def _toml(meta: dict, nav: list, brand: bool = False) -> str:
         "use_directory_urls = false",
         'docs_dir = "docs"',
     ]
+    if site.get("url"):
+        lines += [f"site_url = {q(site['url'])}"]
     if site.get("repo_url"):
         lines += [f"repo_url = {q(site['repo_url'])}"]
     if site.get("copyright"):

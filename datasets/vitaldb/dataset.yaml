@@ -176,6 +176,7 @@ sources:
     note: Registry and fitted value models. Refreshed by _import/resolution.py; never edited here.
 site:
   title: VitalDB metrology atlas
+  url: https://vitaldb.metrology-atlas.org/
   copyright: "© 2026 Andrew J. Goodwin, University of Sydney · Text and figures CC BY 4.0 · Code MIT · Data: VitalDB (CC BY 4.0); see Data and licence"
 records:
   name: case
