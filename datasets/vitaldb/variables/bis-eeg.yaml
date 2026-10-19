@@ -45,11 +45,11 @@ chain:
   clock: bis-clock
   kind: clock
   effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps sit 0.53–1.05 s off the
-    ECG's. It drifts +23 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +155 ms).
+    ECG's. It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +155 ms).
   offset_s:
   - 0.53
   - 1.05
-  drift: +23 ppm against the PC; corrected every 8,192 s
+  drift: +25 ppm against the PC; corrected every 8,192 s
   status: measured
   studies:
   - snuadc-stamp-sawtooth

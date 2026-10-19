@@ -1,13 +1,13 @@
 id: snuadc-step-period
 name: SNUADC step-mode correction interval
 quantity: Time between successive step-mode corrections.
-value: 2.06
+value: 2.08
 unit: h
-spread: {p10: 1.7, p90: 2.31}
+spread: {text: "5th–95th 1.65–3.57 h between resets; per-recording means p10–p90 1.68–3.07 h"}
 status: measured
 study: snuadc-stamp-sawtooth
 about: [snuadc-step-vs-pc]
-date: 2026-10-17
+date: 2026-10-19
 headline: true
 notes: >-
-  From the resets of all recordings ([[study:device-correction-schedules]], 19 October): median 2.08 h (5th–95th 1.65–3.57) between resets, in 642 recordings with two or more.
+  Full release, replacing the pilot value of 2.06 h (p10–p90 1.70–2.31 h, 182 intervals). From the resets of all recordings ([[study:device-correction-schedules]], 19 October): median 2.08 h (5th–95th 1.65–3.57) between resets, in 642 recordings with two or more.

@@ -17,6 +17,18 @@ description: 'Vital Recorder stamps each record on arrival with this clock, and 
 
   and it never steps backwards.
 
+
+  Every device drift in the atlas is measured against this clock, so its own drift and corrections are inside
+
+  every one of them. Within a recording the BIS and SNUADC drifts vary from interval to interval, but in opposite
+
+  directions (r = −0.54), which a PC excursion would not produce ([[study:device-correction-schedules]]).
+
+
+  The recording itself pauses for about 18 s on a 5-hour timer that does not start with the recording
+
+  ([[observation:recording-pauses]]); whether that timer belongs to the PC or to Vital Recorder is not known.
+
   '
 references: [lee2022vitaldb, rfc5905]
 utc_plan: 'The only link the release cannot show. What is known: no step of 0.5 s or more in any file. To go further

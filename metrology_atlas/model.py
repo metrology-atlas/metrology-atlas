@@ -63,6 +63,7 @@ FIGURE = (
     Field("alt", "str", required=True, help="What the figure shows, for readers who cannot see it."),
     Field("study", "ref", ref="study", help="The study the figure comes from."),
     Field("placeholder", "bool", help="Shown with a note that a final figure will replace it."),
+    Field("interactive", "bool", help="An SVG whose links should work: embedded as an object, not an image."),
     Field("theme", "str", help="Figure family for the gallery, e.g. 'drift and resets', 'delay and window fits'."),
     Field("source", "str", help="Script and output file the figure came from (for reproduction)."),
     Field("records", "ints", help="Record ids (e.g. VitalDB cases) the figure shows, for figures of specific examples."),

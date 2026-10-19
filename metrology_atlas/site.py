@@ -125,6 +125,16 @@ class Site:
         src = f"{self.base}figures/{f['file']}"
         note = "<em>Placeholder figure.</em> " if f.get("placeholder") else ""
         caption = _inline_html(self.prose(f["caption"]).replace("\n", " "))
+        if f["file"].endswith(".svg") and f.get("interactive"):
+            # an SVG with links: embedded as an object so its links work (an <img> would make them inert)
+            ar = ""
+            svgf = Path(self.ds.folder) / "figures" / f["file"]
+            m = re.search(r'viewBox="0 0 ([0-9.]+) ([0-9.]+)"', svgf.read_text(encoding="utf-8")[:2000]) if svgf.is_file() else None
+            if m:
+                ar = f";aspect-ratio:{float(m.group(1)):.0f}/{float(m.group(2)):.0f}"
+            return (f'<figure id="fig-{f["id"]}" style="width:100%">\n  <object data="{src}" type="image/svg+xml" style="width:100%{ar}" '
+                    f'aria-label="{f["alt"]}">{f["alt"]}</object>\n'
+                    f"  <figcaption>{note}{caption}</figcaption>\n</figure>")
         return (f'<figure markdown="span" id="fig-{f["id"]}">\n  [![{f["alt"]}]({src})]({src})\n'
                 f"  <figcaption>{note}{caption}</figcaption>\n</figure>")
 
@@ -1136,6 +1146,12 @@ class Site:
             if "system-overview" in figs and "system-overview" not in self.placed:
                 out += self.figure(figs["system-overview"]) + "\n\n"
                 self.placed.add("system-overview")
+                if figs["system-overview"].get("file") == "timing-graph.svg":
+                    from metrology_atlas.overview import overview_table  # noqa: PLC0415
+                    out += ("??? info \"The links in the timing graph\"\n\n"
+                            + "\n".join("    " + ln for ln in overview_table(
+                                self.ds, href=lambda kind, id_: f"{KINDS[kind].folder}/{id_}.md").splitlines())
+                            + "\n\n")
         out += self.axes_table()
         out += self.time_chart()
         if m.get("reference"):
@@ -1482,6 +1498,10 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     (docs / "data").mkdir(parents=True)
     (docs / "data" / json_name).write_text(json.dumps(to_json(ds), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     if (Path(ds.folder) / "figures").is_dir():
+        # the timing graph is generated from the atlas on every build (and refreshed in the dataset's folder)
+        from metrology_atlas.overview import overview_svg  # noqa: PLC0415
+        svg = overview_svg(ds, href=lambda kind, id_: f"../{KINDS[kind].folder}/{id_}.html")
+        (Path(ds.folder) / "figures" / "timing-graph.svg").write_text(svg, encoding="utf-8")
         shutil.copytree(Path(ds.folder) / "figures", docs / "figures")
     (docs / "css").mkdir()
     (docs / "css" / "atlas.css").write_text(ATLAS_CSS, encoding="utf-8")

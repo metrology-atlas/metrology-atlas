@@ -11,7 +11,10 @@ correction:
   rule: |
     Triggered by drift, not by a timer: once the stamps are about 0.5 s ahead, the recorder pulls the track back.
     The stamps show only −0.480 s of the true correction of about 0.498 s, because about 18 ms of signal is never
-    sampled ([[parameter:snuadc-reset-loss]]).
+    sampled ([[parameter:snuadc-reset-loss]]). In all recordings ([[study:device-correction-schedules]]): 3,417
+    resets in 2,540 recordings, a median 2.08 h apart; the drift count usually starts with the recording (the first
+    reset falls at 0.99 × the time 0.49 s of drift takes, interquartile 0.87–1.01), though not reliably enough to
+    time drift from a single reset. Rates are relative to the recorder PC.
   period: snuadc-step-period
   size: snuadc-step-correction-size
 status: measured

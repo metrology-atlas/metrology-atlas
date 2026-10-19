@@ -17,10 +17,10 @@ method: |
   between gaps.
 results: |
   - **SNUADC (step mode) corrects on a drift threshold.** Its interval follows its rate: about 0.5 s ÷ rate predicts
-    a median of 2.08 h, and 2.06 h is observed (p10–p90 1.70–2.31 h, 182 intervals).
+    a median of 2.08 h, and 2.06 h is observed (p10–p90 1.70–2.31 h, 182 intervals); the full release gives 2.08 h in 642 recordings, [[study:device-correction-schedules]]).
   - **BIS corrects on a fixed timer** of 8,192 s (2¹³ s) in 95% of 266 intervals. The step takes whatever drift has
     built up (+83 to +289 ms, median +155 ms); 0.155 s per 8,192 s implies 19 ppm, against 23 ppm from the tooth
-    fits.
+    fits (25 ppm in the full release).
   - **Primus AWP shows small corrections** of −64 to +80 ms (median +8 ms) about every 7,230 s (2.0 h; p90 twice
     that), besides gaps of +20 to +22 s (median 5.5 per case).
 discussion: |

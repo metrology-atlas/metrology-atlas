@@ -43,15 +43,17 @@ reference: |
   error against UTC is assumed.
 figures:
   - id: system-overview
-    file: system-overview-2026-10-12.png
+    file: timing-graph.svg
+    interactive: true
     caption: |
-      The devices and the measured timing links between them, as of 12 October 2026. A diagram generated from
-      the atlas itself will replace it; some links have been measured more precisely since (see
-      [[link:snuadc-step-vs-pc]] and the clock pages).
+      The timing graph: every clock in the atlas, placed one row below the clock it is measured against, with each
+      link's drift and correction interval. Generated from the atlas's clock, link and parameter pages on every
+      build, so it shows what the atlas currently holds; every box and label links to its page. All device rates
+      are relative to the recorder PC, whose own link to UTC is assumed.
     alt: >-
-      Boxes for SNUADC, BIS, the Primus ventilator and the Solar8000 monitor, joined by lines coloured by
-      confidence, each line labelled with the measured drift, correction period, offset and detection method.
-    placeholder: true
+      A tree with UTC at the top, the recorder PC clock below it, a row of device clocks (Primus, CardioQ, SNUADC,
+      BIS, hospital records) below that, and the clocks measured against the SNUADC (pulse oximeter frames, monitor
+      output, pacemaker, Solar8000) at the bottom; each line labelled with a drift and a correction interval.
 utc_step:
   node: Recorder PC clock
   clock: recorder-pc

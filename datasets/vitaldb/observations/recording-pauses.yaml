@@ -2,9 +2,20 @@ id: recording-pauses
 name: Recording pauses of about 20 s
 summary: >-
   In 29% of files every device jumps forward together, by a median 19.6 s: the recorder paused. Data are missing
-  there, and the stamps show it honestly.
+  there, and the stamps show it honestly. The pauses run on a 5-hour timer: consecutive pauses in a recording are
+  5 h apart (plus the pause) in 86% of cases, and the first comes at any time after the recording starts.
 status: established
 clocks: [recorder-pc]
 devices: [vital-recorder]
 studies: [recorder-pc-steps, continuity-gaps-segments]
-consequence: Gaps common to every device are recorder pauses, not clock steps; nothing needs correcting.
+description: |
+  From the steps between records (19 October): 1,713 pauses of 15–25 s in the SNUADC with a BIS gap within 3 s, in
+  1,605 recordings. Of the 108 intervals between two pauses in one recording, 93 (86%) lie between 17,990 and
+  18,050 s, and only 3 are longer. The first pause comes a median 1.5 h after the SNUADC starts (10th–90th
+  percentile 0.4–3.8 h), so the timer does not start with the recording, like the BIS and Primus correction timers
+  ([[study:device-correction-schedules]]). This is the 5-hour limit on SNUADC segments
+  ([[study:continuity-gaps-segments]]): a segment can only reach 5 h when it starts at a pause. The cause (a
+  5-hour job on the recording PC, or in VitalRecorder) is not known.
+consequence: |
+  Gaps common to every device are recorder pauses, not clock steps; nothing needs correcting. A recording longer
+  than 5 h that has had one pause will have another 5 h later.

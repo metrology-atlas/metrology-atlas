@@ -36,8 +36,9 @@ results: |
     every device, not losses in any one signal. Above about 30 s the curve falls smoothly to gaps of hours.
   - **A step at 0.2 s in SNUADC:** gaps of exactly one message.
   - **SNUADC segments stop at 5 hours.** No interior segment is longer than 17,991 s (5 h minus about 9 s), and
-    many are exactly that long, each followed by an 18 s gap: the recorder appears to break the SNUADC stream
-    every 5 hours of unbroken recording.
+    many are exactly that long, each followed by an 18 s gap. These are the recorder's pauses, which recur every
+    5 hours on a timer of their own ([[observation:recording-pauses]]); most 5-hour segments start at an earlier
+    pause.
   - **Primus and BIS segments stop near 2.2 hours.** Primus AWP segments never exceed about 7,980 s; BIS segments
     pile up at 7,500–8,500 s (2,584 of them).
   - **BIS's short gaps are clock resynchronisations.** Sub-second BIS gaps grow in proportion to the time since the
@@ -67,12 +68,6 @@ limitations: |
   - The 5-hour and 2.2-hour breaks are inferred from the stamps; the recorder's own logs, if they exist, would
     name them.
 open_questions:
-  - title: "What breaks the SNUADC stream every 5 hours?"
-    kind: next step
-    summary: >-
-      Check whether the 18 s gap after 17,991 s is shared by every device at that moment (a recorder event) or
-      only SNUADC (a device restart). The Primus and BIS limits near 2 hours are their correction cycles
-      ([[study:device-correction-schedules]]), so they are a different mechanism.
   - title: "Which gaps lose data?"
     kind: next step
     summary: >-

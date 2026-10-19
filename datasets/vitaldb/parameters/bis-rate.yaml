@@ -1,12 +1,13 @@
 id: bis-rate
 name: BIS drift against the recorder PC
 quantity: Drift of the BIS EEG stamps against the recorder PC, per case, from whole teeth.
-value: 23
+value: 25
 unit: ppm
-spread: {p10: 17, p90: 47}
+spread: {p10: 12, p90: 50, text: "5th–95th 7.3–51.1 ppm; census fit of 4,728 recordings median 21.1 ppm"}
 status: measured
 study: snuadc-stamp-sawtooth
 about: [bis-vs-pc]
 headline: true
+date: 2026-10-19
 notes: >-
-  From the correction steps of all recordings ([[study:device-correction-schedules]], 19 October): median 24.8 ppm (5th–95th 7.3–51.1) in 1,939 recordings, identical to the clock-correction scan where both exist; the full census fit gives 4,728 recordings, median 21.1 ppm (5th–95th 2.1–52.8). Relative to the recorder PC.
+  Full release, replacing the pilot value of 23 ppm (p10–p90 17–47). From the correction steps of all recordings ([[study:device-correction-schedules]], 19 October): median 24.8 ppm (5th–95th 7.3–51.1) in 1,939 recordings, identical to the clock-correction scan where both exist; the full census fit gives 4,728 recordings, median 21.1 ppm (5th–95th 2.1–52.8). Relative to the recorder PC.

@@ -1,13 +1,17 @@
 id: bis-vs-pc
 name: BIS against the recorder PC
-summary: The BIS EEG stamps drift +23 ppm against the PC and are pulled forward on a fixed 8,192 s timer.
+summary: >-
+  The BIS EEG stamps drift about +21 ppm against the PC (median of 4,728 recordings) and are pulled forward on a
+  fixed 8,192 s timer of the BIS's own, which does not start with the recording.
 clock: bis-clock
 against: recorder-pc
 rate: bis-rate
 correction:
   rule: |
     On a fixed timer: every 8,192 s the run is cut and restarted forward by whatever drift has built up. A correction
-    moves every BIS track together.
+    moves every BIS track together. In all recordings ([[study:device-correction-schedules]]), 95% of corrections
+    after the first are 8,192 ± 20 s apart, and the first comes at any time after the BIS starts: the timer is the
+    BIS's own. The rate is relative to the recorder PC, whose own corrections are part of what it measures.
   period: bis-period
   size: bis-step
 status: measured

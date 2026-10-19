@@ -113,10 +113,6 @@ open_questions:
       A joint model of the PC and every device clock (each drifting and corrected), fitted to all correction
       events at once, would separate the PC's corrections from the devices'; events seen by several devices at once
       (diathermy bursts, [[study:shared-bursts]]) would validate it.
-  - title: "What breaks the SNUADC stream every 5 hours?"
-    kind: next step
-    summary: >-
-      Still open: it is not the reset cycle (about 2 h). See [[study:continuity-gaps-segments]].
 figures:
   - id: correction-schedules
     file: correction-schedules.png

@@ -49,7 +49,7 @@ chain:
   clock: snuadc-sample
   kind: clock
   effect: SNUADC samples on its own crystal; the recorder stamps each 0.2 s record from its model of that clock.
-    In step mode the stamps drift (−62 ppm median) and are pulled back about 0.48 s whenever the drift reaches half
+    In step mode the stamps drift (−63 ppm median) and are pulled back about 0.48 s whenever the drift reaches half
     a second; in frequent-correction mode they stay within about 10 ms. The atlas's stamp model refits the line.
   offset_s:
   - 0.01
@@ -57,7 +57,7 @@ chain:
   residual_s:
   - 0.0003
   - 0.003
-  drift: −62 ppm median in step mode, pulled back about every 2.06 h
+  drift: −63 ppm median in step mode, pulled back about every 2.08 h
   status: measured
   link: snuadc-step-vs-pc
   studies:

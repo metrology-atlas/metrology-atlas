@@ -1,13 +1,17 @@
 id: primus-vs-pc
 name: Primus against the recorder PC
 summary: >-
-  The Primus stamps are corrected by small steps about every two hours and re-anchored at recording gaps; their
-  drift is not yet well measured.
+  The Primus stamps are corrected by small steps every 7,230 s on the Primus's own timer, each about 21 s after a
+  pause in its AWP waveform; their drift is not yet well measured.
 clock: primus-clock
 against: recorder-pc
 rate: primus-drift-implied
 correction:
-  rule: Small steps of −64 to +80 ms about every 7,230 s, and re-anchoring at gaps of about 20 s.
+  rule: |
+    Small steps, whole 16 ms samples in either direction (most between −176 and +144 ms), every 7,230 s or twice
+    that, often two at once; the first at any time after the Primus starts. The AWP waveform stops for about 21 s
+    just before each correction and that AWP is lost ([[observation:primus-awp-pauses]]); CO2 carries on. Measured in
+    4,529 recordings ([[study:device-correction-schedules]]).
   period: primus-period
   size: primus-step
 status: measured

@@ -3,7 +3,7 @@ name: BIS clock
 summary: The BIS monitor's own clock.
 type: oscillator
 nominal: 128 Hz EEG sample clock
-description: The BIS monitor's own clock. Its EEG stamps drift by about +23 ppm against the recorder PC and are
+description: The BIS monitor's own clock. Its EEG stamps drift by about +25 ppm against the recorder PC and are
   corrected on a fixed 8,192 s timer.
 tags:
 - stub
