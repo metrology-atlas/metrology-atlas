@@ -1,0 +1,128 @@
+id: pat-vs-bp
+name: Pulse arrival time against blood pressure, before and after synchronisation
+summary: >-
+  In 3,270 recordings, PAT tracks systolic pressure only once each pulse is paired with its own beat: the hourly
+  correlation moves from a mean of −0.04 to −0.21 (88% of recordings negative), reproducing Ruffolo et al. 2025
+  in a second dataset; paired naively, PAT is a heart-rate signal.
+side: time
+status: draft
+question: |
+  Does pulse arrival time (PAT) follow blood pressure within a patient, and how much of the answer depends on
+  synchronising the ECG and the finger pulse correctly?
+why: |
+  PAT is studied as a cuffless blood-pressure surrogate, with mixed results. In VitalDB the stored ECG-to-PLETH delay
+  is about 0.7 s ([[study:pat-offset-census]]), longer than one RR interval at faster heart rates, so pairing each
+  pulse with the next R peak puts it one beat out; and the PLETH reaches the recorder on the oximeter's 30 Hz frames,
+  with a sawtooth of 33 ms slips ([[study:ppg-sawtooth]]). Ruffolo et al. found in a paediatric ICU that the expected
+  negative PAT–SBP correlation only appears after correcting such errors ([[reference:ruffolo2025high]], appendix
+  B), and suspected naive synchronisation makes PAT follow heart rate instead. This example tests both in VitalDB.
+variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art, solar8000-art-numerics]
+studies: [pat-offset-census, ppg-sawtooth, ppg-offset-reference, ppg-art-reference]
+observations: [fiducial-quantisation]
+data: |
+  Every recording with SNUADC ECG II, PLETH and a pulsatile arterial line at 500 Hz, and some variation in systolic
+  pressure (SD of 3 mmHg or more): 3,270 recordings, 60 minutes each from 10 minutes into the overlap (as
+  [[example:pulse-arrival-time]]). All three signals are on one clock, the SNUADC's.
+steps: |
+  1. R peaks in ECG II; per beat, systolic pressure (the arterial peak after its upstroke), mean pressure (foot to
+     foot) and heart rate (the RR interval ending at the beat).
+  2. PAT, R peak to the steepest PLETH upstroke, under five timings:
+     **naive**, each R peak paired with the first upstroke 0.1 s or more after it;
+     **own beat**, the upstroke within 0.25 s of the recording's typical delay;
+     **+ sawtooth removed**, step 1 of [[example:pulse-arrival-time]];
+     **+ global delay**, step 2, a constant, so every correlation must equal the previous one (a built-in check);
+     and **arterial PAT**, R peak to the arterial upstroke, with neither problem, as the reference.
+  3. Pearson r per recording between PAT and SBP, MAP and heart rate, and between PAT and SBP with heart rate held
+     constant (partial r): beat to beat, and over 30 s windows (window medians).
+  4. As Ruffolo et al. appendix B: the mean of the beat-paired, hour-long r and the share of recordings with r below
+     0.
+results: |
+  **The appendix B result, reproduced.**
+
+  | PAT against SBP, r over one hour per patient | Ruffolo et al. 2025 (paediatric ICU, 3,316 patients) | VitalDB (adult surgery, 3,270 recordings) |
+  |---|---|---|
+  | Naive synchronisation | Centred on 0; about 50% below 0 | Mean −0.04; 60% below 0 |
+  | Corrected | Mean −0.16; 84% below 0 | Mean −0.21; 88% below 0 |
+
+  [[figure:pat-vs-bp-ruffolo]]
+
+  **Paired naively, PAT is a heart-rate signal.** Beat to beat, naive PAT correlates with heart rate (median r
+  −0.40) and hardly with SBP (−0.04); with heart rate held constant, nothing is left (−0.00). Paired with its own
+  beat, PAT does not follow heart rate (0.00) and does follow SBP (−0.19; −0.18 with heart rate held constant). In
+  the 523 recordings where naive pairing is one beat out more than a fifth of the time, the same holds more strongly
+  (PAT–HR −0.36 naive, 0.01 paired). This confirms Ruffolo et al.'s suspicion that naive synchronisation makes PAT
+  track heart rate.
+
+  **Over 30 s windows the link is stronger,** and the corrected finger PAT matches the arterial PAT:
+
+  | Median r per recording, 30 s windows | PAT–SBP | PAT–HR | PAT–SBP, HR held constant |
+  |---|---|---|---|
+  | Naive pairing | −0.24 | −0.45 | −0.10 |
+  | Own beat | −0.45 | −0.32 | −0.36 |
+  | + sawtooth removed | −0.47 | −0.34 | −0.38 |
+  | + global delay | −0.47 | −0.34 | −0.38 |
+  | Arterial PAT (reference) | −0.48 | −0.34 | −0.39 |
+
+  Almost all of the gain comes from the pairing; removing the sawtooth adds a little over windows (−0.45 to −0.47)
+  and nothing beat to beat, where its 33 ms slips are small next to beat-to-beat noise. The global delay changes
+  nothing, as it must. The slope is −0.41 ms of PAT per mmHg of SBP (median over recordings), against −0.34 for
+  the arterial PAT.
+
+  [[figure:pat-vs-bp]]
+
+  **Between patients, PAT says little about SBP.** Naive PAT's recording medians correlate with heart rate (r
+  −0.69) and slightly positively with SBP (+0.08); correctly paired, both are near zero (−0.15 and −0.05). The device
+  delay is the same for every recording, so it neither helps nor hurts between patients.
+levels:
+  error: systematic
+  population: >-
+    Naive pairing turns a cohort's mean hourly PAT–SBP correlation from −0.21 into −0.04, and its PAT–HR correlation
+    into −0.40: a systematic error that changes what a study concludes.
+  individual: >-
+    Each recording's correlation moves by a median −0.16 when pulses are paired with their own beats; for a
+    patient-level PAT–BP calibration, the pairing decides whether there is a signal at all.
+takeaways: |
+  - Pair each pulse with its own beat before using PAT for anything: in VitalDB the stored delay is longer than the
+    RR interval at ordinary heart rates, and naive pairing makes PAT a heart-rate signal.
+  - Test PAT against BP with heart rate held constant; otherwise a correlation may be heart rate's.
+  - Over 30 s windows, corrected finger PAT carries as much SBP information as arterial PAT; beat to beat, neither
+    carries much.
+  - The result holds in two very different populations (paediatric ICU, adult surgery) with different monitors.
+limitations: |
+  - Pearson r over an hour mixes slow trends with beat-to-beat noise; the 30 s scale is more informative, but its
+    windows are not independent.
+  - SBP comes from the same arterial line whose upstroke gives the reference PAT, so the reference is not
+    independent of the BP measurement.
+  - The "own beat" window is centred on each recording's typical delay; a recording whose delay changes by more
+    than 0.25 s would be paired wrongly.
+  - Ruffolo et al. corrected with their full method (including maximum-likelihood smoothing); here "corrected" is
+    own-beat pairing plus sawtooth removal, so the comparison is of methods in spirit, not identical steps.
+code:
+  - vitaldb-bench/examples/pat_vs_bp.py
+  - vitaldb-bench/examples/pulse_arrival_time.py
+  - vitaldb-bench/examples/run_scan.sh
+  - vitaldb-bench/tools/deck_figures.py
+reproduce: |
+  ```
+  bash examples/run_scan.sh pat_vs_bp                    # 8 parallel parts, about 15 minutes
+  python examples/pat_vs_bp.py agg <work>/examples/pat_vs_bp/part_*.jsonl --out out/pat_bp
+  ```
+references: [ruffolo2025high]
+figures:
+  - id: pat-vs-bp-ruffolo
+    file: examples/pat-vs-bp-ruffolo.png
+    theme: agreement and residuals
+    source: vitaldb-bench tools/deck_figures.py
+    caption: >-
+      Pearson r between beat-paired PAT and SBP over an hour per recording, 3,270 recordings, drawn as Ruffolo et
+      al. 2025 appendix B figure 10: distribution (left) and cumulative distribution (right), naive pairing (orange)
+      against corrected (blue).
+    alt: Two step histograms, orange centred just below zero and blue shifted to about minus 0.2; two cumulative curves with blue left of orange.
+  - id: pat-vs-bp
+    file: examples/pat-vs-bp.png
+    theme: agreement and residuals
+    source: vitaldb-bench examples/pat_vs_bp.py
+    caption: >-
+      Correlation of PAT with SBP, with heart rate, and with SBP for heart rate held constant, per recording (median
+      and interquartile range), under five timings: beat to beat (A) and over 30 s windows (B).
+    alt: Two dot-and-whisker panels; naive pairing (grey) sits near zero for SBP and strongly negative for heart rate, the corrected timings and the arterial reference sit together further down for SBP.
