@@ -9,3 +9,5 @@ study: snuadc-stamp-sawtooth
 about: [snuadc-step-vs-pc]
 date: 2026-10-17
 headline: true
+notes: >-
+  From the resets of all recordings ([[study:device-correction-schedules]], 19 October): median 2.08 h (5th–95th 1.65–3.57) between resets, in 642 recordings with two or more.

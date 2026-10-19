@@ -71,7 +71,8 @@ open_questions:
     kind: next step
     summary: >-
       Check whether the 18 s gap after 17,991 s is shared by every device at that moment (a recorder event) or
-      only SNUADC (a device restart), and whether Primus and BIS's 2.2-hour limit is the same mechanism.
+      only SNUADC (a device restart). The Primus and BIS limits near 2 hours are their correction cycles
+      ([[study:device-correction-schedules]]), so they are a different mechanism.
   - title: "Which gaps lose data?"
     kind: next step
     summary: >-

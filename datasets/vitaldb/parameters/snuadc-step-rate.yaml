@@ -8,5 +8,8 @@ status: measured
 study: snuadc-stamp-sawtooth
 about: [snuadc-step-vs-pc]
 date: 2026-10-15
-notes: The size of each correction divided by the time since the previous one, from the record stamps.
+notes: >-
+  The size of each correction divided by the time since the previous one, from the record stamps. From the resets of
+  all recordings ([[study:device-correction-schedules]], 19 October): median −62.9 ppm (5th–95th −80.3 to −36.9) in
+  642 recordings with two resets or more; the full census fit gives 2,728 recordings, median −49.5 ppm (5th–95th −79.1 to −8.1). Relative to the recorder PC.
 headline: true

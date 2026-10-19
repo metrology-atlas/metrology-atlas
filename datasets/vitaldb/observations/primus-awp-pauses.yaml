@@ -1,0 +1,16 @@
+id: primus-awp-pauses
+name: The Primus AWP stops for about 21 s every 7,230 s
+summary: >-
+  In 5,502 recordings the Primus airway-pressure waveform has gaps of 19–23.5 s (whole messages of 0.48 s, mostly
+  21.12 s) that recur every 7,230 s, the Primus's correction interval; a clock correction follows about 21.6 s
+  after. The CO2 waveform carries on through 90% of them.
+status: likely
+clocks: [primus-clock]
+devices: [primus]
+variables: [primus-awp, primus-co2]
+studies: [device-correction-schedules, step-classification]
+consequence: |
+  An AWP gap of about 21 s is the Primus's two-hourly resynchronisation, not a disconnection or a random loss.
+  Whether the 21 s of AWP is missing, or only its stamps jumped, is open: the waveform appears to run on across the
+  pause.
+handling: Not handled yet; flagged as a periodic device event in the step classes.
