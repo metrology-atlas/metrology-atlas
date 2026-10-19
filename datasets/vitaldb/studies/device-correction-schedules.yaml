@@ -79,12 +79,13 @@ results: |
     2.6 ppm).
   - **Primus: every 7,230 s, also on its own timer, and the AWP pauses belong to the cycle.** 8,077 corrections in
     4,529 recordings, each a whole number of 16 ms samples (one sample at 62.5 Hz) in either direction, often two
-    at once; 7,230 s apart, or twice that. The 10,496 AWP pauses of 19–23.5 s in 5,502 recordings recur at the
-    same interval, and where a correction lies within 60 s (69% of pauses) it follows the pause by about 21.6 s.
+    at once (median −16 ms; p10–p90 −144 to +144 ms); 7,230 s apart, or twice that. These steps are far too small
+    for the Primus drift, which breath matching measures at +104 ppm against the PC ([[parameter:primus-drift-breath]]),
+    so they do not give its rate. The 10,496 AWP pauses of 19–23.5 s in 5,502 recordings recur at the same interval, and where a correction lies within 60 s (69% of pauses) it follows the pause by about 21.6 s.
     The CO2 track has no gap at the same moment in 90% of them, and the AWP data in the pause are lost, not
     re-stamped: after each pause AWP still lines up with CO2 at the lag it had before ([[observation:primus-awp-pauses]]).
   - These cycles end the long segments: the BIS segments that pile up at 7,500–8,500 s and the Primus AWP segments
-    that never exceed about 2 h ([[study:continuity-gaps-segments]]) are cut by the corrections and pauses.
+    that never exceed about 7,980 s ([[study:continuity-gaps-segments]]) are cut by the corrections and pauses.
 
   [[figure:correction-schedules]]
 discussion: |

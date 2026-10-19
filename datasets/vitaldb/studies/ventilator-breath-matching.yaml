@@ -2,8 +2,9 @@ id: ventilator-breath-matching
 name: The Primus ventilator against SNUADC, by breaths
 summary: >-
   Each breath shows in the Primus airway pressure and, through the chest, in SNUADC's central venous pressure.
-  Tracking that lag puts the Primus on the SNUADC timeline to about 49 ms, and shows a drift of 31–200 ppm that is
-  not constant within a case.
+  Tracking that lag puts the Primus on the SNUADC timeline to about 74 ms over the whole release (49 ms in the
+  pilot). At scale it measures the Primus drifting a median +104 ppm against the recorder PC between its AWP
+  pauses, with steps at the pauses that do not reset it.
 date: 2026-10-12
 status: open
 methods: [shared-events]
@@ -30,28 +31,67 @@ results: |
     91–96% of the time when confident. With confirmed identity the lag fits per-stretch lines to 49 ms (p90 165 ms).
   - **The drift is 31–200 ppm** (median +141) and not constant within a case. A sweep of assumed drifts is
     inconclusive: 170 ppm fits no better than 115.
+  - **At scale (19 October).** The same lag, on the SNUADC stamp model, in 1,061 recordings with CVP
+    ([[example:ppv-by-breath]]): the Primus sits a median 1.8 s off the SNUADC (p10–p90 0.6 to 5.1 s), and a line
+    through each whole recording gives +87 ppm (p10–p90 −49 to +229). Fitted with one slope and one offset per stretch
+    between AWP pauses, in 178 recordings with pauses ([[code:vitaldb-bench/tools/primus_drift_probe.py]]): the drift
+    within stretches is a median **+104 ppm** (p10–p90 +28 to +184), and the per-stretch offsets halve the residual
+    (195 to 99 ms). The steps at the 390 pauses (median −29 ms, p10–p90 −685 to +494 ms) are unrelated to the drift
+    built up in the stretch before (correlation 0.0): the pauses move the stamps but do not reset the drift.
+  - **Accuracy over the whole release (19 October;
+    [[code:vitaldb-bench/tools/primus_sync_accuracy.py]]).** Each 10-minute window predicted from all the others
+    (one slope and one offset per stretch): a median error of 74 ms (p90 259 ms, p95 390 ms) in 1,067 recordings
+    with CVP. The arterial mean pressure as a second reference is noisier (114 ms; p90 515 ms, 1,386 recordings),
+    sometimes a breath out; where both exist (462) their drifts differ by a median 49 ppm. An injected shift of
+    0.25 s and drift of 100 ppm (196 recordings) come back as 0.252 s and 99.6 ppm (medians).
+
+  [[figure:sync-demo-breath]]
 discussion: |
-  The 115 ppm used for the Primus elsewhere rests on this pilot, and the Primus's own corrections
-  ([[study:correction-periods]]) suggest far less. Breath identity after resets is still open, so the Primus link
-  stays "estimated".
+  The SNUADC stamp model places the SNUADC on the recorder PC's timeline, so the lag's slope is the Primus drift
+  against the PC: about +104 ppm, close to the 115 ppm assumed earlier from this pilot. The Primus's own small
+  corrections ([[study:correction-periods]]) imply only 1–11 ppm, so they do not track the drift. The measured lag
+  includes the physiological airway-to-CVP delay, which is constant within a recording and does not affect the
+  slope.
 limitations: A 20-case pilot. The offset includes the physiological airway-to-CVP delay.
 open_questions:
-  - title: "A full run for the Primus clock rate"
-    kind: next step
+  - title: "What sets the steps at the AWP pauses"
+    kind: phenomenon
     summary: >-
-      This pilot is the only measured route to the Primus clock; a full run is needed to settle the drift question
-      raised by [[study:correction-periods]].
+      At each AWP pause the Primus stamps step by up to about ±0.5 s relative to the SNUADC, by amounts unrelated to
+      the drift built up since the last pause. Whether they are re-anchoring to something other than the recorder PC,
+      breath mis-assignment after the gap, or both, is open.
   - title: "Separating the airway-to-CVP delay"
     kind: next step
     summary: >-
       The physiological delay from airway pressure to CVP is inside the measured offset and has not been separated.
 code:
   - vitaldb-bench/tools/vent_sync_pilot.py
+  - vitaldb-bench/tools/primus_drift_probe.py
+  - vitaldb-bench/examples/ppv_by_breath.py
 figures:
+  - id: sync-demo-breath
+    file: sync-demo-1216.png
+    theme: example traces
+    source: vitaldb-bench tools/sync_demo.py
+    records: [1216]
+    caption: >-
+      One recording ([[case:1216]], 8.7 hours), before synchronisation (left) and after (right), on the same scales.
+      Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
+      second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
+      Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
+      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 74 ms (Primus, whole-release
+      medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
+      and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
+      pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is
+      predicted from all the others.
+    alt: >-
+      Six panels over 9 hours. Left column: sawtooth lines for SNUADC and BIS and a rising line for the Primus
+      spanning about 3.5 seconds; burst lags ramping between minus 0.6 and minus 1.2 seconds; breath lags rising
+      from minus 2 to plus 2 seconds. Right column: the same quantities flat near zero.
   - id: vent-breath-matching
     file: vent-breath-matching.png
     theme: example traces
     source: ad hoc (no script in vitaldb-bench yet; to be regenerated by one)
     records: [4644, 4817, 3148, 750, 2443, 1403, 3706, 5780, 2838, 1936, 3146, 3549, 2172, 629]
-    caption: Lag of the Primus ventilator against SNUADC, from CVP after breath matching, in 14 cases. The lag ramps by about 50–200 ppm and resets at Primus stamp jumps (red dashed lines). [[case:1936]] and [[case:3549]] show offset plateaus near 8 s; in [[case:3549]] and [[case:2172]] red crosses mark values before the fix.
+    caption: Lag of the Primus ventilator against SNUADC, from CVP after breath matching, in 14 cases. The lag ramps by about 50–200 ppm and steps at Primus stamp jumps (red dashed lines). [[case:1936]] and [[case:3549]] show offset plateaus near 8 s; in [[case:3549]] and [[case:2172]] red crosses mark values before the fix.
     alt: Fourteen small scatter plots of lag in ms against hours, with filled and open dots and red dashed vertical lines.

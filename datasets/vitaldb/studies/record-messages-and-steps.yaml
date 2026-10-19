@@ -62,7 +62,9 @@ open_questions:
     kind: next step
     summary: >-
       For SNUADC and BIS gaps that are not whole messages, test whether the waveform continues across the gap
-      (no loss) or needs missing samples to fit ([[method:signal-continuity]]).
+      (no loss) or needs missing samples to fit ([[method:signal-continuity]]). Partly answered by
+      [[study:step-classification]]: steps under one message run on (clock corrections), while about 70% of SNUADC
+      fractional gaps and roughly a third of BIS fractional gaps lose data. What is left is fitting how much.
 figures:
   - id: record-steps-magnitude
     file: record-steps-magnitude.png

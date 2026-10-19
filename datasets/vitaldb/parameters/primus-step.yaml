@@ -1,9 +1,15 @@
 id: primus-step
 name: Primus correction size
 quantity: Size of the Primus's small corrections.
-value: 0.008
+value: -0.016
 unit: s
-spread: {min: -0.064, max: 0.08}
+display: "whole 16 ms samples either way; median −16 ms (one sample back), p10–p90 −144 to +144 ms"
 status: measured
-study: correction-periods
+study: device-correction-schedules
 about: [primus-vs-pc]
+date: 2026-10-19
+notes: >-
+  The whole release: each correction is a whole number of 16 ms samples in either direction, often two at once:
+  8,077 corrections, median −16 ms, p10–p90 −144 to +144 ms, p5–p95 −176 to +176 ms. The pilot
+  ([[study:correction-periods]]) gave +8 ms median (−64 to +80 ms). These steps do not track the Primus
+  drift ([[parameter:primus-drift-breath]]).

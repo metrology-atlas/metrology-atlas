@@ -39,8 +39,10 @@ reference_clock: snuadc-sample
 reference: |
   The working reference is **SNUADC stamp-model time**: the SNUADC sample clock, placed on the recorder PC's
   timeline by the stamp model (drift and corrections fitted, the signal lost at each correction added back). Every
-  delay in the planner is measured against it. Its own error against the PC is a few milliseconds, and the PC's
-  error against UTC is assumed.
+  delay in the planner is measured against it. Its own error against the PC is a few milliseconds where the
+  SNUADC's corrections are seen; in recordings that make no SNUADC correction it rests on the port's typical rate
+  and can drift by about ±0.1 s per hour ([[observation:snuadc-long-uncorrected]]). The PC's error against UTC is
+  assumed.
 figures:
   - id: system-overview
     file: timing-graph.svg
@@ -54,6 +56,42 @@ figures:
       A tree with UTC at the top, the recorder PC clock below it, a row of device clocks (Primus, CardioQ, SNUADC,
       BIS, hospital records) below that, and the clocks measured against the SNUADC (pulse oximeter frames, monitor
       output, pacemaker, Solar8000) at the bottom; each line labelled with a drift and a correction interval.
+  - id: synchronisation-demo
+    file: sync-demo-1216.png
+    theme: example traces
+    source: vitaldb-bench tools/sync_demo.py
+    records: [1216]
+    caption: >-
+      One recording ([[case:1216]], 8.7 hours), before synchronisation (left) and after (right), on the same scales.
+      Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
+      second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
+      Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
+      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 74 ms (Primus, whole-release
+      medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
+      and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
+      pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is
+      predicted from all the others.
+    alt: >-
+      Six panels over 9 hours. Left column: sawtooth lines for SNUADC and BIS and a rising line for the Primus
+      spanning about 3.5 seconds; burst lags ramping between minus 0.6 and minus 1.2 seconds; breath lags rising
+      from minus 2 to plus 2 seconds. Right column: the same quantities flat near zero.
+  - id: synchronisation-census
+    file: sync-error-census.png
+    theme: population results
+    source: vitaldb-bench tools/sync_error_census.py
+    caption: >-
+      Timing error per window across the whole release, as recorded (grey) and after synchronisation (blue), on a
+      log scale; dashed lines mark the medians. Each link is checked by a signal both clocks record, which never
+      enters the correction it tests. BIS against SNUADC, by electrocautery and muscle bursts in the ECG and the EEG:
+      median 794 ms to 42 ms (2,737 recordings, 10-minute windows). Primus against SNUADC, by the breath cycle in
+      airway pressure and CVP: 378 ms to 74 ms (1,077 recordings; each window predicted from all the others).
+      Primus against the PC, by PC-stamped PIP values: 450 ms to 238 ms (172 recordings, 30-minute blocks). The
+      "before" for both Primus links has each recording's own offset removed, so it understates the raw error.
+    alt: >-
+      Three histograms on a log time axis. In each the grey "as recorded" distribution sits to the right, at
+      hundreds of milliseconds to seconds, and the blue "synchronised" distribution sits to the left, at tens of
+      milliseconds for BIS and the Primus against SNUADC, and a few hundred milliseconds for the Primus against
+      the PC.
 utc_step:
   node: Recorder PC clock
   clock: recorder-pc
@@ -79,15 +117,15 @@ domains:
   - id: bis
     name: BIS clock
     clock: bis-clock
-    drift_ppm: 23
+    drift_ppm: 25
     drift_status: measured
     note: Against the recorder PC; corrected on a fixed 8,192 s timer.
   - id: primus
     name: Primus clock
     clock: primus-clock
-    drift_ppm: 115
-    drift_status: assumed
-    note: The 115 ppm is a set value; the Primus's own corrections suggest 1-11 ppm. Under recheck.
+    drift_ppm: 104
+    drift_status: measured
+    note: Against the recorder PC, by breath matching through the SNUADC stamp model (p10–p90 +28 to +184 ppm); steps of up to about ±0.5 s at the AWP pauses.
   - id: solar8000
     name: Solar8000 numerics
     clock: solar8000-clock

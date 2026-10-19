@@ -1,8 +1,8 @@
 id: timenet
-name: TimeNet
+name: TimeNet VitalDB reader
 summary: >-
-  An open time-series database and its dataset connectors. The VitalDB connector imports the .vital files and is
-  where several of this atlas's findings are applied on import.
+  The reader that loads VitalDB's .vital files with this atlas's corrections applied: records after each reset put
+  back in order, every sample placed by its count, the corrected scale factors and the whole-file time zero.
 repo: https://github.com/OpenTSLM/TimeNet
 branch: main
 visibility: public
@@ -10,32 +10,34 @@ local: ../../../TimeNet
 docs: https://docs.timenet.ai
 language: Python
 description: |
-  TimeNet stores records and their tracks with exact sample times. Its `timenet-connectors` package holds one
-  connector per dataset; the VitalDB connector reads .vital files and writes cases.
+  The VitalDB reader is one of the dataset connectors in the open TimeNet project (`timenet-connectors`). It reads
+  .vital files into records and tracks with exact sample times. The atlas uses it as the place where its findings
+  about the files are applied on reading, so an analysis that loads VitalDB through it starts from corrected data.
 role: |
-  What the VitalDB connector does about the atlas's observations:
+  What the reader does about the atlas's observations:
 
   - **Reset blocks out of order.** It puts the five records after each SNUADC reset back in sampling order
     (on by default; `VITALDB_RESET_ORDER=off` turns it off) and records the rule on each record
     ([[observation:reset-records-out-of-order]]).
   - **Samples placed by count.** Every sample is kept and placed by its count, so none are lost to the stamp
     arithmetic ([[observation:snuadc-stamp-arithmetic]], [[observation:loaders-lose-samples]]).
+  - **Corrected scale factors** for the Primus waveforms and the mislabelled arterial tracks
+    ([[observation:primus-waveform-gains]], [[observation:art-with-pleth-factors]]).
   - **Whole-file time zero** ([[observation:loaded-subset-time-zero]]).
   - **Numeric delay labels** ([[observation:numerics-not-front-stamped]]).
 
-  [[software:vitaldb-bench]] drives the builds and checks them against the source files.
-
-  Changes to the connector made during this work may be ahead of the public repository until they are merged.
+  [[software:vitaldb-bench]] checks what it reads against the source files. Changes to the reader made during this
+  work may be ahead of the public repository until they are merged.
 parts:
-  - group: The VitalDB connector
+  - group: The VitalDB reader
     path: packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py
 
     summary: Reads .vital files into TimeNet records; import options, including the reset reordering.
-  - group: The VitalDB connector
+  - group: The VitalDB reader
     path: packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py
 
     summary: Finds the reset clusters in an SNUADC track and puts their records back in sampling order.
-  - group: The VitalDB connector
+  - group: The VitalDB reader
     path: packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/tests/test_resets.py
 
     summary: Tests of the reordering rule, including the variant clusters.

@@ -23,6 +23,4 @@ results: |
     is not used. Rounding to the nearest anchor beats floor rounding by BIC.
 discussion: |
   - Crystalloid volume is very strongly tied to case duration (Spearman 0.82).
-  - Conditioning the latent on duration would narrow posteriors considerably. This is a candidate extension for all volumes.
-limitations: |
-  - The latent does not yet use duration, so posteriors are wider than they need to be.
+  - Conditioning the latent on duration narrows the posteriors considerably; model version 2 does so (see results).

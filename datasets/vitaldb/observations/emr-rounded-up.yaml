@@ -2,11 +2,12 @@ id: emr-rounded-up
 name: Anaesthesia record times on 5-minute marks are rounded up
 summary: >-
   An anaesthesia start or end entered on a 5-minute mark was rounded up to it: the event happened in the 5 minutes
-  before, and on average a little earlier still.
+  before, and on average a little earlier still. Clear for anaesthesia end; for anaesthesia start the margin is
+  small, and the value model ([[study:value-model-anestart]]) prefers rounding to the nearest mark.
 status: established
 clocks: [hospital-records]
 devices: [clinical-records]
 variables: [emr-events]
-studies: [emr-rounding]
+studies: [emr-rounding, value-model-anestart, value-model-aneend]
 consequence: Taking a 5-minute entry at face value puts the event about 2.5 minutes late on average.
 handling: The clinical_time labels give each time its interval and the earliest moment it could be known.

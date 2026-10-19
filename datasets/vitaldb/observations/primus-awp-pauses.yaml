@@ -24,8 +24,10 @@ description: |
   [[figure:primus-awp-pauses]]
 consequence: |
   An AWP gap of about 21 s is the Primus's two-hourly resynchronisation: about 21 s of airway pressure is never
-  recorded, and the stamps after it are right. It is not a disconnection, and nothing needs re-timing; CO2 covers
-  the same breaths.
+  recorded. It is not a disconnection, and CO2 covers the same breaths. Within the Primus nothing needs re-timing
+  (AWP keeps its lag to CO2), but against the recorder PC the stamps step at the pause by up to about ±0.5 s
+  (median −29 ms; [[study:ventilator-breath-matching]]), so a Primus–SNUADC offset fitted before a pause does not
+  carry over to after it.
 handling: Treat it as a real gap. Flagged as a periodic device event in the step classes.
 figures:
   - id: primus-awp-pauses

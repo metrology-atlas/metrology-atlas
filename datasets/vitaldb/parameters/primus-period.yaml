@@ -5,7 +5,9 @@ value: 7230
 unit: s
 display: "about 7,230 s (2.0 h; p90 twice that)"
 status: measured
-study: correction-periods
+study: device-correction-schedules
 about: [primus-vs-pc]
+date: 2026-10-19
 notes: >-
-  From the corrections of all recordings ([[study:device-correction-schedules]], 19 October): 7,230 s or twice that in 4,529 recordings; the AWP pauses recur at the same interval ([[observation:primus-awp-pauses]]).
+  The whole release: 7,230 s or twice that, 8,077 corrections in 4,529 recordings; the AWP pauses recur at the same
+  interval ([[observation:primus-awp-pauses]]). The pilot ([[study:correction-periods]]) gave the same.

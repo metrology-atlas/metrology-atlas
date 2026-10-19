@@ -48,7 +48,8 @@ results: |
 discussion: |
   Mean against median, or beats against seconds, often differ by only 0.01–0.05 log-likelihood per record, so the
   algorithm family is less certain than the delay. Pressure numerics sit about 4 mmHg below the analogue waveform
-  (scale, not timing). Delays here are pilot values; [[study:numeric-delay-variability]] measures them in every case.
+  in these cases (scale, not timing); over the whole release the median is −1.2 mmHg, varying by about ±6 mmHg
+  between patients ([[example:hypotension-burden]]). Delays here are pilot values; [[study:numeric-delay-variability]] measures them in every case.
 code:
   - vitaldb-bench/tools/numeric_intervals.py
   - vitaldb-bench/tools/numeric_derivation_pilot.py

@@ -21,6 +21,4 @@ results: |
     fitter worked out the time-of-day prior on its own 0.1-minute grid; refitted with the library's likelihood the
     model gains 33.2 in log-likelihood and the posteriors move by less than 0.03 minutes.
 discussion: |
-  - Through the package, the log-likelihood differs from the stored one by −10.6. The difference is not yet explained. The working explanation is that the fitter integrates the first-case clock prior on its own 0.1-min grid, about 0.007 per first-case record.
-limitations: |
-  - The package and stored log-likelihoods differ by 10.6 points, and the cause is not confirmed.
+  - Before v0.6.0 the package's log-likelihood differed from the stored one by −10.6. The cause was the fitter integrating the first-case clock prior on its own 0.1-min grid; model version 2 is fitted with the library's likelihood.

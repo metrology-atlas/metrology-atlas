@@ -3,9 +3,11 @@ name: BIS correction interval
 quantity: Time between BIS corrections.
 value: 8192
 unit: s
-display: "8,192 s (2 h 16.5 min) in 95% of 266 intervals"
+display: "8,192 s (2 h 16.5 min), ± 20 s in 95% of intervals"
 status: measured
-study: correction-periods
+study: device-correction-schedules
 about: [bis-vs-pc]
+date: 2026-10-19
 notes: >-
-  The census of all recordings ([[study:device-correction-schedules]], 19 October): 95% of corrections after the first are 8,192 ± 20 s apart; the first comes at any time after the BIS starts.
+  The whole release: 95% of corrections after the first are 8,192 ± 20 s apart; the first comes at any time after the
+  BIS starts. The pilot ([[study:correction-periods]]) found the same in 95% of 266 intervals.

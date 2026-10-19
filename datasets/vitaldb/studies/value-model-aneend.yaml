@@ -23,9 +23,8 @@ results: |
 discussion: |
   - Ceiling rounding for anaesthesia end and floor rounding for op end together inflate charted emergence by about 6–7 min.
   - Correction: an earlier fit did not exclude the derived ends, because their noise (about 10⁻⁶ s) slipped under the test threshold. The model was refitted without them and with a wider offset range; the conclusions are unchanged.
-  - Through the package, the log-likelihood differs from the stored one by +1,381.5. The two out-of-range records were left in the fit at probability 10⁻³⁰⁰ (−690.8 each). They are constants, so the parameters are unaffected.
+  - Before v0.6.0 the package's log-likelihood differed from the stored one by +1,381.5: the two out-of-range records had been left in the fit at probability 10⁻³⁰⁰ (−690.8 each). They are constants, so the parameters were unaffected; model version 2 excludes them and the two now agree.
 limitations: |
-  - The stored fit block (n = 6,256, log-likelihood −13,065.92) is stale: it was fitted with the two out-of-range records in. The package recomputes −11,684.41 on the 6,254 usable records. A refit, or at least a corrected fit block, is pending.
   - Ends charted after the recording stops cannot be validated against the signals.
 open_questions:
   - title: "Two out-of-range end times as 12-hour or date errors"

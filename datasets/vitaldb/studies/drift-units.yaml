@@ -47,9 +47,11 @@ open_questions:
   - title: "Per-setup drift in the uncertainty models"
     kind: next step
     summary: >-
-      Drift is known per setup far better than over the release ([[observation:device-drift-by-setup]]), but the
-      clock domains, the planner and several parameters still quote one range for all recordings. They should
-      take a recording's setup when its ports are known, with the release range only as the fallback.
+      Drift is known per setup far better than over the release ([[observation:device-drift-by-setup]]). The drift
+      parameters now list per-setup values (by PC key), but the clock domains and the planner still use one value
+      for all recordings. They should take a recording's setup when its ports are known, with the release range
+      only as the fallback. The per-setup values come from the correction scan's cases; the whole-release
+      correction steps ([[study:device-correction-schedules]]) would give them for three to five times as many.
 code:
   - vitaldb-bench/tools/syncanalyze.py
 figures:

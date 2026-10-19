@@ -2,8 +2,8 @@ id: continuity-gaps-segments
 name: Gaps and unbroken segments in every waveform
 summary: >-
   Every gap and every unbroken segment in the 6,388 recordings, per waveform. The curves are not smooth: a cliff
-  at about 18 s in every device marks the recorder's pauses, SNUADC segments stop at 5 hours, Primus and BIS
-  segments at about 2.2 hours, and BIS's short gaps grow with the time since the last one (clock
+  at about 18 s in every device marks the recorder's pauses, SNUADC segments stop at 5 hours, Primus segments at
+  about 2.0 hours and BIS segments at about 2.3 hours (each device's correction cycle), and BIS's short gaps grow with the time since the last one (clock
   resynchronisations, not lost data).
 date: 2026-10-19
 status: draft
@@ -39,8 +39,10 @@ results: |
     many are exactly that long, each followed by an 18 s gap. These are the recorder's pauses, which recur every
     5 hours on a timer of their own ([[observation:recording-pauses]]); most 5-hour segments start at an earlier
     pause.
-  - **Primus and BIS segments stop near 2.2 hours.** Primus AWP segments never exceed about 7,980 s; BIS segments
-    pile up at 7,500–8,500 s (2,584 of them).
+  - **Primus and BIS segments stop at their correction cycles.** Primus AWP segments never exceed about 7,980 s; most
+    end at the AWP pause that recurs every 7,230 s (2.0 h; [[observation:primus-awp-pauses]]). BIS segments pile up
+    at 7,500–8,500 s (2,584 of them), around its 8,192 s (2.3 h) correction timer
+    ([[study:device-correction-schedules]]).
   - **BIS's short gaps are clock resynchronisations.** Sub-second BIS gaps grow in proportion to the time since the
     previous gap: a median 30 ppm of the elapsed time (interquartile range 20–48 ppm), the BIS clock's drift
     against the recorder (18–55 ppm by setup; [[observation:device-drift-by-setup]]). The stamps are stepped to
@@ -90,7 +92,7 @@ figures:
     caption: >-
       Number of unbroken segments longer than x, per waveform: all segments (grey), interior segments with a gap at
       both ends (blue), and a Kaplan–Meier estimate with edge segments censored (orange). SNUADC interior segments
-      stop at 5 hours; Primus AWP and BIS segments stop near 2.2 hours.
+      stop at 5 hours; Primus AWP segments near 2.0 hours and BIS segments near 2.3 hours.
     alt: Ten log–log curves of segment counts; the blue SNUADC curves drop vertically at about 18,000 seconds, Primus and BIS at about 8,000 seconds.
   - id: continuity-gap-vs-since
     file: continuity-gap-vs-since.png

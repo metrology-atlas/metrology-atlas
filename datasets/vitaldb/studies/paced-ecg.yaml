@@ -45,7 +45,7 @@ discussion: |
   burst lag. The slight overshoot hints that the average loss is nearer 15 ms.
 limitations: |
   Three paced corrections in two cases. The gap shift is measured modulo one pacing period. The location of the
-  lost time was not resolved by this study.
+  lost time was not resolved here; [[study:reset-cluster-order]] later placed it inside the last old-grid record.
 open_questions:
   - title: "Long regular runs that may be paced"
     kind: phenomenon

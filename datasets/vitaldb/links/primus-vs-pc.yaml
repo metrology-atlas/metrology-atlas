@@ -1,17 +1,21 @@
 id: primus-vs-pc
 name: Primus against the recorder PC
 summary: >-
-  The Primus stamps are corrected by small steps every 7,230 s on the Primus's own timer, each about 21 s after a
-  pause in its AWP waveform; their drift is not yet well measured.
+  The Primus stamps drift a median +104 ppm against the recorder PC (measured by breath matching through the SNUADC
+  stamp model). Its small corrections every 7,230 s, each about 21 s after a pause in the AWP waveform, do not keep
+  up with that drift.
 clock: primus-clock
 against: recorder-pc
-rate: primus-drift-implied
+rate: primus-drift-breath
 correction:
   rule: |
-    Small steps, whole 16 ms samples in either direction (most between −176 and +144 ms), every 7,230 s or twice
+    Small steps, whole 16 ms samples in either direction (median −16 ms; p10–p90 −144 to +144 ms), every 7,230 s or twice
     that, often two at once; the first at any time after the Primus starts. The AWP waveform stops for about 21 s
     just before each correction and that AWP is lost ([[observation:primus-awp-pauses]]); CO2 carries on. Measured in
-    4,529 recordings ([[study:device-correction-schedules]]).
+    4,529 recordings ([[study:device-correction-schedules]]). These steps imply only 1–11 ppm
+    ([[parameter:primus-drift-implied]]), far less than the drift: the stamps also step by up to about ±0.5 s at the
+    AWP pauses, by amounts unrelated to the drift built up ([[study:ventilator-breath-matching]]), so over a recording
+    the Primus wanders from the PC by a median 1.5 s.
   period: primus-period
   size: primus-step
 status: measured

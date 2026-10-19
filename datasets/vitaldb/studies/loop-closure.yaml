@@ -39,7 +39,7 @@ results: |
   | Loop | Result | Verdict |
   |---|---|---|
   | Arterial pressure three ways | 14 cases, 145 blocks: residual median +0.13 s (p10–p90 −0.97 to +1.18 s); within 1 s in 75%, 2 s in 96% | Closes, within the CardioQ's re-anchoring spread |
-  | BIS EEG | Drift within 25 ppm in 108 of 145 cases (r = 0.88); 79% of lag jumps on a stamp step (chance 12%); a constant −0.80 s (step mode) or −0.69 s (frequent mode) remains | Closes in drift and steps; the constant is a latency |
+  | BIS EEG | Drift within 25 ppm in 108 of 145 cases (r = 0.88); 79% of lag jumps on a stamp step (chance 12%); a constant −0.80 s (step mode) or −0.69 s (frequent mode; −0.66 s over the whole release) remains | Closes in drift and steps; the constant is a latency |
   | Ventilation | 72% of 57 large lag changes fall on a Primus stamp jump; the physiological arms differ by 37–46 ppm | Partly closes; physiological arms too weak |
   | EMR and recorder | Both arms are measured from the recorder's case start, so any offset cancels; the recorder EVENT track repeats the clinical table's times exactly | Degenerate: not a loop |
 discussion: |
@@ -50,7 +50,7 @@ open_questions:
   - title: "The BIS constant as processing latency"
     kind: hypothesis
     summary: >-
-      The loop closes in drift and steps but leaves −0.80 s (step mode) or −0.69 s (frequent mode). A processing
+      The loop closes in drift and steps but leaves −0.80 s (step mode) or −0.69 s (frequent mode; −0.66 s over the whole release). A processing
       latency in the BIS is the working explanation; it fits the sign and size but has no direct evidence, and it
       does not explain why the constant differs between modes.
   - title: "The ventilation loop only partly closes"

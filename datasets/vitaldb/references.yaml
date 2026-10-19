@@ -202,7 +202,7 @@
   citation: Goodwin AJ, Eytan D, Greer RW, Mazwi M, Thommandram A, Goodfellow SD, Assadi A, Jegatheeswaran A, Laussen PC.
     A practical approach to storage and retrieval of high-frequency physiological signals. Physiol Meas. 2020;41(3):035008.
   doi: 10.1088/1361-6579/ab7cb5
-  note: The storage approach behind AtriumDB.
+  note: Earlier work on storing and retrieving high-frequency physiological signals.
 - id: eytan2019revisiting
   group: The authors' earlier work
   citation: Eytan D, Mazwi ML, Goodwin AJ, Goodfellow SD, Assadi A, Greer RW, Jegatheeswaran A, Laussen PC. Revisiting
@@ -244,11 +244,6 @@
     temporal foundation models. arXiv:2610.04407. 2026.'
   url: https://github.com/OpenTSLM/TimeNet
   note: Preprint details to be confirmed.
-- id: atriumdb
-  group: Software
-  citation: Greer R, Dixon W, Vecile S. AtriumDB [Python package]. Laussen Labs, The Hospital for Sick Children.
-  url: https://pypi.org/project/atriumdb/
-  note: No citation request found; cite with the version used.
 - id: hrvmatch
   group: Software
   citation: LaussenLabs. hrvmatch [source code]. GitHub.

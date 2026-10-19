@@ -1,11 +1,14 @@
 id: snuadc-long-uncorrected
 name: Long SNUADC recordings with no correction at all
 summary: >-
-  1,066 cases of 2.5 h or longer show no SNUADC correction, although at −65 ppm a 0.49 s step falls due within about
-  2.1 h. Slower units, a third recorder mode, or both.
+  1,066 cases of 2.5 h or longer show no SNUADC correction, although at the step-mode median of −63 ppm a 0.49 s step
+  falls due within about 2.2 h. Slower units, a third recorder mode, or both; shared bursts point to slower units
+  (about −36 ppm where the BIS rate is known, [[study:snuadc-stamp-sawtooth]], due only after about 3.8 h).
 status: open
 devices: [snuadc]
 studies: [clock-correction-scan, drift-units]
 consequence: |
-  Short step-mode files with no reset can carry up to about 0.4 s of drift the model does not see; the stamp model
-  gives them a rate of 0.
+  Step-mode files with no reset can carry up to about 0.4 s of drift that the stamps do not show. The first stamp
+  model gave them a rate of 0; the adopted one (model3) gives them their port's step-mode rate, which leaves a
+  spread of about −135 to +122 ms/h (p10–p90) because each recording drifts at its own rate
+  ([[study:snuadc-stamp-sawtooth]]).

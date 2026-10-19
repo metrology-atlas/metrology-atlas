@@ -26,7 +26,8 @@ results: |
 discussion: |
   Treat the index as an average of the EEG over roughly 15–40 s ending about 3 s before its stamp, with slow weight
   beyond. It suits slow questions (depth of anaesthesia over minutes); anything faster needs features computed from
-  the EEG itself, which after synchronisation sits about 30 ms from SNUADC time. The 132 s propofol-to-BIS latency
+  the EEG itself, which after synchronisation sits about 42 ms from SNUADC time (17 ms with the recording's own bursts;
+  [[parameter:stamp-model-error]]). The 132 s propofol-to-BIS latency
   ([[study:drug-effect-latency]]) includes this delay. The bis_smoothing label gives each case's group.
 code:
   - vitaldb-bench/tools/bis_index_delay.py

@@ -8,5 +8,5 @@ description: The BIS monitor's own clock. Its EEG stamps drift by about +25 ppm 
 tags:
 - stub
 utc_plan: 'Two routes, and they close: through its own stamps to the PC, and through shared bursts to SNUADC. A
-  constant latency (−0.80 s or −0.69 s by SNUADC mode) belongs in the link. To strengthen: use the cardiac artefact
+  constant latency (−0.80 s or −0.66 s by SNUADC mode, whole release) belongs in the link. To strengthen: use the cardiac artefact
   where there are no bursts.'

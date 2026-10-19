@@ -33,7 +33,8 @@ discussion: |
   - The API needs the case's recording start and admission date to place the value on the clock, plus emergency status.
 limitations: |
   - The capture windows of the two nominal first-case values are not identifiable.
-  - The charted start sits a median of about 10 minutes before monitoring begins, so what it marks is unclear.
+  - The charted start sits a median of about 10 minutes before monitoring begins, and device-marked induction a
+    median 14 minutes after it (see the open question below): it marks the start of anaesthesia care, not induction.
 open_questions:
   - title: "Anaesthesia start ignores the 5-minute rule"
     kind: phenomenon
@@ -43,8 +44,10 @@ open_questions:
   - title: "What event anaesthesia start marks"
     kind: phenomenon
     summary: >-
-      What event does charted anaesthesia start define, given that it falls before monitoring starts? This affects
-      which signal marker to compare it with.
+      Partly answered: device-marked induction (BIS loss of consciousness, else the propofol pump start) comes a
+      median 14 minutes after the charted start (10th–90th percentile 6 to 25 minutes) in 2,913 cases
+      ([[example:induction-hypotension]]), so the charted time marks the start of anaesthesia care, not induction.
+      Which event of care it records (arrival, monitoring, pre-oxygenation) is open.
   - title: "No time axis for era effects"
     kind: assumption
     summary: >-

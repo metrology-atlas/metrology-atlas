@@ -2,7 +2,8 @@ id: bolus-response-latency
 name: Time from a vasopressor bolus to the pressure response
 summary: >-
   How quickly arterial pressure responds to a phenylephrine or ephedrine bolus, with the charted dose times' rounding
-  taken into account.
+  taken into account. Not feasible in VitalDB, which records bolus totals but no bolus times; kept for a dataset that
+  does.
 side: both
 status: planned
 question: |
@@ -12,4 +13,6 @@ why: |
 variables: [emr-events, snuadc-art]
 studies: [drug-effect-latency, emr-rounding, value-bolus-drug-doses]
 takeaways: |
-  Planned (stretch: bolus times are only in the event records).
+  Planned, but not feasible in this release: the clinical table holds each drug's bolus total per case, and no
+  bolus has a time ([[study:value-bolus-drug-doses]]); the event track holds only the case and operation times
+  ([[observation:event-track-generated]]). Kept as a pointer for a dataset that records bolus times.

@@ -44,6 +44,15 @@ open_questions:
     summary: >-
       The anaesthesia record times sit later than rounding alone explains. Documentation lag and an offset between
       the EMR clock and the recorder cannot be separated with these data.
+  - title: "Rounded up or to the nearest: two studies disagree"
+    kind: conflict
+    summary: >-
+      For anaesthesia start, the device markers here favour rounding up, but only by a small margin, while the
+      value model, which compares the charted time with the recording start, prefers the nearest mark by 47 BIC
+      points ([[study:value-model-anestart]]). For anaesthesia end the two agree (rounded up). Operation start and
+      end were not measured here; their value models give the nearest mark and rounding down
+      ([[study:value-model-opend]], [[study:timestamp-derived-intervals]]), while the EMR timing entry
+      ([[variable:emr-events]]) treats every 5-minute entry as rounded up. Not reconciled.
 code:
   - vitaldb-bench/tools/emr_markers.py
 references: [rietveld2002rounding]

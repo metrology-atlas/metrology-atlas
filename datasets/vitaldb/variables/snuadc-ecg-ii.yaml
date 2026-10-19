@@ -30,7 +30,7 @@ timing:
   - 0.01
   domain: reference
   status: estimated
-  evidence: stamp-model residual; 100 Hz files 10 ms
+  evidence: stamp-model residual where corrections are seen (recordings with none can drift about +-0.1 s/h on the port's rate); 100 Hz files 10 ms
   corrects:
   - snu-raw
 - id: snu-raw

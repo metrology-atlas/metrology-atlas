@@ -1,6 +1,8 @@
 id: emr-events
 name: Anaesthesia record events
-summary: Anaesthesia and operation start and end times in the clinical table.
+summary: >-
+  Anaesthesia and operation start and end times in the clinical table. Anaesthesia start marks the start of
+  anaesthesia care, a median 14 minutes before device-marked induction ([[example:induction-hypotension]]).
 group: Clinical record/Times and durations
 type: event
 source_name: clinical_data times
@@ -18,7 +20,7 @@ timing:
   - 300.0
   domain: records
   status: measured
-  evidence: 'rounded up: 90-290 s later than minute entries; ceiling kernel best in 11/11'
+  evidence: 'rounded up: 90-290 s later than minute entries; ceiling kernel best in 11/11 device markers (small margin at anaesthesia start, where the value model prefers the nearest mark; op end floor by its value model)'
 - id: emr1
   name: minute entries
   delay_s:
@@ -29,7 +31,7 @@ timing:
   - 60.0
   domain: records
   status: estimated
-  evidence: minute grid; documentation lag not yet measured
+  evidence: 'minute grid, 5-min entries rounded up; anaesthesia start a median 14 min (p10-p90 6-25) before device induction (2,913 cases); per-entry documentation lag not measured'
 tags:
 - stub
 chain:
@@ -43,7 +45,8 @@ chain:
   kind: processing
   status: measured
   effect: Entered in the anaesthesia record with a lag that is not measured separately; entries on a 5-minute mark
-    were rounded up to it, so the event lies in the 5 minutes before, about 2.5 min earlier on average.
+    were rounded up to it, so the event lies in the 5 minutes before, about 2.5 min earlier on average
+    (clearly so at anaesthesia end; for the other times two studies disagree, see [[study:emr-rounding]]).
   offset_s:
   - 0
   - 300

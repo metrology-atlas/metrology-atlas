@@ -37,6 +37,8 @@ discussion: |
   between SNUADC and BIS. Because the ramps and steps are visible in the stamps themselves, they can be corrected
   without any artefact ([[study:snuadc-stamp-sawtooth]]); the bursts then check the correction and give the
   constant left over.
+  These numbers are from the 191-case pilot; over the whole release the constant is −804 ms in step mode and
+  −660 ms in frequent-correction mode ([[parameter:eeg-ecg-offset]], [[observation:eeg-ecg-offset-by-mode]]).
 limitations: Needs bursts; about one case in eight with BIS has none.
 code:
   - vitaldb-bench/tools/shared_artifacts.py

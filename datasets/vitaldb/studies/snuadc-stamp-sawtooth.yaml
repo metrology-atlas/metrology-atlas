@@ -3,7 +3,8 @@ name: The stamp sawtooth model for SNUADC and BIS
 summary: >-
   Fitting each track's record stamps against its sample count as a drift with corrections (a sawtooth) puts SNUADC
   and BIS on one timeline without any artefact. Checked against shared bursts, the EEG–ECG timing error falls from
-  about 790 ms on the recorded stamps to 33 ms with one constant per SNUADC mode.
+  about 790 ms on the recorded stamps to 33 ms with one constant per SNUADC mode in the pilot, and 42 ms over the
+  whole release.
 date: 2026-10-12
 status: current
 methods: [stamp-reading, shared-events]
@@ -14,8 +15,8 @@ variables: [snuadc-ecg-ii, bis-eeg]
 data: |
   191 benchmark cases with BIS; validation on 143 cases with at least 5 good burst windows each way, and on 3,683
   ten-minute windows in 165 cases. Later refitted on 250 cases with the signal lost at each SNUADC reset. Rerun on
-  the whole release (19 October): all 5,520 recordings with ECG II and BIS EEG; 36,911 good burst windows in the
-  2,714 recordings with at least 5.
+  the whole release (19 October): all 5,520 recordings with ECG II and BIS EEG; with the adopted model (model3), 36,928 good burst
+  windows in the 2,710 recordings with at least 5.
 background: |
   Between corrections a device stamps by its own sample count, so the offset between two devices ramps at the
   difference of their clock rates; the corrections pull each device back towards the recorder's clock. Both are
@@ -83,12 +84,23 @@ results: |
   - Over all 2,707 recordings with model2: a median error of 42 ms against the mode's constant and 18 ms against
     the recording's own constant (p90 151 and 79 ms); within-recording SD 24 ms (first model: 46, 22, 165, 106 and
     34 ms).
+  - **The adopted model (model3), over all 2,710 recordings with at least 5 good windows:** EEG minus ECG −804 ms
+    in step mode (1,526 recordings; interquartile range −833 to −776), −660 ms in frequent-correction mode (78),
+    and −766 ms with no SNUADC correction (1,099). A median error of 42 ms against the mode's constant (p90 150 ms)
+    and 17 ms against the recording's own constant (p90 79 ms); within-recording SD 23 ms. These are the values in
+    [[parameter:eeg-ecg-offset]] and [[parameter:stamp-model-error]]. (The first bullet above is the first model,
+    before the recordings with no correction were given a rate.)
 
   [[figure:burst-validation-full]]
+
+  What this looks like in one recording, together with the Primus:
+
+  [[figure:sync-demo-stamp-model]]
 discussion: |
   The model needs no artefact; the bursts only check it and supply the constant. With the constant for the case's
-  SNUADC mode, a typical window lines up to about 33 ms; with the case's own bursts, to about 16 ms. These are the
-  numbers behind the BIS EEG "after sync" timing in the planner.
+  SNUADC mode, a typical window lines up to about 42 ms over the whole release (33 ms in the pilot); with the
+  recording's own bursts, to about 17 ms. These are the numbers behind the BIS EEG "after sync" timing in the
+  planner.
 limitations: |
   Recordings that change correction mode partway, or have many gaps, still fail (p99 about 250 ms). The error
   distributions come from the bursts, so they include the probe's own noise.
@@ -112,13 +124,32 @@ open_questions:
   - title: "Why the constant offset differs between modes"
     kind: phenomenon
     summary: >-
-      The EEG lags the ECG by −0.80 s in step mode and −0.69 s in frequent mode after the model; why the constant
-      differs between modes is not known.
+      The EEG lags the ECG by −0.80 s in step mode and −0.66 s in frequent mode after the model (whole release;
+      −0.69 s in the pilot); why the constant differs between modes is not known.
 code:
   - physiosync/physiosync/stamps.py
   - vitaldb-bench/tools/sa_corrected.py
   - vitaldb-bench/tools/clock_model_fit.py
 figures:
+  - id: sync-demo-stamp-model
+    file: sync-demo-1216.png
+    theme: example traces
+    source: vitaldb-bench tools/sync_demo.py
+    records: [1216]
+    caption: >-
+      One recording ([[case:1216]], 8.7 hours), before synchronisation (left) and after (right), on the same scales.
+      Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
+      second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
+      Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
+      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 74 ms (Primus, whole-release
+      medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
+      and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
+      pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is
+      predicted from all the others.
+    alt: >-
+      Six panels over 9 hours. Left column: sawtooth lines for SNUADC and BIS and a rising line for the Primus
+      spanning about 3.5 seconds; burst lags ramping between minus 0.6 and minus 1.2 seconds; breath lags rising
+      from minus 2 to plus 2 seconds. Right column: the same quantities flat near zero.
   - id: stamp-model-validation
     file: stamp-model-validation.png
     theme: agreement and residuals

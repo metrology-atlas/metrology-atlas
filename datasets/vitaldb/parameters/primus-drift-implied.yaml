@@ -5,3 +5,6 @@ display: "about 1–11 ppm"
 status: derived
 study: correction-periods
 about: [primus-vs-pc]
+notes: >-
+  Correction size over interval. Breath matching measures the Primus drift directly at about +104 ppm
+  ([[parameter:primus-drift-breath]]): these small steps do not track the drift, so this is not the clock's rate.

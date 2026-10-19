@@ -18,7 +18,8 @@ module, one ventilator). The release never names a theatre, a PC or a serial num
    assigned by Windows on each PC, so one port number alone is a poor key (the SNUADC was on COM4 in 2,824
    recordings, on several PCs), but the combination of four rarely repeats across PCs: [[study:hr-delay-groups]]
    found 44 PCs this way. Knowing the PC key puts the SNUADC's drift within 3 ppm of its setup's median in 97% of
-   cases, against 34% for the release's median.
+   cases, against 34% for the release's median (in the correction scan's cases; on the whole release's correction
+   intervals 71%, an open question on [[study:setup-identification]]).
 2. **Coarser keys**, where the PC key is incomplete: one device's port (75% within 3 ppm for the SNUADC), or the
    SNUADC and BIS ports together (96%).
 3. **Clock fingerprints**, which need no port: a device's crystal runs at its own rate to about 1 ppm, so drift
@@ -42,7 +43,7 @@ date or a patient.
 | SNUADC correction mode (step or frequent) | 0–68% frequent by port | mostly one mode | [[observation:snuadc-mode-setups]] |
 | SNUADC step-mode drift | medians −44 to −81 ppm by setup | within 3 ppm in 97% of cases | [[parameter:snuadc-step-rate]], [[observation:device-drift-by-setup]] |
 | BIS drift | medians 18–55 ppm by setup | within 3 ppm in 83% of cases | [[parameter:bis-rate]], [[observation:device-drift-by-setup]] |
-| EEG minus ECG constant offset | −803 ms step, −690 ms frequent mode | tight within a port or unit | [[observation:eeg-ecg-offset-by-mode]], [[parameter:eeg-ecg-offset]] |
+| EEG minus ECG constant offset | −804 ms step, −660 ms frequent mode (whole release) | tight within a port or unit | [[observation:eeg-ecg-offset-by-mode]], [[parameter:eeg-ecg-offset]] |
 | Solar8000 heart-rate delay group (1.9 or 4.2 s) | set by the PC | 94% of cases follow their PC's majority | [[observation:hr-two-delay-groups]], [[study:hr-delay-groups]] |
 
 ## The setup register

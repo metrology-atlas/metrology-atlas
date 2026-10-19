@@ -69,7 +69,9 @@ open_questions:
   - title: "34 files whose records overlap throughout"
     kind: phenomenon
     summary: >-
-      Their cause is unexplained ([[observation:snuadc-overlapping-records]]).
+      Mostly explained since: records written twice and two interleaved streams
+      ([[observation:duplicated-records]], [[observation:interleaved-records]]); whether these account for all 34
+      is not checked ([[observation:snuadc-overlapping-records]]).
   - title: "Twelve unmatched resets"
     kind: phenomenon
     summary: >-

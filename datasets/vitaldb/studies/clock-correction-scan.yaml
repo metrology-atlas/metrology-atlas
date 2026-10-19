@@ -52,16 +52,26 @@ discussion: |
   of the device jumping together, and by an implied rate that fits the case. Other jumps on these devices are
   gaps or dropouts. Within a case the rate holds to about 0.2 ppm, so one rate per device per case is enough. The
   drift values from this scan are wrong for some cases; the stamp sawtooth model
-  ([[study:snuadc-stamp-sawtooth]]) replaced them.
+  ([[study:snuadc-stamp-sawtooth]]) replaced them. The SNUADC jump here (−0.487 s median) is measured from the start
+  of the run before it, so it includes the −0.954 ppm stamp arithmetic built up over that run
+  ([[study:stamp-arithmetic]]): over the median run of 6,198 s that is 5.9 ms, and −0.480 − 0.006 = −0.486 s. The
+  reset itself steps the stamps by −0.4804 s (SD 0.7 ms, all 3,417 resets in the release;
+  [[study:device-correction-schedules]]), and the true correction is about 0.498 s once the 17.7 ms of signal lost
+  at the reset is counted ([[parameter:snuadc-step-correction-size]]). The Primus row is a miss, not an absence: the Primus does correct,
+  every 7,230 s by whole 16 ms samples, but its AWP pauses at the same moments while CO2 carries on, so the
+  same-jump test rejected nearly all of them ([[study:device-correction-schedules]]).
 limitations: |
   The 2 s limit and the same-jump test can miss corrections during gaps. The cases with no correction at all are not
-  yet explained (slower units, a third recorder mode, or both).
+  yet explained (slower units, a third recorder mode, or both); the shared bursts point to slower units
+  ([[observation:snuadc-long-uncorrected]]).
 open_questions:
   - title: "Recordings that never correct their clocks"
     kind: phenomenon
     summary: >-
       Some recordings never correct their clocks within the 2 s test. Slower units, a third recorder mode, or both,
-      could explain it; their drift units and ports have not been compared with the rest.
+      could explain it. The shared bursts point to slower units (about −36 ppm where the BIS rate is known;
+      [[observation:snuadc-long-uncorrected]]); their drift units have not been compared with the rest. Followed up
+      on [[study:snuadc-stamp-sawtooth]].
 code:
   - vitaldb-bench/tools/syncscan.py
   - vitaldb-bench/tools/syncanalyze.py

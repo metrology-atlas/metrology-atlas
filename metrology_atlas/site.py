@@ -1187,6 +1187,13 @@ class Site:
         out += self.time_chart()
         if m.get("reference"):
             out += "## The working reference\n\n" + self.prose(m["reference"]) + "\n\n"
+        if "synchronisation-demo" in figs and "synchronisation-demo" not in self.placed:
+            out += "## What synchronising the clocks does\n\n" + self.figure(figs["synchronisation-demo"]) + "\n\n"
+            self.placed.add("synchronisation-demo")
+        if "synchronisation-census" in figs and "synchronisation-census" not in self.placed:
+            out += ("Across the whole release, for every link a shared signal can check:\n\n"
+                    + self.figure(figs["synchronisation-census"]) + "\n\n")
+            self.placed.add("synchronisation-census")
         if m.get("references"):
             out += ("## Citing\n\nIf you use the atlas, please also cite the data:\n\n"
                     + "\n".join(f"- {self.ds.get('reference', r)['citation']}"

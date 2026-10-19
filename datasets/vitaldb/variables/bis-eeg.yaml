@@ -13,14 +13,14 @@ timing:
   name: after sync to the ECG
   default: true
   delay_s:
-  - 0.016
-  - 0.033
+  - 0.017
+  - 0.042
   interval_s:
   - 0.0078
   - 0.0078
   domain: reference
   status: measured
-  evidence: 16-33 ms; loop closes in drift and steps; latency -0.80 s (SD 25 ms) in link K
+  evidence: 17-42 ms (recording's own constant to the mode's; whole release, 2,710 recordings); loop closes in drift and steps; latency -0.80 s (SD 25 ms) in link K
   corrected_delay_s:
   - 0.53
   - 1.05
@@ -37,7 +37,7 @@ timing:
   - 0.0078
   domain: bis
   status: measured
-  evidence: offset p5-p95 -1053..-533 ms
+  evidence: offset p5-p95 -1053..-533 ms on the recorded stamps (191-case pilot)
 tags:
 - stub
 chain:
@@ -45,7 +45,7 @@ chain:
   clock: bis-clock
   kind: clock
   effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps sit 0.53–1.05 s off the
-    ECG's. It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +155 ms).
+    ECG's. It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +0.17 s).
   offset_s:
   - 0.53
   - 1.05
@@ -56,13 +56,14 @@ chain:
 - node: Synchronised to the ECG
   kind: correction
   effect: The stamp model removes the drift and corrections; one constant per SNUADC mode, from bursts seen in both
-    the ECG and the EEG, removes the offset. With the case's own bursts the error is about 16 ms.
+    the ECG and the EEG, removes the offset. With the recording's own bursts the error is about 17 ms, with the
+    mode's constant about 42 ms (whole release).
   offset_s:
   - 0.53
   - 1.05
   residual_s:
-  - 0.016
-  - 0.033
+  - 0.017
+  - 0.042
   status: measured
   studies:
   - snuadc-stamp-sawtooth

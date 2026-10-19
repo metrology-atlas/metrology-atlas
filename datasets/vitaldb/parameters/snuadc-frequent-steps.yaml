@@ -1,7 +1,12 @@
 id: snuadc-frequent-steps
 name: SNUADC frequent-correction steps
 quantity: Forward steps of the SNUADC stamps in frequent-correction mode.
-display: "+5 to +15 ms (median +10), about 0.2 per hour"
+display: "+5 to +15 ms (median +10), about one an hour (median 1.1 per hour per recording)"
 status: measured
 study: clock-correction-scan
 about: [snuadc-frequent-vs-pc]
+notes: >-
+  The rate is from the correction scan's step counts ([[study:clock-correction-scan]]): 635 small corrections in
+  448 hours of the 120 recordings in frequent-correction mode, a median of 1.1 per hour per recording (p10–p90
+  0.5–4.1), that is one every 15 minutes to 2 hours. An earlier figure of 0.2 per hour was not traceable to any
+  result and has been replaced.

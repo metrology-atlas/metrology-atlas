@@ -28,9 +28,10 @@ results: |
     difference between setups beyond ±15 ms and the same value, 385 ms (655 ms to the foot minus 270 ms), so one
     global delay is used. The adopted value and the delay must use the same fiducial: 270 ms is to the foot.
 discussion: |
-  The adopted value must use the same PPG point the software detects; the correction currently uses the steepest
-  upstroke, which comes later than the foot. The offset is kept as its own label, one per recording, so it can be
-  changed or made per device later.
+  The adopted value must use the same PPG point the software detects. The global delay is taken at the foot, where
+  the 270 ms applies; a PAT timed to the steepest upstroke comes about 60 ms later, and that difference stays in the
+  corrected value ([[example:pulse-arrival-time]]). Since the census, one delay serves every recording, so a
+  change to the adopted value moves every recording's level by the same amount.
 limitations: The hardware delay is not observable in VitalDB; it rests on the adopted physiological value.
 references: [allen2000variability, allen2002age, block2020conventional, jose2025exploring, kortekaas2018small, lee2019analysis, liao2023filtering, martin2016weighing, mohammadpoor2024use, obata2017noninvasive, vanvelzen2017increasing, youn2014changes, ruffolo2025high]
 figures:

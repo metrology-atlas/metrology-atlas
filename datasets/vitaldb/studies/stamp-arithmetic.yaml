@@ -39,6 +39,15 @@ limitations: |
   What sets the slope in the 12% of files that differ is not known (a different recorder build, or a different
   increment), and the cause of −0.954 itself (fixed-point arithmetic) is unproven.
 open_questions:
+  - title: "How far does the SNUADC drift in frequent-correction mode?"
+    kind: conflict
+    summary: >-
+      Between corrections the frequent-mode stamps show only the −0.95 ppm of stamp arithmetic, which is why the
+      real drift in that mode is put under about 1 ppm. But the small forward corrections that keep those stamps on
+      the PC add up to more: about one an hour of +5 to +15 ms ([[parameter:snuadc-frequent-steps]]), and the
+      correction scan's per-recording drift for the 82 frequent-mode recordings it could fit has a median of
+      +2.7 ppm (10th percentile −0.9; [[study:clock-correction-scan]]). The drift against the PC is what the
+      corrections remove, so it may be a few ppm rather than under one. Not reconciled.
   - title: "Why 12% of files run at a different slope"
     kind: phenomenon
     summary: >-

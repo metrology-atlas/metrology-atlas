@@ -38,9 +38,9 @@ steps: |
 results: |
   **The ventilator is seconds off the arterial line.** On the stamp model, the airway pressure leads the CVP by a
   median 1.8 s (p10–p90 0.6 to 5.1 s). The lag is not fixed within a recording: it moves by a median 1.5 s over the
-  recording and grows by a median +87 ppm (p10–p90 −49 to +229), the Primus's clock against the SNUADC's. That is
-  consistent with the two clocks' drifts against the recorder PC (Primus a few ppm, SNUADC about −63 ppm), not in
-  conflict with them: the two figures are against different clocks.
+  recording and grows by a median +87 ppm (p10–p90 −49 to +229). The SNUADC here is on its stamp model, on the
+  recorder PC's timeline, so this is the Primus's drift against the PC; between its AWP pauses it is +104 ppm
+  ([[parameter:primus-drift-breath]]). The Primus's own small corrections do not keep up with it.
 
   **Aligned, pulse pressure peaks where physiology says it should.** With the Primus aligned, the pulse-pressure
   maximum comes a median 0.84 s after the breath onset, interquartile range 0.40 s, in the 544 recordings where the

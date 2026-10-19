@@ -1,6 +1,6 @@
 id: cardioq-clock
 name: CardioQ clock
-summary: The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes..
+summary: The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes.
 type: oscillator
 nominal: Waveform sample clock
 description: The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes.

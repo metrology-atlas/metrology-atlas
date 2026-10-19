@@ -32,8 +32,8 @@ open_questions:
     kind: hypothesis
     summary: >-
       Some recordings get the Solar8000 heart rate one 2 s poll earlier, and on a given recording sometimes do not.
-      The working explanation is that the recording PC's polling decides it, but nothing in the release ties the
-      groups to a PC.
+      The PC key predicts the group for 94% of cases, so the working explanation is the PC's polling path; what
+      makes an early-majority PC deliver late in some recordings is not in the release.
 code:
   - vitaldb-bench/tools/numeric_delay_labels.py
   - vitaldb-bench/tools/adhoc/hr_group_ports/

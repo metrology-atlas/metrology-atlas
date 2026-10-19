@@ -3,8 +3,13 @@ name: Hospital records clock
 summary: The clocks of the anaesthesia record and the laboratory system, and the rounding of what was entered.
 type: software
 nominal: Clinical and laboratory systems
-description: The clocks of the anaesthesia record and the laboratory system, and the rounding of what was entered.
-  Not observable in the release except through events seen in the signals.
+description: >-
+  The clocks of the anaesthesia record and the laboratory system, and the rounding of what was entered.
+  Not observable in the release except through events seen in the signals. What its stamps mark is known better
+  than its offset: anaesthesia start comes a median 14 minutes before device-marked induction
+  ([[example:induction-hypotension]]), entries on 5-minute marks are rounded up, clearly so at anaesthesia end
+  ([[study:emr-rounding]]; the value models disagree for the starts and for operation end), and a blood gas's lab
+  time comes a median 7.2 minutes after the draw ([[parameter:lab-bg-lag]]).
 tags:
 - stub
 utc_plan: 'Not observable: the clinical and lab times share the case start with the recorder, so any offset cancels,

@@ -45,6 +45,17 @@ results: |
     incomplete recordings have a frame clock: most of the rest have no usable PLETH stretch or no lock. Validation
     is unchanged within a percentage point.
 open_questions:
+  - title: "Does the setup still fix the drift on the whole release?"
+    kind: conflict
+    summary: >-
+      The register's drifts come from the correction scan's cases (472 SNUADC step-mode and 1,627 BIS recordings,
+      one duration-weighted rate per recording, including the −0.95 ppm stamp arithmetic). There the PC key puts 97%
+      of SNUADC and 83% of BIS drifts within 3 ppm of their setup's median. Rerun on the whole release's
+      correction intervals ([[study:device-correction-schedules]]: 642 SNUADC and 1,939 BIS recordings), the same
+      test gives 71% and 60% (against 25% and 17% for the release median). The setup still narrows the
+      drift a great deal, but less than the register says; the difference may be the drift's variation within a
+      recording (a median 3.5 ppm for the BIS), which a single interval does not average out. Which rate per
+      recording the register should use is not decided.
   - title: "Assigning the last 112 recordings to a setup"
     kind: next step
     summary: >-

@@ -22,8 +22,7 @@ description: |
     Only aggregates and figures are published (`results/`).
 
   It depends on [[software:timenet]] for builds; its scripts also use [[software:physiosync]] (timing
-  corrections) and [[software:lineaccess]] (pressure-line accesses). AtriumDB builds live in the separate,
-  GPL-licensed [[software:vitaldb-bench-atriumdb]], which imports this package; nothing here imports it.
+  corrections) and [[software:lineaccess]] (pressure-line accesses).
 
   No VitalDB data are in the repository: only code, aggregate results and figures. To reproduce a result,
   download the release from PhysioNet and point the scripts' `--root` at it.
@@ -150,5 +149,5 @@ parts:
     path: docs/timing_guide/vitaldb_timing_guide.pdf
     name: VitalDB timing guide (PDF)
     summary: The longer write-up of the timing audit.
-related: [timenet, physiosync, lineaccess, vitaldb-bench-atriumdb, vitaldb-resolution]
+related: [timenet, physiosync, lineaccess, vitaldb-resolution]
 references: [harris2020numpy, virtanen2020scipy, mckinney2010pandas, pandas-zenodo, hunter2007matplotlib, apache-arrow, raasveldt2019duckdb, makowski2021neurokit2, bota2024biosppy, cairosvg, pytest]

@@ -20,7 +20,7 @@ timing:
   evidence: 'numeric_delay label SE p10-p90 0.07-0.57 s (RR_CO2 weaker: SE ~1 s)'
   corrected_delay_s:
   - 0.75
-  - 7.45
+  - 7.6
   correction: per-case delay label
   corrects:
   - primus-num
@@ -28,13 +28,13 @@ timing:
   name: as stamped
   delay_s:
   - 0.75
-  - 7.45
+  - 7.6
   interval_s:
   - 7.0
   - 30.0
   domain: primus
   status: measured
-  evidence: 'from window end: ETCO2 0.75-3.4, PIP 3.65-6.5, RR 1.55-7.45 s; 7 s polls, RR over 30 s'
+  evidence: 'from window end: ETCO2 0.75-3.4, PIP 3.65-6.5, RR 1.6-7.6 s; 7 s polls, RR over 30 s'
 tags:
 - stub
 delays:

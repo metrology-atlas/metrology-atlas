@@ -4,10 +4,10 @@
 Drift: 0.1–10 ppm (assumed)
 Corrected every 8–24 h (assumed)
 Status: assumed</title></a>
-<a class="hit" href="../links/primus-vs-pc.html" target="_top" data-tip='["2. Primus against the recorder PC", "Drift: about 1\u201311 ppm", "Corrected every about 7,230 s (2.0 h; p90 twice that)", "Correction size: 0.008 s", "Status: measured"]'><path class="line" d="M165,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M165,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="279" cy="414" r="11" fill="#1b7f4b"/><text x="279" y="418" text-anchor="middle" class="n">2</text><title>2. Primus against the recorder PC
-Drift: about 1–11 ppm
+<a class="hit" href="../links/primus-vs-pc.html" target="_top" data-tip='["2. Primus against the recorder PC", "Drift: +104 ppm", "Corrected every about 7,230 s (2.0 h; p90 twice that)", "Correction size: -0.016 s (whole 16 ms samples either way; median \u221216 ms (one sample back), p10\u2013p90 \u2212144 to +144 ms)", "Status: measured"]'><path class="line" d="M165,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M165,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="279" cy="414" r="11" fill="#1b7f4b"/><text x="279" y="418" text-anchor="middle" class="n">2</text><title>2. Primus against the recorder PC
+Drift: +104 ppm
 Corrected every about 7,230 s (2.0 h; p90 twice that)
-Correction size: 0.008 s
+Correction size: -0.016 s (whole 16 ms samples either way; median −16 ms (one sample back), p10–p90 −144 to +144 ms)
 Status: measured</title></a>
 <a class="hit" href="../links/cardioq-vs-pc.html" target="_top" data-tip='["3. CardioQ against the recorder PC", "Corrected every at most about 300 s; about 40 re-anchors per case", "Status: measured"]'><path class="line" d="M449,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M449,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="506" cy="414" r="11" fill="#1b7f4b"/><text x="506" y="418" text-anchor="middle" class="n">3</text><title>3. CardioQ against the recorder PC
 Corrected every at most about 300 s; about 40 re-anchors per case
@@ -15,19 +15,19 @@ Status: measured</title></a>
 <a class="hit" href="../links/cardioq-vs-snuadc.html" target="_top" data-tip='["4. CardioQ against SNUADC", "Correction size: 0.4\u20134.4 s (p5\u2013p95); matched-beat MAD 0.24 s (24 cases)", "Status: measured"]'><path class="line" d="M449,500 Q591,570 733,500" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M449,500 Q591,570 733,500" fill="none" stroke="transparent" stroke-width="14"/><circle cx="591" cy="535" r="11" fill="#1b7f4b"/><text x="591" y="539" text-anchor="middle" class="n">4</text><title>4. CardioQ against SNUADC
 Correction size: 0.4–4.4 s (p5–p95); matched-beat MAD 0.24 s (24 cases)
 Status: measured</title></a>
-<a class="hit" href="../links/snuadc-frequent-vs-pc.html" target="_top" data-tip='["5. SNUADC (frequent-correction mode) against the recorder PC", "Drift: -0.954 ppm", "Correction size: +5 to +15 ms (median +10), about 0.2 per hour", "Status: measured", "5. SNUADC (step mode) against the recorder PC", "Drift: -63 ppm", "Corrected every 2.08 h", "Correction size: about 0.498 s true (paced: 0.4981\u20130.4988 s); \u22120.480 s on the stamps", "Status: measured"]'><path class="line" d="M733,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M733,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="733" cy="414" r="11" fill="#1b7f4b"/><text x="733" y="418" text-anchor="middle" class="n">5</text><title>5. SNUADC (frequent-correction mode) against the recorder PC
+<a class="hit" href="../links/snuadc-frequent-vs-pc.html" target="_top" data-tip='["5. SNUADC (frequent-correction mode) against the recorder PC", "Drift: -0.954 ppm", "Correction size: +5 to +15 ms (median +10), about one an hour (median 1.1 per hour per recording)", "Status: measured", "5. SNUADC (step mode) against the recorder PC", "Drift: -63 ppm", "Corrected every 2.08 h", "Correction size: about 0.498 s true (paced: 0.4981\u20130.4988 s); \u22120.480 s on the stamps", "Status: measured"]'><path class="line" d="M733,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M733,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="733" cy="414" r="11" fill="#1b7f4b"/><text x="733" y="418" text-anchor="middle" class="n">5</text><title>5. SNUADC (frequent-correction mode) against the recorder PC
 Drift: -0.954 ppm
-Correction size: +5 to +15 ms (median +10), about 0.2 per hour
+Correction size: +5 to +15 ms (median +10), about one an hour (median 1.1 per hour per recording)
 Status: measured
 5. SNUADC (step mode) against the recorder PC
 Drift: -63 ppm
 Corrected every 2.08 h
 Correction size: about 0.498 s true (paced: 0.4981–0.4988 s); −0.480 s on the stamps
 Status: measured</title></a>
-<a class="hit" href="../links/bis-vs-pc.html" target="_top" data-tip='["6. BIS against the recorder PC", "Drift: +25 ppm", "Corrected every 8,192 s (2 h 16.5 min) in 95% of 266 intervals", "Correction size: 0.155 s", "Status: measured"]'><path class="line" d="M1017,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M1017,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="960" cy="414" r="11" fill="#1b7f4b"/><text x="960" y="418" text-anchor="middle" class="n">6</text><title>6. BIS against the recorder PC
+<a class="hit" href="../links/bis-vs-pc.html" target="_top" data-tip='["6. BIS against the recorder PC", "Drift: +25 ppm", "Corrected every 8,192 s (2 h 16.5 min), \u00b1 20 s in 95% of intervals", "Correction size: 0.17 s median", "Status: measured"]'><path class="line" d="M1017,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M1017,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="960" cy="414" r="11" fill="#1b7f4b"/><text x="960" y="418" text-anchor="middle" class="n">6</text><title>6. BIS against the recorder PC
 Drift: +25 ppm
-Corrected every 8,192 s (2 h 16.5 min) in 95% of 266 intervals
-Correction size: 0.155 s
+Corrected every 8,192 s (2 h 16.5 min), ± 20 s in 95% of intervals
+Correction size: 0.17 s median
 Status: measured</title></a>
 <a class="hit" href="../links/bis-vs-snuadc.html" target="_top" data-tip='["7. BIS against SNUADC", "Drift: -72 ppm", "Status: measured"]'><path class="line" d="M1017,500 Q875,570 733,500" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M1017,500 Q875,570 733,500" fill="none" stroke="transparent" stroke-width="14"/><circle cx="875" cy="535" r="11" fill="#1b7f4b"/><text x="875" y="539" text-anchor="middle" class="n">7</text><title>7. BIS against SNUADC
 Drift: -72 ppm
@@ -64,8 +64,8 @@ Nominal: Monitor numerics windows</title></a>
 <a class="hit" href="../clocks/bis-clock.html" target="_top" data-tip="[&quot;BIS clock&quot;, &quot;The BIS monitor's own clock.&quot;, &quot;Nominal: 128 Hz EEG sample clock&quot;]"><rect class="box" x="892" y="440" width="250" height="60" rx="8" fill="#f5f7fb" stroke="#14213d" stroke-width="1.4"/><text x="1017" y="467" text-anchor="middle" class="t">BIS clock</text><text x="1017" y="486" text-anchor="middle" class="s">128 Hz EEG sample clock</text><title>BIS clock
 The BIS monitor's own clock.
 Nominal: 128 Hz EEG sample clock</title></a>
-<a class="hit" href="../clocks/cardioq-clock.html" target="_top" data-tip="[&quot;CardioQ clock&quot;, &quot;The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes..&quot;, &quot;Nominal: Waveform sample clock&quot;]"><rect class="box" x="324" y="440" width="250" height="60" rx="8" fill="#f5f7fb" stroke="#14213d" stroke-width="1.4"/><text x="449" y="467" text-anchor="middle" class="t">CardioQ clock</text><text x="449" y="486" text-anchor="middle" class="s">Waveform sample clock</text><title>CardioQ clock
-The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes..
+<a class="hit" href="../clocks/cardioq-clock.html" target="_top" data-tip="[&quot;CardioQ clock&quot;, &quot;The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes.&quot;, &quot;Nominal: Waveform sample clock&quot;]"><rect class="box" x="324" y="440" width="250" height="60" rx="8" fill="#f5f7fb" stroke="#14213d" stroke-width="1.4"/><text x="449" y="467" text-anchor="middle" class="t">CardioQ clock</text><text x="449" y="486" text-anchor="middle" class="s">Waveform sample clock</text><title>CardioQ clock
+The CardioQ's own clock; the recorder re-anchors its stamps about every 5 minutes.
 Nominal: Waveform sample clock</title></a>
 <a class="hit" href="../clocks/hospital-records.html" target="_top" data-tip='["Hospital records clock", "The clocks of the anaesthesia record and the laboratory system, and the rounding of what\u2026", "Nominal: Clinical and laboratory systems"]'><rect class="box" x="1176" y="440" width="250" height="60" rx="8" fill="#f5f7fb" stroke="#14213d" stroke-width="1.4"/><text x="1301" y="467" text-anchor="middle" class="t">Hospital records clock</text><text x="1301" y="486" text-anchor="middle" class="s">Clinical and laboratory systems</text><title>Hospital records clock
 The clocks of the anaesthesia record and the laboratory system, and the rounding of what…

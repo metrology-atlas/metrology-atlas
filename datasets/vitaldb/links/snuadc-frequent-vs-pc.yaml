@@ -8,6 +8,6 @@ against: recorder-pc
 modes: [frequent]
 rate: snuadc-stamp-arithmetic
 correction:
-  rule: Small forward steps of +5 to +15 ms, about 0.2 per hour; never the 0.48 s pull-back of step mode.
+  rule: Small forward steps of +5 to +15 ms, about one an hour; never the 0.48 s pull-back of step mode.
   size: snuadc-frequent-steps
 status: measured

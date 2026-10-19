@@ -3,7 +3,8 @@ name: Device clock drift depends on the setup
 summary: >-
   The drift of the SNUADC's and the BIS's timestamps against the recorder PC is largely set by the setup: knowing a
   recording's PC key (the serial ports of its four core devices) puts the SNUADC's drift within 3 ppm of its
-  setup's median in 97% of cases and the BIS's in 83%, against 34% and 17% for the release's median.
+  setup's median in 97% of cases and the BIS's in 83%, against 34% and 17% for the release's median. On the whole
+  release's correction intervals the same test gives 71% and 60% ([[study:setup-identification]]).
 status: established
 clocks: [snuadc-sample, bis-clock, recorder-pc]
 devices: [snuadc, bis, vital-recorder]
@@ -23,10 +24,10 @@ description: |
   One port is a weak key because Windows numbers ports per PC: the SNUADC was on COM4 in 2,824 recordings, on
   several PCs, and with six inferred units. The four ports together rarely repeat across PCs.
 consequence: |
-  A drift quoted over all recordings (SNUADC medians −47 to −80 ppm by port, BIS 18 to 51 ppm) overstates the
+  A drift quoted over all recordings (in the correction scan's cases, SNUADC medians −47 to −80 ppm by port, BIS 18 to 51 ppm) overstates the
   uncertainty for a recording whose setup is known, and understates how different two setups are.
 handling: |
   Where a track has no whole tooth to measure its own rate, use its setup's rate (the stamp model already uses the
   port's typical rate for the SNUADC), with the setup's spread as its uncertainty; fall back to a coarser key, then
   to the release, only when the PC key is incomplete. The per-setup rates are listed on
-  [[parameter:snuadc-step-rate]] and [[parameter:bis-rate]].
+  [[parameter:snuadc-step-rate]] and [[parameter:bis-rate]], and in the register on [Recording setups](../setups.md).

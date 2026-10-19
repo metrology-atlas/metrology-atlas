@@ -1,8 +1,9 @@
 id: bis-vs-pc
 name: BIS against the recorder PC
 summary: >-
-  The BIS EEG stamps drift about +21 ppm against the PC (median of 4,728 recordings) and are pulled forward on a
-  fixed 8,192 s timer of the BIS's own, which does not start with the recording.
+  The BIS EEG stamps drift about +25 ppm against the PC (median from the correction steps of 1,939 recordings; a fit
+  over every recording's stamps gives +21 ppm in 4,728) and are pulled forward on a fixed 8,192 s timer of the BIS's
+  own, which does not start with the recording.
 clock: bis-clock
 against: recorder-pc
 rate: bis-rate

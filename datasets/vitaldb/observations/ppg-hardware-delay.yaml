@@ -11,4 +11,6 @@ studies: [ppg-offset-reference, ppg-sawtooth, pat-offset-census]
 consequence: |
   PAT and any ECG–PPG timing from VitalDB is mostly device delay unless that delay is removed. PLETH also lags ART by
   0.40–0.53 s, depending on the fiducial.
-handling: An adopted physiological PAT (270 ms) splits off the hardware delay, as a separate per-recording label.
+handling: >-
+  One global delay, 385 ms ([[parameter:pleth-chain-delay]]: the stored R-to-foot delay of 655 ms minus an adopted
+  physiological PAT of 270 ms), is subtracted from every recording, which keeps the differences between patients.

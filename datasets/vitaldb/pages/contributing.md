@@ -10,10 +10,9 @@ goes, the rules that apply everywhere, and the steps for the common cases.
 | A page of this atlas: a variable, clock, study, observation, method ... | [[software:metrology-atlas]] (`datasets/vitaldb/`) | CC BY 4.0 (text and figures); MIT (engine) |
 | A value model: rounding, heaping, a charted time | [[software:vitaldb-resolution]] | MIT |
 | An analysis script, the clock model, corrected times, builds, labels | [[software:vitaldb-bench]] | MIT |
-| AtriumDB builds and labels | [[software:vitaldb-bench-atriumdb]] | GPL-3.0-or-later |
 | Timing corrections that are not specific to VitalDB | [[software:physiosync]] | MIT |
 | Pressure-line access detection | [[software:lineaccess]] | MIT |
-| How VitalDB files are imported into TimeNet | [[software:timenet]] (its VitalDB connector) | see the repository |
+| How the .vital files are read, with the corrections applied (reset order, sample placement, scale factors) | [[software:timenet]] (its VitalDB reader) | see the repository |
 
 Some of these repositories are private for now. To contribute to one, ask the maintainer (Andrew J. Goodwin,
 University of Sydney) for access. If you only want to report a problem, describe it with the page it concerns;
@@ -141,8 +140,6 @@ Where code goes:
   to the work folder, then an aggregate or plot step that writes to `results/`. Add each published file to the
   table in [[code:vitaldb-bench/docs/how-to/reproduce-results.md]].
 - **Short helpers** kept only because a number came from them go in `tools/adhoc/`, with a one-line docstring.
-- **Anything that imports the AtriumDB SDK** goes in [[software:vitaldb-bench-atriumdb]], never here, because of
-  its licence.
 
 Before a pull request, run `pytest -q` (which includes the per-case files check) and ruff. Then link the script from the
 atlas study it supports, under `code:`.

@@ -44,6 +44,11 @@ discussion: |
   Tiers A and B cover 29% of the real time analysed, 52% with the stretches where no sawtooth is running. The
   benchmark is optimistic: its physiology came from quiet recordings. Labels carry each tooth's tier, so a user can
   choose how much time to trust.
+
+  The last step of the fit, shifting each recording's median to the adopted pulse arrival time, also removes real
+  differences between patients. [[study:pat-offset-census]] later showed that one global delay (385 ms,
+  [[parameter:pleth-chain-delay]]) fits the whole release, so the atlas removes that instead and keeps those
+  differences ([[example:pulse-arrival-time]]).
 code:
   - physiosync/physiosync/ecg_ppg.py
   - physiosync/physiosync/labels.py

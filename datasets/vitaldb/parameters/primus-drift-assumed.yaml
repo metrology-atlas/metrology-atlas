@@ -5,4 +5,7 @@ value: 115
 unit: ppm
 status: assumed
 about: [primus-vs-pc]
-notes: Contradicted by [[parameter:primus-drift-implied]]; under recheck.
+notes: >-
+  Set by hand before the Primus drift was measured. Breath matching now gives +104 ppm (p10–p90 +28 to +184,
+  [[parameter:primus-drift-breath]]), so 115 ppm lies within the measured spread; the delay fits that used it need no
+  change.

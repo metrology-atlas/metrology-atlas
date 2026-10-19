@@ -8,3 +8,10 @@ status: measured
 study: paced-ecg
 about: [snuadc-step-vs-pc]
 date: 2026-10-17
+notes: >-
+  Four numbers describe the same reset. The stamps step back −0.4804 s (SD 0.7 ms) at every one of the 3,417 resets
+  in the release ([[study:device-correction-schedules]]); adding the 17.7 ms never sampled
+  ([[parameter:snuadc-reset-loss]]) gives the true 0.498 s seen in the pacing train. The correction scan's −0.487 s
+  (0.484–0.492 s) is measured from the start of the preceding run, so it also holds the −0.954 ppm stamp arithmetic
+  built up over that run, 5.9 ms over the median run of 6,198 s ([[study:clock-correction-scan]]). The 0.49 s quoted
+  as the trigger is the drift at which the reset falls, rounded.
