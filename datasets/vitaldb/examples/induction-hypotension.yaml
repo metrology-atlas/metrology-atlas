@@ -1,0 +1,89 @@
+id: induction-hypotension
+name: Post-induction hypotension, from the charted start and from the devices
+summary: >-
+  The charted anaesthesia start comes a median 14 minutes before the patient is induced; measured from it,
+  "hypotension within 20 minutes of induction" is found in 27% of 2,913 patients, against 51% from the devices'
+  induction, and the label changes for a quarter of patients.
+side: time
+status: draft
+question: |
+  How many patients have a mean arterial pressure below 65 mmHg in the first 20 minutes after induction, and does it
+  matter which time is taken as induction?
+why: |
+  Post-induction hypotension is a common outcome, usually counted from the charted anaesthesia start. Anaesthesia
+  start entered on a 5-minute mark is rounded up ([[study:emr-rounding]]), about 2½ minutes late; but before that
+  is the question of what the charted time stands for. The devices mark induction themselves: the BIS falls below
+  60 as the patient loses consciousness, and the propofol pump starts.
+variables: [emr-events, bis-index, pump-rates, solar8000-nibp, solar8000-art-numerics]
+studies: [emr-rounding]
+data: |
+  2,913 cases with a device induction within −20 to +40 minutes of the charted start (88% from the BIS, the rest
+  from the propofol pump), a recovered case clock, and blood pressure monitored in both windows (at least two cuff
+  readings, or an arterial line running from the window's start); half have an arterial line.
+steps: |
+  1. Device induction ([[study:emr-rounding]], `tools/emr_markers.py`): BIS below 60 held 30 s after BIS of 80 or
+     more, else the first propofol pump rate.
+  2. Low pressure: a cuff reading below 65, or the arterial numeric below 65 for a minute or more.
+  3. Hypotension within 20 minutes from the charted start, and from the device induction; cases split into
+     5-minute and minute entries by the recovered case clock.
+  4. A sweep of the 20-minute window's start from 40 minutes before to 10 minutes after the device induction.
+results: |
+  **The charted start is not induction.** The device induction comes a median 14 minutes after the charted start
+  (10th–90th percentile 6 to 25 minutes), in 5-minute entries and minute entries alike. The 2½-minute rounding is
+  small next to this: the charted time marks the start of anaesthesia care, not the induction.
+
+  **The cohort's incidence nearly halves.**
+
+  | Window from | All (2,913) | 5-minute entries (1,613) | Minute entries (1,300) |
+  |---|---|---|---|
+  | Charted start | 27.1% | 26.5% | 27.8% |
+  | Device induction | 51.1% | 49.7% | 52.8% |
+  | Difference (95% interval) | +24.0 points (22.4 to 25.6) | +23.3 | +25.0 |
+
+  Moving the window's start shows why: the incidence peaks when the window opens at induction, and falls steeply as
+  it opens earlier and covers the minutes before induction, when pressure is rarely low.
+
+  **Per patient, a quarter of labels change** (26%): 734 patients hypotensive from the device induction are not from
+  the charted start, and 34 the other way. Where both windows find a low reading, it comes a median 4.1 minutes
+  after the device induction, and 13.8 minutes after the charted start.
+
+  [[figure:induction-hypotension]]
+levels:
+  error: systematic
+  population: >-
+    The incidence is 27% from the charted start and 51% from the device induction: the shift goes the same way in
+    every patient, so it does not cancel.
+  individual: >-
+    26% of patients change label, nearly all from "no hypotension" to "hypotension".
+takeaways: |
+  - Do not take the charted anaesthesia start as induction in VitalDB: it comes a median 14 minutes before it. Find
+    induction from the devices (BIS, the propofol pump, the start of ventilation).
+  - A systematic shift in an event time moves a cohort's estimate as much as each patient's label: unlike rounding,
+    it does not average out.
+  - Report which time a "post-induction" window starts from.
+limitations: |
+  - Device induction is BIS loss of consciousness in most cases; it comes after the induction drugs are given, so
+    the true induction is a little earlier still. Cases without a BIS or a pump are left out.
+  - Cuff readings are sparse before the arterial line is placed; a short dip between readings is missed in both
+    windows alike.
+  - Monitoring had to cover both windows, which selects cases.
+code:
+  - vitaldb-bench/examples/induction_hypotension.py
+  - vitaldb-bench/tools/emr_markers.py
+  - vitaldb-bench/examples/run_scan.sh
+reproduce: |
+  ```
+  bash examples/run_scan.sh induction_hypotension        # 8 parallel parts, about 10 minutes
+  python examples/induction_hypotension.py agg <work>/examples/induction_hypotension/part_*.jsonl --root <VitalDB release> --out out/induction
+  ```
+figures:
+  - id: induction-hypotension
+    file: examples/induction-hypotension.png
+    theme: delay and window fits
+    source: vitaldb-bench examples/induction_hypotension.py
+    caption: >-
+      Post-induction hypotension. A: where the charted anaesthesia start sits against the device induction, for
+      5-minute and minute entries. B: the incidence of MAP below 65 within a 20-minute window, by where the window
+      opens against the device induction (dotted: the median charted start). C: the incidence from the charted start
+      and from the device induction, and the share of patients whose label changes.
+    alt: Two overlapping histograms centred about 14 minutes before zero; a curve rising from about 7% to a peak of 51% at zero; paired bars, grey near 27% and blue near 51%.
