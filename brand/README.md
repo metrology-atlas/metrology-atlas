@@ -13,7 +13,7 @@ logo/  mark and horizontal logo
        mono-navy  line-only, one colour
        mono-white line-only, white, for dark backgrounds or photos
 icon/  rounded app icon, square icon, favicon.svg, favicon.ico (16/32/48)
-png/   raster exports (icons 16-512, apple-touch-icon, logo @2x, mark 1024)
+png/   raster exports (icons 16-512, apple-touch-icon, logo @2x, mark 1024, github-avatar-1024: mark on navy, full square)
 
 Website header:
   <a href="/"><img src="/metrology-atlas-logo-horizontal-color.svg" alt="Metrology Atlas" height="40"></a>
