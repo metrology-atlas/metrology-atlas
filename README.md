@@ -10,6 +10,10 @@ resolution), together with the evidence: the **clocks** and **links** that carry
 The first atlas, for VitalDB, is at **https://vitaldb.metrology-atlas.org**. Comments and corrections are welcome
 as issues or in Discussions here.
 
+[![Atlas DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23494768.svg)](https://doi.org/10.5281/zenodo.23494768)
+Archived VitalDB atlas (all versions; v0.1.0 is [10.5281/zenodo.23494769](https://doi.org/10.5281/zenodo.23494769)).
+This software, v0.2.0: [10.5281/zenodo.23488888](https://doi.org/10.5281/zenodo.23488888).
+
 The engine knows nothing about any one dataset. A dataset is a folder of YAML files, one per item:
 
 ```text

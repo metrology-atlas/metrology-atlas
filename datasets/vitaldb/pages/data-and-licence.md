@@ -40,8 +40,17 @@ If you use VitalDB, or results from this atlas that are derived from it, cite:
 | Results derived from VitalDB | CC BY 4.0, as above, with VitalDB's citations |
 
 CC BY 4.0 lets you copy, adapt and build on the atlas for any purpose, including commercially, provided you give
-credit, link to the licence, and say what you changed. Please cite the atlas and the data together; a permanent
-citation for the atlas (with a DOI) will be given here once a version is archived.
+credit, link to the licence, and say what you changed. Please cite the atlas and the data together.
+
+### Citing the atlas
+
+Goodwin, A. J. (2026). *VitalDB metrology atlas* [Data set]. Zenodo.
+[doi:10.5281/zenodo.23494768](https://doi.org/10.5281/zenodo.23494768)
+
+This DOI always resolves to the latest archived version. To cite the exact version you used, take its own DOI from
+that page; version 0.1.0 is [doi:10.5281/zenodo.23494769](https://doi.org/10.5281/zenodo.23494769). Each archived
+version holds the website, the machine-readable file and the YAML source. The software releases have DOIs of their
+own, listed on their Zenodo records and in each repository.
 
 ## No warranty, and not for clinical use
 
