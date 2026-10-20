@@ -2,9 +2,9 @@ id: lineaccess
 name: lineaccess
 summary: >-
   Finds accesses to invasive pressure lines (flushes, blood draws, zeroing) in the pressure waveform itself.
-repo: https://github.com/meshlab/lineaccess
+repo: https://github.com/metrology-atlas/lineaccess
 branch: main
-visibility: private
+visibility: public
 local: ../../../lineaccess
 licence: MIT
 language: Python 3.10+ (numpy)

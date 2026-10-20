@@ -3,9 +3,9 @@ name: vitaldb-resolution
 summary: >-
   Every recorded VitalDB time and value as a probability distribution of the true value: native resolution, or
   a mixture of resolutions recovered from heaped data.
-repo: https://github.com/meshlab/vitaldb-resolution
+repo: https://github.com/metrology-atlas/vitaldb-resolution
 branch: main
-visibility: private
+visibility: public
 local: ../../../vitaldb/vitaldb-resolution
 licence: MIT
 language: Python (numpy, scipy)

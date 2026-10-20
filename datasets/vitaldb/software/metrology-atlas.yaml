@@ -1,7 +1,9 @@
 id: metrology-atlas
 name: metrology-atlas
 summary: The engine that turns this dataset's YAML files into the atlas JSON and this site.
-visibility: unpublished
+repo: https://github.com/metrology-atlas/metrology-atlas
+branch: main
+visibility: public
 local: ../..
 licence: MIT
 language: Python 3.11+ (pyyaml); the site is built with Zensical
@@ -9,7 +11,6 @@ description: |
   Nothing in the engine is specific to VitalDB. A dataset is a folder of YAML files, one per item, which the
   engine checks (types, references, figures, code paths, forbidden patterns such as record identifiers),
   compiles to one JSON file, and writes as this site, including the planner and the accuracy chart.
-  The repository is not yet published, so its paths are shown as text.
 install: |
   ```bash
   python -m metrology_atlas check datasets/vitaldb

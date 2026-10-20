@@ -7,6 +7,9 @@ resolution), together with the evidence: the **clocks** and **links** that carry
 **parameter** we rely on, and the **studies** that measured them, grouped by **method** and built from shared
 **techniques**. Observations, software and references complete it.
 
+The first atlas, for VitalDB, is at **https://vitaldb.metrology-atlas.org**. Comments and corrections are welcome
+as issues or in Discussions here.
+
 The engine knows nothing about any one dataset. A dataset is a folder of YAML files, one per item:
 
 ```text

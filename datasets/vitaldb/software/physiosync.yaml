@@ -3,9 +3,9 @@ name: physiosync
 summary: >-
   Timing corrections for multi-signal physiological recordings: the stamp sawtooth, hidden frame clocks, the
   ECG-to-PPG delay and its sawtooth, and the resolution of fiducial points. Dataset-neutral.
-repo: https://github.com/meshlab/physiosync
+repo: https://github.com/metrology-atlas/physiosync
 branch: main
-visibility: private
+visibility: public
 local: ../../../physiosync
 licence: MIT
 language: Python 3.10+ (numpy, scipy)

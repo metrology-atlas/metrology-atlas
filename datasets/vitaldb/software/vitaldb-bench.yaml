@@ -3,9 +3,9 @@ name: vitaldb-bench
 summary: >-
   The timing and data-quality audit of VitalDB: the scripts behind most studies in this atlas, the clock model
   and corrected-time reader, the per-case labels, and resumable TimeNet builds with their fidelity checks.
-repo: https://github.com/meshlab/vitaldb-bench
+repo: https://github.com/metrology-atlas/vitaldb-bench
 branch: main
-visibility: private
+visibility: public
 local: ../../../vitaldb/vitaldb-bench
 licence: MIT
 language: Python 3.11+

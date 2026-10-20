@@ -14,9 +14,9 @@ goes, the rules that apply everywhere, and the steps for the common cases.
 | Pressure-line access detection | [[software:lineaccess]] | MIT |
 | How the .vital files are read, with the corrections applied (reset order, sample placement, scale factors) | [[software:timenet]] (its VitalDB reader) | see the repository |
 
-Some of these repositories are private for now. To contribute to one, ask the maintainer (Andrew J. Goodwin,
-University of Sydney) for access. If you only want to report a problem, describe it with the page it concerns;
-no access is needed for that.
+All of these repositories are public. To report a problem or suggest a change, open an issue on the repository
+concerned, naming the page or file; for an atlas page, that is [[software:metrology-atlas]]. Questions and
+wider discussion are welcome in its Discussions.
 
 ## Rules that apply everywhere
 
