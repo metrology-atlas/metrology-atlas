@@ -219,11 +219,13 @@
   group: The authors' earlier work
   citation: Goodwin AJ, Eytan D, Dixon W, Goodfellow SD, Doherty Z, Greer RW, McEwan A, Tracy M, Laussen PC, Assadi A, et
     al. Timing errors and temporal uncertainty in clinical databases – a narrative review. Front Digit Health. 2022;4:932599.
+  doi: 10.3389/fdgth.2022.932599
 - id: goodwin2023
   group: The authors' earlier work
   citation: Goodwin AJ, Dixon W, Mazwi M, Hahn CD, Meir T, Goodfellow SD, Kazazian V, Greer RW, McEwan A, Laussen PC, et
     al. The truth Hertz – synchronization of electroencephalogram signals with physiological waveforms recorded in an intensive
     care unit. Physiol Meas. 2023;44(8):085002.
+  doi: 10.1088/1361-6579/ace49e
 - id: goodwin2023high
   group: The authors' earlier work
   citation: 'Goodwin AJ. High frequency physiological data quality modelling in the intensive care unit [PhD thesis]. Sydney:
@@ -233,6 +235,7 @@
   citation: Ruffolo I, Siddiqui A, Nguyen B, Dixon W, Assadi A, Greer R, Schwartz S, Brudno M, Mariakakis A, Goodwin A.
     High-fidelity measurement of pulse arrival time in critically ill children using standard bedside monitoring equipment.
     Physiol Meas. 2025;46(11):115006.
+  doi: 10.1088/1361-6579/ae1b70
 - id: vitaldb-python
   group: Software
   citation: VitalLab. vitaldb [Python package]. PyPI.
