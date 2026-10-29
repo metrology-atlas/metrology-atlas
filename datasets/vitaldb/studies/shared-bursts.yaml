@@ -31,7 +31,7 @@ results: |
   - **The jumps are stamp steps:** 79% of 216 lag jumps have a SNUADC or BIS record-stamp step in the same window,
     against 12% for the same interval 40 minutes later.
   - **Other shared signals fail.** Bursts within SNUADC are rare and point to interference entering after the
-    monitor's processing; mains hum is absent from SNUADC; ventilation is too regular to give a unique lag.
+    monitor's processing; mains hum was not seen in SNUADC at 60 Hz (its harmonics carry it in 39% of recordings, [[study:mains-grid-pc-rate]]); ventilation is too regular to give a unique lag.
 discussion: |
   The first direct, artefact-based confirmation of the clock drifts, and the only measure of the absolute offset
   between SNUADC and BIS. Because the ramps and steps are visible in the stamps themselves, they can be corrected

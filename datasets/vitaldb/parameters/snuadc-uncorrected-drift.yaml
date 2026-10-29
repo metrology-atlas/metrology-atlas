@@ -1,0 +1,15 @@
+id: snuadc-uncorrected-drift
+name: Drift of the working reference without stamp corrections
+quantity: >-
+  Error of the SNUADC rate the stamp model uses in recordings without stamp corrections, against the BIS-checked drift
+  (zero-centred robust SD over recordings).
+unit: ppm
+display: "31 ppm on the port's assumed rate (76 ms/h median); 13 ppm with the hum rate (31 ms/h)"
+status: measured
+study: hum-snuadc-rate
+about: [snuadc-sample]
+date: 2026-10-29
+headline: true
+notes: >-
+  224 recordings without SNUADC corrections whose BIS rate comes from its own corrections; 57% of recordings have no
+  SNUADC correction, 1,248 of them hum.

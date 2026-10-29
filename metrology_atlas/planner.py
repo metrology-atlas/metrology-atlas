@@ -193,7 +193,11 @@ CODE = r"""
         drift = null;
         driftNote = 'drift unknown for ' + doms.filter((d, i) => ppm[i] === null || ppm[i] === undefined).map((d) => D.domains[d]?.name || d).join(', ');
       } else {
-        const dp = Math.max(...ppm) - Math.min(...ppm);
+        // largest relative drift over the pairs of domains: the rates' difference and their spreads between recordings
+        const uu = doms.map((d) => D.domains[d]?.drift_u_ppm || 0);
+        let dp = 0;
+        for (let i = 0; i < doms.length; i++) for (let j = i + 1; j < doms.length; j++)
+          dp = Math.max(dp, Math.round(Math.sqrt((ppm[i] - ppm[j]) ** 2 + uu[i] ** 2 + uu[j] ** 2)));
         drift = dp ? sigma / (dp * 1e-6) : Infinity;
         driftNote = 'relative drift ' + dp + ' ppm between ' + doms.map((d) => D.domains[d].name).join(' and ') +
           (doms.some((d) => D.domains[d].drift_status === 'assumed') ? ' (partly assumed)' : '');
@@ -295,7 +299,7 @@ def planner_page(ds, site) -> str:
             "href": f"variables/{sid}.md".replace(".md", ".html"),
             "forms": [planner_form(f, ds) for f in timing_forms(s)],
         })
-    domains = {d["id"]: {"name": d["name"], "drift_ppm": d.get("drift_ppm"), "drift_status": d.get("drift_status"),
+    domains = {d["id"]: {"name": d["name"], "drift_ppm": d.get("drift_ppm"), "drift_u_ppm": d.get("drift_u_ppm"), "drift_status": d.get("drift_status"),
                          "href": f"clocks/{d['clock']}.html" if d.get("clock") else None}
                for d in ds.meta.get("domains") or []}
     chart = chart_forms(ds)

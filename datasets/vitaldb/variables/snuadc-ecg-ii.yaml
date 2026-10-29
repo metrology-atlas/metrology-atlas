@@ -56,8 +56,53 @@ timing:
   - snu-raw
   domain: reference
   status: estimated
-  evidence: stamp-model residual where corrections are seen; recordings with none can drift about +-0.1 s/h on the port's
-    rate (not included); 100 Hz files 10 ms; this form is the working reference
+  evidence: stamp-model residual where corrections are seen; recordings without corrections drift on the port's assumed
+    rate by 31 ppm (spread between recordings; 76 ms/h median), carried by the clock domain; 100 Hz files 10 ms; this form
+    is the working reference
+  studies:
+  - hum-snuadc-rate
+- id: snu-hum
+  name: stamp-model time, SNUADC rate from the mains hum
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.002
+  removes_bias_s:
+    median: 0.24
+    p5: 0.01
+    p95: 0.47
+    scope: structured
+    status: measured
+    evidence: 'the sawtooth: stamps run ahead by up to 480 ms before each downward correction'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: stamp-model residual where corrections are seen
+      type: B
+      distribution: unknown
+      u_s: 0.0015
+      scope: unknown
+      status: estimated
+      shared_with: SNUADC stamp model
+    - name: 500 Hz samples
+      type: B
+      distribution: rectangular
+      u_s: 0.0006
+      scope: independent
+  correction: stamp model with the SNUADC rate from the mains hum where the stamps carry no correction (vitaldb-bench tools/hum_snuadc_rate.py,
+    passed to physiosync.stamp_clock as rate_ppm)
+  corrects:
+  - snu-raw
+  domain: reference-hum
+  status: estimated
+  evidence: '1,248 of the 3,622 recordings without stamp corrections have hum; elsewhere this form is the stamp-model form.
+    Against the BIS bursts on 224 recordings not used to build it: drift 13 ppm (zero-centred robust SD) instead of 31 ppm,
+    31 instead of 76 ms/h median'
+  studies:
+  - hum-snuadc-rate
 - id: snu-raw
   name: raw stamps
   kind: as_stored

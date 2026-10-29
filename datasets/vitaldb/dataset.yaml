@@ -109,8 +109,23 @@ domains:
     name: SNUADC stamp-model time (the working reference)
     clock: snuadc-sample
     drift_ppm: 0
+    drift_u_ppm: 31
     drift_status: measured
-    note: Signals synchronised to the reference share it, so drift cancels between them.
+    note: >-
+      Signals synchronised to the reference share it, so drift cancels between them. Against the recorder PC it does
+      not drift where the SNUADC stamps carry corrections; in recordings without them (57%) the stamp model uses the
+      port's assumed rate and drifts by 31 ppm (zero-centred robust SD of the BIS-checked drift; 76 ms per hour
+      median), given as the spread; it is that of recordings without corrections ([[study:hum-snuadc-rate]]).
+  - id: reference-hum
+    name: SNUADC stamp-model time with the hum rate
+    clock: snuadc-sample
+    drift_ppm: 0
+    drift_u_ppm: 13
+    drift_status: measured
+    note: >-
+      As the reference, with the SNUADC rate from the mains hum where the stamps carry no correction: 13 ppm against
+      the recorder PC (31 ms per hour median), in the 1,248 recordings without corrections that have hum
+      ([[study:hum-snuadc-rate]]).
   - id: snuadc-raw
     name: SNUADC raw record stamps
     clock: snuadc-sample

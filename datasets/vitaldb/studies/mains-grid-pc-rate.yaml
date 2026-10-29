@@ -1,0 +1,88 @@
+id: mains-grid-pc-rate
+name: Mains hum as an outside clock, and the recording PCs against the grid
+summary: >-
+  The SNUADC waveforms carry the mains hum at 120 and 360 Hz in 39% of recordings. The grid is regulated to its
+  nominal frequency, so the hum is a clock outside the recording, and through it the recorder PC's rate against the
+  grid can be measured: tens of ppm, differing between setups.
+date: 2026-10-28
+status: current
+methods: [signal-borne-clocks]
+techniques: [null-controls]
+clocks: [recorder-pc, snuadc-sample, utc]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii, snuadc-art]
+data: |
+  Pilot: 30 recordings with measured SNUADC and BIS rates. Whole release: all 6,388 recordings, on the longest
+  contiguous run of records of each track, up to its first 60 min (27–28 Oct 2026). SNUADC ECG II, ECG V5, ART and
+  CVP; BIS EEG1 and EEG2; in the pilot also PLETH and the Primus AWP and CO2.
+background: |
+  Korea's grid runs at 60 Hz. A grid frequency deviation is common to every device in a theatre, and each device sees
+  the hum on its own sample count, offset by its own clock rate. The rates the atlas measures are all relative: one
+  device against the recorder PC. A clock regulated from outside the recording breaks that circle.
+method: |
+  - **Lines.** At each harmonic h × 60 Hz (h = 1–8), at its aliased position for the track's rate (at 500 Hz: 120,
+    180, 240, 140 [360], 200 [300], 80 [420] and 20 [480] Hz), the line strength is the peak of a 0.01 Hz Welch
+    spectrum over the median of ±1 Hz.
+  - **Frequency** of each strong line (SNR > 20; > 50 for results) by complex demodulation: the phase slope over 1 s
+    blocks, as ppm of the harmonic, on the device's own sample count. A line at the true grid frequency appears at
+    −(device fast) ppm, so line = f_grid − f_SNUADC.
+  - **The PC against the grid.** With r = f_PC − f_SNUADC, the SNUADC rate from its stamp corrections
+    (physiosync.stamp_clock; negative = SNUADC fast), g = r − line = f_PC − f_grid: positive means the PC runs fast.
+  - **Controls.** Two SNUADC channels' hum phases against each other; minute-by-minute line frequency in two channels.
+results: |
+  - **Hum present** in 2,455 of 6,348 recordings with SNUADC, mainly at 120 Hz and 360 Hz (seen at 140 Hz). The 60 Hz
+    fundamental is weak and inconsistent. 240 Hz mixes mains with the monitor's own output line, so its estimates
+    scatter ([[clock:monitor-output-clock]]).
+  - **Not mains:** the PLETH lines at 60, 120 and 180 Hz belong to its 30 Hz frame family; the Primus pressure lines
+    are mechanical, and 62.5 Hz sampling cannot carry the hum.
+  - **Controls:** two SNUADC channels' hum phases cancel to 0.0 ppm (0.2 rad residual over 60–118 min, 10 s blocks);
+    their minute-by-minute frequencies have rank correlation +0.63. The grid varies by 11–20 ppm (SD) from minute to
+    minute.
+  - **The PC against the grid** (1,206 recordings with hum and at least one correction):
+
+    | Recordings | n | g, median | IQR |
+    |---|---|---|---|
+    | One stamp correction | 846 | +1.6 ppm | −16.9 to +16.2 |
+    | Two or more | 360 | −13.8 ppm | −29.7 to −3.0 |
+    | All | 1,206 | −3.7 ppm | −21.4 to +10.6 |
+
+    By setup (≥ 30 recordings, 9 setups) the medians run from −47 to +18 ppm. By SNUADC port: COM4 −1.2 ppm (669),
+    COM12 −43, COM14 −33, COM19 +13.5.
+discussion: |
+  The first check of any clock in the release against an outside, regulated reference. The recording PCs differ
+  between setups by tens of ppm, so they are not held to one rate.
+
+  **Which recordings carry corrections is selected by their rate.** A recording only gets stamp corrections once its
+  stamps have run 480 ms ahead, which depends on r = line + g, so g is selected along with it: no single median is a
+  population value. The range, about −14 to +2 ppm, is the honest statement. [[study:hum-snuadc-rate]] calibrates g
+  on recordings like those it is applied to.
+
+  This replaces the assumed PC drift ([[parameter:pc-utc-drift]], 0.1–10 ppm): the measured rates are larger. It
+  gives a rate, not an offset: the PC's absolute time (its NTP steps) is not seen this way
+  (an attempt to see them through the hum failed).
+limitations: |
+  The grid's own frequency wanders by 11–20 ppm from minute to minute and its hourly mean by a few ppm; each
+  recording's value carries that. The grid is assumed to keep its nominal frequency on average; the release's
+  shifted dates make it impossible to look the grid up. Only recordings with hum and a measured rate.
+open_questions:
+  - title: "Why do setups differ?"
+    kind: phenomenon
+    summary: >-
+      The PCs' rates against the grid differ by setup from −47 to +18 ppm: PC hardware, time-synchronisation
+      configuration, or the theatre. Whether a PC's rate changes over the years of the release is not known.
+  - title: "The 240 Hz line"
+    kind: next step
+    summary: >-
+      Separating the monitor's own 240 Hz output line from the 4th mains harmonic in the same window (two close lines).
+code:
+  - vitaldb-bench/tools/mains_hum.py
+figures:
+  - id: pc-rate-vs-grid
+    file: pc-rate-vs-grid.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench tools/mains_hum_plot.py
+    caption: >-
+      The recorder PC's clock rate against the mains grid, through the SNUADC hum. (a) In recordings with one stamp
+      correction and with two or more: which recordings carry corrections is selected by their rate, so the two differ
+      by about 15 ppm. (b) Median and interquartile range by recording setup, from −47 to +18 ppm.
+    alt: Two overlaid histograms of PC rate against the grid, and a dot-and-range plot for nine setups.

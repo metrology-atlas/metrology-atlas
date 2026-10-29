@@ -5,3 +5,4 @@ display: "0.1–10 ppm (assumed)"
 status: assumed
 about: [recorder-pc-vs-utc]
 notes: A typical range for PC crystals; not observable in the release.
+superseded_by: pc-grid-rate

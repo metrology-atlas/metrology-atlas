@@ -1,0 +1,13 @@
+id: pc-grid-rate
+name: Recorder PC rate against the mains grid
+quantity: How fast the recorder PC runs against the grid (f_PC − f_grid), per recording, through the SNUADC hum.
+unit: ppm
+display: "about −14 to +2 ppm (median, depending on which recordings); setups −47 to +18 ppm"
+status: measured
+study: mains-grid-pc-rate
+about: [recorder-pc-vs-utc]
+date: 2026-10-28
+notes: >-
+  −13.8 ppm (IQR −29.7 to −3.0) in 360 recordings with two or more SNUADC corrections, +1.6 ppm (IQR −16.9 to +16.2) in
+  846 with one: which recordings carry corrections is selected by their rate, so neither is a population value.
+  Against UTC only if the grid keeps its nominal frequency on average (assumed).

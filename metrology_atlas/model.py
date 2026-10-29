@@ -531,7 +531,10 @@ DATASET = (
         Field("id", "str", required=True),
         Field("name", "str", required=True),
         Field("clock", "ref", ref="clock"),
-        Field("drift_ppm", "number", help="Drift against the working reference; leave out when unknown."),
+        Field("drift_ppm", "number", help="Typical drift against the recorder PC, ppm (the working reference is pinned to "
+                                          "it by its corrections); leave out when unknown."),
+        Field("drift_u_ppm", "number", help="Spread of that drift between recordings (1 SD, ppm) where it is not one rate, "
+                                            "e.g. a clock running on an assumed rate."),
         Field("drift_status", "enum", choices=STATUS),
         Field("note", "str"),
     ), help="Clock domains: signals in one domain share their drift, which then cancels between them."),

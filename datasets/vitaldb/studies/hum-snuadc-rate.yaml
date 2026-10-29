@@ -1,0 +1,95 @@
+id: hum-snuadc-rate
+name: The SNUADC rate from the mains hum, where the stamps cannot give it
+summary: >-
+  57% of recordings carry no SNUADC stamp correction, so the working reference runs on an assumed rate and drifts by
+  31 ppm against the recorder PC (76 ms per hour, median). The mains hum gives each such recording its own rate;
+  checked against the BIS through a second, independent path, it cuts the drift to 13 ppm (31 ms per hour).
+date: 2026-10-29
+status: current
+methods: [signal-borne-clocks, shared-events]
+clocks: [snuadc-sample, recorder-pc, bis-clock]
+devices: [snuadc, bis]
+variables: [snuadc-ecg-ii, snuadc-art, bis-eeg]
+data: |
+  The whole release. Hum lines from [[study:mains-grid-pc-rate]] (2,455 recordings with SNUADC hum, first 60 min);
+  SNUADC and BIS rates from their stamp corrections ([[study:correction-periods]]); BIS-against-ECG burst drift over
+  each whole recording (median 2.2 h) from the burst validation ([[study:shared-bursts]]). 3,622 of 6,350 recordings
+  with SNUADC have no stamp correction; 1,248 of them have hum.
+background: |
+  Without stamp corrections the stamp model cannot measure the SNUADC's rate, so it uses the typical rate of the
+  recording's SNUADC port, and the reference drifts by however far the recording's rate is from that. The hum is seen
+  on the SNUADC's own sample count whatever the stamps do.
+method: |
+  - **Hum rate:** rate = line + g_setup + k. The line is the hum's frequency on the SNUADC count (f_grid − f_SNUADC);
+    g_setup the median PC-against-grid rate of recordings with corrections in the same setup (else the same SNUADC
+    port, else all; at least 10 recordings, leaving out the recording itself); k one constant. In physiosync's
+    convention, so it replaces the assumed rate in physiosync.stamp_clock.
+  - **The constant k** is calibrated on 174 recordings with SNUADC corrections whose BIS rate also comes from its own
+    corrections: the burst drift left there against the hum rate minus the measured rate. k = −12.6 ppm.
+  - **Check, on recordings not used for g or k:** 224 recordings without SNUADC corrections, with hum, whose BIS rate
+    comes from the BIS's own corrections. With the BIS on a measured rate, the drift of the BIS-against-ECG burst lag
+    over the recording is the error of the SNUADC rate the stamp model used. It is compared with the error left when
+    the hum rate is used instead.
+results: |
+  Error of the SNUADC rate against the burst reference, 224 recordings:
+
+  | Rate used | Zero-centred robust SD | Median drift | Recordings drifting more than 0.1 s/h |
+  |---|---|---|---|
+  | The port's assumed rate (the stamp model today) | 31 ppm (95% 25–36) | 76 ms/h | 33% |
+  | The typical rate of the recording's SNUADC mode | 19 ppm (17–21) | 46 ms/h | |
+  | **The hum rate** | **13 ppm** | **31 ms/h** | **13%** |
+
+  - The hum rate follows the burst drift (rank correlation +0.54). Mode "none" recordings run a median 27 ppm off the
+    assumed rate; the hum sees this. After the hum rate the two modes are alike (13.8 and 12.6 ppm).
+  - **Reference noise:** where both rates come from corrections, the burst drift has a robust SD of 2.7 ppm, so the
+    13 ppm is the hum rate's own error.
+  - **Not crystal warm-up:** the hum line per 30-min block over whole recordings (47 recordings of 4 h or more) is
+    flat; the first hour minus the whole recording is 0.0 ppm (median; IQR −6.5 to +7.9).
+  - **Where the hum adds nothing:** on recordings that already have corrections, the measured rate is better (the hum
+    rate differs from it by 16–20 ppm, robust SD): the hum's error is the grid's hour-scale wander and the PCs'
+    spread.
+discussion: |
+  Through the hum, a reference outside the recording (the grid) gives each uncorrected SNUADC recording a rate that a
+  second, independent clock path (the BIS bursts) confirms to 13 ppm. It ties the SNUADC sample clock, the recorder
+  PC and the BIS to the grid at the level of rate.
+
+  **For the atlas.** The working reference's clock domain now states its drift against the recorder PC: 31 ppm in
+  recordings without corrections, as a spread between recordings, and 13 ppm with the hum rate (the domain
+  'stamp-model time with the hum rate'). Signals synchronised to the reference share its drift, which cancels between
+  them; against signals stamped by the PC it limits how long a window can be. The SNUADC ECG and ART have a new
+  form that uses the hum rate.
+
+  **The constant k.** g, pooled over recordings with corrections, depends on how many corrections they carry (+1.6 ppm
+  with one, −13.8 ppm with two or more), because which recordings carry corrections is selected by their rate
+  ([[study:mains-grid-pc-rate]]). k calibrates g for the recordings the rate is applied to. Pooling g from recordings
+  with two or more corrections instead removes most of the offset but leaves a larger spread (18 ppm), from fewer
+  recordings per setup.
+limitations: |
+  The check needs a BIS with its own corrections: 224 recordings, two thirds in step mode, mostly on port COM4. The hum
+  is measured over the first 60 min of a recording and applied to all of it. It gives a rate, not an offset. The
+  drift is stated for recordings without corrections; with corrections there is none to speak of.
+open_questions:
+  - title: "Why recordings with one correction sit apart"
+    kind: hypothesis
+    summary: >-
+      That the split of g by number of corrections is selection by rate is the likeliest reading, not proven. A
+      simulation of the selection from the release's rate and length distributions would test it.
+  - title: "The hum over the whole recording"
+    kind: next step
+    summary: >-
+      The hum rate uses the first hour. Over the whole recording (the scan's --block-min option) the rate would carry
+      less of the grid's hourly wander.
+code:
+  - vitaldb-bench/tools/mains_hum.py
+  - vitaldb-bench/tools/hum_snuadc_rate.py
+figures:
+  - id: hum-snuadc-rate
+    file: hum-snuadc-rate.png
+    theme: agreement and residuals
+    source: vitaldb-bench tools/hum_snuadc_plot.py
+    caption: >-
+      In 224 recordings without SNUADC stamp corrections, checked by the BIS bursts. (a) The drift left over each
+      recording with the port's assumed rate (grey, median 76 ms per hour) and with the hum rate (blue, 31 ms per
+      hour). (b) The change the hum makes to the rate against the drift the bursts show with the assumed rate; on
+      the dashed line the hum predicts it exactly.
+    alt: Two overlaid histograms of drift in ms per hour, and a scatter of predicted against measured drift.
