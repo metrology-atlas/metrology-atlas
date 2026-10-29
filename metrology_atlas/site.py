@@ -495,12 +495,10 @@ class Site:
         rng = ""
         if step.get("bias_s"):
             rng += f"bias {_rng(step['bias_s'])}"
-        elif step.get("offset_s"):
-            rng += f"{_rng(step['offset_s'])}"
+        elif step.get("span_s"):
+            rng += f"spans {_rng(step['span_s'])}"
         if step.get("u_s") is not None:
             rng += f" → u {_rng([step['u_s'], step['u_s']])} after correction"
-        elif step.get("residual_s"):
-            rng += f" → {_rng(step['residual_s'])} after correction"
         meta = f'<span class="tc-kind">{step["kind"]}</span> <span class="tc-st tc-{step["status"]}">{step["status"]}</span>'
         if rng:
             meta += f' <span class="tc-rng">{rng}</span>'
@@ -529,7 +527,7 @@ class Site:
         if sup[1] > 0:
             steps.append({"node": "Stored time stamp", "kind": "window", "status": t["status"],
                           "effect": "The interval one value or sample describes; its time is the interval's end.",
-                          "bias_s": sup})
+                          "span_s": sup})
         return steps
 
     def chain(self, s: dict) -> str:
@@ -544,9 +542,9 @@ class Site:
         rows = ([first] if first and not own_root else []) + steps
         html = ('<div class="tc"><div class="tc-row tc-head"><div></div><div>' + self._axis() +
                 '</div><div class="tc-txt">The clock path first (UTC to the clock that stamps or spaces the samples), then '
-                'the signal\'s own path to its stored time. Each bar: the time shift or error the step introduces (pale) '
-                'and what is left after the atlas\'s correction (solid), on a log scale; dashed when estimated or '
-                'assumed.</div></div>'
+                'the signal\'s own path to its stored time. Each bar: the size of the shift (bias) or interval the step '
+                'introduces (pale) and the standard uncertainty left after the atlas\'s correction (solid), on a log '
+                'scale; dashed when estimated or assumed.</div></div>'
                 '<div class="tc-row tc-start"><div class="tc-node"><a href="' + self.href("clock", "utc").replace(".md", ".html")
                 + '">UTC</a></div><div></div><div class="tc-txt">The reference every chain starts from.</div></div>'
                 if "utc" in self.ds.items["clock"] else '<div class="tc">')
@@ -566,7 +564,10 @@ class Site:
         rate = f"{s['rate_hz']} Hz" if s.get("rate_hz") else None
         timing = self.timing_table(i, s)
         time_side = (self.sub("From UTC to the stored time stamp", self.chain(s)) + self.sub("Timing", timing)
-                     + self.sub("Delays", delays) + self.sub("Averaging window", window))
+                     + self.sub("Delays (sources of bias)", delays)
+                     + self.sub("Interval each value describes",
+                                (window + "\n\nA value's time is the end of this interval, the moment it could first exist "
+                                 "(see [Aim and terms](../terms.md)).") if window else ""))
         if not time_side.strip():
             time_side = ("This variable carries no time of its own in the dataset." if not s.get("stamp_clock") else
                          "Its time side is still to be described.")
@@ -1567,12 +1568,12 @@ def _inline_html(md: str) -> str:
 
 
 def _step_range(step: dict, key: str):
-    """A chain step's range for the bar: the current fields (bias_s, u_s) or the legacy ones (offset_s, residual_s)."""
+    """A chain step's range for the bar (magnitudes, log scale): the shift or span it introduces ('offset_s'), or what
+    is left after the atlas's correction ('residual_s', from u_s)."""
     if key == "offset_s":
-        return step.get("bias_s") or step.get("offset_s")
-    if step.get("u_s") is not None:
-        return [0.0, step["u_s"]]
-    return step.get("residual_s")
+        r = step.get("bias_s") or step.get("span_s")
+        return sorted(abs(x) for x in r) if r else None
+    return [0.0, step["u_s"]] if step.get("u_s") is not None else None
 
 
 def value_u(v: dict) -> float | None:

@@ -71,12 +71,10 @@ chain:
   status: measured
   effect: Blood is drawn from the arterial line (an access, 28–117 s long) and analysed in theatre or sent on. The
     specimen is stamped 3–12 min after the draw; the lab_draw label marks the matched access.
-  offset_s:
+  bias_s:
   - 190
   - 730
-  residual_s:
-  - 28
-  - 117
+  u_s: 25.7
   parameter: lab-bg-lag
   studies:
   - lab-timestamp-meaning
@@ -89,7 +87,7 @@ chain:
 - node: Stored lab time
   kind: stamping
   status: measured
-  offset_s:
+  span_s:
   - 1
   - 1
   effect: Whole seconds, one time per specimen shared by every analyte of the panel.

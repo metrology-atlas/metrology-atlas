@@ -11,6 +11,6 @@ licence: MIT
 language: Python (numpy, scipy)
 description: |
   Models are JSON files evaluated by one generic engine. For timing, it describes the resolution of each kind of
-  time stamp: the second axis of the accuracy-against-resolution chart.
+  time stamp: its grid, one component of each timing form's uncertainty.
 related: [vitaldb-bench]
 references: [harris2020numpy, virtanen2020scipy, mckinney2010pandas, jax2018github, pytest]

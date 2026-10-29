@@ -70,7 +70,7 @@ chain:
   kind: processing
   status: estimated
   effect: Drawn (often not from the arterial line), sent to the central lab and logged there about 8–24 min later.
-  offset_s:
+  bias_s:
   - 480
   - 1440
   parameter: lab-central-lag
@@ -83,7 +83,7 @@ chain:
 - node: Stored lab time
   kind: stamping
   status: measured
-  offset_s:
+  span_s:
   - 1
   - 1
   effect: Whole seconds, one time per specimen.

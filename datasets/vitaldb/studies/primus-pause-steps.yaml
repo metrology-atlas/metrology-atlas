@@ -35,7 +35,7 @@ results: |
   - **Unrelated to the drift built up** since the previous pause (r = −0.03; 0.3% of it taken back), to the gap's
     length (r = −0.05) and to the small whole-sample corrections (r = 0.00).
   - **A nearby SNUADC reset** does not enlarge the step (median |step| 87 ms with, 119 ms without).
-  - **Precision:** a median standard error of 37 ms per step.
+  - **Standard uncertainty of each step:** a median standard error of 37 ms.
 
   [[figure:primus-pause-steps]]
 discussion: |

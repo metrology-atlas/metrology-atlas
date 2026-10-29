@@ -99,7 +99,7 @@ chain:
   effect: Entered in the anaesthesia record with a lag that is not measured separately; entries on a 5-minute mark
     were rounded up to it, so the event lies in the 5 minutes before, about 2.5 min earlier on average
     (clearly so at anaesthesia end; for the other times two studies disagree, see [[study:emr-rounding]]).
-  offset_s:
+  bias_s:
   - 0
   - 300
   parameter: emr-rounding
@@ -108,7 +108,7 @@ chain:
 - node: Stored clinical time
   kind: stamping
   status: measured
-  offset_s:
+  span_s:
   - 60
   - 300
   effect: On a 1-minute or 5-minute grid, relative to the case start.

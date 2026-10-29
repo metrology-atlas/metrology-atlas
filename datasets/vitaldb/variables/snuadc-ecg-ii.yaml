@@ -93,12 +93,10 @@ chain:
   effect: SNUADC samples on its own crystal; the recorder stamps each 0.2 s record from its model of that clock.
     In step mode the stamps drift (−63 ppm median) and are pulled back about 0.48 s whenever the drift reaches half
     a second; in frequent-correction mode they stay within about 10 ms. The atlas's stamp model refits the line.
-  offset_s:
+  bias_s:
   - 0.01
   - 0.48
-  residual_s:
-  - 0.0003
-  - 0.003
+  u_s: 0.0016
   drift: −63 ppm median in step mode, pulled back about every 2.08 h
   status: measured
   link: snuadc-step-vs-pc
@@ -109,12 +107,10 @@ chain:
   effect: At each step-mode reset about 18–20 ms of signal is never sampled, while every record still holds 100
     samples. The stamp model adds the loss back at the end of the last record before the new grid; samples inside
     that record can still be up to about 20 ms late.
-  offset_s:
+  bias_s:
   - 0.0172
   - 0.0182
-  residual_s:
-  - 0.0
-  - 0.02
+  u_s: 0.0058
   status: measured
   parameter: snuadc-reset-loss
   studies:
@@ -129,7 +125,7 @@ chain:
   effect: Sample j of a record sits at its stamp + j/500 s. Stamps run −0.95 ppm against the sample count (stamp
     arithmetic), and the five records after each reset are written out of order; the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] puts them back
     in sampling order.
-  offset_s:
+  span_s:
   - 0.002
   - 0.002
   status: measured

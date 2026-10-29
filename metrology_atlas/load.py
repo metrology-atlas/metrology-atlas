@@ -142,8 +142,8 @@ def load(folder: str | Path) -> Dataset:
 
 
 QUANT_ACCURACY = re.compile(r"(?i)\baccura(?:cy|te)\b[^.\n]{0,40}?\d")
-STRICT_TERMS = False
-"""After the text pass (reframe stage 5) a number given as 'accuracy' becomes an error; until then a warning (D1)."""
+STRICT_TERMS = True
+"""Since the text pass (reframe stage 5, 29 Oct 2026) a number given as 'accuracy' is an error (D1)."""
 
 
 def _check_terms(ds: Dataset, problems: list[str]) -> None:

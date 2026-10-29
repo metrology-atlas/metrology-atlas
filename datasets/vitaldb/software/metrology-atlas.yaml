@@ -10,7 +10,7 @@ language: Python 3.11+ (pyyaml); the site is built with Zensical
 description: |
   Nothing in the engine is specific to VitalDB. A dataset is a folder of YAML files, one per item, which the
   engine checks (types, references, figures, code paths, forbidden patterns such as record identifiers),
-  compiles to one JSON file, and writes as this site, including the planner and the accuracy chart.
+  compiles to one JSON file, and writes as this site, including the planner and the timing chart.
 install: |
   ```bash
   python -m metrology_atlas check datasets/vitaldb
@@ -29,5 +29,5 @@ parts:
   - path: metrology_atlas/planner.py
     summary: The synchronisation planner.
   - path: metrology_atlas/chart.py
-    summary: The accuracy-against-resolution chart.
+    summary: The timing chart (bias against standard uncertainty).
 references: [pyyaml, zensical, pytest]

@@ -38,6 +38,19 @@ wider discussion are welcome in its Discussions.
 - Contributions are made under the repository's licence; atlas text and figures are CC BY 4.0 (see
   [Data and licence](data-and-licence.md)).
 
+!!! note "Words we use"
+    The atlas follows the VIM and GUM; [Aim and terms](terms.md) has the full mapping. In short:
+
+    - **Bias** (systematic error): the part of an error that stays the same within a recording, with a sign;
+      corrected where known. **Standard uncertainty**: one standard deviation of what is left. Every number is one
+      or the other, and says which.
+    - **Resolution** is a grid or a step only. The **interval a value describes** (a window) is part of what the
+      value is, and the value's time is the end of that interval; a stamp before it is **look-ahead**.
+    - **Error** is a measured value minus a reference value. **Precision** is the agreement of repeated
+      measurements, as an SD. **Accuracy** is used only in words, never with a number (the check refuses it).
+    - Each uncertainty component says **what shares it** (independent, structured, recording, shared, release),
+      and a structured one its correlation shape and length.
+
 ## Correcting or extending an atlas page
 
 Every page is built from one YAML file in `datasets/vitaldb/`, in a folder named after its kind

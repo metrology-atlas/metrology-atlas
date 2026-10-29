@@ -38,7 +38,7 @@ results: |
     within stretches is a median **+104 ppm** (p10–p90 +28 to +184), and the per-stretch offsets halve the residual
     (195 to 99 ms). The steps at the 390 pauses (median −29 ms, p10–p90 −685 to +494 ms) are unrelated to the drift
     built up in the stretch before (correlation 0.0): the pauses move the stamps but do not reset the drift.
-  - **Accuracy over the whole release (19 October;
+  - **Error over the whole release, held out (19 October;
     [[code:vitaldb-bench/tools/primus_sync_accuracy.py]]).** Each 10-minute window predicted from all the others
     (a slope and an offset in each stretch between AWP pauses): a median error of 55 ms (p90 187 ms, p95 284 ms)
     in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording

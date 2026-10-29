@@ -126,3 +126,10 @@ def test_correlation_shapes():
     assert correlation({**base, "correlation": "triangular"}, 25) == pytest.approx(0.75)
     assert correlation(base, 100) == pytest.approx(math.exp(-1))            # exponential by default
     assert correlation({"scope": "recording"}, 1e6) == 1 and correlation({"scope": "independent"}, 1) == 0
+
+
+def test_accuracy_with_a_number_is_refused(tmp_path):
+    files = {"clocks/c.yaml": {"id": "c", "name": "C", "summary": "Its accuracy is 5 ms.", "type": "oscillator"}}
+    with pytest.raises(AtlasError) as err:
+        load(_dataset(tmp_path, **files))
+    assert any("'accuracy' with a number" in p for p in err.value.problems), err.value.problems

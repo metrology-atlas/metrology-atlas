@@ -92,7 +92,7 @@ chain:
 - node: Heart rate algorithm
   kind: window
   effect: The Solar8000 averages heart rate over a window of about 6–8 s of ECG.
-  offset_s:
+  span_s:
   - 6.0
   - 8.0
   status: measured
@@ -101,18 +101,14 @@ chain:
   effect: The value reaches the recorder 1.05–2.3 s after its window ends in the early group of cases, or 3.6–5.25
     s in the late group (one extra 2 s poll cycle). A per-case delay label fixes the offset to 0.12–0.61 s (standard
     error, p10–p90).
-  offset_s:
-  - 1.05
-  - 5.25
-  residual_s:
-  - 0.12
-  - 0.61
+  bias_s: [0.8, 5.7]
+  u_s: 0.256
   status: measured
 - node: Stored stamp
   clock: recorder-pc
   kind: stamping
   effect: Stamped by the recorder on arrival, on a 1 ms grid; the receipt latency is not measured.
-  offset_s:
+  bias_s:
   - 0.001
   - 0.02
   status: estimated

@@ -177,11 +177,9 @@ chain:
 - node: BIS clock
   clock: bis-clock
   kind: clock
-  effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps sit 0.53–1.05 s off the
-    ECG's. It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +0.17 s).
-  offset_s:
-  - 0.53
-  - 1.05
+  effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps come 0.60–0.97 s before
+    the ECG's (look-ahead). It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +0.17 s).
+  bias_s: [-0.97, -0.601]
   drift: +25 ppm against the PC; corrected every 8,192 s
   status: measured
   studies:
@@ -189,21 +187,17 @@ chain:
 - node: Synchronised to the ECG
   kind: correction
   effect: The stamp model removes the drift and corrections; one constant per SNUADC mode, from bursts seen in both
-    the ECG and the EEG, removes the offset. With the recording's own bursts the error is about 17 ms, with the
-    mode's constant about 42 ms (whole release).
-  offset_s:
-  - 0.53
-  - 1.05
-  residual_s:
-  - 0.017
-  - 0.042
+    the ECG and the EEG, removes the offset. What is left is a standard uncertainty of 63 ms with the mode's constant
+    (an upper bound, median absolute error 42 ms) and 30 ms with the recording's own bursts (whole release).
+  bias_s: [-0.97, -0.601]
+  u_s: 0.0634
   status: measured
   studies:
   - snuadc-stamp-sawtooth
 - node: Stored sample time
   kind: stamping
   effect: 'Samples at 128 Hz: one sample is 7.8 ms.'
-  offset_s:
+  span_s:
   - 0.0078
   - 0.0078
   status: measured

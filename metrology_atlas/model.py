@@ -218,10 +218,11 @@ STEP = (
     Field("kind", "enum", required=True,
           choices=("sync", "clock", "stamping", "transport", "processing", "window", "correction")),
     Field("effect", "text", required=True, help="What happens to the time at this step, in a sentence or two."),
-    Field("bias_s", "range", help="Systematic time shift this step introduces, across recordings: [low, high] s."),
+    Field("bias_s", "range", help="Systematic time shift this step introduces, across recordings: [low, high] s "
+                                  "(stamp minus true; negative = early)."),
     Field("u_s", "number", help="Standard uncertainty left at this step after the atlas's correction, in s."),
-    Field("offset_s", "range", help="Legacy: size of the time shift or error this step introduces, [low, high] s."),
-    Field("residual_s", "range", help="Legacy: what is left of it after the atlas's correction, [low, high] s."),
+    Field("span_s", "range", help="For a window or a stamp grid: the width of the interval or step, [low, high] s. Part "
+                                  "of what a value is (or the grid's resolution), not a shift."),
     Field("drift", "str", help="Drift at this step, in words, e.g. '−62 ppm, pulled back every ~2 h'."),
     Field("status", "enum", required=True, choices=STATUS),
     Field("link", "ref", ref="link"),

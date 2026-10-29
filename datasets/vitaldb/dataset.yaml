@@ -100,7 +100,7 @@ utc_step:
   effect: >-
     Windows time synchronisation to the hospital's time server every 8–24 h (assumed), drifting a few ppm in
     between. Not observable in the release: dates are shifted to 2100. No step of 0.5 s or more was found.
-  offset_s: [0.003, 0.9]
+  bias_s: [0.003, 0.9]
   status: assumed
   link: recorder-pc-vs-utc
   parameter: pc-utc-offset

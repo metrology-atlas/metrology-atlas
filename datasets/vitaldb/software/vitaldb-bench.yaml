@@ -31,10 +31,11 @@ role: |
   Several atlas pages come straight from it:
 
   - The [[method:delays-and-windows|timing budget]] behind the synchronisation planner is the model in
-    [[code:vitaldb-bench/tools/pair_timing_budget.py]]: each source's offset range and resolution become one
-    standard deviation, and the planner's coherence limit, grid and window sizing follow from it.
-  - The accuracy-against-resolution chart on the home page began as
-    [[code:vitaldb-bench/tools/time_source_accuracy_figure.py]]; the atlas now draws it from its own data.
+    [[code:vitaldb-bench/tools/pair_timing_budget.py]]: each source's offset range and interval became one
+    standard deviation (the atlas now uses each form's uncertainty budget instead), and the planner's coherence limit, grid and window sizing follow from it.
+  - The home page's timing chart began as the 'accuracy against resolution' figure of
+    [[code:vitaldb-bench/tools/time_source_accuracy_figure.py]]; the atlas now draws bias against standard
+    uncertainty from its own data (the old script is kept under its cited name).
   - The clock fits that the [[study:snuadc-stamp-sawtooth]] study validated are made by
     [[code:vitaldb-bench/tools/clock_model_fit.py]] and read through
     [[code:vitaldb-bench/vitaldb_bench/correct/|the correct package]].
@@ -99,7 +100,7 @@ parts:
       data.
   - group: Scripts not tied to one study
     path: tools/time_source_accuracy_figure.py
-    summary: The original accuracy-against-resolution figure for every kind of time stamp.
+    summary: The original 'accuracy against resolution' figure for every kind of time stamp (superseded).
   - group: Scripts not tied to one study
     path: tools/timestamp_resolution.py
     summary: Temporal resolution of every kind of time stamp (aggregates only).

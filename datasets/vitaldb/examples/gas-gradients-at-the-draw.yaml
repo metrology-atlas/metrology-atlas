@@ -78,10 +78,10 @@ results: |
   gradient varies by about 1.5 mmHg. Pooled, reading at the stamp instead of the draw barely changes the
   distribution, though it moves an individual gas's gradient by 3 mmHg or more in 11.5% of gases.
 
-  **How precisely each gradient is known.** Per gas, the median 95% interval is 1.57 mmHg wide; rounding alone gives
+  **How well each gradient is known.** Per gas, the median 95% interval is 1.57 mmHg wide; rounding alone gives
   1.54, so the uncertain draw time adds almost nothing once the monitor is averaged over ±60 s. Using the single
-  nearest reading instead widens it to 2.29 mmHg (up to 4.3 at the 95th percentile). This is the precision of the
-  recording, not agreement between the two measurements.
+  nearest reading instead widens it to 2.29 mmHg (up to 4.3 at the 95th percentile). This is the 95% interval the
+  recording allows, not agreement between the two measurements.
 
   **SaO₂ − SpO₂.** Median 0 (interquartile range −0.8 to 0). SpO₂ is 100 at the draw for 77% of gases and SaO₂ is
   100 for 47%. With SpO₂ = 100 read as "99.5 to 100", the interval includes zero for half of all gases: the release
@@ -118,7 +118,7 @@ limitations: |
     the window against 26% of random times. A wrong match is not part of the per-gas interval.
   - The draw is taken to happen during the access; a sample drawn after the line was flushed and closed again
     would be missed.
-  - The lab value's analyser error and the oximeter's stated accuracy (a few percentage points) are not included;
+  - The lab value's analyser error and the oximeter's stated error (its specification, a few percentage points) are not included;
     both are larger than the rounding.
   - The vitaldb-resolution library gives a recorded SaO₂ of 100 an upper bound of 100.475; the example caps it at
     100.

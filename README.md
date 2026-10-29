@@ -2,8 +2,8 @@
 
 A machine-readable metrology of a recorded dataset. Every recorded value is a pair, a recorded time and a recorded
 value, and neither is the truth. The atlas describes, for every **variable**, where the true time and the true value
-can lie given the recorded pair, on two axes (time, value) and with two kinds of error on each (accuracy,
-resolution), together with the evidence: the **clocks** and **links** that carry time, the **devices**, every
+can lie given the recorded pair, on two axes (time, value), each with a systematic error (bias) and a standard
+uncertainty (VIM/GUM), together with the evidence: the **clocks** and **links** that carry time, the **devices**, every
 **parameter** we rely on, and the **studies** that measured them, grouped by **method** and built from shared
 **techniques**. Observations, software and references complete it.
 
@@ -54,9 +54,9 @@ cd build/vitaldb && zensical build          # the site lands in build/vitaldb/si
 - Every number is a parameter with a status: `measured`, `derived`, `estimated`, `assumed`, `withdrawn` or
   `superseded`.
 - Figures live in the dataset's `figures/` folder; `[[figure:id]]` places one inline.
-- A variable's `timing:` lists the forms its times come in, each with its delay and interval ranges against the
-  working reference and its clock domain; the **synchronisation planner** combines them. Its `value:` gives the value
-  side: resolution, accuracy and an optional model in a pinned snapshot.
+- A variable's `timing:` lists the forms its times come in, each with the interval a value describes, its bias and
+  its uncertainty budget against the working reference, and its clock domain; the **synchronisation planner** combines them. Its `value:` gives the value
+  side: resolution, bias and uncertainty, and an optional model in a pinned snapshot.
 - `dataset.yaml` lists forbidden patterns. Any text that matches one, anywhere, fails the check. A dataset can also
   declare `records:` (for VitalDB, `case`): then `[[case:1234]]` names one record deliberately, the forbidden
   patterns do not apply inside such a reference, and every named record is listed on a "Cases discussed" page with

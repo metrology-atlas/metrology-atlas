@@ -24,7 +24,7 @@ method: |
   ECG→PPG does not) to accesses, with random times as controls.
 results: |
   - **8,245 accesses (1.1 per hour), 3,249 occlusions (0.4 per hour), 590 hours unavailable.**
-  - **Precision 33 of 34** on a visual check of 50 random events. Most "lost pulse only" events were a blood
+  - **Positive predictive value 33 of 34** on a visual check of 50 random events. Most "lost pulse only" events were a blood
     pressure cuff inflating on the arm with the line: 66% have an NIBP reading 0–90 s later, against 24% at random.
   - **Lab draws:** 76.6% follow an access within 15 minutes, against 26% for random times.
   - **Arterial-side timing steps cluster at line events:** 24% fall within 60 s of an access or occlusion, against
