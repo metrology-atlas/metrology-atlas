@@ -28,7 +28,7 @@ timing:
       distribution: empirical
       u_s: 0.2432
       scope: recording
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: 'onset +4 s (+0.4 s PLETH); window 10-20 s estimated, not measured; whole release 28 Oct: last value 0.8 s after
     pulse loss, back 5.4 s after pulse return (6,152 recordings)'

@@ -5,7 +5,7 @@ unit: ppm
 display: "about −14 to +2 ppm (median, depending on which recordings); setups −47 to +18 ppm"
 status: measured
 study: mains-grid-pc-rate
-about: [recorder-pc-vs-utc]
+about: [recorder-pc-vs-grid]
 date: 2026-10-28
 notes: >-
   −13.8 ppm (IQR −29.7 to −3.0) in 360 recordings with two or more SNUADC corrections, +1.6 ppm (IQR −16.9 to +16.2) in

@@ -28,7 +28,7 @@ timing:
       distribution: empirical
       u_s: 6.079
       scope: independent
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: result 20-40 s after the cuff measurement
 tags:

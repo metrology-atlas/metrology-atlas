@@ -1,0 +1,8 @@
+id: mains-grid-vs-utc
+name: Mains grid against UTC
+summary: >-
+  The grid is regulated to its nominal 60 Hz, so its mean rate over hours is assumed to match UTC's within a few ppm.
+  Not observable in the release.
+clock: mains-grid
+against: utc
+status: assumed

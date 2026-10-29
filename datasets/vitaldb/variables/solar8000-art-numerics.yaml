@@ -35,7 +35,7 @@ timing:
   correction: per-case delay label
   corrects:
   - solar-win
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: 'numeric_delay labels (about 3,460 ART and 1,331 CVP recordings); windows: ART exponential average of 2-4 beats,
     CVP waveform mean over about 5 s (whole release, 29 Oct)'
@@ -57,7 +57,7 @@ timing:
       distribution: empirical
       u_s: 0.8328
       scope: recording
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: label delays from window end (above); 2 s polls; CVP later (3.8 s median)
   studies:

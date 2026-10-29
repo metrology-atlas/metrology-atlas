@@ -3,7 +3,8 @@ name: The CO2 sampling-line delay
 summary: >-
   Breath by breath, the stored Primus CO2 waveform trails the airway pressure by a median 3.60 s (IQR 3.45–3.79 s):
   the time the gas takes to travel down the sidestream sampling line. It is steady within a recording and across the
-  release, and it explains why the ETCO2 numeric seemed to come before its breath.
+  release, and it is why the ETCO2 numeric is stamped about 3 s sooner than the peak pressure against their own
+  waveforms.
 date: 2026-10-29
 status: current
 methods: [delays-and-windows]
@@ -18,7 +19,8 @@ background: |
   Sidestream capnography draws gas from the airway down a thin tube to the analyser, so the CO2 waveform describes
   the airway as it was some seconds earlier. The whole-release numeric derivation
   ([[study:numerics-derivation-release]]) found the ETCO2 numeric stamped about 2 s *before* the breath on the CO2
-  waveform it describes, which read literally is look-ahead. Both waveforms come from the Primus with their own
+  waveform it describes, which read literally is look-ahead (that sign later proved to be the fit's phase model; the
+  delay is about +1.5 s). Both waveforms come from the Primus with their own
   record stamps, so their difference is free of clock error between devices.
 method: |
   On each recording, the start of inspiration is marked on the airway pressure (AWP) waveform where it rises through
@@ -44,8 +46,9 @@ results: |
     than the measured lag (IQR −0.97 to +0.8 s). The two hardly correlate per recording (r = 0.09), because the
     numeric fit's delays are coarse; on average they agree.
 discussion: |
-  The ETCO2 numeric is not look-ahead. The stored CO2 waveform runs about 3.6 s behind the breath, so a value matched
-  to that waveform appears to come early; against the breath itself ETCO2's delay is positive, close to PIP's.
+  The stored CO2 waveform runs about 3.6 s behind the breath, so ETCO2's delay against its waveform is about 3 s
+  shorter than PIP's against the airway pressure; against the breath itself the two are close. The negative ETCO2
+  delay first reported was a separate matter, the fit's phase model ([[study:numerics-derivation-release]]).
 
   For the atlas, the CO2 waveform carries the sampling line as a bias of its own in every timing form, including
   the one after breath matching: breath matching aligns the Primus *clock* (through AWP), but the CO2 content still
@@ -62,10 +65,5 @@ open_questions:
       About 10% of recordings (610) give a lag below 2.5 s, some below 1 s. Candidates: spontaneous breathing (the
       AWP rise no longer marks the gas flow), a missed or mismatched marker, or a different sampling line or
       monitor setup. Not yet examined.
-  - title: "PEEP's negative delay"
-    kind: phenomenon
-    summary: >-
-      PEEP is read from the airway pressure, which has no sampling line, yet its fitted delay is also negative
-      ([[study:numerics-derivation-release]]). The sampling line does not explain it.
 code:
   - vitaldb-bench/tools/co2_sampling_line.py

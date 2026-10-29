@@ -1,0 +1,16 @@
+id: mains-grid
+name: Mains grid
+summary: >-
+  The 60 Hz mains supply, seen as hum in the SNUADC waveforms. Regulated from outside the recording, it is the only
+  clock in the release not set by the recording's own equipment.
+type: reference
+nominal: 60 Hz, regulated
+description: |
+  Korea's grid runs at 60 Hz. Its frequency wanders by 11–20 ppm from minute to minute and its hourly mean by a few
+  ppm, but it is regulated to its nominal frequency, so over a recording it serves as an outside reference for rate.
+  The SNUADC carries its hum at 120 and 360 Hz in 39% of recordings ([[study:mains-grid-pc-rate]]); through it the
+  recorder PC's rate against the grid is measured ([[link:recorder-pc-vs-grid]]), and the SNUADC's rate where its
+  stamps cannot give it ([[study:hum-snuadc-rate]]). It gives rates, not absolute times.
+utc_plan: >-
+  Assumed to keep its nominal frequency on average ([[link:mains-grid-vs-utc]]). The release's shifted dates make it
+  impossible to look up the grid's actual frequency record for any recording.

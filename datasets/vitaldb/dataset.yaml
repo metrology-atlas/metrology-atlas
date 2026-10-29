@@ -126,6 +126,15 @@ domains:
       As the reference, with the SNUADC rate from the mains hum where the stamps carry no correction: 13 ppm against
       the recorder PC (31 ms per hour median), in the 1,248 recordings without corrections that have hum
       ([[study:hum-snuadc-rate]]).
+  - id: recorder-pc
+    name: Recorder PC stamps (values stamped on arrival)
+    clock: recorder-pc
+    drift_ppm: 0
+    drift_status: measured
+    note: >-
+      Numerics stamped by the recorder PC when they arrive (the Solar8000 and Primus numerics), so no device clock
+      enters their stamps ([[study:numeric-clock-check]]). Against the working reference they drift only as the
+      reference does without stamp corrections.
   - id: snuadc-raw
     name: SNUADC raw record stamps
     clock: snuadc-sample
@@ -211,8 +220,10 @@ forbidden_patterns:
   - pattern: '\b\d{4}\.vital\b'
     why: name a case only deliberately, as [[case:1234]]
 notice: |
-  **Pre-release, open for review (v0.1.0, October 2026).** This first public version accompanies a preprint ([arXiv:2610.29001](https://arxiv.org/abs/2610.29001)) and is
-  released for review by the community and the dataset's custodians ahead of a peer-reviewed journal version.
+  **Open for review (v0.2.0).** This version accompanies version 2 of the preprint
+  ([arXiv:2610.29001](https://arxiv.org/abs/2610.29001)), which reframes the atlas in the terms of the VIM and the GUM,
+  and is released for review by the community and the dataset's custodians ahead of a peer-reviewed journal version.
+  Version 0.1.0 is archived, and its superseded numbers stay on the pages that replaced them.
   Comments are welcome as [issues or discussions](https://github.com/metrology-atlas/metrology-atlas) on GitHub.
 
   Studies are still being added and revised, some numbers rest on small runs, and

@@ -35,7 +35,7 @@ timing:
       distribution: empirical
       u_s: 2.0578
       scope: recording
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: 'delay from window end, against the recorded PLETH plus its 0.385 s delay: median 2.8 s (6,150 recordings, 29
     Oct); median of about 12 beats'

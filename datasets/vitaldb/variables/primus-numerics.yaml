@@ -34,10 +34,12 @@ timing:
   correction: per-case delay label
   corrects:
   - primus-num
-  domain: primus
+  domain: recorder-pc
   status: measured
   evidence: numeric_delay labels (6,186 ETCO2, 5,894 PIP, 6,114 RR recordings); the CO2-based delays are against the CO2
-    waveform, which trails the breath by 3.6 s (sampling line)
+    waveform, which trails the breath by 3.6 s (sampling line). The numerics are stamped by the recorder PC on arrival,
+    so the Primus clock does not enter their stamps; it enters only through the waveform each label is measured against,
+    within the label's fit
   studies:
   - numerics-derivation-release
   - co2-sampling-line
@@ -62,7 +64,7 @@ timing:
       distribution: empirical
       u_s: 2.4164
       scope: recording
-  domain: primus
+  domain: recorder-pc
   status: measured
   evidence: 'label delays from window end: ETCO2 1.55, PIP 4.6, RR 4.3 s (medians); 7 s polls; ETCO2 and PIP one breath,
     RR about 30 s'

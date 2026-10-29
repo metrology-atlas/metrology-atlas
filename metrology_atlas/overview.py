@@ -140,7 +140,12 @@ def overview_svg(ds, root="utc", href=lambda kind, id_: ""):
         st = g["live"][ids[0]].get("status", "assumed")
         col = STATUS_COL.get(st, "#7a7a7a"); dash = STATUS_DASH.get(st)
         (x1, y1), (x2, y2) = xy[a], xy[b]
-        if depth[a] == depth[b]:
+        if depth[a] == depth[b] and abs(x1 - x2) <= NODE_W + 40:
+            # neighbours in one row: a short straight link across the gap, badge in the middle
+            sx = 1 if x2 > x1 else -1
+            d = f"M{x1 + sx * NODE_W / 2:.0f},{y1:.0f} L{x2 - sx * NODE_W / 2:.0f},{y2:.0f}"
+            bx, by = (x1 + x2) / 2, y1
+        elif depth[a] == depth[b]:
             my = y1 + NODE_H / 2 + 70
             d = f"M{x1:.0f},{y1 + NODE_H / 2:.0f} Q{(x1 + x2) / 2:.0f},{my:.0f} {x2:.0f},{y2 + NODE_H / 2:.0f}"
             bx, by = (x1 + x2) / 2, (y1 + NODE_H / 2 + my) / 2

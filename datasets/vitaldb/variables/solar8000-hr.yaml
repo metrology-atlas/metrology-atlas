@@ -37,7 +37,7 @@ timing:
   corrects:
   - hr-early
   - hr-late
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: numeric_delay labels, 6,222 recordings; window about 8 s (6-10 s), whole release 29 Oct
   studies:
@@ -64,7 +64,7 @@ timing:
       distribution: empirical
       u_s: 0.4863
       scope: recording
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: label delays of the early group, 1,775 recordings
   studies:
@@ -91,7 +91,7 @@ timing:
       distribution: empirical
       u_s: 0.6839
       scope: recording
-  domain: solar8000
+  domain: recorder-pc
   status: measured
   evidence: label delays of the late group, 3,652 recordings; one extra 2 s poll; follows the PC
   studies:
