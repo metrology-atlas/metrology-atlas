@@ -124,7 +124,7 @@ open_questions:
   - title: "Why the constant offset differs between modes"
     kind: phenomenon
     summary: >-
-      The EEG lags the ECG by −0.80 s in step mode and −0.66 s in frequent mode after the model (whole release;
+      The EEG stamps sit −0.80 s from the ECG's (early) in step mode and −0.66 s in frequent mode after the model (whole release;
       −0.69 s in the pilot); why the constant differs between modes is not known.
 code:
   - physiosync/physiosync/stamps.py

@@ -68,6 +68,15 @@ limitations: |
   certain than the window length and the delay. Truncation was tested for three numerics only. The ART and CVP
   delays are fitted within a narrow range, and their offsets mix scale and timing.
 open_questions:
+  - title: "ETCO2: the per-case labels and the release fit disagree in sign"
+    kind: conflict
+    summary: >-
+      Against the CO2 waveform, the per-case delay labels give ETCO2 stamped a median 1.55 s after the breath's
+      plateau ([[parameter:etco2-delay]]), while this study's fit gives −2.05 s (IQR −3.05 to −1.3). Both describe the
+      same numeric against the same waveform, so one of the two windows or anchors is defined differently. The
+      sampling line ([[study:co2-sampling-line]]) explains why the fit comes out negative, but not why the labels do
+      not. Until settled, the ETCO2 forms rest on the labels. Found by asking an AI assistant a planning question
+      against the atlas file.
   - title: "PEEP's algorithm and negative delay"
     kind: phenomenon
     summary: >-

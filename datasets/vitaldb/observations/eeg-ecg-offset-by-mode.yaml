@@ -1,7 +1,7 @@
 id: eeg-ecg-offset-by-mode
 name: The EEG–ECG offset is fixed by the SNUADC correction mode
 summary: >-
-  After the stamp model, BIS EEG still lags the SNUADC ECG by a constant: −804 ms in step mode and −660 ms in
+  After the stamp model, BIS EEG stamps still sit early against the SNUADC ECG by a constant (EEG minus ECG): −804 ms in step mode and −660 ms in
   frequent-correction mode over the whole release, tight within a port or unit. The mode, a property of the setup,
   sets the constant.
 status: established
