@@ -80,6 +80,7 @@ timing:
   studies:
   - co2-sampling-line
   - ventilator-breath-matching
+  - primus-co2-update-grid
 - id: primus-shift
   name: raw stamps shifted by the release median
   kind: fixed_shift
@@ -120,6 +121,7 @@ timing:
   evidence: 'per-recording raw lag: median 5.4 s, robust SD 1.33 s (1,067 recordings)'
   studies:
   - co2-sampling-line
+  - primus-co2-update-grid
 - id: primus-raw
   name: raw stamps
   kind: as_stored
@@ -142,5 +144,6 @@ timing:
     +104 ppm against the PC between AWP pauses; plus the 3.6 s sampling line
   studies:
   - co2-sampling-line
+  - primus-co2-update-grid
 tags:
 - stub

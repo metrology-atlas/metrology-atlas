@@ -1,0 +1,51 @@
+id: art-240hz-timing
+name: Arterial pressure against the monitor's 240 Hz cycle
+summary: >-
+  The arterial pressure's steps follow a 240 Hz output cycle that runs 23–55 ppm off the SNUADC clock. If its timing
+  followed that cycle it would slide against the ECG by 4.17 ms each turn, or drift by up to 290 ms an hour. Neither
+  happens: arterial pressure keeps time with the ECG to within about 1 ms.
+date: 2026-10-28
+status: current
+methods: [signal-borne-clocks]
+techniques: [sawtooth-fit, null-controls]
+clocks: [monitor-output-clock, snuadc-sample]
+devices: [snuadc]
+variables: [snuadc-art, snuadc-ecg-ii]
+data: The 30 recordings of the 240 Hz fold batch ([[study:waveform-deltas]]); up to 90 min from minute 10; 29 with more than 1,000 beats.
+background: |
+  The arterial pressure's step sizes follow a cycle at 239.986–239.994 Hz on the SNUADC sample count
+  ([[study:waveform-deltas]]). If the pressure were acquired on that clock and placed on the 500 Hz grid without timing
+  correction, its content would either slide against the ECG by one 240 Hz period (4.17 ms) every time the cycle turns
+  over (a sawtooth, every 75–181 s in these recordings), or drift steadily by 23–55 ppm (70–290 ms over 80 minutes).
+method: |
+  R peaks on ECG II (5–25 Hz band) and the steepest arterial upstroke 80–450 ms later, to a fraction of a sample. Each
+  beat's delay minus its 3-minute running median. The cycle's slow phase from the arterial pressure's own step-size
+  pattern, demodulated at exactly 240 Hz in 10 s blocks. Delay averaged in 12 bins of that phase; the swing (maximum
+  minus minimum) against the same binning with the phase shifted by a quarter of the recording (control). Drift: the
+  median delay in the last 10 minutes minus the first 10, against the cycle's rate times the time elapsed.
+results: |
+  - **No sawtooth.** The swing over the cycle equals the control's (median 1.24 ms both; larger than the control in 14
+    of 29; at most 2.1 ms). A sawtooth would give about 4 ms.
+  - **No drift.** The changes expected from the cycle's rate are −70 to −270 ms; the observed changes scatter around
+    zero, of both signs (physiology).
+discussion: |
+  The 240 Hz pattern is in how the values are written (the output stage), not in when the pressure was sampled, so the
+  arterial pressure's timing forms need no term for it. The cycle remains a usable marker of the output stage's clock
+  ([[clock:monitor-output-clock]]).
+limitations: |
+  The 3-minute detrend absorbs slower changes. Single slips of the kind seen against the plethysmogram (ECG to
+  arterial pressure about −1.5 ms) are a different mechanism and are not tested here.
+code:
+  - vitaldb-bench/tools/art_cycle_and_co2_grid.py
+  - vitaldb-bench/tools/art_cycle_and_co2_grid_plot.py
+figures:
+  - id: art-sawtooth-test
+    file: art-sawtooth-test.png
+    theme: agreement and residuals
+    source: vitaldb-bench tools/art_cycle_and_co2_grid_plot.py
+    records: [497]
+    caption: >-
+      (A) Ten minutes of one recording: the ECG-to-upstroke delay shows no 4.17 ms sawtooth with the 240 Hz cycle. (B)
+      In 29 recordings the delay's swing over the cycle is no bigger than the control's. (C) The drift expected if the
+      arterial timing followed the cycle's clock does not appear.
+    alt: A time series with a simulated sawtooth beside it, a scatter against a control, and a scatter of observed against expected drift.

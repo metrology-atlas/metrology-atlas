@@ -61,6 +61,8 @@ timing:
   status: measured
   evidence: 'held-out windows against CVP, signed: robust SD 79 ms, median absolute error 53 ms, 95% -262 to +272 ms (1,067
     recordings, 37,881 windows); likely value 40 ms from the part shared with the ART check (25%)'
+  studies:
+  - primus-awp-conversion
 - id: primus-shift
   name: raw stamps shifted by the release median
   kind: fixed_shift
@@ -98,6 +100,8 @@ timing:
   domain: primus
   status: measured
   evidence: 'per-recording raw lag: median 1.8 s, robust SD 1.33 s (1,067 recordings)'
+  studies:
+  - primus-awp-conversion
 - id: primus-raw
   name: raw stamps
   kind: as_stored
@@ -123,5 +127,7 @@ timing:
     - 0.69
     basis: apparent
     note: The lower tail (stamp before the CVP breath) is mostly airway-to-CVP physiology in the reference, not a true lead.
+  studies:
+  - primus-awp-conversion
 tags:
 - stub

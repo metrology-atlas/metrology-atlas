@@ -1,0 +1,76 @@
+id: primus-awp-conversion
+name: How the Primus airway pressure is written at 62.5 Hz
+summary: >-
+  About one stored airway-pressure sample in nine repeats the previous one, in a fixed pattern of lines that is the
+  same in every recording and does not drift. It is made before the data reach the file, by a scheme tied to the
+  Primus clock but separate from CO2's, and not a plain hold, cascade or queue. A stored value is at most about one
+  sample old.
+date: 2026-10-28
+status: current
+methods: [signal-borne-clocks, value-resolution]
+techniques: [null-controls, prediction-test]
+clocks: [primus-clock]
+devices: [primus]
+variables: [primus-awp, primus-co2]
+data: The 30 recordings of the 240 Hz fold batch, up to 90 min from minute 10; the 16.6, 25.1 and 29.3 Hz lines are in 99–100% of the release ([[study:waveform-deltas]]).
+background: |
+  Airway pressure changes on most samples, unlike CO2, so the question is not when it updates but where its repeated
+  samples come from, and so how old a stored value can be.
+method: |
+  - **Rate check.** A repeated sample is a stored value equal to the previous one while the samples either side
+    change. Each line of its spectrum fine-scanned (0.0005 Hz) on 10-minute pieces.
+  - **Experiment 1, file records.** Where repeats fall within the file's 30-sample (480 ms) records.
+  - **Experiment 3, against CO2.** Each steep airway-pressure sample placed in the CO2 40 ms update cycle
+    ([[study:primus-co2-update-grid]]); the repeat rate by position, against a grid at a wrong rate.
+  - **Experiment 2, simulation.** Candidate conversion schemes simulated with rates drawn from the observed line
+    lattice (144 candidates, 20–130 Hz). A scheme passes if it reproduces the 10 lines, gives 5–10% repeats, and makes
+    no line that is not seen (above 30% of its strongest).
+results: |
+  - **Repeats** are 10–13% of moving samples (median 11.6%; 7.7–10% on the steepest parts). The pattern has a family
+    of 10 lines (4.228, 8.521, 12.357, 12.749, 16.585, 20.845, 24.581, 25.105, 28.941 and 29.333 Hz), all sums and
+    differences of two frequencies, 20.8445 and 25.1055 Hz, with small multipliers. No single rate and its harmonics
+    explains them (a search over 0.5–130 Hz fits at most 4 of the 10).
+  - **Fixed, not drifting.** Each line sits at the same frequency in all 30 recordings (p10–p90 within ±2 mHz for the
+    strong lines) and holds within 1–4 mHz over 90 minutes.
+  - **In the conversion, not the pressure.** The values themselves carry none of the lines (strength 1–4, noise); the
+    repeats carry them at 6–18.
+  - **Not at record boundaries.** The file's records are a regular container (stamps exactly 480 ms apart, as for
+    every waveform track); repeats are spread evenly over their 30 positions (8.2–9.9% at each).
+  - **Not locked to the CO2 updates** (swing across the cycle 2.6% pooled, 2.1% for the control). But across
+    recordings the two strongest lines move with the CO2 rate (rank correlation 0.59 and 0.58, p = 0.001): the same
+    Primus clock most likely paces both, by separate paths.
+  - **Simple schemes ruled out:** one source rate held onto 62.5 Hz (it can only make a harmonic family); two rates in
+    series, each holding the latest value (17,223 pairs; best still makes unobserved lines at 65–75% of its strongest);
+    a source near 58.27 Hz sent in packets and played out one sample per 16 ms from a queue (1,837 pairs; best 65%).
+discussion: |
+  Two independent periodicities shape the repeats, and the scheme is not a plain hold, cascade or queue. For timing
+  this is small: a stored value is at most about one sample (16 ms) old, which the airway pressure's timing forms
+  already carry as their 16 ms grid component ([[variable:primus-awp]]); its mean (about 8 ms) sits inside the
+  constant that breath matching measures.
+limitations: |
+  30 recordings for the rates; more elaborate schemes (interpolation with rounding, timer-driven drops, clocks off the
+  lattice) were not searched, because nothing in the data would tell the fits apart.
+open_questions:
+  - title: "What scheme makes the airway-pressure line family?"
+    kind: phenomenon
+    summary: >-
+      Two periodicities, 20.8445 and 25.1055 Hz after folding, and none of the simple schemes. The Medibus real-time
+      curve specification or a bench recording would settle it more cheaply than a wider search.
+code:
+  - vitaldb-bench/tools/primus_awp_repeats.py
+  - vitaldb-bench/tools/primus_awp_records.py
+  - vitaldb-bench/tools/primus_awp_vs_co2.py
+  - vitaldb-bench/tools/primus_awp_sim_chain.py
+  - vitaldb-bench/tools/primus_awp_sim_score.py
+  - vitaldb-bench/tools/primus_awp_sim_queue.py
+  - vitaldb-bench/tools/primus_awp_repeats_plot.py
+figures:
+  - id: awp-repeat-pattern
+    file: awp-repeat-pattern.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench tools/primus_awp_repeats_plot.py
+    records: [497, 17, 2929]
+    caption: >-
+      (A) A breath: some stored samples repeat the previous value. (B) The repeat pattern has the same lines in every
+      recording, not one clean rate. (C) Each line's frequency in 30 recordings, within a few mHz of the others.
+    alt: A sampled breath with repeats circled, overlaid spectra of three recordings, and a strip plot of line frequencies.

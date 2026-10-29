@@ -1,0 +1,48 @@
+id: primus-co2-update-grid
+name: The Primus CO2 update grid
+summary: >-
+  The stored CO2 changes about every 40 ms: a 24.974 Hz update grid that is not locked to the 62.5 Hz samples and
+  slides through a full update every 40 s or so. Each stored value describes a 40 ms interval that closed 0–40 ms
+  before its stamp.
+date: 2026-10-28
+status: current
+methods: [signal-borne-clocks, value-resolution]
+clocks: [primus-clock]
+devices: [primus]
+variables: [primus-co2]
+data: The 30 recordings of the 240 Hz fold batch; up to 90 min from minute 10. The 12.5 and 25 Hz lines are in 99% of the release ([[study:waveform-deltas]]).
+background: |
+  CO2 changes every 2 or 3 stored samples. Whether that 25 Hz update grid is locked to the stored samples decides how
+  old a stored value is at its stamp.
+method: |
+  An indicator of change (a value different from the previous one) during breathing; its fundamental near 25 Hz
+  scanned in 0.0005 Hz steps on 10-minute pieces; its phase against an exact 25 Hz grid in 1 s and 5 s blocks.
+results: |
+  - **Not locked.** The update rate is 24.974 Hz on the file's clock (median of 30 recordings; all between 24.973 and
+    24.976 Hz; −980 to −1,080 ppm against 25 Hz), steady within each recording.
+  - **The grid slides smoothly**, one full 40 ms wrap every 39–48 s. Through 16 ms samples it seems to hold for about
+    8 s and then jump 8 ms; a simulation of one 24.974 Hz grid read on a 62.5 Hz grid gives exactly that staircase, so
+    the steps are how the measurement sees a smooth slide.
+  - About 1,000 ppm is ten times the Primus clock's drift against SNUADC (+104 ppm by breaths): a nominal update
+    period of about 40.04 ms, not clock error.
+discussion: |
+  Each stored CO2 sample shows the latest update, which describes an interval of about 40 ms that closed between 0 and
+  40 ms before the sample's stamp. Because the grid slides, that age cycles over its whole range every 40 s or so and
+  behaves as uniform: a mean of about 20 ms (a bias) and a standard uncertainty of 40 / √12 = 11.5 ms. The CO2 timing
+  forms carry exactly this: a 40 ms support stamped at its close, 20 ms in the bias, and the hold position as a
+  rectangular component ([[variable:primus-co2]]). It comes on top of the sampling line ([[study:co2-sampling-line]]).
+limitations: 30 recordings for the rate; the presence of the grid is release-wide.
+code:
+  - vitaldb-bench/tools/art_cycle_and_co2_grid.py
+  - vitaldb-bench/tools/art_cycle_and_co2_grid_plot.py
+figures:
+  - id: co2-update-grid
+    file: co2-update-grid.png
+    theme: drift and resets
+    source: vitaldb-bench tools/art_cycle_and_co2_grid_plot.py
+    records: [497]
+    caption: >-
+      (A) On an upstroke CO2 changes every 2 or 3 stored samples. (B) Where each 40 ms update starts, against an exact
+      25 Hz grid: the grid slides through a full update about every 40 s. (C) The update rate in 30 recordings, median
+      24.974 Hz.
+    alt: A step plot of CO2 codes, a scatter of update phase over two minutes, and a narrow histogram of update rates.

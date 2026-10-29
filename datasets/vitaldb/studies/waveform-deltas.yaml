@@ -1,0 +1,116 @@
+id: waveform-deltas
+name: What the stored waveform values say about the recording chain
+summary: >-
+  Successive differences of every stored waveform, over the whole release, show how each one was converted: no slew
+  bound or coarse lattice, a 240 Hz output cycle in the arterial pressure and plethysmogram but not the ECG, the BIS
+  EEG on an exact 0.05 µV grid, and the Primus waveforms resampled from slower internal rates.
+date: 2026-10-28
+status: current
+methods: [value-resolution, signal-borne-clocks]
+techniques: [null-controls]
+clocks: [monitor-output-clock, primus-clock, snuadc-sample]
+devices: [snuadc, bis, primus, cardioq]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, bis-eeg, primus-awp, primus-co2, cardioq-abp]
+data: |
+  Pilot of 40 recordings (the first case, then every 160th), a test of 200 (every 32nd case), then the whole release (6,388
+  recordings, up to 30 min each, 28 Oct 2026). Every waveform track at 20 Hz or more: SNUADC ECG II, ECG V5, ART,
+  CVP, PLETH and FEM (500 Hz, 10-bit codes), BIS EEG1 and EEG2 (128 Hz, float), Primus AWP and CO2 (62.5 Hz, codes),
+  CardioQ FLOW and ABP. Differences within records only.
+background: |
+  A converter leaves marks in the differences between successive samples: a largest possible step, a lattice of
+  allowed values, interpolated runs, or values held while a slower internal rate catches up. Each says something about
+  the chain between the patient and the file, and some of them carry a clock of their own.
+method: |
+  On up to 30 min of the longest stretch of contiguous records of each track: the share of zero differences and the
+  run lengths of held values; the strongest lines (0.01 Hz resolution) in the pattern of zero differences;
+  equal-difference runs against the same signal smoothed and re-rounded (a null for interpolation); for float tracks
+  the smallest step and whether every step is a multiple of it; the value range. For the 240 Hz cycle, each SNUADC
+  channel's step size relative to its local average is folded on the cycle measured from the arterial pressure of the
+  same recording (12 bins), against a fold at a wrong frequency (237.3 Hz) as control.
+results: |
+  | Track | Recordings | What the differences show |
+  |---|---|---|
+  | SNUADC PLETH | 6,152 | 240 Hz cycle in the change pattern in 98.8% (median strength 104) |
+  | SNUADC ART | 3,507 | 240 Hz cycle in 95.4% |
+  | SNUADC FEM | 100 | 240 Hz cycle in 98 |
+  | SNUADC CVP | 1,363 | 240 Hz cycle in 3: too slow to show it |
+  | SNUADC ECG II | 6,349 | 240 Hz only weakly, in 9.9% (median strength 5, threshold 4); full 0–1023 range reached in 4,103 |
+  | SNUADC ECG V5 | 3,379 | 240 Hz weakly, in 7.9% |
+  | Primus CO2 | 6,362 | lines at 12.5 and 25 Hz in 99%: a 25 Hz internal rate held up to 62.5 Hz |
+  | Primus AWP | 6,360 | lines at 16.6, 25.1 and 29.3 Hz in 99–100%: repeated samples in a fixed pattern |
+  | BIS EEG1, EEG2 | 5,566 | an exact 0.05 µV grid in 5,564; lower limit −1,476.7 µV; 2 recordings with corrupt values up to 1.6 × 10¹⁵ |
+  | CardioQ FLOW, ABP | 29 | a 0.2 grid |
+
+  - **No slew bound and no coarse lattice.** The largest step differs between recordings and occurs only a handful of
+    times; the ECG's largest is usually the full 0–1023 range (dropouts or saturation). No integer track has a lattice
+    coarser than one code.
+  - **The 240 Hz cycle modulates the step size, it does not hold values.** At the steepest moments the arterial
+    pressure changes on every sample. Folded on the cycle, ART and PLETH steps are 10–13% larger at one point than at
+    the opposite one; in 30 recordings across every SNUADC port the swing is ART 0.23 (median; beyond twice the
+    largest control in 28 of 30), PLETH 0.29 (30 of 30), ECG II 0.03 (as control), CVP 0.05. The peak sits at the
+    same place in every recording, PLETH about 0.35 ms before ART, close to the SNUADC channel-to-channel read skew of
+    about 0.3 ms. The cycle runs at 239.986–239.994 Hz on the SNUADC count (−25 to −58 ppm).
+  - **No interpolation.** Pairs of equal differences of 2 codes or more are no more common than in the smoothed and
+    re-rounded null (above it in 3–6% of SNUADC recordings).
+discussion: |
+  Pressure and plethysmogram reach SNUADC through a monitor output updated at 240 Hz and smoothed afterwards; the ECG
+  by another path. The cycle is a clock of the monitor's output stage ([[clock:monitor-output-clock]]), seen release-wide,
+  but it does not move the arterial pressure's timing ([[study:art-240hz-timing]]). The Primus conversions are fixed
+  schemes, studied in [[study:primus-co2-update-grid]] and [[study:primus-awp-conversion]]. The BIS grid matches the
+  16-bit resolution in [[study:track-value-resolution]]; at 0.05 µV it adds nothing to the EEG's uncertainty.
+limitations: |
+  Up to 30 min per recording. The ECG's faint 240 Hz trace is unexplained (crosstalk or a shared stage are guesses).
+  Other lines in the change patterns (mains harmonics, 20, 30, 90 and 140 Hz, 5.0–5.3 Hz, 64 Hz in the BIS) are
+  recorded but not followed up.
+open_questions:
+  - title: "Which channels does the 240 Hz output stage feed, and does the ECG have its own update clock?"
+    kind: next step
+    summary: >-
+      Per channel across the release; a second hidden clock in the ECG would matter for ECG against arterial timing.
+  - title: "The BIS value limits"
+    kind: phenomenon
+    summary: >-
+      The EEG spans −1,476.7 to +1,800.05 µV: asymmetric limits, not yet matched to the BIS documentation.
+code:
+  - vitaldb-bench/tools/waveform_deltas.py
+  - vitaldb-bench/tools/waveform_deltas_summary.py
+  - vitaldb-bench/tools/output_cycle_fold.py
+  - vitaldb-bench/tools/waveform_staircase_plot.py
+  - vitaldb-bench/tools/output_cycle_fold_plot.py
+  - vitaldb-bench/tools/bis_grid_plot.py
+  - vitaldb-bench/tools/primus_holds_plot.py
+figures:
+  - id: staircase
+    file: staircase.png
+    theme: example traces
+    source: vitaldb-bench tools/waveform_staircase_plot.py
+    records: [497]
+    caption: >-
+      The steepest 48 ms of each SNUADC channel in one recording, sample by sample: the arterial pressure and the
+      plethysmogram change on almost every sample, so the 240 Hz cycle is not a held value.
+    alt: Four step plots of stored codes over 48 ms, repeated samples marked.
+  - id: fold-240
+    file: fold-240.png
+    theme: distributions of measured parameters
+    source: vitaldb-bench tools/output_cycle_fold_plot.py
+    caption: >-
+      Step size by position in the monitor's 240 Hz output cycle, in three recordings: the arterial pressure and the
+      plethysmogram swing by 10–13% at the same point of the cycle; the ECG stays flat.
+    alt: Three panels of step size against cycle position for four channels.
+  - id: bis-grid
+    file: bis-grid.png
+    theme: distributions of recorded values
+    source: vitaldb-bench tools/bis_grid_plot.py
+    caption: >-
+      The BIS EEG values lie exactly on a 0.05 µV grid: small steps are whole multiples of it (left), and every sample
+      sits on a grid line, against the same values randomly shifted (right).
+    alt: A histogram of small steps at multiples of 0.05 µV, and a log histogram of position between grid lines.
+  - id: primus-holds
+    file: primus-holds.png
+    theme: distributions of recorded values
+    source: vitaldb-bench tools/primus_holds_plot.py
+    records: [1]
+    caption: >-
+      Primus CO2 and airway pressure at 62.5 Hz, on their steepest 640 ms: CO2 holds each value for 2 or 3 samples (a
+      25 Hz internal rate); airway pressure repeats only some samples. Right: how long repeats last, 200 recordings.
+    alt: Two step plots with repeated samples marked, and a grouped bar chart of repeat lengths.

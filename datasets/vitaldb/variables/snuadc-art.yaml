@@ -51,6 +51,7 @@ timing:
     is the working reference
   studies:
   - hum-snuadc-rate
+  - art-240hz-timing
 - id: snu-hum
   name: stamp-model time, SNUADC rate from the mains hum
   kind: per_recording
@@ -93,6 +94,7 @@ timing:
     31 instead of 76 ms/h median'
   studies:
   - hum-snuadc-rate
+  - art-240hz-timing
 - id: snu-raw
   name: raw stamps
   kind: as_stored
