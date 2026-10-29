@@ -1,0 +1,11 @@
+id: pc-grid-rate-single
+name: Recorder PC rate against the grid, recordings with one SNUADC correction
+quantity: Rate of the recorder PC against the mains grid in recordings with one SNUADC stamp correction.
+value: 1.6
+unit: ppm
+spread: {q1: -16.9, q3: 16.2, n: 846}
+status: measured
+study: mains-grid-pc-rate
+about: [recorder-pc-vs-grid]
+date: 2026-10-30
+notes: Selected by rate (which recordings carry corrections depends on their rate); not a population value.

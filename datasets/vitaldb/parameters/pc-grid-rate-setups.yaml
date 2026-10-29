@@ -1,0 +1,10 @@
+id: pc-grid-rate-setups
+name: Recorder PC rate against the grid, range of setup medians
+quantity: Range of the per-setup median rate of the recorder PC against the mains grid (setups with 30 or more recordings).
+unit: ppm
+spread: {min: -47, max: 18, n: 9}
+display: "setup medians −47 to +18 ppm (9 setups)"
+status: measured
+study: mains-grid-pc-rate
+about: [recorder-pc-vs-grid]
+date: 2026-10-30

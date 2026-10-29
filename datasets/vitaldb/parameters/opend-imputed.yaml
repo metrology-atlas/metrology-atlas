@@ -1,0 +1,11 @@
+id: opend-imputed
+name: Operation ends set from the recording end
+quantity: Cases whose operation end lies 598-604 s before the recording end (value), out of the release (n).
+value: 537
+unit: cases
+spread: {min: 598, max: 604, n: 6388, text: "offset from the recording end, s"}
+display: "537 of 6,388 cases (8.4%), 598–604 s before the recording end"
+status: measured
+study: timestamp-imputed-and-conformance
+about: [opend]
+date: 2026-10-30

@@ -1,0 +1,11 @@
+id: snuadc-hum-share
+name: Recordings with mains hum in the SNUADC
+quantity: Recordings whose SNUADC waveforms carry mains hum at its harmonics (value), out of the recordings with SNUADC (n).
+value: 2455
+unit: recordings
+spread: {n: 6348}
+display: "2,455 of 6,348 recordings with SNUADC (39%)"
+status: measured
+study: mains-grid-pc-rate
+about: [snuadc-sample]
+date: 2026-10-30

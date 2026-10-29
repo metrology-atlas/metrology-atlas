@@ -1,0 +1,12 @@
+id: snuadc-uncorrected-drift-hum
+name: Drift of the working reference with the hum rate
+quantity: >-
+  Error of the SNUADC rate from the mains hum in recordings without stamp corrections, against the BIS-checked drift
+  (zero-centred robust SD over recordings).
+value: 12.8
+unit: ppm
+spread: {n: 224}
+status: measured
+study: hum-snuadc-rate
+about: [snuadc-sample]
+date: 2026-10-30

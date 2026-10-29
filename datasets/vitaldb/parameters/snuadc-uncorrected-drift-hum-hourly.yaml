@@ -1,0 +1,10 @@
+id: snuadc-uncorrected-drift-hum-hourly
+name: Hourly drift of the working reference with the hum rate
+quantity: Median absolute drift per hour of the working reference on the hum rate, in recordings without stamp corrections.
+value: 31
+unit: ms/h
+spread: {n: 224}
+status: measured
+study: hum-snuadc-rate
+about: [snuadc-sample]
+date: 2026-10-30

@@ -1,0 +1,10 @@
+id: hr-truncation-share
+name: Solar8000 HR truncated
+quantity: Share of recordings whose Solar8000 heart rate is best explained as truncated, not rounded.
+value: 98.6
+unit: "%"
+spread: {n: 6343}
+status: measured
+study: numerics-derivation-release
+about: [solar8000-hr]
+date: 2026-10-30

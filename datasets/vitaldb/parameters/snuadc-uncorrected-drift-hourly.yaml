@@ -1,0 +1,10 @@
+id: snuadc-uncorrected-drift-hourly
+name: Hourly drift of the working reference without stamp corrections
+quantity: Median absolute drift per hour of the working reference on the port's assumed SNUADC rate, in recordings without stamp corrections.
+value: 76
+unit: ms/h
+spread: {n: 224}
+status: measured
+study: hum-snuadc-rate
+about: [snuadc-sample]
+date: 2026-10-30

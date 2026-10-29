@@ -1,0 +1,11 @@
+id: primus-awp-pause
+name: Primus AWP pause
+quantity: Length of the Primus airway-pressure gaps at its two-hourly resynchronisation; n counts the recordings with such gaps.
+value: 21
+unit: s
+spread: {min: 19, max: 23.5, n: 5502}
+status: measured
+study: device-correction-schedules
+about: [primus-awp-pauses]
+date: 2026-10-30
+notes: 10,496 pauses in 5,502 recordings, every 7,230 s ([[parameter:primus-period]]).

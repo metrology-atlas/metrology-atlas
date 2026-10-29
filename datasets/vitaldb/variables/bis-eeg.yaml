@@ -58,6 +58,9 @@ timing:
   status: measured
   evidence: 'held-out burst windows against the mode''s leave-one-out constant: robust SD 62 ms, median absolute error 42
     ms (2,710 recordings, 36,928 windows); step mode 51 ms, others 94-129 ms; latency -0.80 s in link K'
+  studies:
+  - shared-bursts
+  - snuadc-stamp-sawtooth
 - id: bis-own
   name: after sync with the recording's own bursts
   kind: per_recording
@@ -94,6 +97,9 @@ timing:
   status: measured
   evidence: 'each burst window against the median of the recording''s other windows: robust SD 30 ms, median absolute error
     20 ms (2,710 recordings)'
+  studies:
+  - shared-bursts
+  - snuadc-stamp-sawtooth
 - id: bis-shift
   name: raw stamps shifted by the release median
   kind: fixed_shift
@@ -133,6 +139,9 @@ timing:
   domain: bis
   status: measured
   evidence: 'raw burst windows against the release median: robust SD 171 ms (2,702 recordings, 36,788 windows)'
+  studies:
+  - shared-bursts
+  - snuadc-stamp-sawtooth
 - id: bis-raw
   name: raw stamps
   kind: as_stored
@@ -171,6 +180,9 @@ timing:
   domain: bis
   status: measured
   evidence: 'EEG minus ECG for the same burst on the raw stamps: median -787 ms, p5-p95 -970 to -601 ms (2,702 recordings)'
+  studies:
+  - shared-bursts
+  - snuadc-stamp-sawtooth
 tags:
 - stub
 chain:

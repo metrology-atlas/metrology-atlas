@@ -1,0 +1,13 @@
+id: co2-sampling-line-lag
+name: Primus CO2 sampling-line lag
+quantity: Lag of the stored Primus CO2 waveform behind the airway pressure, breath by breath, median per recording.
+value: 3.60
+unit: s
+spread: {q1: 3.45, q3: 3.79, p10: 2.62, p90: 3.98, n: 6341}
+status: measured
+study: co2-sampling-line
+about: [primus-co2]
+date: 2026-10-30
+notes: >-
+  The whole release, up to the first 60 min of each recording. Steady over the release (block medians 3.59-3.63 s) and
+  by recorder port (3.47-3.66 s).

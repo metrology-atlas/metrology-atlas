@@ -1,0 +1,10 @@
+id: loop-bis-misclosure
+name: Misclosure of the BIS-SNUADC-PC loops
+quantity: Misclosure of the fundamental BIS-SNUADC-PC loops after network adjustment (BIS steps, ECG-EEG bursts, SNUADC resets).
+value: 1.3
+unit: ppm
+spread: {q1: -3.74, q3: 7.8, n: 253}
+status: measured
+study: loop-closure
+about: [bis-vs-pc, bis-vs-snuadc]
+date: 2026-10-30

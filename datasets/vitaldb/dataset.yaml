@@ -41,8 +41,9 @@ reference: |
   timeline by the stamp model (drift and corrections fitted, the signal lost at each correction added back). Every
   delay in the planner is measured against it. Its own error against the PC is a few milliseconds where the
   SNUADC's corrections are seen; in recordings that make no SNUADC correction it rests on the port's typical rate
-  and can drift by about ±0.1 s per hour ([[observation:snuadc-long-uncorrected]]). The PC's error against UTC is
-  assumed.
+  and drifts by 31 ppm between recordings (76 ms per hour, median), or 13 ppm (31 ms per hour) where the mains hum
+  gives the recording its own rate ([[observation:snuadc-long-uncorrected]], [[study:hum-snuadc-rate]]). The PC's
+  error against UTC is assumed.
 figures:
   - id: system-overview
     file: timing-graph.svg

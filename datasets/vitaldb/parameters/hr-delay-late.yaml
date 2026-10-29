@@ -3,7 +3,7 @@ name: Solar8000 HR delay, late group
 quantity: Delay from the end of the HR window to its stamp, in the late group of cases.
 value: 4.2
 unit: s
-spread: {sd: 0.65, text: "64% of classified cases"}
+spread: {n: 3652, sd: 0.65, text: "64% of classified cases"}
 status: measured
 study: hr-delay-groups
 about: [solar8000-hr]

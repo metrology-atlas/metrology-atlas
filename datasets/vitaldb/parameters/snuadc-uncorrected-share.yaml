@@ -1,0 +1,11 @@
+id: snuadc-uncorrected-share
+name: Recordings without SNUADC stamp corrections
+quantity: Recordings with no SNUADC stamp correction (value), out of the recordings with SNUADC (n).
+value: 3622
+unit: recordings
+spread: {n: 6350}
+display: "3,622 of 6,350 recordings with SNUADC (57%)"
+status: measured
+study: hum-snuadc-rate
+about: [snuadc-sample]
+date: 2026-10-30

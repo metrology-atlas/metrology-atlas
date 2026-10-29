@@ -1,0 +1,10 @@
+id: snuadc-uncorrected-hum
+name: Recordings given a hum rate
+quantity: Recordings without SNUADC stamp corrections that carry hum, and so get their own SNUADC rate from it.
+value: 1248
+unit: recordings
+display: "1,248 recordings"
+status: measured
+study: hum-snuadc-rate
+about: [snuadc-sample]
+date: 2026-10-30

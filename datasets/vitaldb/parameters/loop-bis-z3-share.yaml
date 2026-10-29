@@ -1,0 +1,10 @@
+id: loop-bis-z3-share
+name: BIS-SNUADC-PC loops beyond three standard errors
+quantity: Share of BIS-SNUADC-PC loops whose misclosure is more than three stated standard errors.
+value: 17
+unit: "%"
+spread: {n: 253}
+status: measured
+study: loop-closure
+about: [bis-vs-pc, bis-vs-snuadc]
+date: 2026-10-30

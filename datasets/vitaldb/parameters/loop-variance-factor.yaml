@@ -1,0 +1,15 @@
+id: loop-variance-factor
+name: Variance factors of the clock network
+quantity: >-
+  Variance factor of each measurement method in the clock-network adjustment (1 if the stated standard errors were
+  right); range over the methods with redundancy.
+unit: ratio
+spread: {min: 1.97, max: 5.19, n: 5}
+display: "2 to 5.2 by method"
+status: measured
+study: loop-closure
+about: [bis-vs-pc, bis-vs-snuadc, primus-vs-pc]
+date: 2026-10-30
+notes: >-
+  BIS steps 4.8, bursts 5.19, SNUADC resets 5.19, breath matching 3.28, PIP numerics 1.97. The stamp arithmetic has no
+  redundancy (5.76, not counted).

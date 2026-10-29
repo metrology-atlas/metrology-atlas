@@ -1,0 +1,9 @@
+id: primus-numeric-gap
+name: Primus numeric record interval
+quantity: Median time between Primus numeric records, the gap in which a last-breath value may have been computed.
+value: 7.02
+unit: s
+status: measured
+study: numerics-derivation-release
+about: [primus-numerics]
+date: 2026-10-30

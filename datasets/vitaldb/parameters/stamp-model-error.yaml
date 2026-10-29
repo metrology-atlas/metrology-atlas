@@ -2,6 +2,7 @@ id: stamp-model-error
 name: EEG–ECG timing error after the stamp model
 quantity: EEG–ECG timing error per 10-minute window with the stamp model and the SNUADC mode's constant.
 value: 0.042
+spread: {n: 2710}
 unit: s
 display: "median absolute error 42 ms, p90 150 ms; standard uncertainty 62 ms (robust SD, an upper bound); with the recording's own bursts 17 ms median, 30 ms SD"
 status: measured
