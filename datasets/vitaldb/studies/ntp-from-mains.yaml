@@ -1,0 +1,31 @@
+id: ntp-from-mains
+name: Recorder PC time adjustments from the mains hum (negative result)
+summary: >-
+  Comparing PC time (from SNUADC stamp corrections) with grid time (from the hum phase) could in principle show when
+  the recorder PC's clock is adjusted. In VitalDB it cannot: the recordings that correct often enough have hum too weak
+  to track.
+date: 2026-10-28
+status: current
+methods: [signal-borne-clocks, stamp-reading]
+clocks: [recorder-pc, snuadc-sample]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii]
+data: The 120 recordings labelled as frequent small corrections in the SNUADC mode labels; 11 of them have hum.
+background: |
+  The hum follows the SNUADC sample count, so a PC clock adjustment leaves no mark on it. PC time shows only where the
+  stamps are pulled back to the PC. Step-mode SNUADC corrects about every 2.2 h, too sparse; recordings that correct
+  often would give a dense trace of PC minus grid, in which steps (sudden) or slews (slope changes) could show. The
+  grid's own phase wanders about 10 ms per 10 minutes.
+method: Track the hum phase in 10 s blocks against the stamp corrections, in recordings that correct often.
+results: |
+  - In the 11 frequent-correction recordings with hum, the hum is too weak to track the phase at 10 s resolution, and
+    the corrections are irregular.
+  - Recordings first picked by correction count (11–19 per hour) were broken streams (stamp jumps at nearly every
+    record, 30–60 s), not frequent-correction recordings.
+discussion: |
+  Not feasible in VitalDB with this approach. The PCs' average rate against the grid can be measured
+  ([[study:mains-grid-pc-rate]]); individual adjustments cannot, so the recorder PC's offset from UTC stays unobserved.
+code:
+  - vitaldb-bench/tools/ntp_mains_pilot.py
+  - vitaldb-bench/tools/ntp_mains_pilot2.py
+  - vitaldb-bench/tools/ntp_mains_pilot3.py

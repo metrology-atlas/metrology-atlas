@@ -1,0 +1,60 @@
+id: bis-60hz-line
+name: The BIS EEG's 60 Hz line is not mains hum
+summary: >-
+  The BIS EEG carries a strong line near 60 Hz in about half of the recordings, but it does not follow the grid: it
+  wanders by about 150 ppm from minute to minute, unrelated to the grid seen through SNUADC. It cannot check the BIS
+  clock.
+date: 2026-10-28
+status: current
+methods: [signal-borne-clocks]
+techniques: [null-controls]
+clocks: [bis-clock, snuadc-sample]
+devices: [bis, snuadc]
+variables: [bis-eeg]
+data: |
+  Pilot: 30 recordings (21 with a strong line); the same-window tests on 4 recordings of 259–476 minutes. Whole
+  release: the line in 2,672 of 5,564 recordings with BIS EEG ([[study:mains-grid-pc-rate]]).
+background: |
+  If the line were mains hum, the BIS would see the grid on its own sample count as SNUADC does, and the two together
+  would give the BIS clock against SNUADC with the grid's wander cancelled.
+method: |
+  1. The line's frequency on the BIS sample count against the BIS rate from its stamp corrections.
+  2. Phase difference, BIS 60 Hz minus half the SNUADC 120 Hz phase, at common times in 10 s blocks: the grid's wander
+     cancels if both are mains. Controls: two SNUADC channels; EEG1 against EEG2.
+  3. The line's frequency minute by minute against the grid seen through SNUADC.
+results: |
+  - **Both EEG channels carry the same line** (EEG1 minus EEG2 phase cancels to about 0 ppm, 0.07–0.3 rad).
+  - **It does not lock to the grid:** BIS minus SNUADC phase leaves 1.4–4.8 rad over 13–30 min, with slopes from −99 to
+    +121 ppm against a model of about +95.
+  - **Minute by minute** the grid through SNUADC varies by 11–20 ppm (SD), the BIS line by 161–195 ppm, with rank
+    correlation +0.02 (the two-SNUADC-channel control: +0.63).
+  - Over hours its mean sits up to 140 ppm from where mains would be. BIS timing cannot explain this: it would
+    contradict the burst-checked BIS drift (within 25 ppm).
+  - Whole release: centred near 60 Hz on BIS time (median +3.9 ppm) but with an IQR of about 100 ppm, and no grouping
+    by BIS port.
+discussion: |
+  A 60 Hz-like source with its own wander, inside the BIS system or in nearby equipment. Not usable as a clock check;
+  the BIS clock rests on the burst and heartbeat evidence ([[study:shared-bursts]]).
+limitations: Same-window tests on four recordings.
+open_questions:
+  - title: "What is the BIS 60 Hz source?"
+    kind: phenomenon
+    summary: >-
+      A power supply, an impedance check, or equipment in the theatre; whether the BIS documentation names it is not
+      known.
+code:
+  - vitaldb-bench/tools/mains_hum.py
+  - vitaldb-bench/tools/bis_line_tests.py
+  - vitaldb-bench/tools/mains_phase.py
+  - vitaldb-bench/tools/bis_line_minutes.py
+  - vitaldb-bench/tools/bis_line_plot.py
+figures:
+  - id: bis-line-not-mains
+    file: bis-line-not-mains.png
+    theme: agreement and residuals
+    source: vitaldb-bench tools/bis_line_plot.py
+    caption: >-
+      Minute by minute, about each recording's median, in 4 recordings. (a) Control: two SNUADC channels' 120 Hz
+      lines move together (rank correlation +0.63). (b) The BIS 60 Hz line does not follow the grid seen through
+      SNUADC (+0.02) and wanders ten times as much.
+    alt: Two scatter plots, one tight along the diagonal and one a vertical band.

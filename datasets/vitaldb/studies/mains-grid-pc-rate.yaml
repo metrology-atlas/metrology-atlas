@@ -59,7 +59,7 @@ discussion: |
 
   This replaces the assumed PC drift ([[parameter:pc-utc-drift]], 0.1–10 ppm): the measured rates are larger. It
   gives a rate, not an offset: the PC's absolute time (its NTP steps) is not seen this way
-  (an attempt to see them through the hum failed).
+  ([[study:ntp-from-mains]] tried and failed).
 limitations: |
   The grid's own frequency wanders by 11–20 ppm from minute to minute and its hourly mean by a few ppm; each
   recording's value carries that. The grid is assumed to keep its nominal frequency on average; the release's
@@ -76,6 +76,7 @@ open_questions:
       Separating the monitor's own 240 Hz output line from the 4th mains harmonic in the same window (two close lines).
 code:
   - vitaldb-bench/tools/mains_hum.py
+  - vitaldb-bench/tools/mains_phase.py
 figures:
   - id: pc-rate-vs-grid
     file: pc-rate-vs-grid.png

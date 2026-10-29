@@ -1,0 +1,60 @@
+id: paced-bis-eeg
+name: Paced beats in the BIS EEG
+summary: >-
+  In the six paced recordings with BIS, the EEG averaged around paced beats shows beat-locked activity beyond every
+  random-time control in some 3-minute windows, and in two recordings a sharp deflection that repeats exactly at the
+  pacing period. Whether pacing artefact or the heart's own trace, it could time the BIS against SNUADC to a few ms.
+date: 2026-10-28
+status: current
+methods: [shared-events]
+techniques: [null-controls]
+clocks: [bis-clock, snuadc-sample, pacemaker]
+devices: [bis, snuadc, pacemaker]
+variables: [bis-eeg, snuadc-ecg-ii]
+data: |
+  The seven paced recordings of [[study:paced-ecg]] (paced at about 860, 1,000 and 1,204 ms); six have BIS EEG. In
+  the figure they are lettered A to F.
+background: |
+  The SNUADC ECG carries no pacing spikes (the monitor's ECG output removes them), so pacing is found by its rhythm. If
+  pacing spikes reached the BIS EEG, they would be a sharp event shared by the two chains, able to measure the BIS
+  constant directly, and with a model of each chain's impulse response even their delay difference.
+method: |
+  Paced beats: R peaks in SNUADC ECG II whose interval is within 12 ms of the pacing interval. The BIS EEG (1 Hz
+  high-pass) averaged from −1.6 to +0.6 s around each paced beat, on raw stamps, in 3-minute windows, short enough that
+  the BIS-against-SNUADC sawtooth barely moves. Control: 40 averages at random times in the same window. Width of the
+  sharpest feature at half height.
+results: |
+  - **Beat-locked activity beyond all 40 controls** (chance about 1–2 windows per recording), EEG1 and EEG2 windows:
+    A 3 and 11 of 64; B 20 and 14 of 75; C 10 and 6 of 46; D 40 and 14 of 81; E 18 and 0 of 56; F 18 and 24 of 31.
+  - **Its form varies.** In D and F, in the clearest windows, a sharp, narrow deflection of about 8–10 µV repeats
+    exactly at the pacing period; in A and E slower beat-locked waves; B and C weaker.
+  - The sharpest feature is 4–8 samples wide at half height (31–63 ms), which does not by itself tell a filtered
+    pacing spike from the heart's own electrical trace ([[study:bis-cardiac-artefact]]).
+  - An earlier summary ("no usable spikes") used medians over all windows, which hide intermittent activity.
+discussion: |
+  Paced beats leave intermittent, sometimes sharp, beat-locked activity in the BIS EEG. Whatever its source, the sharp
+  events in D and F could time the BIS against SNUADC in those recordings to a few ms: a direct check of the −0.8 s
+  constant and of the synchronisation residual.
+limitations: Six recordings; windows on raw stamps only; the source of the activity (pacing or cardiac) is not settled.
+open_questions:
+  - title: "Pacing artefact or cardiac trace?"
+    kind: next step
+    summary: >-
+      A pacing spike comes a fixed latency before the paced QRS and should be one or two samples wide at 128 Hz; the
+      cardiac trace follows the QRS shape. Aligning the windows with the stamp model would let the whole recording be
+      averaged.
+code:
+  - vitaldb-bench/tools/paced_bis_spikes.py
+  - vitaldb-bench/tools/paced_bis_spikes_control.py
+  - vitaldb-bench/tools/paced_bis_windows.py
+  - vitaldb-bench/tools/paced_bis_plot.py
+figures:
+  - id: paced-bis-averages
+    file: paced-bis-averages.png
+    theme: example traces
+    source: vitaldb-bench tools/paced_bis_plot.py
+    records: [830, 1219, 2701, 4368, 4631, 6378]
+    caption: >-
+      The BIS EEG averaged around paced beats in each recording's clearest 3-minute window (blue), against averages at
+      random times (grey, 5–95%). In D and F a sharp deflection repeats at the pacing period.
+    alt: Six panels of averaged EEG around paced beats with a grey random-time band.

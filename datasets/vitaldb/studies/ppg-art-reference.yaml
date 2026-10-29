@@ -21,6 +21,12 @@ results: |
     more than 15 ms: physiological changes that had passed as slips.
   - **Detected slips are real** in 97–100% of cases; slips inferred from ECG→PPG alone are real in only 62%.
   - **Tier A leaves about 2 ms of drift mid-tooth** (an upper bound that includes physiology).
+  - **Six further recordings, whole overlaps** (76–147 min; added 29 Oct): [[case:383]], [[case:561]], [[case:3377]],
+    [[case:5366]], [[case:5533]], [[case:6261]], where an earlier R-peak analysis had found no sawtooth against ART.
+    One shows a clear sawtooth (17 slips, tier C, creep 44 ppm; at the slips ECG→ART −1.5 ms, ART→PPG +26 ms); three
+    show slips with the teeth unresolved (tier U; ART→PPG +24 to +27 ms at the slips, ECG→ART flat); one has no
+    sawtooth (tier N); one is too noisy. The earlier null came from steps between consecutive 30-beat medians, which
+    split a slip across two steps.
 discussion: |
   Used in [[software:physiosync]] as an optional reference, arterial pressure raises confidence and rejects physiological jumps,
   but adds little coverage.
@@ -29,3 +35,4 @@ discussion: |
   output delay to small without measuring it ([[example:pulse-arrival-time]], open questions).
 code:
   - vitaldb-bench/tools/art_check.py
+  - vitaldb-bench/tools/ppg_slips_art_check.py
