@@ -17,9 +17,10 @@ timing:
   stamp_position: instant
   grid_s: 1
   bias_s: &id001
-    median: 460
-    p5: 190
-    p95: 730
+    median: 410
+    p5: 150
+    p95: 787
+    n: 4742
     scope: independent
     status: measured
   uncertainty:
@@ -27,11 +28,12 @@ timing:
     - name: turnaround between samples
       type: A
       distribution: empirical
-      u_s: 164.1337
+      u_s: 193.617
       scope: independent
   domain: records
   status: measured
-  evidence: 3-12 min after the access (modes about 4 and 9 min); the value is known later
+  evidence: 'lab timestamp minus the matched arterial access, 4,742 matched gases (lab_draw labels, 29 Oct): 2.5-13 min
+    (p5-p95), two typical delays of about 4 and 9 min; the value is known later'
 - id: lab-draw
   name: draw time from arterial access
   kind: per_recording

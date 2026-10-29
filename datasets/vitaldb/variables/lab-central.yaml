@@ -17,9 +17,10 @@ timing:
   stamp_position: instant
   grid_s: 1
   bias_s: &id001
-    median: 840
-    p5: 480
-    p95: 1440
+    median: 872
+    p5: 190
+    p95: 1684
+    n: 618
     scope: independent
     status: measured
   uncertainty:
@@ -27,11 +28,12 @@ timing:
     - name: turnaround between samples
       type: A
       distribution: empirical
-      u_s: 291.7933
+      u_s: 454.1033
       scope: independent
   domain: records
   status: measured
-  evidence: about 8-24 min after the access (median about 14; weak); result after an unrecorded turnaround
+  evidence: 'lab timestamp minus the matched arterial access, 618 matched central draws (lab_draw labels, 29 Oct): 3-28
+    min (p5-p95), median 14.5 min; weak; result after an unrecorded turnaround'
 - id: lab-draw
   name: draw time from arterial access
   kind: per_recording
