@@ -3,7 +3,7 @@ name: Pacemaker clock
 summary: The crystal of an implanted pacemaker. At a fixed pacing rate it beats at one constant interval that no
   device in the recording chain can touch, which makes it an independent reference.
 type: oscillator
-nominal: Fixed pacing interval (about 1,204, 1,000 or 860 ms in VitalDB's paced recordings)
+nominal: Fixed pacing interval (860–1,204 ms)
 description: 'Only fixed-rate (asynchronous) pacing works as a clock. A demand pacemaker resets its interval at
   every
 

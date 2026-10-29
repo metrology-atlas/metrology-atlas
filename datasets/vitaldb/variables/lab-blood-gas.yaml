@@ -1,5 +1,5 @@
 id: lab-blood-gas
-name: Blood gas result time
+name: Blood gas lab timestamp
 summary: Time stamp of a blood gas result in the lab table.
 group: Laboratory/Result times
 type: event

@@ -35,7 +35,7 @@ timing:
     p95: 0.47
     scope: structured
     status: measured
-    evidence: 'the sawtooth: stamps run ahead by up to 480 ms before each downward correction'
+    evidence: 'the sawtooth: stamps run late by up to 480 ms (stamp after the true time) before each downward correction'
   uncertainty:
     upper_bound: false
     components:
@@ -76,7 +76,7 @@ timing:
     p95: 0.47
     scope: structured
     status: measured
-    evidence: 'the sawtooth: stamps run ahead by up to 480 ms before each downward correction'
+    evidence: 'the sawtooth: stamps run late by up to 480 ms (stamp after the true time) before each downward correction'
   uncertainty:
     upper_bound: false
     components:

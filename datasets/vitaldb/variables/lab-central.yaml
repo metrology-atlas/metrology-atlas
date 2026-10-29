@@ -1,5 +1,5 @@
 id: lab-central
-name: Central lab result time
+name: Central lab timestamp
 summary: Time stamp of a central laboratory result in the lab table.
 group: Laboratory/Result times
 type: event

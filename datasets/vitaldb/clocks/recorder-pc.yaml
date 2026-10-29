@@ -3,7 +3,7 @@ name: Recorder PC clock
 summary: The Windows clock of the PC running Vital Recorder. It stamps every record, and every other clock is linked
   to it, directly or through others.
 type: software
-nominal: Windows system time, kept by network time synchronisation
+nominal: Windows time, synchronised by NTP
 description: 'Vital Recorder stamps each record on arrival with this clock, and every device link is measured against
   it. Its
 
