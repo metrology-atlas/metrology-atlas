@@ -40,6 +40,9 @@ timing:
   domain: solar8000
   status: measured
   evidence: numeric_delay labels, 6,222 recordings; window about 8 s (6-10 s), whole release 29 Oct
+  studies:
+  - numerics-derivation-release
+  - hr-delay-groups
 - id: hr-early
   name: as stamped, early group
   kind: as_stored
@@ -64,6 +67,9 @@ timing:
   domain: solar8000
   status: measured
   evidence: label delays of the early group, 1,775 recordings
+  studies:
+  - numerics-derivation-release
+  - hr-delay-groups
 - id: hr-late
   name: as stamped, late group
   kind: as_stored
@@ -88,6 +94,9 @@ timing:
   domain: solar8000
   status: measured
   evidence: label delays of the late group, 3,652 recordings; one extra 2 s poll; follows the PC
+  studies:
+  - numerics-derivation-release
+  - hr-delay-groups
 chain:
 - node: Heart rate algorithm
   kind: window

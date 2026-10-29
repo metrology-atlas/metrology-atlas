@@ -1,0 +1,87 @@
+id: numerics-derivation-release
+name: How the monitor numerics are computed, over the whole release
+summary: >-
+  The numeric-derivation pilot repeated on every recording (6,388) and the SpO2 dropout timing on 6,152. Each
+  numeric describes a short window that ends before its stamp: HR about 8 s, pleth HR about 12 beats, arterial
+  pressure 2–4 beats, CVP about 5 s, ETCO2 and PIP one breath, RR about 30 s. Solar8000 HR is truncated, not rounded,
+  in 98.6% of recordings.
+date: 2026-10-29
+status: current
+methods: [delays-and-windows]
+techniques: [null-controls]
+devices: [solar8000, primus]
+variables: [solar8000-hr, solar8000-pleth-hr, solar8000-art-numerics, solar8000-spo2, primus-numerics, snuadc-ecg-ii, snuadc-art, snuadc-pleth, primus-co2, primus-awp]
+data: |
+  The whole release, 6,388 recordings, run 28–29 Oct 2026. Numerics: no errors; recordings per numeric in the
+  table. SpO2 and pleth HR: 6,152 analysed, 236 without pleth or SpO2; 23 recordings failed on the first run (12
+  files at 100 Hz where a filter cut-off exceeded Nyquist, 11 an off-by-one at the end of a recording) and were
+  rerun after a fix, with no errors.
+background: |
+  [[study:numeric-derivation-pilot]] found the algorithm and window behind each numeric on 24 cases (231 for pleth HR),
+  and [[study:spo2-latency]] timed SpO2 from step events on 231. Under the atlas's interval convention (D10) a value
+  is stamped at the close of the interval it describes, so the window becomes the value's *support* and only the
+  delay from the window's end to the stamp is a bias. Those need release-wide values, not pilot ones.
+method: |
+  As in the pilot. For each numeric, candidate algorithms (median, mean, exponential average, 60 / mean interval,
+  waveform mean) over windows in beats or in seconds are computed from the device's own waveform and fitted to the
+  stamped values with a delay d from the window's end to the stamp, a value offset b, a scatter s, and truncation
+  or rounding; the best by likelihood wins per recording. Truncation against rounding was tested for HR, pleth HR
+  and RR only. SNUADC waveforms are on stamp-model time; Primus waveform stamps are mapped to recorder time with a
+  fitted drift.
+
+  SpO2 cannot be recomputed from one plethysmogram, so its timing comes from pulse loss and return (flat and
+  low-perfusion pleth episodes, recorder gaps excluded), with electrocautery bursts and pleth-only artefacts against
+  random times as controls.
+results: |
+  Per recording, median and IQR:
+
+  | Numeric | Recordings | Best algorithm (share) | Window it describes | Delay, window end to stamp | Value |
+  |---|---|---|---|---|---|
+  | Solar8000 HR | 6,343 | median R–R over time 46%; 60 / mean of 8 beats 23%; median of 8–10 beats 22% | about 8 s (6–10 s) | 3.25 s (1.75–4.2) | **truncated** (98.6%) |
+  | Pleth HR | 6,127 | median of beats 57%; median over time 31% | about 12 beats (10–12) | 3.4 s (2.55–4.1) | rounded (floor better in 9%) |
+  | ART systolic | 3,483 | exponential average of about 2 beats 45%; median of 4 beats or 3 s 54% | 2–4 beats | 1.25 s (0.8–1.85) | offset from SNUADC ART −4.5 to +4.2 mmHg |
+  | ART mean | 3,485 | exponential average of 4 beats 69%; waveform mean over 8 s 28% | 4 beats or about 8 s | 1.35 s (0.9–2.0) | offset −4.2 to +4.0 mmHg |
+  | ART diastolic | 3,483 | exponential average of about 2 beats 83% | 2 beats | 0.95 s (0.45–1.45) | offset −3.5 to +4.3 mmHg |
+  | CVP | 1,343 | waveform mean over time 75% | about 5 s (4–5) | 3.15 s (2.35–3.75) | offset −4.7 to +3.0 mmHg |
+  | Primus ETCO2 | 6,321 | peak of the last breath 84% | 1 breath | −2.05 s (−3.05 to −1.3), against the CO2 waveform | |
+  | Primus RR | 6,316 | 60 / mean breath interval over 20–30 s 52% | about 30 s | 6.4 s (3.8–9.4) | rounded (98.5%) |
+  | Primus PIP | 5,982 | peak airway pressure of the last breath 98% | 1 breath | 1.3 s (0.7–2.05) | |
+  | Primus PEEP | 5,975 | no clear winner | | | |
+
+  **SpO2 and pleth HR (6,152 recordings).** At pulse loss (2,635 flat and 4,703 low-perfusion episodes) the last SpO2
+  value comes a median 0.8 s after the pulse is lost (IQR −0.04 to 2.0 s); after the pulse returns, SpO2 reappears
+  a median 5.4 s later (3.7–7.7 s). Pleth HR behaves the same. Electrocautery bursts (77,693) move SpO2 no more than
+  random times do (6.7% against 5.8% of 365,768 controls). Pleth-only artefacts (9,158) do move it (28% against
+  6%), but the onset spreads over 0–37 s, too wide to give a latency.
+discussion: |
+  The pilot's picture holds over the release, with tighter delays. These numbers set the numerics' timing forms:
+  the windows are their supports (D10), the delays their biases as release distributions, and HR's truncation is a
+  value-side bias of −0.5 /min (D6). HR's delay spread is the early and late groups of [[study:hr-delay-groups]];
+  the per-case label remains its correction.
+
+  ETCO2's negative delay is not look-ahead: it is measured against the CO2 waveform, which trails the breath by
+  3.6 s ([[study:co2-sampling-line]]). The Solar8000 pressure numerics differ from the SNUADC waveform by a
+  per-recording offset of a few mmHg (scope: recording), so the two are not interchangeable without it. The SpO2
+  window is still not identified; the dropout timing is consistent with the 4.0–4.8 s delay already in the atlas.
+limitations: |
+  Mean against median, or beats against seconds, often differ little in likelihood, so the algorithm family is less
+  certain than the window length and the delay. Truncation was tested for three numerics only. The ART and CVP
+  delays are fitted within a narrow range, and their offsets mix scale and timing.
+open_questions:
+  - title: "PEEP's algorithm and negative delay"
+    kind: phenomenon
+    summary: >-
+      No algorithm wins for PEEP (median likelihood margin 4.9; windows from one breath to 60 s), and its fitted
+      delay is negative. PEEP comes from the airway pressure, which has no sampling line, so
+      [[study:co2-sampling-line]] does not explain it.
+  - title: "Pleth HR's early tail"
+    kind: phenomenon
+    summary: >-
+      The lower tail of pleth HR's delay reaches −1.8 s (p5). Probably poorly identified fits rather than a true
+      lead; to check.
+code:
+  - vitaldb-bench/tools/numeric_derivation_pilot.py
+  - vitaldb-bench/tools/numeric_derivation_agg.py
+  - vitaldb-bench/tools/numeric_derivation_readout.py
+  - vitaldb-bench/tools/spo2_event_pilot.py
+  - vitaldb-bench/tools/spo2_event_agg.py

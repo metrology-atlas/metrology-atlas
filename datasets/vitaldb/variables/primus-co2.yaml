@@ -65,8 +65,8 @@ timing:
   - primus-raw
   domain: reference
   status: measured
-  evidence: 'held-out windows against CVP, signed: robust SD 79 ms, median |error| 53 ms, 95% -262 to +272 ms (1,067 recordings,
-    37,881 windows); likely value 40 ms from the part shared with the ART check (25%)'
+  evidence: 'held-out windows against CVP, signed: robust SD 79 ms, median absolute error 53 ms, 95% -262 to +272 ms (1,067
+    recordings, 37,881 windows); likely value 40 ms from the part shared with the ART check (25%)'
   bias_s:
     name: sampling line (sidestream transport) and the 40 ms hold
     median: 3.625
@@ -77,6 +77,9 @@ timing:
     status: measured
     evidence: CO2 fall after the AWP breath start, median per recording (co2_transit, 29 Oct) plus 20 ms for the sliding
       40 ms hold
+  studies:
+  - co2-sampling-line
+  - ventilator-breath-matching
 - id: primus-shift
   name: raw stamps shifted by the release median
   kind: fixed_shift
@@ -115,6 +118,8 @@ timing:
   domain: primus
   status: measured
   evidence: 'per-recording raw lag: median 5.4 s, robust SD 1.33 s (1,067 recordings)'
+  studies:
+  - co2-sampling-line
 - id: primus-raw
   name: raw stamps
   kind: as_stored
@@ -135,5 +140,7 @@ timing:
   status: measured
   evidence: offset median 1.8 s, p5-p95 -0.7 to +5.8 s (1,067 recordings, CVP breaths), incl. AWP-CVP physiology; drifts
     +104 ppm against the PC between AWP pauses; plus the 3.6 s sampling line
+  studies:
+  - co2-sampling-line
 tags:
 - stub

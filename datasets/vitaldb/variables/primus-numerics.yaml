@@ -38,6 +38,10 @@ timing:
   status: measured
   evidence: numeric_delay labels (6,186 ETCO2, 5,894 PIP, 6,114 RR recordings); the CO2-based delays are against the CO2
     waveform, which trails the breath by 3.6 s (sampling line)
+  studies:
+  - numerics-derivation-release
+  - co2-sampling-line
+  - numeric-delay-variability
 - id: primus-num
   name: as stamped
   kind: as_stored
@@ -62,6 +66,9 @@ timing:
   status: measured
   evidence: 'label delays from window end: ETCO2 1.55, PIP 4.6, RR 4.3 s (medians); 7 s polls; ETCO2 and PIP one breath,
     RR about 30 s'
+  studies:
+  - numerics-derivation-release
+  - co2-sampling-line
 tags:
 - stub
 delays:

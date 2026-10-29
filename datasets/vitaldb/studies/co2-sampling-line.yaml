@@ -1,0 +1,71 @@
+id: co2-sampling-line
+name: The CO2 sampling-line delay
+summary: >-
+  Breath by breath, the stored Primus CO2 waveform trails the airway pressure by a median 3.60 s (IQR 3.45–3.79 s):
+  the time the gas takes to travel down the sidestream sampling line. It is steady within a recording and across the
+  release, and it explains why the ETCO2 numeric seemed to come before its breath.
+date: 2026-10-29
+status: current
+methods: [delays-and-windows]
+techniques: [beat-matching]
+clocks: [primus-clock]
+devices: [primus]
+variables: [primus-co2, primus-awp, primus-numerics]
+data: |
+  The whole release: 6,388 recordings, up to the first 60 min of each. 6,341 gave a lag; 28 had no AWP or CO2
+  waveform, and 19 gave no matched breaths. No errors.
+background: |
+  Sidestream capnography draws gas from the airway down a thin tube to the analyser, so the CO2 waveform describes
+  the airway as it was some seconds earlier. The whole-release numeric derivation
+  ([[study:numerics-derivation-release]]) found the ETCO2 numeric stamped about 2 s *before* the breath on the CO2
+  waveform it describes, which read literally is look-ahead. Both waveforms come from the Primus with their own
+  record stamps, so their difference is free of clock error between devices.
+method: |
+  On each recording, the start of inspiration is marked on the airway pressure (AWP) waveform where it rises through
+  30% of its local range, and the arrival of fresh gas where the CO2 waveform falls through 50% of its range (the
+  local range is the 5th to 95th percentile over a sliding 20 s; flat stretches are skipped, and crossings closer
+  than 1.5 s are merged). Each track's sample times come from its own record stamps. The lag of each breath is the
+  first CO2 fall at least 0.3 s after the AWP rise, kept if it is between 0.3 and 10 s; the per-recording value is
+  the median over breaths. The start of expiration (AWP falling through 50%, CO2 rising through 50%) gives a
+  second, independent marker.
+results: |
+  | | Value |
+  |---|---|
+  | Lag per recording, median | **3.60 s** |
+  | IQR; p10–p90; p5–p95 | 3.45–3.79 s; 2.62–3.98 s; 0.85–4.05 s |
+  | Spread between recordings (robust SD from the IQR) | 0.25 s |
+  | Within a recording, middle half of breaths | within 0.08 s (median; p90 2.1 s) |
+  | Expiration marker, median (p10–p90) | 3.86 s (0.84–4.27 s) |
+  | Recordings below 2.5 s | 9.6% (610) |
+  | Median in each block of 800 recordings | 3.59–3.63 s |
+
+  - **Steady over the release** and by Primus recorder port (port medians 3.47–3.66 s).
+  - **It accounts for the ETCO2–PIP gap.** Per recording, PIP's fitted delay minus ETCO2's is a median 0.17 s longer
+    than the measured lag (IQR −0.97 to +0.8 s). The two hardly correlate per recording (r = 0.09), because the
+    numeric fit's delays are coarse; on average they agree.
+discussion: |
+  The ETCO2 numeric is not look-ahead. The stored CO2 waveform runs about 3.6 s behind the breath, so a value matched
+  to that waveform appears to come early; against the breath itself ETCO2's delay is positive, close to PIP's.
+
+  For the atlas, the CO2 waveform carries the sampling line as a bias of its own in every timing form, including
+  the one after breath matching: breath matching aligns the Primus *clock* (through AWP), but the CO2 content still
+  trails the airway by 3.6 s. Between recordings it spreads by about 0.25 s, which enters the uncertainty with scope
+  'recording'. The atlas's earlier summary ("the sampling line adds at least 1 s") understated it.
+limitations: |
+  The AWP rise marks the ventilator's breath, not the gas reaching the sampling point; the lag includes the short
+  path from the Y-piece to the sampling port. Only the first 60 min of each recording were used. The crossing
+  levels depend on the waveform's shape; a different level shifts both markers similarly but not exactly.
+open_questions:
+  - title: "Recordings with a short lag"
+    kind: phenomenon
+    summary: >-
+      About 10% of recordings (610) give a lag below 2.5 s, some below 1 s. Candidates: spontaneous breathing (the
+      AWP rise no longer marks the gas flow), a missed or mismatched marker, or a different sampling line or
+      monitor setup. Not yet examined.
+  - title: "PEEP's negative delay"
+    kind: phenomenon
+    summary: >-
+      PEEP is read from the airway pressure, which has no sampling line, yet its fitted delay is also negative
+      ([[study:numerics-derivation-release]]). The sampling line does not explain it.
+code:
+  - vitaldb-bench/tools/co2_sampling_line.py
