@@ -44,6 +44,13 @@ credit, link to the licence, and say what you changed. Please cite the atlas and
 
 ### Citing the atlas
 
+The atlas is described in:
+
+Goodwin, A. J. (2026). The Metrology Atlas: describing recorded physiological data as a measurement system, with VitalDB as a first application. arXiv:2610.29001.
+[doi:10.48550/arXiv.2610.29001](https://doi.org/10.48550/arXiv.2610.29001)
+
+The archived atlas itself:
+
 Goodwin, A. J. (2026). *VitalDB metrology atlas* [Data set]. Zenodo.
 [doi:10.5281/zenodo.23494768](https://doi.org/10.5281/zenodo.23494768)
 

@@ -10,8 +10,11 @@ question: |
   operation?
 why: |
   Pulse arrival time (PAT) is a difference of two event times taken from two signals, so any delay or drift between
-  them goes straight into it. ECG and arterial pressure come through the same SNUADC converter and stay aligned
-  ([[observation:snuadc-one-clock]], [[study:ppg-art-reference]]). The PLETH does not, in two ways:
+  them goes straight into it. ECG and arterial pressure are sampled together by the SNUADC, so its clock cannot move
+  one against the other ([[observation:snuadc-one-clock]]). Both are the monitor's analogue outputs, so a difference
+  in the monitor's own processing delays would still pass into an arterial-line PAT; it has not been measured, but
+  the arterial line's physiological R-to-upstroke delay bounds it to small ([[study:ppg-art-reference]]). The PLETH
+  differs in two ways:
 
   - **a sawtooth**: its delay behind the ECG creeps at 18–52 ppm and jumps back by one 33.3 ms frame at each slip,
     every 11–31 minutes ([[observation:ppg-sawtooth]], [[study:ppg-sawtooth]]);
@@ -128,6 +131,16 @@ open_questions:
       In some stretches no slip comes although several were due, and the delay is flat
       ([[study:ppg-sawtooth-pauses]]). The model treats the stretch before and after a pause as creep then hold, of
       unknown length, which leaves up to one frame of uncertainty there.
+  - title: "ECG and arterial-line outputs may differ in delay inside the monitor"
+    kind: assumption
+    summary: >-
+      The SNUADC records the monitor's analogue outputs, not the patient, so sharing a converter aligns their sampling
+      but not the monitor's processing before it. A difference in filtering or buffering between the ECG and
+      invasive-pressure outputs would go straight into the arterial-line PAT (223 ms) and into the arterial check on
+      the sawtooth. The converter's own channel skew is below a millisecond (it reads its channels in turn). Settled by
+      the monitor's documentation of its analogue-output delays, a simulator feeding one event to both, or, from the
+      data, the phase of the monitor's 240 Hz output-update line where it shows in both the ECG and the arterial
+      pressure (raised by the R-peak timing session).
   - title: "Pairing by the modal delay in the example itself"
     kind: next step
     summary: >-
@@ -141,7 +154,12 @@ open_questions:
       finger PAT for anaesthetised adults from studies that sampled ECG and PPG on one clock
       ([[study:ppg-offset-reference]]). Differences between patients and changes within a case are measured; the
       absolute level of every case moves with the adopted value. It implies a finger-minus-radial difference of about
-      90 ms foot to foot, which a literature value could check.
+      90 ms foot to foot, which a literature value could check. An upper bound comes from the data: PLETH's foot lags
+      the arterial foot by the device delay plus the finger-minus-radial transit, which is positive, so the device
+      delay cannot exceed that lag. In the census's 2,900 cases with an arterial line, the lag's case median is 475 ms
+      and 98.5% of cases lie above 385 ms; most of the 43 below have a late, unsteady arterial foot (a damped line or
+      a missed foot), and the cleanest sit within a few milliseconds of 385 ms ([[study:pat-offset-census]]; check
+      suggested by the R-peak timing session).
   - title: "What plausible PAT range should be shown for anaesthetised adults?"
     kind: assumption
     summary: >-

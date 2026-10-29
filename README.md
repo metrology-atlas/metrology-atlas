@@ -14,6 +14,8 @@ as issues or in Discussions here.
 Archived VitalDB atlas (all versions; v0.1.0 is [10.5281/zenodo.23494769](https://doi.org/10.5281/zenodo.23494769)).
 This software, v0.2.0: [10.5281/zenodo.23488888](https://doi.org/10.5281/zenodo.23488888).
 
+Paper: Goodwin, A. J. (2026). *The Metrology Atlas: describing recorded physiological data as a measurement system, with VitalDB as a first application*. [arXiv:2610.29001](https://arxiv.org/abs/2610.29001).
+
 The engine knows nothing about any one dataset. A dataset is a folder of YAML files, one per item:
 
 ```text

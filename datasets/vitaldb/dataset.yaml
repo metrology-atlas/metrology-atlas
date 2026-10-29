@@ -196,7 +196,7 @@ forbidden_patterns:
   - pattern: '\b\d{4}\.vital\b'
     why: name a case only deliberately, as [[case:1234]]
 notice: |
-  **Pre-release, open for review (v0.1.0, October 2026).** This first public version accompanies a preprint and is
+  **Pre-release, open for review (v0.1.0, October 2026).** This first public version accompanies a preprint ([arXiv:2610.29001](https://arxiv.org/abs/2610.29001)) and is
   released for review by the community and the dataset's custodians ahead of a peer-reviewed journal version.
   Comments are welcome as [issues or discussions](https://github.com/metrology-atlas/metrology-atlas) on GitHub.
 

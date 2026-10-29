@@ -24,5 +24,8 @@ results: |
 discussion: |
   Used in [[software:physiosync]] as an optional reference, arterial pressure raises confidence and rejects physiological jumps,
   but adds little coverage.
+  Arterial pressure and the PLETH reach the SNUADC as the monitor's analogue outputs. Sharing the converter aligns
+  their sampling, not any processing inside the monitor; the 212 ms R-to-upstroke delay bounds an ECG-to-arterial
+  output delay to small without measuring it ([[example:pulse-arrival-time]], open questions).
 code:
   - vitaldb-bench/tools/art_check.py
