@@ -10,12 +10,24 @@ timing:
 - id: invos-fms
   name: as stamped
   default: true
-  delay_s:
-  - 1.0
-  - 100.0
-  interval_s:
-  - 1.0
-  - 10.0
+  kind: as_stored
+  support_s:
+  - 1
+  - 10
+  stamp_position: unknown
+  bias_s:
+    name: 'not measured: the clock is not synchronised'
+    value: 0
+    status: assumed
+  uncertainty:
+    components:
+    - name: unsynchronised clock
+      type: B
+      distribution: rectangular
+      u_s: 28.5788
+      scope: recording
+      status: assumed
+      evidence: the legacy range 1-100 s
   domain: invos-fms
   status: estimated
   evidence: not synchronised; FMS flow start -> CVP rise 32 s median (plausible); Invos uninformative

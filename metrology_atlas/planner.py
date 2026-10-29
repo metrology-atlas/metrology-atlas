@@ -6,7 +6,8 @@ form into a bias and a standard uncertainty (framework spec of 28 Oct 2026):
 
 - a corrected form is not shifted (bias 0, D5); a fixed shift subtracts the release median, known in advance; an
   as-stored form is not shifted and its bias stays as a systematic offset, reported apart from the spread;
-- ``sigma = sqrt(sum u_c^2)``, the signals taken as independent (shared errors come with stage 4b);
+- for each pair of signals, ``sqrt(u_a^2 + u_b^2 - 2 cov)``, where ``cov`` sums the products of the components they share
+  (the same ``shared_with``: one clock, one correction), which cancel (GUM 5.2); ``sigma`` is the largest pair;
 - coherent band ``0.1325 / sigma``; finest useful shared grid ``sqrt(12) * sigma``;
 - latency floor: the latest the data can arrive after the close of what they describe (the availability rule);
 - signals in one clock domain share their drift; across domains the longest window before drift adds another
@@ -29,11 +30,14 @@ def planner_form(f: dict, ds) -> dict:
     """What the page's script needs of one resolved timing form."""
     x, y = chart_xy(f)
     return {"id": f["id"], "name": f["name"], "default": f["default"], "kind": f["kind"], "uses_future": f["uses_future"],
-            "legacy": f["legacy"], "synthetic": f["synthetic"], "bias": f["bias"], "shift": f["shift_s"],
+            "bias": f["bias"], "shift": f["shift_s"],
             "removes": f["removes"], "u_c": f["u_c"], "upper_bound": f["upper_bound"], "likely": f["likely_u"],
             "latency": f["latency_s"], "support_hi": (f["support"] or [0, 0])[1], "domain": f["domain"],
             "status": f["status"], "evidence": f["evidence"], "correction": f["correction"], "corrects": f["corrects"],
             "delay": x, "interval": y, "chart_key": f["id"] + "|" + json.dumps([x, y]),
+            "shared": {k: round(sum(c["u_s"] ** 2 for c in f["components"] if c.get("shared_with") == k and not c.get("included_in")) ** 0.5, 6)
+                       for k in {c.get("shared_with") for c in f["components"] if c.get("shared_with")}},
+            "unknown_scope": sum(1 for c in f["components"] if c["scope"] == "unknown" and not c.get("shared_with")),
             "studies": [{"name": ds.items["study"][x]["name"], "href": f"studies/{x}.html"} for x in f["studies"]]}
 
 PAGE = r"""---
@@ -58,8 +62,10 @@ timing of each signal in this atlas, not a fit to your data.
     - **Corrected forms are not shifted**: the correction has already removed the bias. A **fixed shift** subtracts
       the release median, known in advance, so it also works in real time. A form **as stored** is not shifted: its
       bias stays, shown apart as a systematic offset.
-    - **Relative timing error** `σ = √(Σ u²)` over the chosen signals, taken as independent (errors they share, such
-      as one clock, are not yet cancelled). Where a correction's uncertainty is an upper bound, σ is one too.
+    - **Relative timing uncertainty** of two signals: `√(u_a² + u_b² − 2·cov)`, where the covariance comes from the
+      error components they share (one clock, one correction), which cancel. σ is the largest over the chosen pairs.
+      Components whose sharing is unknown are taken as independent. Where a correction's uncertainty is an upper
+      bound, σ is one too.
     - **Coherent band** `0.1325 / σ`: the −3 dB frequency of a Gaussian timing blur. Cross-modal structure faster
       than this is smeared.
     - **Finest useful grid** `√12 · σ`: a shared time grid finer than this adds no cross-channel information.
@@ -161,7 +167,17 @@ CODE = r"""
       bind(); drawChart(rows); return;
     }
     const terms = rows.map(({s, f}) => ({s, f, sd: f.u_c, bias: f.bias.mid, v: f.u_c * f.u_c}));
-    const sigma = Math.sqrt(terms.reduce((a, t) => a + t.v, 0));
+    // relative uncertainty of two signals: errors they share (same clock, correction ...) cancel (GUM 5.2)
+    const shared = (a, b) => Object.keys(a.f.shared).filter((k) => k in b.f.shared).reduce((c, k) => c + a.f.shared[k] * b.f.shared[k], 0);
+    const pairSd = (a, b) => Math.sqrt(Math.max(a.v + b.v - 2 * shared(a, b), 0));
+    let sigma = 0, cancelled = [];
+    for (let i = 0; i < terms.length; i++) for (let j = i + 1; j < terms.length; j++) {
+      sigma = Math.max(sigma, pairSd(terms[i], terms[j]));
+      const ks = Object.keys(terms[i].f.shared).filter((k) => k in terms[j].f.shared);
+      if (ks.length) cancelled.push(esc(terms[i].s.name) + ' and ' + esc(terms[j].s.name) + ' share ' + ks.map(esc).join(', '));
+    }
+    const unknownShare = rows.reduce((a, r) => a + r.f.unknown_scope, 0);
+    const tv = terms.reduce((a, t) => a + t.v, 0);
     const band = sigma > 0 ? 0.1325 / sigma : Infinity, grid = SQ12 * sigma;
     const latency = Math.max(...rows.map((r) => r.f.latency));
     const oldest = Math.max(...rows.map((r) => r.f.latency + r.f.support_hi));
@@ -195,9 +211,9 @@ CODE = r"""
     const raw = rows.filter((r) => r.s.forms.length > 1 && !r.f.default && !(realtime && r.s.forms.find((g) => g.default)?.uses_future));
     if (raw.length) warn.push('Using a less-corrected form for ' + raw.map((r) => esc(r.s.name)).join(', ') + '; the default form lines up better.');
     if (offset > 0) warn.push('Stamps used as stored keep their bias: a systematic offset of up to ' + fmt(offset) + ' between these signals, not included in σ. Shift them (fixed shift) or correct them to remove it.');
-    const leg = rows.filter((r) => r.f.legacy);
-    if (leg.length) warn.push('Not yet re-evaluated in bias and uncertainty terms (old ranges read as uniform): ' + leg.map((r) => esc(r.s.name)).join(', ') + '.');
     if (realtime) warn.push('Real-time use: corrections fitted on the whole recording are left out.');
+    if (cancelled.length) warn.push('Shared errors cancel between signals: ' + cancelled.join('; ') + '.');
+    if (unknownShare) warn.push(unknownShare + ' error component' + (unknownShare > 1 ? 's' : '') + ' with unknown sharing are taken as independent, so σ may be an overestimate.');
     let res = '';
     if (resolveMs) { const n = Math.ceil(Math.pow(sigma / (resolveMs / 1000), 2)); res = '<div class="tp-card"><b>' + n + '</b><span>events to average to resolve ' + resolveMs + ' ms (random part only; a bias does not average away)</span></div>'; }
 
@@ -216,13 +232,14 @@ CODE = r"""
       '<li><strong>Latency:</strong> a feature at time <em>t</em> can only use windows that ended ' + fmt(latency) + ' before <em>t</em>.</li>' +
       '<li><strong>Line each signal up first:</strong> ' + terms.map((t) => esc(t.s.name) + ': ' + (
         t.f.kind === 'per_recording' ? 'apply its ' + esc(t.f.correction || 'correction') + (t.f.removes ? ' (it removes ' + fmt(t.f.removes[0]) + '–' + fmt(t.f.removes[1]) + (t.f.uses_future ? '; fitted on the whole recording' : '') + ')' : (t.f.uses_future ? ' (fitted on the whole recording)' : '')) :
-        t.f.kind === 'fixed_shift' ? 'shift back by ' + fmt(t.f.shift) + ' (' + esc(t.f.correction || 'a fixed shift') + ', known in advance)' :
-        (t.f.bias.hi > 0 ? 'no shift: its stamps are late by ' + fmt(t.f.bias.lo) + '–' + fmt(t.f.bias.hi) + ', median ' + fmt(t.f.bias.mid) : 'no shift'))).join('; ') + '.</li></ul>' +
+        t.f.kind === 'fixed_shift' ? (t.f.shift < 0 ? 'shift forward by ' + fmt(-t.f.shift) : 'shift back by ' + fmt(t.f.shift)) + ' (' + esc(t.f.correction || 'a fixed shift') + ')' :
+        (t.f.bias.mid > 0 ? 'no shift: its stamps are late by ' + fmt(t.f.bias.lo) + '–' + fmt(t.f.bias.hi) + ', median ' + fmt(t.f.bias.mid) :
+         t.f.bias.mid < 0 ? 'no shift: its stamps come early by ' + fmt(-t.f.bias.hi) + '–' + fmt(-t.f.bias.lo) + ', median ' + fmt(-t.f.bias.mid) + ' (look-ahead)' : 'no shift'))).join('; ') + '.</li></ul>' +
       '<h3>Where the error comes from, and how we know</h3>' +
-      '<table><thead><tr><th>Signal</th><th>Form</th><th>Bias left</th><th>Uncertainty (1 SD)</th><th>Share of σ²</th><th>Real time</th><th>Clock domain</th><th>Evidence</th></tr></thead><tbody>' +
+      '<table><thead><tr><th>Signal</th><th>Form</th><th>Bias left</th><th>Uncertainty (1 SD)</th><th>Share of the variance</th><th>Real time</th><th>Clock domain</th><th>Evidence</th></tr></thead><tbody>' +
       terms.sort((a, b) => b.v - a.v).map((t) => '<tr><td><a href="' + t.s.href + '">' + esc(t.s.name) + '</a></td><td>' + esc(t.f.name) +
-        (t.f.status !== 'measured' ? ' <em>(' + t.f.status + ')</em>' : '') + (t.f.legacy ? ' <em>(old range)</em>' : '') + '</td><td>' + (t.f.bias.hi > 0 ? fmt(t.f.bias.mid) : '0') + '</td><td>' + (t.f.upper_bound ? '≤ ' : '') + fmt(t.sd) + (t.f.likely ? ' (likely ' + fmt(t.f.likely) + ')' : '') + '</td><td>' +
-        (sigma > 0 ? Math.round(100 * t.v / (sigma * sigma)) : 0) + '%</td><td>' + (t.f.uses_future ? 'no' : 'yes') + '</td><td>' + (D.domains[t.f.domain]?.href ? '<a href="' + D.domains[t.f.domain].href + '">' + esc(D.domains[t.f.domain].name) + '</a>' : esc(D.domains[t.f.domain]?.name || t.f.domain)) +
+        (t.f.status !== 'measured' ? ' <em>(' + t.f.status + ')</em>' : '') + '</td><td>' + (t.f.bias.mid !== 0 ? fmt(t.f.bias.mid) : '0') + '</td><td>' + (t.f.upper_bound ? '≤ ' : '') + fmt(t.sd) + (t.f.likely ? ' (likely ' + fmt(t.f.likely) + ')' : '') + '</td><td>' +
+        (tv > 0 ? Math.round(100 * t.v / tv) : 0) + '%</td><td>' + (t.f.uses_future ? 'no' : 'yes') + '</td><td>' + (D.domains[t.f.domain]?.href ? '<a href="' + D.domains[t.f.domain].href + '">' + esc(D.domains[t.f.domain].name) + '</a>' : esc(D.domains[t.f.domain]?.name || t.f.domain)) +
         '</td><td>' + esc(t.f.evidence) + (t.f.studies.length ? '<br>' + t.f.studies.map((x) => '<a href="' + x.href + '">' + esc(x.name) + '</a>').join(', ') : '') + '</td></tr>').join('') +
       '</tbody></table>' + pairs(terms);
     bind();
@@ -251,9 +268,9 @@ CODE = r"""
   function pairs(terms) {
     if (terms.length < 3) return '';
     const ts = [...terms].sort((a, b) => a.s.name.localeCompare(b.s.name));
-    return '<h3>Pair by pair</h3><p>Relative timing error (1 SD) for each pair alone.</p><table><thead><tr><th></th>' +
+    return '<h3>Pair by pair</h3><p>Relative timing uncertainty (1 SD) for each pair alone, shared errors cancelled. σ above is the largest of these.</p><table><thead><tr><th></th>' +
       ts.map((t) => '<th>' + esc(t.s.name) + '</th>').join('') + '</tr></thead><tbody>' +
-      ts.map((a) => '<tr><th>' + esc(a.s.name) + '</th>' + ts.map((b) => '<td>' + (a === b ? '—' : fmt(Math.sqrt(a.v + b.v))) + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
+      ts.map((a) => '<tr><th>' + esc(a.s.name) + '</th>' + ts.map((b) => '<td>' + (a === b ? '—' : fmt(Math.sqrt(Math.max(a.v + b.v - 2 * Object.keys(a.f.shared).filter((k) => k in b.f.shared).reduce((c, k) => c + a.f.shared[k] * b.f.shared[k], 0), 0)))) + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
   }
   function bind() {
     out.querySelectorAll('input[name=tp-tol]').forEach((el) => el.addEventListener('change', () => { tol = +el.value; drawOut(); }));

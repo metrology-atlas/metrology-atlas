@@ -56,7 +56,7 @@ STATUS = ("measured", "derived", "estimated", "assumed", "withdrawn", "supersede
 OBS_STATUS = ("established", "likely", "open", "withdrawn")
 STUDY_STATUS = ("current", "draft", "open", "superseded", "withdrawn")
 ANCHOR_BASIS = ("tested", "convention", "assumption", "open")
-from metrology_atlas.timing import DISTRIBUTIONS, POSITIONS, SCOPES
+from metrology_atlas.timing import CORRELATIONS, DISTRIBUTIONS, POSITIONS, SCOPES
 from metrology_atlas.timing import KINDS as FORM_KINDS
 
 FIGURE = (
@@ -123,7 +123,13 @@ COMPONENT = (
     Field("scope", "enum", required=True, choices=SCOPES,
           help="What shares it (D9): independent per stamp; structured over a time scale; one recording; a shared "
                "clock, link, correction or group; the whole release; or unknown."),
-    Field("length_s", "number", help="For scope 'structured': the correlation length in seconds."),
+    Field("length_s", "number", help="For scope 'structured': the correlation scale in seconds (its meaning depends on "
+                                     "`correlation`)."),
+    Field("correlation", "enum", choices=CORRELATIONS,
+          help="Shape of the error correlation over time, as in FIDUCEO effects tables (Mittaz et al. 2019): exponential "
+               "(exp(-dt / length)), rectangular (1 within a block of `length_s`, e.g. one correction cycle, 0 across), "
+               "triangular (1 - dt / length), bell (Gaussian, length = SD), or unknown. Default for 'structured': "
+               "exponential."),
     Field("shared_with", "str", help="For scope 'shared': what shares it."),
     Field("included_in", "str", help="Name of another component that already contains this one (not added again)."),
     Field("status", "enum", choices=STATUS),
@@ -191,12 +197,13 @@ TIMING = (
     Field("uncertainty", "obj", fields=UNCERTAINTY, help="The standard uncertainty and its components (GUM)."),
     Field("uses_future", "bool", help="True when the correction is fitted on data after the stamp (a whole-recording "
                                       "fit), so it cannot run in real time."),
-    Field("look_ahead", "obj", fields=(Field("lead_s", "range", required=True), Field("note", "text")),
+    Field("look_ahead", "obj", fields=(Field("lead_s", "range", required=True), Field("note", "text"),
+                                       Field("basis", "enum", choices=("real", "apparent"),
+                                             help="real (default): the stamp can come before the value could exist; "
+                                                  "apparent: the early tail comes from how the delay was measured "
+                                                  "(the reference's own physiology, poorly fitted recordings), "
+                                                  "shown as a note, not flagged.")),
           help="When the stamp can sit before the close (a value stamped before it could exist): by how much."),
-    Field("delay_s", "range",
-          help="Legacy (before the VIM/GUM reframe): delay from the end of the interval to the stamp, [low, high] s."),
-    Field("interval_s", "range", help="Legacy: width of the interval one value or sample stands for, [low, high] s."),
-    Field("corrected_delay_s", "range", help="Legacy: the delay a correction removes, [low, high] s."),
     Field("correction", "str", help="What the correction is, in a few words."),
     Field("corrects", "strs", help="Ids of this signal's other forms that this one improves on (drawn as arrows)."),
     Field("domain", "str", required=True, help="Clock domain (dataset.yaml `domains`) whose drift remains."),
@@ -496,8 +503,6 @@ class Dataset:
     """(kind, id) -> the file it came from."""
     warnings: list[str] = field(default_factory=list)
     """Things worth fixing that do not stop a build (for example code not yet committed)."""
-    legacy_timing: list[str] = field(default_factory=list)
-    """Timing forms still in the pre-reframe fields."""
 
     def get(self, kind: str, id_: str) -> dict | None:
         """The item of a kind with the given id, or None."""

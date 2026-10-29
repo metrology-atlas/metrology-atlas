@@ -12,31 +12,128 @@ timing:
 - id: primus-sync
   name: after breath matching
   default: true
-  delay_s:
-  - 0.055
-  - 0.187
-  interval_s:
-  - 0.016
-  - 0.016
-  domain: reference
-  status: measured
-  evidence: 'leave-one-out error 55 ms median, p90 187 ms, a line per stretch between AWP pauses (1,067 recordings with CVP, tools/primus_sync_accuracy.py); 74 ms with one slope per recording'
-  corrected_delay_s:
-  - 0.6
-  - 5.1
-  correction: breath matching to SNUADC
+  kind: per_recording
+  uses_future: true
+  support_s: &id001
+  - 0.04
+  - 0.04
+  stamp_position: close
+  grid_s: 0.016
+  removes_bias_s:
+    median: 1.787
+    p5: -0.693
+    p95: 5.782
+    n: 1067
+    scope: recording
+    status: measured
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording; includes airway-to-CVP physiology
+  uncertainty:
+    upper_bound: true
+    interval95_s:
+    - -0.262
+    - 0.272
+    likely_u_s: 0.2553
+    components:
+    - name: breath matching within the recording (a line per stretch between AWP pauses)
+      type: A
+      distribution: empirical
+      u_s: 0.0766
+      scope: structured
+      length_s: 420
+      correlation: exponential
+      shared_with: Primus breath matching
+      evidence: correlation length 7 min (stage 4b); the same correction for AWP and CO2, so it cancels between them
+    - name: the recording's constant
+      type: A
+      distribution: empirical
+      u_s: 0.0121
+      scope: recording
+      shared_with: Primus breath matching
+    - name: sampling line, between recordings
+      type: A
+      distribution: empirical
+      u_s: 0.252
+      scope: recording
+    - &id002
+      name: hold position on the sliding 40 ms update grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0115
+      scope: independent
+  correction: breath matching to SNUADC (a slope and an offset per AWP stretch)
   corrects:
   - primus-raw
-- id: primus-raw
-  name: raw stamps
-  delay_s:
-  - 0.6
-  - 5.1
-  interval_s:
-  - 0.016
-  - 0.016
+  domain: reference
+  status: measured
+  evidence: 'held-out windows against CVP, signed: robust SD 79 ms, median |error| 53 ms, 95% -262 to +272 ms (1,067 recordings,
+    37,881 windows); likely value 40 ms from the part shared with the ART check (25%)'
+  bias_s:
+    name: sampling line (sidestream transport) and the 40 ms hold
+    median: 3.625
+    p5: 0.874
+    p95: 4.073
+    n: 6341
+    scope: recording
+    status: measured
+    evidence: CO2 fall after the AWP breath start, median per recording (co2_transit, 29 Oct) plus 20 ms for the sliding
+      40 ms hold
+- id: primus-shift
+  name: raw stamps shifted by the release median
+  kind: fixed_shift
+  support_s: *id001
+  stamp_position: close
+  grid_s: 0.016
+  removes_bias_s: &id003
+    median: 5.41
+    p5: 2.93
+    p95: 9.41
+    n: 1067
+    scope: recording
+    status: measured
+    evidence: 'the AWP lag plus the CO2 sampling line (3.6 s): sums of medians and of the tails, approximate'
+  uncertainty:
+    upper_bound: true
+    components:
+    - name: between recordings (includes airway-to-CVP physiology)
+      type: A
+      distribution: empirical
+      u_s: 1.325
+      scope: recording
+      shared_with: Primus clock
+    - name: drift within a stretch (+104 ppm against the PC)
+      type: B
+      distribution: unknown
+      u_s: 0.3
+      scope: unknown
+      status: estimated
+      shared_with: Primus clock
+      evidence: about 0.4 s per hour of stretch; not yet measured as a spread
+    - *id002
+  correction: release median, known in advance
+  corrects:
+  - primus-raw
   domain: primus
   status: measured
-  evidence: offset p10-p90 0.6-5.1 s, median 1.8 s (1,061 recordings, examples/ppv-by-breath), incl. AWP-CVP physiology; drifts +104 ppm against the PC between AWP pauses
+  evidence: 'per-recording raw lag: median 5.4 s, robust SD 1.33 s (1,067 recordings)'
+- id: primus-raw
+  name: raw stamps
+  kind: as_stored
+  support_s: *id001
+  stamp_position: close
+  grid_s: 0.016
+  bias_s: *id003
+  uncertainty:
+    components:
+    - name: between recordings (includes airway-to-CVP physiology)
+      type: A
+      distribution: empirical
+      u_s: 1.325
+      scope: recording
+      shared_with: Primus clock
+    - *id002
+  domain: primus
+  status: measured
+  evidence: offset median 1.8 s, p5-p95 -0.7 to +5.8 s (1,067 recordings, CVP breaths), incl. AWP-CVP physiology; drifts
+    +104 ppm against the PC between AWP pauses; plus the 3.6 s sampling line
 tags:
 - stub

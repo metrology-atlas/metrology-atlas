@@ -8,7 +8,7 @@ import yaml
 from test_engine import _dataset
 
 from metrology_atlas import AtlasError, load, write_site
-from metrology_atlas.timing import SQ12, forms, resolve
+from metrology_atlas.timing import resolve
 
 DOMAINS = [{"id": "ref", "name": "Reference"}, {"id": "dev", "name": "Device clock"}]
 
@@ -56,21 +56,16 @@ def test_current_forms_resolve():
     assert lab["latency_s"] == pytest.approx(5.25)              # the data still arrived that late
 
 
-def test_legacy_forms_keep_their_numbers_without_the_wrong_shift():
-    raw = {"id": "r", "name": "raw", "delay_s": [0.53, 1.05], "interval_s": [0.0078, 0.0078], "domain": "x",
-           "status": "measured", "evidence": "E.", "default": True}
-    sync = {"id": "y", "name": "sync", "delay_s": [0.017, 0.042], "interval_s": [0.0078, 0.0078],
-            "corrected_delay_s": [0.53, 1.05], "domain": "x", "status": "measured", "evidence": "E.", "corrects": ["r"]}
-    r, y = resolve(raw), resolve(sync)
-    assert r["legacy"] and r["kind"] == "as_stored" and r["bias"]["mid"] == pytest.approx(0.79)
-    assert r["u_c"] == pytest.approx(math.hypot(0.52 / SQ12, 0.0078 / SQ12))
-    assert y["kind"] == "per_recording" and y["shift_s"] is None and y["bias"]["mid"] == 0
-    # a signal with only a raw default gains a named fixed shift, which becomes the default
-    fs = forms({"timing": [raw]})
-    assert [f["id"] for f in fs] == ["r", "r-shift"] and fs[1]["default"] and not fs[0]["default"]
-    assert fs[1]["shift_s"] == pytest.approx(0.79) and fs[1]["kind"] == "fixed_shift"
-    # with a correction present, the default stays where it was
-    assert next(f for f in forms({"timing": [dict(raw, default=False), dict(sync, default=True)]}) if f["default"])["id"] == "y"
+def test_retired_fields_are_refused(tmp_path):
+    form = {**AS_STORED, "delay_s": [0, 1]}
+    with pytest.raises(AtlasError) as err:
+        load(_with_domains(_dataset(tmp_path, **_signal([form]))))
+    assert any("retired in schema 0.3" in p for p in err.value.problems), err.value.problems
+
+
+def test_early_stamps_add_no_latency():
+    f = resolve({**LABEL, "removes_bias_s": {"median": -0.8, "p5": -0.97, "p95": -0.6}})
+    assert f["latency_s"] == 0
 
 
 @pytest.mark.parametrize(("form", "expect"), [
@@ -82,7 +77,6 @@ def test_legacy_forms_keep_their_numbers_without_the_wrong_shift():
      "upper bound (D3)"),
     ({**AS_STORED, "bias_s": {"median": 0.1, "p5": -0.2, "p95": 0.3}}, "mark 'look_ahead'"),
     ({**AS_STORED, "stamp_position": "open", "bias_s": None}, "needs a bias giving its displacement"),
-    ({**AS_STORED, "delay_s": [0, 1]}, "mixes legacy fields"),
     ({k: v for k, v in AS_STORED.items() if k != "support_s"}, "'support_s' is required"),
     ({**FIXED, "uses_future": True}, "cannot use future data"),
     ({**LABEL, "uncertainty": {"upper_bound": True, "components": [
@@ -109,3 +103,26 @@ def test_planner_and_pages(tmp_path):
     assert fs["fix"]["shift"] == 4.2 and not fs["fix"]["uses_future"]
     assert fs["raw"]["bias"]["mid"] == 4.2 and fs["raw"]["shift"] == 0
     assert "Real-time use" in planner
+
+
+def test_shared_errors_cancel_in_the_planner(tmp_path):
+    a = {**LABEL, "corrects": [], "uncertainty": {"upper_bound": True, "components": [
+        {"name": "clock", "type": "A", "u_s": 0.3, "scope": "recording", "shared_with": "one clock"},
+        {"name": "own", "type": "A", "u_s": 0.4, "scope": "independent"}]}}
+    files = _signal([a])
+    files["variables/t.yaml"] = {**files["variables/s.yaml"], "id": "t", "name": "Other"}
+    ds = load(_with_domains(_dataset(tmp_path, **files)))
+    out = write_site(ds, tmp_path / "site")
+    planner = (out / "docs" / "planner.md").read_text()
+    data = json.loads(planner.split("const ATLAS_PLANNER = ", 1)[1].split(";\n", 1)[0])
+    assert all(s["forms"][0]["shared"] == {"one clock": 0.3} for s in data["signals"])
+    assert "Shared errors" in (out / "docs" / "time.md").read_text()
+
+
+def test_correlation_shapes():
+    from metrology_atlas.timing import correlation
+    base = {"scope": "structured", "length_s": 100.0}
+    assert correlation({**base, "correlation": "rectangular"}, 50) == 1 and correlation({**base, "correlation": "rectangular"}, 150) == 0
+    assert correlation({**base, "correlation": "triangular"}, 25) == pytest.approx(0.75)
+    assert correlation(base, 100) == pytest.approx(math.exp(-1))            # exponential by default
+    assert correlation({"scope": "recording"}, 1e6) == 1 and correlation({"scope": "independent"}, 1) == 0

@@ -13,10 +13,9 @@ against that close:
 - whether the form uses data from after the stamp (``uses_future``: a whole-recording fit), so real-time use can
   leave it out (option C of 28 Oct).
 
-A form is written either in these fields or in the legacy ones (``delay_s``, ``interval_s``, ``corrected_delay_s``)
-that predate the reframe. :func:`resolve` turns either into one normalised dict, which the planner, the pages and the
-chart read, so the arithmetic lives here and only here. Legacy forms keep today's numbers (a range read as uniform)
-and are flagged until stage 3 migrates them.
+:func:`resolve` turns a form into one normalised dict, which the planner, the pages and the chart read, so the
+arithmetic lives here and only here. The pre-reframe fields (delay_s, interval_s, corrected_delay_s) were retired in
+schema 0.3 once every form had been migrated (29 Oct 2026).
 """
 
 from __future__ import annotations
@@ -28,6 +27,7 @@ KINDS = ("as_stored", "fixed_shift", "per_recording")
 SCOPES = ("independent", "structured", "recording", "shared", "release", "unknown")
 POSITIONS = ("close", "open", "centre", "instant", "unknown")
 DISTRIBUTIONS = ("normal", "rectangular", "empirical", "mixture", "unknown")
+CORRELATIONS = ("exponential", "rectangular", "triangular", "bell", "unknown")
 
 
 def bias_range(b: dict | None) -> tuple[float, float, float]:
@@ -49,6 +49,7 @@ def combine(components: list[dict]) -> float:
 def _component(c: dict) -> dict:
     return {"name": c["name"], "type": c.get("type", "B"), "distribution": c.get("distribution", "unknown"),
             "u_s": float(c["u_s"]), "scope": c.get("scope", "unknown"), "length_s": c.get("length_s"),
+            "correlation": c.get("correlation", "exponential" if c.get("scope") == "structured" else None),
             "shared_with": c.get("shared_with"), "status": c.get("status"), "evidence": c.get("evidence"),
             "included_in": c.get("included_in")}
 
@@ -62,7 +63,7 @@ def _common(t: dict) -> dict:
 def resolve(t: dict) -> dict:
     """One timing form, normalised. Keys:
 
-    ``kind`` as_stored / fixed_shift / per_recording; ``uses_future``; ``legacy``; ``synthetic``;
+    ``kind`` as_stored / fixed_shift / per_recording; ``uses_future``;
     ``support`` [lo, hi] s or None; ``stamp_position``; ``look_ahead`` [lo, hi] s of lead, or None;
     ``bias`` {lo, mid, hi, scope, name}: the displacement left in the form as used (0 after a correction);
     ``shift_s``: what to subtract from the stamps (fixed_shift only; None for a per-recording correction, 0 otherwise);
@@ -71,8 +72,6 @@ def resolve(t: dict) -> dict:
     ``latency_s``: how long after the close the stored data can arrive (the availability rule).
     """
     out = _common(t)
-    if t.get("delay_s") is not None:
-        return out | _legacy(t)
     kind = t["kind"]
     lo, mid, hi = bias_range(t.get("bias_s"))
     removes = None
@@ -86,13 +85,15 @@ def resolve(t: dict) -> dict:
         shift = bias_range(t.get("removes_bias_s"))[1]
     elif kind == "per_recording":
         shift = None
-    late = max(hi, 0.0) + (removes[1] if removes else 0.0)
+    late = max(hi, 0.0) + (max(removes[1], 0.0) if removes else 0.0)  # an early stamp adds no latency
     la = t.get("look_ahead")
     return out | {
-        "kind": kind, "legacy": False, "synthetic": False,
+        "kind": kind,
         "uses_future": bool(t.get("uses_future", False)),
         "support": t.get("support_s"), "stamp_position": t.get("stamp_position", "unknown"), "grid_s": t.get("grid_s"),
-        "look_ahead": (la or {}).get("lead_s") if la else None,
+        "look_ahead": la["lead_s"] if la and la.get("basis", "real") == "real" else None,
+        "look_ahead_note": (la or {}).get("note") if la else None,
+        "look_ahead_apparent": bool(la and la.get("basis") == "apparent"),
         "bias": {"lo": lo, "mid": mid, "hi": hi, "scope": (t.get("bias_s") or {}).get("scope"),
                  "name": (t.get("bias_s") or {}).get("name")},
         "shift_s": shift, "removes": removes, "components": comps, "u_c": combine(comps),
@@ -101,60 +102,9 @@ def resolve(t: dict) -> dict:
     }
 
 
-def _legacy(t: dict) -> dict:
-    """A form in the pre-reframe fields. Today's numbers are kept: the delay range read as uniform, the interval as an
-    unsplit grid-or-window component. Raw forms are taken as stored (no shift); forms that correct another (with or
-    without ``corrected_delay_s``) have bias 0 (the D5 fix) and are assumed to use the whole recording."""
-    d, iv = t["delay_s"], t["interval_s"]
-    ty = "A" if t["status"] == "measured" else "B"
-    interval = {"name": "interval one value stands for (grid or window, not yet split)", "type": "B",
-                "distribution": "rectangular", "u_s": iv[1] / SQ12, "scope": "independent", "length_s": None,
-                "shared_with": None, "status": t["status"], "evidence": "legacy interval_s", "included_in": None}
-    common = {"legacy": True, "synthetic": False, "support": iv, "legacy_xy": [list(d), list(iv)], "stamp_position": "close", "grid_s": None,
-              "look_ahead": None, "interval95": None, "upper_bound": False, "likely_u": None}
-    if t.get("corrected_delay_s") is not None or t.get("corrects"):
-        comps = [{"name": "correction (legacy range read as uniform; not yet re-evaluated)", "type": ty,
-                  "distribution": "rectangular", "u_s": (d[1] - d[0]) / SQ12, "scope": "unknown", "length_s": None,
-                  "shared_with": None, "status": t["status"], "evidence": t["evidence"], "included_in": None}, interval]
-        rem = t.get("corrected_delay_s")
-        return common | {"kind": "per_recording", "uses_future": True,
-                         "bias": {"lo": 0.0, "mid": 0.0, "hi": 0.0, "scope": None, "name": None},
-                         "shift_s": None, "removes": list(rem) if rem else None, "components": comps,
-                         "u_c": combine(comps), "latency_s": (rem[1] if rem else 0.0) + d[1]}
-    comps = [{"name": "spread of the delay between recordings (legacy range read as uniform)", "type": ty,
-              "distribution": "rectangular", "u_s": (d[1] - d[0]) / SQ12, "scope": "recording", "length_s": None,
-              "shared_with": None, "status": t["status"], "evidence": t["evidence"], "included_in": None}, interval]
-    return common | {"kind": "as_stored", "uses_future": False,
-                     "bias": {"lo": d[0], "mid": (d[0] + d[1]) / 2, "hi": d[1], "scope": "recording", "name": None},
-                     "shift_s": 0.0, "removes": None, "components": comps, "u_c": combine(comps), "latency_s": d[1]}
-
-
-def fixed_shift_of(r: dict) -> dict:
-    """The fixed-shift form derived from an as-stored form: subtract the release median, known in advance (option C).
-    Used for legacy forms until stage 3 writes them; the uncertainty is the same, the bias is gone."""
-    b = r["bias"]
-    return r | {"id": r["id"] + "-shift", "name": r["name"] + ", shifted by the release median", "kind": "fixed_shift",
-                "synthetic": True, "default": False, "corrects": [r["id"]], "correction": "release median",
-                "shift_s": b["mid"], "removes": [b["lo"], b["hi"]],
-                "bias": {"lo": 0.0, "mid": 0.0, "hi": 0.0, "scope": None, "name": None}}
-
-
 def forms(signal: dict) -> list[dict]:
-    """All of a signal's timing forms, normalised, with a fixed-shift form added beside each legacy as-stored form that
-    has no written fixed-shift sibling. When the default is such a form and the signal has no correction, the derived
-    fixed shift becomes the default (it is what the planner did before option C, now named)."""
-    rs = [resolve(t) for t in signal.get("timing") or []]
-    has_fixed = any(r["kind"] == "fixed_shift" for r in rs)
-    has_corr = any(r["kind"] != "as_stored" for r in rs)
-    out = []
-    for r in rs:
-        out.append(r)
-        if r["legacy"] and r["kind"] == "as_stored" and not has_fixed and r["bias"]["hi"] > 0:
-            f = fixed_shift_of(r)
-            if r["default"] and not has_corr:
-                r["default"], f["default"] = False, True
-            out.append(f)
-    return out
+    """All of a signal's timing forms, normalised."""
+    return [resolve(t) for t in signal.get("timing") or []]
 
 
 def default(signal: dict) -> dict | None:
@@ -169,3 +119,21 @@ def describe_bias(b: dict) -> str:
     if b["lo"] == b["hi"]:
         return "0" if b["mid"] == 0 else _rng([b["mid"], b["mid"]])
     return f"{_rng([b['lo'], b['hi']])}, median {_rng([b['mid'], b['mid']])}"
+
+
+def correlation(c: dict, dt: float) -> float:
+    """Correlation of a component's error between two stamps dt seconds apart, from its scope and shape."""
+    if c["scope"] in ("recording", "release", "shared"):
+        return 1.0
+    if c["scope"] != "structured" or not c.get("length_s"):
+        return 1.0 if dt == 0 else 0.0
+    L, x, shape = float(c["length_s"]), abs(dt), c.get("correlation") or "exponential"
+    if shape == "rectangular":
+        return 1.0 if x < L else 0.0       # same block assumed when closer than one block length
+    if shape == "triangular":
+        return max(0.0, 1.0 - x / L)
+    if shape == "bell":
+        return float(math.exp(-0.5 * (x / L) ** 2))
+    if shape == "exponential":
+        return float(math.exp(-x / L))
+    return float("nan")

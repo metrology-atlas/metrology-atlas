@@ -12,28 +12,70 @@ timing:
 - id: snu-model
   name: stamp-model time
   default: true
-  delay_s:
-  - 0.0003
-  - 0.003
-  interval_s:
-  - 0.002
-  - 0.01
-  domain: reference
-  status: estimated
-  evidence: stamp-model residual where corrections are seen (recordings with none can drift about +-0.1 s/h on the port's rate); 100 Hz files 10 ms
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.002
+  removes_bias_s:
+    median: 0.24
+    p5: 0.01
+    p95: 0.47
+    scope: structured
+    status: measured
+    evidence: 'the sawtooth: stamps run ahead by up to 480 ms before each downward correction'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: stamp-model residual where corrections are seen
+      type: B
+      distribution: unknown
+      u_s: 0.0015
+      scope: unknown
+      status: estimated
+      shared_with: SNUADC stamp model
+    - name: 500 Hz samples
+      type: B
+      distribution: rectangular
+      u_s: 0.0006
+      scope: independent
+  correction: 'stamp model (physiosync.stamp_clock): one rate, one offset per stretch'
   corrects:
   - snu-raw
+  domain: reference
+  status: estimated
+  evidence: stamp-model residual where corrections are seen; recordings with none can drift about +-0.1 s/h on the port's
+    rate (not included); 100 Hz files 10 ms; this form is the working reference
 - id: snu-raw
   name: raw stamps
-  delay_s:
-  - 0.01
-  - 0.48
-  interval_s:
-  - 0.002
-  - 0.002
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.002
+  bias_s:
+    median: 0.24
+    p5: 0.01
+    p95: 0.47
+    scope: structured
+    status: measured
+  uncertainty:
+    components:
+    - name: sawtooth position
+      type: A
+      distribution: rectangular
+      u_s: 0.1386
+      scope: structured
+      length_s: 7488
+      correlation: rectangular
+      shared_with: SNUADC clock
+      evidence: 'length: the step-mode correction period, 2.08 h'
   domain: snuadc-raw
   status: measured
-  evidence: sawtooth up to -480 ms (step mode corrections)
+  evidence: sawtooth up to 480 ms (step-mode corrections, downwards)
 tags:
 - stub
 chain:

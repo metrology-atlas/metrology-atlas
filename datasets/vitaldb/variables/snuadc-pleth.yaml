@@ -9,18 +9,81 @@ stamp_clock: recorder-pc
 sample_clock: snuadc-sample
 rate_hz: 500
 timing:
-- id: pleth
-  name: stamp-model time
+- id: pleth-shift
+  name: stamp-model time, shifted by the oximeter delay
   default: true
-  delay_s:
-  - 0.37
-  - 0.4
-  interval_s:
-  - 0.002
-  - 0.033
+  kind: fixed_shift
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.033
+  removes_bias_s:
+    value: 0.385
+    scope: release
+    status: measured
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: oximeter hardware delay
+      type: B
+      distribution: rectangular
+      u_s: 0.0115
+      scope: release
+      evidence: 0.365-0.405 s with the PAT range
+    - name: stamp-model residual
+      type: B
+      distribution: unknown
+      u_s: 0.0015
+      scope: unknown
+      status: estimated
+      shared_with: SNUADC stamp model
+    - name: 30 Hz frames
+      type: B
+      distribution: rectangular
+      u_s: 0.0095
+      scope: independent
+  correction: one global hardware delay, known in advance
+  corrects:
+  - pleth
   domain: reference
   status: measured
-  evidence: one global hardware delay (pat-offset-census), 0.385 s (0.365-0.405 s with the adopted PAT's 250-290 ms range); 30 Hz frames
+  evidence: one global hardware delay (pat-offset-census), 0.385 s (0.365-0.405 s with the adopted PAT's 250-290 ms range)
+- id: pleth
+  name: stamp-model time
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.033
+  bias_s:
+    name: oximeter hardware delay
+    value: 0.385
+    scope: release
+    status: measured
+  uncertainty:
+    components:
+    - name: oximeter hardware delay
+      type: B
+      distribution: rectangular
+      u_s: 0.0115
+      scope: release
+    - name: stamp-model residual
+      type: B
+      distribution: unknown
+      u_s: 0.0015
+      scope: unknown
+      status: estimated
+      shared_with: SNUADC stamp model
+    - name: 30 Hz frames
+      type: B
+      distribution: rectangular
+      u_s: 0.0095
+      scope: independent
+  domain: reference
+  status: measured
+  evidence: one global hardware delay (pat-offset-census), 0.385 s; 30 Hz frames
 tags:
 - stub
 chain:

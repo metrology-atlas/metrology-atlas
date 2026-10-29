@@ -9,12 +9,24 @@ timing:
 - id: bis-num
   name: as stamped
   default: true
-  delay_s:
-  - 3.0
-  - 4.0
-  interval_s:
-  - 16.0
-  - 61.0
+  kind: as_stored
+  support_s:
+  - 16
+  - 61
+  stamp_position: close
+  bias_s:
+    median: 3.5
+    p5: 3.0
+    p95: 4.0
+    scope: recording
+    status: measured
+  uncertainty:
+    components:
+    - name: delay spread
+      type: A
+      distribution: rectangular
+      u_s: 0.2887
+      scope: recording
   domain: bis
   status: measured
   evidence: 3-4 s after its EEG window ends; window 16 s (48%) or 32-61 s (40%); half the weight older than 30 s

@@ -10,12 +10,28 @@ timing:
 - id: admdis
   name: as recorded
   default: true
-  delay_s:
-  - 3600.0
-  - 86400.0
-  interval_s:
-  - 86400.0
-  - 86400.0
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: unknown
+  grid_s: 86400
+  bias_s:
+    name: date only; where in the day is not recorded
+    value: 0
+    status: assumed
+  look_ahead:
+    lead_s:
+    - 0
+    - 86400
+    note: A date stamped at the start of the day comes before the event.
+  uncertainty:
+    components:
+    - name: whole-day grid
+      type: B
+      distribution: rectangular
+      u_s: 24941.5316
+      scope: independent
   domain: records
   status: estimated
   evidence: whole days

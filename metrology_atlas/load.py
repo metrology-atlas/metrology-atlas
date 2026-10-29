@@ -136,9 +136,6 @@ def load(folder: str | Path) -> Dataset:
     _check_figures(ds, meta, "dataset.yaml", problems)
     _check_forbidden(ds, problems)
     _check_terms(ds, problems)
-    if ds.legacy_timing:
-        ds.warnings.append(f"{len(ds.legacy_timing)} timing forms still use the legacy fields (delay_s, interval_s); "
-                           "read as uniform ranges until they are migrated (reframe stage 3)")
     if problems:
         raise AtlasError(problems)
     return ds
@@ -310,15 +307,9 @@ def _check_timing(ds: Dataset, signal: dict, rel: str, problems: list[str]) -> N
     for t in forms:
         at = f"{rel}: timing '{t.get('id')}'"
         legacy = [k for k in LEGACY_TIMING if k in t]
-        new = [k for k in NEW_TIMING if k in t]
-        if legacy and new:
-            problems.append(f"{at} mixes legacy fields ({', '.join(legacy)}) with current ones ({', '.join(new)})")
-            continue
         if legacy:
-            ds.legacy_timing.append(at)
-            for k in ("delay_s", "interval_s"):
-                if k not in t:
-                    problems.append(f"{at}: legacy form needs '{k}'")
+            problems.append(f"{at}: {', '.join(legacy)} were retired in schema 0.3 (VIM/GUM reframe): write the form as "
+                            "kind, support_s, stamp_position, bias_s or removes_bias_s, and uncertainty (framework spec)")
             continue
         _check_form(t, at, problems)
 

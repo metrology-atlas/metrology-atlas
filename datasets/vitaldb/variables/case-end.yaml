@@ -10,12 +10,28 @@ timing:
 - id: caseend
   name: as recorded
   default: true
-  delay_s:
-  - 0.01
-  - 0.5
-  interval_s:
-  - 1.0
-  - 1.0
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 1
+  bias_s:
+    name: rounded to the nearest second
+    value: 0
+    status: measured
+  look_ahead:
+    lead_s:
+    - 0
+    - 0.5
+    note: Rounding to the nearest second can put the stamp up to 0.5 s early.
+  uncertainty:
+    components:
+    - name: 1 s rounding
+      type: B
+      distribution: rectangular
+      u_s: 0.2887
+      scope: independent
   domain: records
   status: measured
   evidence: recording end rounded to 1 s (98.7% within 1 s)

@@ -603,10 +603,7 @@ class Site:
                "| Form | Kind | Bias | Uncertainty (1 SD) | Interval described | Real time | Clock domain | Status | Evidence |\n"
                "|---|---|---|---|---|---|---|---|---|\n")
         budgets = ""
-        legacy = False
         for t in timing_forms(s):
-            if t["synthetic"]:
-                continue
             d = doms.get(t["domain"], {})
             dn = self.a("clock", d["clock"], d["name"]) if d.get("clock") else d.get("name", t["domain"])
             studies = ", ".join(self.a("study", x) for x in t["studies"])
@@ -618,16 +615,19 @@ class Site:
                 bias += f"; shift {_rng([t['shift_s'], t['shift_s']])}"
             elif t["kind"] == "per_recording" and t["removes"]:
                 bias += f"; removes {_rng(t['removes'])}"
-            mark = " †" if t["legacy"] else ""
-            legacy |= t["legacy"]
+            mark = " ↯" if t["look_ahead"] else ""
             out += (f"| {t['name']}{' (default)' if t['default'] else ''}{mark} | {kinds[t['kind']]} | {bias} | {u} | "
-                    f"{_rng(t['support']) if t['support'] else 'not stated'} | {'no' if t['uses_future'] else 'yes'} | "
+                    f"{('instant' if t['support'] == [0, 0] else _rng(t['support'])) if t['support'] else 'not stated'} | {'no' if t['uses_future'] else 'yes'} | "
                     f"{dn} | {t['status']} | {t['evidence']}{'; ' + studies if studies else ''} |\n")
-            if not t["legacy"] and t["components"]:
+            if t["components"]:
                 budgets += self.budget(t)
-        if legacy:
-            out += ("\n† Not yet re-evaluated in bias and uncertainty terms: the old delay range is read as uniform, "
-                    "and the interval (grid or averaging window, not yet told apart) is counted as uncertainty.\n")
+        fs = timing_forms(s)
+        if any(t["look_ahead"] for t in fs):
+            out += ("\n↯ Look-ahead: the stamp can come before the end of the interval the value describes (D10); "
+                    "see the form's evidence.\n")
+        for t in fs:
+            if t["look_ahead_apparent"]:
+                out += f"\n*{t['name']}: an early tail in the measured delay is not taken as look-ahead. {t['look_ahead_note'] or ''}*\n"
         out += budgets
         out += f"\nCombine it with other signals in the [synchronisation planner]({self.base}planner.md?s={i}).\n"
         return out
@@ -637,7 +637,7 @@ class Site:
         rows = "".join(
             f"| {c['name']} | {c['type']} | {c['distribution']} | {_rng([c['u_s'], c['u_s']])}"
             f"{' (in ' + c['included_in'] + ')' if c.get('included_in') else ''} | {c['scope']}"
-            f"{' (' + _rng([c['length_s'], c['length_s']]) + ')' if c.get('length_s') else ''}"
+            f"{' (' + (c.get('correlation') or 'exponential') + ', ' + _rng([c['length_s'], c['length_s']]) + ')' if c.get('length_s') else ''}"
             f"{': ' + c['shared_with'] if c.get('shared_with') else ''} | {c.get('evidence') or ''} |\n"
             for c in t["components"])
         return (f"\n**Uncertainty budget, {t['name']}** (combined {_rng([t['u_c'], t['u_c']])}"
@@ -1333,19 +1333,39 @@ class Site:
         """The chart of every time stamp (delay against the interval a value describes), with its data embedded."""
         if not any(s.get("timing") for s in self.ds.items["variable"].values()):
             return ""
-        data = chart_forms(self.ds)
+        data = chart_forms(self.ds, kinds=("as_stored",))
         data.update(AXES, aria=f"Timing of every time stamp in {self.ds.meta['name']}")
         return ("## Every time stamp\n\n"
-                "Each kind of time stamp in the dataset, placed by how late it lies after the end of the interval its "
-                "value describes, against the working reference (across; for a corrected form, the uncertainty left), "
-                "and by how wide that interval is (up). This chart is being redrawn as bias against standard "
-                "uncertainty. "
+                "Each kind of time stamp in the dataset, as stored: across, its bias, how far the stamp sits from the end "
+                "of the interval its value describes, against the working reference (left of zero the stamp comes "
+                "early); up, its standard uncertainty. The width of an ellipse is the spread of the bias between "
+                "recordings. Corrected and shifted forms are in each variable's timing table and in the planner. "
                 "Drawn from the atlas data each time the site is built, so it follows every update; the same data "
                 "drives the [synchronisation planner](planner.md).\n\n"
                 '<div id="atlas-chart"></div>\n<script src="js/atlas-chart.js"></script>\n<script>\n'
                 "const ATLAS_CHART = " + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + ";\n"
                 "AtlasChart(document.getElementById('atlas-chart'), ATLAS_CHART).draw(ATLAS_CHART.items.map((it) => "
                 "({...it, href: it.hrefs.length === 1 ? it.hrefs[0] : null})), ATLAS_CHART.arrows);\n</script>\n\n")
+
+    def shared_errors(self) -> str:
+        """The Time page's 'Shared errors' section: every error component that several timing forms share (D9)."""
+        groups: dict[str, list[str]] = {}
+        for vid, v in sorted(self.ds.items["variable"].items(), key=lambda x: x[1]["name"]):
+            for t in timing_forms(v):
+                for c in t["components"]:
+                    if c.get("shared_with"):
+                        groups.setdefault(c["shared_with"], [])
+                        label = f"{self.a('variable', vid)} ({t['name']})"
+                        if label not in groups[c["shared_with"]]:
+                            groups[c["shared_with"]].append(label)
+        if not groups:
+            return ""
+        rows = "".join(f"| {k} | {', '.join(v)} |\n" for k, v in sorted(groups.items()))
+        return ("## Shared errors\n\nSome errors are common to several signals: one clock, one correction. Between two "
+                "signals that share an error it cancels, so their times agree better than each alone suggests (GUM 5.2); "
+                "the [synchronisation planner](planner.md) takes this into account. Each variable's uncertainty budget "
+                "says what shares each part; parts whose sharing is not known are taken as independent.\n\n"
+                "| Shared error | Timing forms that carry it |\n|---|---|\n" + rows + "\n")
 
     def time_page(self) -> str:
         """The time side at a glance: clocks and how each reaches UTC, then the time stamps and the planner."""
@@ -1359,6 +1379,7 @@ class Site:
                "(resolution).\n\n")
         if m.get("reference"):
             out += "## The working reference\n\n" + self.prose(m["reference"]) + "\n\n"
+        out += self.shared_errors()
         ref = m.get("reference_clock")
         has_utc = "utc" in self.ds.items["clock"]
         # links every clock's best route to UTC passes through: they set every absolute time alike

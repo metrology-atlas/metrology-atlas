@@ -10,26 +10,53 @@ timing:
 - id: lab-bg
   name: lab timestamp
   default: true
-  delay_s:
-  - 190.0
-  - 730.0
-  interval_s:
-  - 1.0
-  - 1.0
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 1
+  bias_s: &id001
+    median: 460
+    p5: 190
+    p95: 730
+    scope: independent
+    status: measured
+  uncertainty:
+    components:
+    - name: turnaround between samples
+      type: A
+      distribution: empirical
+      u_s: 164.1337
+      scope: independent
   domain: records
   status: measured
-  evidence: 3-12 min after the access (modes ~4, ~9 min); the value is known later
+  evidence: 3-12 min after the access (modes about 4 and 9 min); the value is known later
 - id: lab-draw
   name: draw time from arterial access
-  delay_s:
-  - 10.0
-  - 100.0
-  interval_s:
-  - 28.0
-  - 117.0
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 28
+  - 117
+  stamp_position: unknown
+  removes_bias_s: *id001
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: where in the access the draw is
+      type: B
+      distribution: rectangular
+      u_s: 25.6921
+      scope: independent
+      status: estimated
+  correction: matched arterial-line access
+  corrects:
+  - lab-bg
   domain: records
   status: estimated
-  evidence: access 28-117 s (p10-p90); matched 0-15 min (gas) or 0-30 min (central) before
+  evidence: access 28-117 s (p10-p90); matched 0-15 min (gas) or 0-30 min (central) before; uses the waveform during and
+    after the draw; a wrong match is not included
 tags:
 - stub
 chain:

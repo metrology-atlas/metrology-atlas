@@ -9,12 +9,29 @@ timing:
 - id: vigileo
   name: as stamped
   default: true
-  delay_s:
-  - 2.0
-  - 25.0
-  interval_s:
-  - 20.0
-  - 20.0
+  kind: as_stored
+  support_s:
+  - 20
+  - 20
+  stamp_position: close
+  bias_s:
+    name: offset against arterial PPV; sign not established
+    median: 4.7
+    p95: 26
+    scope: recording
+    status: measured
+  look_ahead:
+    lead_s:
+    - 0
+    - 26
+    note: Only the size of the offset is known, not its sign.
+  uncertainty:
+    components:
+    - name: between recordings
+      type: A
+      distribution: empirical
+      u_s: 15.8055
+      scope: recording
   domain: vigileo
   status: measured
   evidence: 'SVV vs arterial PPV: aligned in 25 of 343 cases, |offset| 4.7 s median, p95 26 s'

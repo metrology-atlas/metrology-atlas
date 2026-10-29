@@ -10,15 +10,28 @@ timing:
 - id: spo2
   name: as stamped
   default: true
-  delay_s:
-  - 4.0
-  - 4.8
-  interval_s:
-  - 10.0
-  - 20.0
+  kind: as_stored
+  support_s:
+  - 10
+  - 20
+  stamp_position: close
+  bias_s:
+    median: 4.4
+    p5: 4.0
+    p95: 4.8
+    scope: recording
+    status: measured
+  uncertainty:
+    components:
+    - name: delay spread
+      type: A
+      distribution: empirical
+      u_s: 0.2432
+      scope: recording
   domain: solar8000
   status: measured
-  evidence: onset +4 s (+0.4 s PLETH); window 10-20 s estimated, not measured
+  evidence: 'onset +4 s (+0.4 s PLETH); window 10-20 s estimated, not measured; whole release 28 Oct: last value 0.8 s after
+    pulse loss, back 5.4 s after pulse return (6,152 recordings)'
 tags:
 - stub
 delays:

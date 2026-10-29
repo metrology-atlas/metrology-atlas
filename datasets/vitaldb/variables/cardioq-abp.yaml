@@ -11,31 +11,62 @@ timing:
 - id: cardioq-sync
   name: after beat matching
   default: true
-  delay_s:
-  - 0.1
-  - 0.3
-  interval_s:
-  - 0.0056
-  - 0.0056
-  domain: reference
-  status: measured
-  evidence: per stretch; matched-beat MAD 0.24 s, R-R correlation 0.96 (24 cases)
-  corrected_delay_s:
-  - 0.4
-  - 4.4
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.0056
+  removes_bias_s: &id001
+    median: 2.4
+    p5: 0.4
+    p95: 4.4
+    scope: recording
+    status: estimated
+    evidence: lag vs SNUADC ART p5-p95 0.4-4.4 s; median taken as the middle
+  uncertainty:
+    upper_bound: true
+    components:
+    - name: matched beats
+      type: A
+      distribution: empirical
+      u_s: 0.3558
+      scope: unknown
+    - name: sample or stamp grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0016
+      scope: independent
   correction: beat matching to SNUADC ART
   corrects:
   - cardioq-raw
+  domain: reference
+  status: measured
+  evidence: per stretch; matched-beat MAD 0.24 s (robust SD 0.36 s), R-R correlation 0.96 (24 cases)
 - id: cardioq-raw
   name: raw stamps
-  delay_s:
-  - 0.4
-  - 4.4
-  interval_s:
-  - 0.0056
-  - 0.0056
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.0056
+  bias_s: *id001
+  uncertainty:
+    components:
+    - name: between recordings
+      type: A
+      distribution: empirical
+      u_s: 1.2158
+      scope: recording
+    - name: sample or stamp grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0016
+      scope: independent
   domain: cardioq
   status: measured
-  evidence: lag vs SNUADC ART p5-p95 0.4-4.4 s; re-anchors ~40 times per case
+  evidence: lag vs SNUADC ART p5-p95 0.4-4.4 s; re-anchors about 40 times per case
 tags:
 - stub

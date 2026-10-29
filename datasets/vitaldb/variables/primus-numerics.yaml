@@ -9,32 +9,59 @@ timing:
 - id: primus-lab
   name: after the per-case delay label
   default: true
-  delay_s:
-  - 0.07
-  - 0.57
-  interval_s:
-  - 7.0
-  - 30.0
-  domain: primus
-  status: measured
-  evidence: 'numeric_delay label SE p10-p90 0.07-0.57 s (RR_CO2 weaker: SE ~1 s)'
-  corrected_delay_s:
-  - 0.75
-  - 7.6
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 3
+  - 30
+  stamp_position: close
+  removes_bias_s:
+    median: 3.0
+    p5: 0.55
+    p95: 8.5
+    scope: recording
+    status: measured
+    evidence: 'label delays: ETCO2 median 1.55 s, PIP 4.6 s, RR 4.3 s (p5-p95 over all three 0.55-8.5 s)'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: per-case label
+      type: A
+      distribution: empirical
+      u_s: 0.21
+      scope: recording
+      evidence: 'label SE median: ETCO2 0.20 s, PIP 0.23 s; RR weaker, 1.0 s'
   correction: per-case delay label
   corrects:
   - primus-num
-- id: primus-num
-  name: as stamped
-  delay_s:
-  - 0.75
-  - 7.6
-  interval_s:
-  - 7.0
-  - 30.0
   domain: primus
   status: measured
-  evidence: 'from window end: ETCO2 0.75-3.4, PIP 3.65-6.5, RR 1.6-7.6 s; 7 s polls, RR over 30 s'
+  evidence: numeric_delay labels (6,186 ETCO2, 5,894 PIP, 6,114 RR recordings); the CO2-based delays are against the CO2
+    waveform, which trails the breath by 3.6 s (sampling line)
+- id: primus-num
+  name: as stamped
+  kind: as_stored
+  support_s:
+  - 3
+  - 30
+  stamp_position: close
+  bias_s:
+    median: 3.0
+    p5: 0.55
+    p95: 8.5
+    scope: recording
+    status: measured
+  uncertainty:
+    components:
+    - name: between recordings and numerics
+      type: A
+      distribution: empirical
+      u_s: 2.4164
+      scope: recording
+  domain: primus
+  status: measured
+  evidence: 'label delays from window end: ETCO2 1.55, PIP 4.6, RR 4.3 s (medians); 7 s polls; ETCO2 and PIP one breath,
+    RR about 30 s'
 tags:
 - stub
 delays:

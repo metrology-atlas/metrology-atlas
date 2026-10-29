@@ -10,34 +10,167 @@ rate_hz: 128
 unit: uV
 timing:
 - id: bis-sync
-  name: after sync to the ECG
+  name: after sync to the ECG (stamp model and the mode's constant)
   default: true
-  delay_s:
-  - 0.017
-  - 0.042
-  interval_s:
-  - 0.0078
-  - 0.0078
-  domain: reference
-  status: measured
-  evidence: 17-42 ms (recording's own constant to the mode's; whole release, 2,710 recordings); loop closes in drift and steps; latency -0.80 s (SD 25 ms) in link K
-  corrected_delay_s:
-  - 0.53
-  - 1.05
-  correction: stamp model and ECG-EEG burst constant
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.0078
+  removes_bias_s: &id001
+    median: -0.787
+    p5: -0.97
+    p95: -0.601
+    n: 2702
+    scope: recording
+    status: measured
+    evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (reframe_stage3/bis_numbers.json)
+  uncertainty:
+    upper_bound: true
+    interval95_s:
+    - -0.233
+    - 0.166
+    components:
+    - name: the recording's constant against its SNUADC mode's
+      type: A
+      distribution: empirical
+      u_s: 0.058
+      scope: recording
+    - name: 'within the recording: drift and steps left by the stamp model'
+      type: A
+      distribution: empirical
+      u_s: 0.0256
+      scope: structured
+      length_s: 480
+      correlation: exponential
+      evidence: correlation length 8 min, from the burst windows (stage 4b, corr_lengths.json)
+    - name: sample or stamp grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0023
+      scope: independent
+  correction: stamp model and the SNUADC mode's EEG-ECG constant
   corrects:
   - bis-raw
-- id: bis-raw
-  name: raw stamps
-  delay_s:
-  - 0.53
-  - 1.05
-  interval_s:
-  - 0.0078
-  - 0.0078
+  domain: reference
+  status: measured
+  evidence: 'held-out burst windows against the mode''s leave-one-out constant: robust SD 62 ms, median |error| 42 ms (2,710
+    recordings, 36,928 windows); step mode 51 ms, others 94-129 ms; latency -0.80 s in link K'
+- id: bis-own
+  name: after sync with the recording's own bursts
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.0078
+  removes_bias_s: *id001
+  uncertainty:
+    upper_bound: true
+    interval95_s:
+    - -0.116
+    - 0.15
+    components:
+    - name: the recording's own constant, leave-one-window-out
+      type: A
+      distribution: empirical
+      u_s: 0.0301
+      scope: structured
+      length_s: 480
+      correlation: exponential
+      evidence: correlation length 8 min, from the burst windows
+    - name: sample or stamp grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0023
+      scope: independent
+  correction: stamp model and the recording's own EEG-ECG burst constant (needs 5 or more good burst windows)
+  corrects:
+  - bis-raw
+  domain: reference
+  status: measured
+  evidence: 'each burst window against the median of the recording''s other windows: robust SD 30 ms, median |error| 20
+    ms (2,710 recordings)'
+- id: bis-shift
+  name: raw stamps shifted by the release median
+  kind: fixed_shift
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.0078
+  removes_bias_s: *id001
+  uncertainty:
+    upper_bound: true
+    interval95_s:
+    - -0.33
+    - 0.267
+    components:
+    - name: 'between recordings: the constant is not known in advance'
+      type: A
+      distribution: empirical
+      u_s: 0.1129
+      scope: recording
+    - name: 'within the recording: drift and BIS corrections'
+      type: A
+      distribution: empirical
+      u_s: 0.1143
+      scope: structured
+      length_s: 8192
+      correlation: rectangular
+      evidence: one BIS correction cycle (8,192 s)
+    - name: sample or stamp grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0023
+      scope: independent
+  correction: the release median, known in advance
+  corrects:
+  - bis-raw
   domain: bis
   status: measured
-  evidence: offset p5-p95 -1053..-533 ms on the recorded stamps (191-case pilot)
+  evidence: 'raw burst windows against the release median: robust SD 171 ms (2,702 recordings, 36,788 windows)'
+- id: bis-raw
+  name: raw stamps
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.0078
+  bias_s: *id001
+  look_ahead:
+    lead_s:
+    - 0.6
+    - 0.97
+    note: 'On the working reference, a BIS EEG stamp comes 0.6-1.0 s before the event: raw BIS stamps put the EEG ahead
+      of the SNUADC signals.'
+  uncertainty:
+    components:
+    - name: between recordings
+      type: A
+      distribution: empirical
+      u_s: 0.1129
+      scope: recording
+    - name: 'within the recording: drift and BIS corrections'
+      type: A
+      distribution: empirical
+      u_s: 0.1143
+      scope: structured
+      length_s: 8192
+      correlation: rectangular
+      evidence: one BIS correction cycle (8,192 s)
+    - name: sample or stamp grid
+      type: B
+      distribution: rectangular
+      u_s: 0.0023
+      scope: independent
+  domain: bis
+  status: measured
+  evidence: 'EEG minus ECG for the same burst on the raw stamps: median -787 ms, p5-p95 -970 to -601 ms (2,702 recordings)'
 tags:
 - stub
 chain:

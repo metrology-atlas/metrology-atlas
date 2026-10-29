@@ -9,12 +9,30 @@ timing:
 - id: pumps
   name: as stamped
   default: true
-  delay_s:
-  - 0.1
-  - 2.0
-  interval_s:
-  - 1.0
-  - 10.0
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 1
+  bias_s:
+    name: delay not measured
+    value: 1.0
+    status: assumed
+  uncertainty:
+    components:
+    - name: delay not measured
+      type: B
+      distribution: rectangular
+      u_s: 0.5485
+      scope: recording
+      status: assumed
+      evidence: legacy range 0.1-2 s
+    - name: 1 s records
+      type: B
+      distribution: rectangular
+      u_s: 0.2887
+      scope: independent
   domain: pumps
   status: estimated
   evidence: 1 s records; propofol start -> BIS<60 132 s median, none negative (497 cases)

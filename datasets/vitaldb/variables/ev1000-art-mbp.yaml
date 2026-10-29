@@ -10,29 +10,49 @@ timing:
 - id: ev1000-sync
   name: after MAP alignment
   default: true
-  delay_s:
-  - 0.25
-  - 2.4
-  interval_s:
-  - 20.0
-  - 20.0
-  domain: reference
-  status: measured
-  evidence: residual SD 0.25-2.4 s (p5-p95); three-way loop closes, median +0.13 s
-  corrected_delay_s:
-  - 0.9
-  - 3.25
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 20
+  - 20
+  stamp_position: close
+  removes_bias_s: &id001
+    median: 1.6
+    p95: 3.2
+    scope: recording
+    status: measured
+    evidence: 'from the end of an assumed 20 s window: median 1.6 s (p25 0.9, p95 3.2; 579 cases)'
+  uncertainty:
+    upper_bound: true
+    components:
+    - name: MAP alignment residual
+      type: A
+      distribution: empirical
+      u_s: 0.77
+      scope: recording
+      status: estimated
+      evidence: per-recording residual SD p5-p95 0.25-2.4 s; geometric middle
   correction: MAP alignment to SNUADC ART
   corrects:
   - ev1000
+  domain: reference
+  status: measured
+  evidence: residual SD 0.25-2.4 s (p5-p95); three-way loop closes, median +0.13 s
 - id: ev1000
   name: as stamped
-  delay_s:
-  - 0.9
-  - 3.25
-  interval_s:
-  - 20.0
-  - 20.0
+  kind: as_stored
+  support_s:
+  - 20
+  - 20
+  stamp_position: close
+  bias_s: *id001
+  uncertainty:
+    components:
+    - name: between recordings
+      type: A
+      distribution: empirical
+      u_s: 0.9726
+      scope: recording
   domain: ev1000
   status: measured
   evidence: 'from the end of an assumed 20 s window: median 1.6 s (p25 0.9, p95 3.2; 579 cases)'

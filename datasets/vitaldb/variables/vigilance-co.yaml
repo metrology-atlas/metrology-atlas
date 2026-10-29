@@ -10,14 +10,27 @@ timing:
 - id: vigilance
   name: as stamped
   default: true
-  delay_s:
-  - 1.0
-  - 175.0
-  interval_s:
-  - 600.0
-  - 2185.0
+  kind: as_stored
+  support_s:
+  - 600
+  - 2185
+  stamp_position: close
+  bias_s:
+    median: 60
+    p5: 0
+    p95: 175
+    scope: recording
+    status: estimated
+  uncertainty:
+    components:
+    - name: delay spread
+      type: A
+      distribution: empirical
+      u_s: 53.1915
+      scope: recording
+      status: estimated
   domain: vigilance
   status: estimated
-  evidence: running median over 10-36 min; 0-175 s after its window ends (52-case pilot, 16 at zero)
+  evidence: running median over 10-36 min; 0-175 s after its window ends (52-case pilot, 16 at zero); median assumed
 tags:
 - stub

@@ -1,10 +1,11 @@
-"""The timing chart (stamp delay against the interval a value describes), drawn in the browser from the atlas data.
+"""The timing chart (bias against standard uncertainty), drawn in the browser from the atlas data (decision D4).
 
-Every timing form of every signal is an ellipse on log-log axes: across, the delay from the end of the interval a
-value describes to its stamp (against the working reference); up, the width of that interval. Each ellipse spans
-the [low, high] range on both axes; a solid outline is measured, a dashed one estimated or assumed; an arrow joins
-a form to the corrected form that improves on it (``corrects``). The same data and code draw the home-page chart
-(every source) and the planner's chart (the signals a reader picks).
+Every timing form is an ellipse: across, its bias, the displacement of the stamp from the end of the interval a value
+describes, on a symmetric log axis so that zero and early stamps (negative, look-ahead) can show; the ellipse spans the
+spread of that bias between recordings (p5-p95). Up, its combined standard uncertainty (log axis). A corrected form
+sits at zero bias (or its named remaining bias). A solid outline is measured, a dashed one estimated or assumed; an
+arrow joins a form to the corrected form that improves on it. The home page shows the forms as stored (D4: raw time
+sources); the planner shows every form of the signals a reader picks.
 """
 
 from __future__ import annotations
@@ -22,29 +23,27 @@ GROUP_LABELS = {
 }
 
 
+SYMLOG = 1e-3
+"""Bias axis: linear within +-1 ms, logarithmic beyond: t(v) = sign(v) log10(1 + |v| / SYMLOG)."""
+
+
 def chart_xy(f: dict) -> tuple[list[float], list[float]]:
-    """Where a resolved timing form sits on the chart until its redesign (reframe stage 4): x is the bias of a form as
-    stored, or the uncertainty (u to the 95% interval) of a corrected one; y the interval a value describes. Legacy forms
-    keep their old delay and interval."""
-    if f.get("legacy_xy"):
-        return f["legacy_xy"][0], f["legacy_xy"][1]
-    if f["kind"] == "as_stored":
-        x = [f["bias"]["lo"], f["bias"]["hi"]]
-    else:
-        hi = (f["interval95"] or [0, 2 * f["u_c"]])[1]
-        x = [f["u_c"], max(hi, f["u_c"])]
-    sup = f["support"] or [0, 0]
-    y = sup if sup[1] > 0 else [f["grid_s"] or 0, f["grid_s"] or 0]
-    return [max(v, 0.0) for v in x], list(y)
+    """Where a resolved timing form sits: x the bias range (p5-p95, or the single value), y its standard uncertainty."""
+    b = f["bias"]
+    return [b["lo"], b["hi"]], [f["u_c"], f["u_c"]]
 
 
-def chart_forms(ds) -> dict:
-    """Every distinct timing form, with arrows and the axis extent (log10 seconds), ready for the chart."""
+def _t(v: float) -> float:
+    return math.copysign(math.log10(1 + abs(v) / SYMLOG), v)
+
+
+def chart_forms(ds, kinds: tuple[str, ...] | None = None) -> dict:
+    """Every distinct timing form (of the given kinds; all when None), with arrows and the axis extent, ready for the chart."""
     items: dict[str, dict] = {}
     by_form: dict[tuple[str, str], str] = {}
     for sid, s in sorted(ds.items["variable"].items(), key=lambda x: x[1]["name"]):
         for t in forms(s):
-            if t["synthetic"]:
+            if kinds and t["kind"] not in kinds:
                 continue
             x, y = chart_xy(t)
             key = t["id"] + "|" + json.dumps([x, y])
@@ -63,10 +62,10 @@ def chart_forms(ds) -> dict:
                 if (sid, c) in by_form and (sid, t["id"]) in by_form:
                     arrows.add((by_form[(sid, c)], by_form[(sid, t["id"])]))
     lo = lambda v: math.log10(max(v, 1e-6))
-    xs = [lo(v) for it in items.values() for v in it["delay"]]
+    xs = [_t(v) for it in items.values() for v in it["delay"]] + [0.0]
     ys = [lo(v) for it in items.values() for v in it["interval"] if v > 0]
-    ext = {"x": [math.floor(min(xs, default=-3)), math.ceil(max(xs, default=1) + 0.3)],
-           "y": [math.floor(min(ys, default=-3)), math.ceil(max(ys, default=1) + 0.3)]}
+    ext = {"x": [math.floor(min(xs)) - (0.3 if min(xs) < 0 else 0.5), math.ceil(max(xs) + 0.3)],
+           "y": [math.floor(min(ys, default=-3)), math.ceil(max(ys, default=1) + 0.3)], "symlog": SYMLOG}
     for it in items.values():
         it["label"] = ", ".join(it["signals"]) + f" ({it['form']})"
     return {"items": list(items.values()), "arrows": sorted(arrows), "extent": ext, "groups": GROUP_LABELS}
@@ -84,6 +83,8 @@ CHART_JS = r"""
   .ac .ac-dl { font-size: .62rem; margin-left: .6rem; }
   .ac svg { width: 100%; height: auto; color: var(--md-default-fg-color); font-family: inherit; }
   .ac .ac-grid { stroke: var(--md-default-fg-color--lightest); stroke-width: 1; }
+  .ac .ac-minor { stroke: var(--md-default-fg-color--lightest); stroke-width: .5; opacity: .6; }
+  .ac .ac-zero { stroke: var(--md-default-fg-color); stroke-width: 1.6; opacity: .75; }
   .ac .ac-axis { stroke: var(--md-default-fg-color--light); stroke-width: 1; }
   .ac text { fill: var(--md-default-fg-color--light); font-size: 11px; }
   .ac .ac-title { fill: var(--md-default-fg-color); font-size: 12px; }
@@ -104,11 +105,14 @@ CHART_JS = r"""
   const COL = {waveform: '#2a78d6', numeric: '#eb6834', event: '#1baf7a', text: '#8a6fd1'};
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
   const lg = (v) => Math.log10(Math.max(v, 1e-6));
+  let C = 1e-3;
+  const tx = (v) => Math.sign(v) * Math.log10(1 + Math.abs(v) / C);
   let uid = 0;
 
   window.AtlasChart = function (host, opt) {
     const W = 720, H = 600, M = {l: 66, r: 14, t: 14, b: 66};
     const [x0, x1] = opt.extent.x, [y0, y1] = opt.extent.y;
+    C = opt.extent.symlog || 1e-3;
     const sx = (l) => M.l + (l - x0) / (x1 - x0) * (W - M.l - M.r);
     const sy = (l) => H - M.b - (l - y0) / (y1 - y0) * (H - M.t - M.b);
     const id = 'ac' + (++uid);
@@ -120,16 +124,31 @@ CHART_JS = r"""
         (lg(a.interval[0]) + lg(a.interval[1])) - (lg(b.interval[0]) + lg(b.interval[1])));
       shown.forEach((it, i) => { it.n = i + 1; });
       const geo = (it) => {
-        const cx = (lg(it.delay[0]) + lg(it.delay[1])) / 2, cy = (lg(it.interval[0]) + lg(it.interval[1])) / 2;
-        const w = Math.max(lg(it.delay[1]) - lg(it.delay[0]), 0.2), h = Math.max(lg(it.interval[1]) - lg(it.interval[0]), 0.2);
+        const cx = (tx(it.delay[0]) + tx(it.delay[1])) / 2, cy = (lg(it.interval[0]) + lg(it.interval[1])) / 2;
+        const w = Math.max(tx(it.delay[1]) - tx(it.delay[0]), 0.2), h = Math.max(lg(it.interval[1]) - lg(it.interval[0]), 0.2);
         return {cx: sx(cx), cy: sy(cy), rx: (sx(x0 + w) - sx(x0)) / 2, ry: (sy(y0) - sy(y0 + h)) / 2};
       };
       let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opt.aria || 'Timing of time stamps') + '">';
       s += '<defs><marker id="' + id + 'm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity=".7"/></marker></defs>';
-      for (let k = Math.ceil(x0); k <= x1; k++) {
-        s += '<line class="ac-grid" x1="' + sx(k) + '" x2="' + sx(k) + '" y1="' + M.t + '" y2="' + (H - M.b) + '"/>';
-        s += '<text x="' + sx(k) + '" y="' + (H - M.b + 16) + '" text-anchor="middle">10<tspan dy="-5" font-size="8">' + k + '</tspan></text>';
+      const TICKS = [[1e-3, '1 ms'], [1e-2, '10 ms'], [0.1, '100 ms'], [1, '1 s'], [10, '10 s'], [60, '1 min'], [600, '10 min'],
+        [3600, '1 h'], [36000, '10 h'], [86400, '1 d']];
+      for (let k = -3; k <= 5; k++) for (let m = 2; m <= 9; m++) for (const sg of [1, -1]) {
+        const v = sg * m * Math.pow(10, k); if (Math.abs(v) < C) continue;
+        const X = tx(v); if (X < x0 || X > x1) continue;
+        s += '<line class="ac-minor" x1="' + sx(X) + '" x2="' + sx(X) + '" y1="' + M.t + '" y2="' + (H - M.b) + '"/>';
       }
+      for (let k = Math.floor(y0); k <= y1; k++) for (let m = 2; m <= 9; m++) {
+        const Y = k + Math.log10(m); if (Y < y0 || Y > y1) continue;
+        s += '<line class="ac-minor" y1="' + sy(Y) + '" y2="' + sy(Y) + '" x1="' + M.l + '" x2="' + (W - M.r) + '"/>';
+      }
+      const xt = [[0, '0']]; TICKS.forEach(([v, l]) => { if (v >= C) { xt.push([v, l], [-v, '−' + l]); } });
+      xt.sort((a, b) => a[0] - b[0]);
+      let lastX = -1e9;
+      xt.forEach(([v, l]) => {
+        const X = tx(v); if (X < x0 || X > x1) return;
+        s += '<line class="' + (v === 0 ? 'ac-zero' : 'ac-grid') + '" x1="' + sx(X) + '" x2="' + sx(X) + '" y1="' + M.t + '" y2="' + (H - M.b) + '"/>';
+        if (Math.abs(v) !== C && sx(X) - lastX >= 30) { s += '<text x="' + sx(X) + '" y="' + (H - M.b + 16) + '" text-anchor="middle">' + l + '</text>'; lastX = sx(X); }
+      });
       for (let k = Math.ceil(y0); k <= y1; k++) {
         s += '<line class="ac-grid" y1="' + sy(k) + '" y2="' + sy(k) + '" x1="' + M.l + '" x2="' + (W - M.r) + '"/>';
         s += '<text x="' + (M.l - 6) + '" y="' + (sy(k) + 4) + '" text-anchor="end">10<tspan dy="-5" font-size="8">' + k + '</tspan></text>';
@@ -174,7 +193,7 @@ CHART_JS = r"""
           leg += '<li data-n="' + it.n + '"><b>' + it.n + '</b><span>' + name + (it.estimated ? ' <em>(' + esc(it.status) + ')</em>' : '') + '<small>' + esc(it.evidence) + '</small></span></li>';
         });
       });
-      host.innerHTML = '<div class="ac' + (opt.stack ? ' ac-stack' : '') + '"><div>' + s + '<p class="ac-key">Solid outline: measured. Dashed: estimated or assumed. Dashed arrow: a raw form to the corrected form that improves on it. Hover for details.<a class="ac-dl" href="#">Download SVG</a></p></div><ol>' + leg + '</ol></div>';
+      host.innerHTML = '<div class="ac' + (opt.stack ? ' ac-stack' : '') + '"><div>' + s + '<p class="ac-key">Across: bias (symmetric log axis; left of zero, the stamp comes early). Up: standard uncertainty. Solid outline: measured. Dashed: estimated or assumed. Dashed arrow: a form to the corrected form that improves on it. Hover for details.<a class="ac-dl" href="#">Download SVG</a></p></div><ol>' + leg + '</ol></div>';
       host.querySelector('.ac-dl').addEventListener('click', (ev) => {
         ev.preventDefault();
         const svg = host.querySelector('svg').cloneNode(true);
@@ -182,6 +201,8 @@ CHART_JS = r"""
         const cs = getComputedStyle(host);
         svg.querySelectorAll('text').forEach((t) => { t.setAttribute('fill', cs.color); t.setAttribute('font-family', 'sans-serif'); });
         svg.querySelectorAll('.ac-grid').forEach((l) => l.setAttribute('stroke', '#ddd'));
+        svg.querySelectorAll('.ac-minor').forEach((l) => { l.setAttribute('stroke', '#eee'); l.setAttribute('stroke-width', '.5'); });
+        svg.querySelectorAll('.ac-zero').forEach((l) => { l.setAttribute('stroke', '#333'); l.setAttribute('stroke-width', '1.6'); });
         svg.querySelectorAll('.ac-axis').forEach((l) => l.setAttribute('stroke', '#999'));
         svg.querySelectorAll('.ac-badge circle').forEach((c) => c.setAttribute('fill', '#fff'));
         svg.setAttribute('style', 'color:#222;background:#fff');
@@ -201,6 +222,6 @@ CHART_JS = r"""
 """
 
 AXES = {
-    "xlabel": "Delay of the stamp after the end of the interval a value describes; after a correction, what is left (s)",
-    "ylabel": "Width of the interval a time stands for (s)",
+    "xlabel": "Bias: stamp minus the end of the interval a value describes (negative = early)",
+    "ylabel": "Standard uncertainty, 1 SD (s)",
 }

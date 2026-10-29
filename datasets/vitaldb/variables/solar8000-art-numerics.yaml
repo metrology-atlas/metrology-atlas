@@ -10,32 +10,53 @@ timing:
 - id: solar-lab
   name: after the per-case delay label
   default: true
-  delay_s:
-  - 0.055
-  - 0.4
-  interval_s:
-  - 3.0
-  - 8.0
-  domain: solar8000
-  status: measured
-  evidence: 'numeric_delay label SE p10-p90: ART 0.06-0.35 s, CVP 0.11-0.40 s (fixed within a case)'
-  corrected_delay_s:
-  - 0.3
-  - 4.7
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 2
+  - 5
+  stamp_position: close
+  removes_bias_s: &id001
+    median: 1.3
+    p5: 0.0
+    p95: 2.74
+    scope: recording
+    status: measured
+    evidence: 'label delays: systolic 1.05, diastolic 1.1, mean 1.7 s (medians); CVP 3.8 s (2.85-4.8)'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: per-case label
+      type: A
+      distribution: empirical
+      u_s: 0.16
+      scope: recording
+      evidence: 'label SE median: ART 0.15-0.16 s, CVP 0.21 s'
   correction: per-case delay label
   corrects:
   - solar-win
-- id: solar-win
-  name: as stamped
-  delay_s:
-  - 0.3
-  - 4.7
-  interval_s:
-  - 3.0
-  - 8.0
   domain: solar8000
   status: measured
-  evidence: 'delay from window end: ART 0.3-2.5 s, CVP 3.1-4.7 s; windows 3-6 s + 2 s poll'
+  evidence: 'numeric_delay labels (about 3,460 ART and 1,331 CVP recordings); windows: ART exponential average of 2-4 beats,
+    CVP waveform mean over about 5 s (whole release, 29 Oct)'
+- id: solar-win
+  name: as stamped
+  kind: as_stored
+  support_s:
+  - 2
+  - 5
+  stamp_position: close
+  bias_s: *id001
+  uncertainty:
+    components:
+    - name: between recordings
+      type: A
+      distribution: empirical
+      u_s: 0.8328
+      scope: recording
+  domain: solar8000
+  status: measured
+  evidence: label delays from window end (above); 2 s polls; CVP later (3.8 s median)
 tags:
 - stub
 delays:

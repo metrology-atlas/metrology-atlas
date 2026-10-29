@@ -9,29 +9,81 @@ source_name: clinical_data times
 device: clinical-records
 stamp_clock: hospital-records
 timing:
-- id: emr5
-  name: 5-minute entries
+- id: emr5-shift
+  name: 5-minute entries, shifted back half a step
   default: true
-  delay_s:
-  - 150.0
-  - 600.0
-  interval_s:
-  - 300.0
-  - 300.0
+  kind: fixed_shift
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 300
+  removes_bias_s:
+    value: 150
+    scope: independent
+    status: measured
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: 5-minute grid (rounded up)
+      type: B
+      distribution: rectangular
+      u_s: 86.6025
+      scope: independent
+  correction: half the 5-minute step, known in advance
+  corrects:
+  - emr5
   domain: records
   status: measured
-  evidence: 'rounded up: 90-290 s later than minute entries; ceiling kernel best in 11/11 device markers (small margin at anaesthesia start, where the value model prefers the nearest mark; op end floor by its value model)'
+  evidence: ceiling kernel best in 11/11 device markers; documentation lag beyond the rounding not measured (not included)
+- id: emr5
+  name: 5-minute entries
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 300
+  bias_s:
+    name: rounded up to the next 5-minute mark
+    value: 150
+    scope: independent
+    status: measured
+  uncertainty:
+    components:
+    - name: 5-minute grid (rounded up)
+      type: B
+      distribution: rectangular
+      u_s: 86.6025
+      scope: independent
+  domain: records
+  status: measured
+  evidence: 'rounded up: 90-290 s later than minute entries; ceiling kernel best in 11/11 device markers (small margin at
+    anaesthesia start; op end floor by its value model); documentation lag not measured (not included)'
 - id: emr1
   name: minute entries
-  delay_s:
-  - 30.0
-  - 300.0
-  interval_s:
-  - 60.0
-  - 60.0
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 60
+  bias_s:
+    name: minute grid, assumed rounded up like the 5-minute entries
+    value: 30
+    scope: independent
+    status: assumed
+  uncertainty:
+    components:
+    - name: minute grid
+      type: B
+      distribution: rectangular
+      u_s: 17.3205
+      scope: independent
   domain: records
   status: estimated
-  evidence: 'minute grid, 5-min entries rounded up; anaesthesia start a median 14 min (p10-p90 6-25) before device induction (2,913 cases); per-entry documentation lag not measured'
+  evidence: minute grid; anaesthesia start a median 14 min (p10-p90 6-25) before device induction (2,913 cases), a different
+    event, not an error; per-entry documentation lag not measured (not included)
 tags:
 - stub
 chain:

@@ -10,12 +10,24 @@ timing:
 - id: nibp
   name: as stamped
   default: true
-  delay_s:
-  - 20.0
-  - 40.0
-  interval_s:
-  - 30.0
-  - 40.0
+  kind: as_stored
+  support_s:
+  - 30
+  - 40
+  stamp_position: close
+  bias_s:
+    median: 30
+    p5: 20
+    p95: 40
+    scope: independent
+    status: measured
+  uncertainty:
+    components:
+    - name: result delay
+      type: A
+      distribution: empirical
+      u_s: 6.079
+      scope: independent
   domain: solar8000
   status: measured
   evidence: result 20-40 s after the cuff measurement

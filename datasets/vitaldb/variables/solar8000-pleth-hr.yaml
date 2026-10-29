@@ -10,14 +10,34 @@ timing:
 - id: pleth-hr
   name: as stamped
   default: true
-  delay_s:
-  - 2.8
-  - 4.6
-  interval_s:
-  - 8.0
-  - 12.0
+  kind: as_stored
+  support_s:
+  - 8
+  - 12
+  stamp_position: close
+  bias_s:
+    median: 2.79
+    p5: -1.8
+    p95: 4.97
+    n: 6150
+    scope: recording
+    status: measured
+  look_ahead:
+    lead_s:
+    - 0
+    - 1.8
+    basis: apparent
+    note: The lower tail (down to -1.8 s) comes from poorly identified fits, not from a true lead (to check).
+  uncertainty:
+    components:
+    - name: between recordings
+      type: A
+      distribution: empirical
+      u_s: 2.0578
+      scope: recording
   domain: solar8000
   status: measured
-  evidence: delay 2.4-4.2 s + 0.4 s PLETH; ~12 beats
+  evidence: 'delay from window end, against the recorded PLETH plus its 0.385 s delay: median 2.8 s (6,150 recordings, 29
+    Oct); median of about 12 beats'
 tags:
 - stub
