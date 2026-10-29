@@ -109,7 +109,7 @@ def test_generated_overlay_and_snapshot(tmp_path):
         "_generated/variables/h.yaml": {"id": "h", "name": "Height", "summary": "Generated.", "type": "clinical",
                                          "unit": "cm", "value": {"step": 0.1, "model": "lib/models/h.json"}},
         "variables/h.yaml": {"id": "h", "name": "Height", "summary": "Hand-written.", "type": "clinical",
-                             "value": {"accuracy_sd": 0.5}},
+                             "value": {"bias": {"value": 0.5}}},
         "software/lib.yaml": {"id": "lib", "name": "Lib", "summary": "S."},
     })
     meta = yaml.safe_load((d / "dataset.yaml").read_text())
@@ -122,7 +122,7 @@ def test_generated_overlay_and_snapshot(tmp_path):
     (d / "_sources" / "lib" / "models" / "h.json").write_text("{}")
     item = load(d).items["variable"]["h"]
     assert item["summary"] == "Hand-written."
-    assert item["value"] == {"step": 0.1, "model": "lib/models/h.json", "accuracy_sd": 0.5}
+    assert item["value"] == {"step": 0.1, "model": "lib/models/h.json", "bias": {"value": 0.5}}
 
 
 def test_record_references(tmp_path):

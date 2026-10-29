@@ -135,9 +135,32 @@ def load(folder: str | Path) -> Dataset:
     _check_fields(ds, DATASET, {k: v for k, v in meta.items() if not k.startswith("_")}, "dataset.yaml", problems)
     _check_figures(ds, meta, "dataset.yaml", problems)
     _check_forbidden(ds, problems)
+    _check_terms(ds, problems)
+    if ds.legacy_timing:
+        ds.warnings.append(f"{len(ds.legacy_timing)} timing forms still use the legacy fields (delay_s, interval_s); "
+                           "read as uniform ranges until they are migrated (reframe stage 3)")
     if problems:
         raise AtlasError(problems)
     return ds
+
+
+QUANT_ACCURACY = re.compile(r"(?i)\baccura(?:cy|te)\b[^.\n]{0,40}?\d")
+STRICT_TERMS = False
+"""After the text pass (reframe stage 5) a number given as 'accuracy' becomes an error; until then a warning (D1)."""
+
+
+def _check_terms(ds: Dataset, problems: list[str]) -> None:
+    """'Accuracy' is qualitative in the VIM (2.13): flag it next to a number in the content."""
+    hits = 0
+    for (kind_name, id_), rel in ds.sources.items():
+        for text in _strings(ds.items[kind_name][id_]):
+            if QUANT_ACCURACY.search(bare(text)):
+                hits += 1
+                if STRICT_TERMS:
+                    problems.append(f"{rel}: 'accuracy' with a number; use bias or standard uncertainty (D1)")
+                break
+    if hits and not STRICT_TERMS:
+        ds.warnings.append(f"{hits} items use 'accuracy' next to a number; the text pass (stage 5) rewrites them (D1)")
 
 
 def _store(ds: Dataset, kind: Kind, item: dict, rel: str, problems: list[str]) -> None:
@@ -264,19 +287,98 @@ def _check_link_modes(ds: Dataset, link: dict, rel: str, problems: list[str]) ->
             problems.append(f"{rel}: mode '{m}' is not a mode of clock '{link['clock']}'")
 
 
+LEGACY_TIMING = ("delay_s", "interval_s", "corrected_delay_s")
+NEW_TIMING = ("kind", "support_s", "stamp_position", "bias_s", "removes_bias_s", "uncertainty", "uses_future",
+              "look_ahead", "grid_s")
+
+
 def _check_timing(ds: Dataset, signal: dict, rel: str, problems: list[str]) -> None:
+    """Timing forms: domains, corrections and defaults; and the reframe's rules (framework spec 28 Oct, D3/D5/D9/D10)
+    for forms written in the current fields. Legacy forms are counted and warned about until stage 3 migrates them."""
     domains = {d.get("id") for d in ds.meta.get("domains") or []}
-    forms = signal.get("timing") or []
+    forms = [t for t in signal.get("timing") or [] if isinstance(t, dict)]
     for t in forms:
-        if isinstance(t, dict) and t.get("domain") not in domains:
+        if t.get("domain") not in domains:
             problems.append(f"{rel}: timing '{t.get('id')}': domain '{t.get('domain')}' is not in dataset.yaml domains")
-    ids = {t.get("id") for t in forms if isinstance(t, dict)}
+    ids = {t.get("id") for t in forms}
     for t in forms:
-        for c in (t.get("corrects") or []) if isinstance(t, dict) else []:
+        for c in t.get("corrects") or []:
             if c not in ids or c == t.get("id"):
                 problems.append(f"{rel}: timing '{t.get('id')}' corrects '{c}', which is not another form of this signal")
-    if sum(1 for t in forms if isinstance(t, dict) and t.get("default")) > 1:
+    if sum(1 for t in forms if t.get("default")) > 1:
         problems.append(f"{rel}: more than one timing form is marked default")
+    for t in forms:
+        at = f"{rel}: timing '{t.get('id')}'"
+        legacy = [k for k in LEGACY_TIMING if k in t]
+        new = [k for k in NEW_TIMING if k in t]
+        if legacy and new:
+            problems.append(f"{at} mixes legacy fields ({', '.join(legacy)}) with current ones ({', '.join(new)})")
+            continue
+        if legacy:
+            ds.legacy_timing.append(at)
+            for k in ("delay_s", "interval_s"):
+                if k not in t:
+                    problems.append(f"{at}: legacy form needs '{k}'")
+            continue
+        _check_form(t, at, problems)
+
+
+def _check_form(t: dict, at: str, problems: list[str]) -> None:
+    from metrology_atlas.timing import bias_range
+    kind = t.get("kind")
+    for k in ("kind", "support_s", "stamp_position", "uncertainty"):
+        if k not in t:
+            problems.append(f"{at}: '{k}' is required (framework spec: every form states its kind, support, stamp "
+                            "position and uncertainty)")
+    if kind in ("fixed_shift", "per_recording"):
+        b = t.get("bias_s")
+        if b and not b.get("name"):
+            problems.append(f"{at}: a corrected form has no bias (D5); a bias left after the correction needs a name")
+        if not t.get("removes_bias_s"):
+            problems.append(f"{at}: a correction must say what bias it removes ('removes_bias_s')")
+        if kind == "per_recording" and "uses_future" not in t:
+            problems.append(f"{at}: a per-recording correction must say whether it uses data after the stamp "
+                            "('uses_future')")
+        if kind == "fixed_shift" and t.get("uses_future"):
+            problems.append(f"{at}: a fixed shift is known in advance; it cannot use future data")
+    elif kind == "as_stored" and "bias_s" not in t:
+        problems.append(f"{at}: an as-stored form must give its bias (0 when the stamp sits at the close)")
+    if t.get("stamp_position") in ("open", "centre") and "bias_s" not in t:
+        problems.append(f"{at}: a stamp at the {t['stamp_position']} of its support needs a bias giving its "
+                        "displacement from the close (D10)")
+    for key in ("bias_s", "removes_bias_s"):
+        b = t.get(key)
+        if b is None:
+            continue
+        if b.get("value") is None and b.get("median") is None:
+            problems.append(f"{at}: '{key}' needs a value or a median")
+            continue
+        if b.get("value") is not None and b.get("median") is not None:
+            problems.append(f"{at}: '{key}' gives both a value and a median")
+        lo, mid, hi = bias_range(b)
+        if not lo <= mid <= hi:
+            problems.append(f"{at}: '{key}' must have p5 <= median <= p95")
+        if key == "bias_s" and lo < 0 and not t.get("look_ahead"):
+            problems.append(f"{at}: the stamp can come before the close (bias down to {lo:g} s): mark 'look_ahead' "
+                            "with the lead (D10)")
+        if b.get("scope") == "shared" and not b.get("shared_with"):
+            problems.append(f"{at}: '{key}' has scope 'shared' but no 'shared_with'")
+    unc = t.get("uncertainty") or {}
+    names = [c.get("name") for c in unc.get("components") or []]
+    for c in unc.get("components") or []:
+        cat = f"{at}: component '{c.get('name')}'"
+        if isinstance(c.get("u_s"), (int, float)) and c["u_s"] < 0:
+            problems.append(f"{cat}: 'u_s' cannot be negative")
+        if c.get("scope") == "structured" and not c.get("length_s"):
+            problems.append(f"{cat}: scope 'structured' needs a correlation length 'length_s'")
+        if c.get("scope") == "shared" and not c.get("shared_with"):
+            problems.append(f"{cat}: scope 'shared' needs 'shared_with'")
+        if c.get("included_in") and c["included_in"] not in names:
+            problems.append(f"{cat}: included_in '{c['included_in']}' is not another component of this form")
+    if len(names) != len(set(names)):
+        problems.append(f"{at}: component names must be unique")
+    if kind in ("fixed_shift", "per_recording") and unc.get("components") and "upper_bound" not in unc:
+        problems.append(f"{at}: say whether the correction's uncertainty is an upper bound (D3)")
 
 
 def _check_figures(ds: Dataset, item: dict, rel: str, problems: list[str]) -> None:

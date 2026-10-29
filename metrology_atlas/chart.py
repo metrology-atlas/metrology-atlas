@@ -1,4 +1,4 @@
-"""The accuracy-against-resolution chart, drawn in the browser from the atlas data.
+"""The timing chart (stamp delay against the interval a value describes), drawn in the browser from the atlas data.
 
 Every timing form of every signal is an ellipse on log-log axes: across, the delay from the end of the interval a
 value describes to its stamp (against the working reference); up, the width of that interval. Each ellipse spans
@@ -12,6 +12,8 @@ from __future__ import annotations
 import json
 import math
 
+from metrology_atlas.timing import forms
+
 GROUP_LABELS = {
     "waveform": "Waveform samples",
     "numeric": "Numeric values (the interval they describe)",
@@ -20,16 +22,35 @@ GROUP_LABELS = {
 }
 
 
+def chart_xy(f: dict) -> tuple[list[float], list[float]]:
+    """Where a resolved timing form sits on the chart until its redesign (reframe stage 4): x is the bias of a form as
+    stored, or the uncertainty (u to the 95% interval) of a corrected one; y the interval a value describes. Legacy forms
+    keep their old delay and interval."""
+    if f.get("legacy_xy"):
+        return f["legacy_xy"][0], f["legacy_xy"][1]
+    if f["kind"] == "as_stored":
+        x = [f["bias"]["lo"], f["bias"]["hi"]]
+    else:
+        hi = (f["interval95"] or [0, 2 * f["u_c"]])[1]
+        x = [f["u_c"], max(hi, f["u_c"])]
+    sup = f["support"] or [0, 0]
+    y = sup if sup[1] > 0 else [f["grid_s"] or 0, f["grid_s"] or 0]
+    return [max(v, 0.0) for v in x], list(y)
+
+
 def chart_forms(ds) -> dict:
     """Every distinct timing form, with arrows and the axis extent (log10 seconds), ready for the chart."""
     items: dict[str, dict] = {}
     by_form: dict[tuple[str, str], str] = {}
     for sid, s in sorted(ds.items["variable"].items(), key=lambda x: x[1]["name"]):
-        for t in s.get("timing") or []:
-            key = t["id"] + "|" + json.dumps([t["delay_s"], t["interval_s"]])
+        for t in forms(s):
+            if t["synthetic"]:
+                continue
+            x, y = chart_xy(t)
+            key = t["id"] + "|" + json.dumps([x, y])
             it = items.setdefault(key, {
-                "key": key, "form": t["name"], "signals": [], "group": s["type"], "delay": t["delay_s"],
-                "interval": t["interval_s"], "estimated": t["status"] != "measured", "status": t["status"],
+                "key": key, "form": t["name"], "signals": [], "group": s["type"], "delay": x,
+                "interval": y, "estimated": t["status"] != "measured", "status": t["status"],
                 "evidence": t["evidence"], "hrefs": [],
             })
             it["signals"].append(s["name"])
@@ -37,9 +58,10 @@ def chart_forms(ds) -> dict:
             by_form[(sid, t["id"])] = key
     arrows = set()
     for sid, s in ds.items["variable"].items():
-        for t in s.get("timing") or []:
-            for c in t.get("corrects") or []:
-                arrows.add((by_form[(sid, c)], by_form[(sid, t["id"])]))
+        for t in forms(s):
+            for c in t["corrects"]:
+                if (sid, c) in by_form and (sid, t["id"]) in by_form:
+                    arrows.add((by_form[(sid, c)], by_form[(sid, t["id"])]))
     lo = lambda v: math.log10(max(v, 1e-6))
     xs = [lo(v) for it in items.values() for v in it["delay"]]
     ys = [lo(v) for it in items.values() for v in it["interval"] if v > 0]
@@ -102,7 +124,7 @@ CHART_JS = r"""
         const w = Math.max(lg(it.delay[1]) - lg(it.delay[0]), 0.2), h = Math.max(lg(it.interval[1]) - lg(it.interval[0]), 0.2);
         return {cx: sx(cx), cy: sy(cy), rx: (sx(x0 + w) - sx(x0)) / 2, ry: (sy(y0) - sy(y0 + h)) / 2};
       };
-      let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opt.aria || 'Accuracy against resolution') + '">';
+      let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opt.aria || 'Timing of time stamps') + '">';
       s += '<defs><marker id="' + id + 'm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity=".7"/></marker></defs>';
       for (let k = Math.ceil(x0); k <= x1; k++) {
         s += '<line class="ac-grid" x1="' + sx(k) + '" x2="' + sx(k) + '" y1="' + M.t + '" y2="' + (H - M.b) + '"/>';
@@ -165,7 +187,7 @@ CHART_JS = r"""
         svg.setAttribute('style', 'color:#222;background:#fff');
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'}));
-        a.download = (opt.filename || 'accuracy-resolution') + '.svg'; a.click();
+        a.download = (opt.filename || 'timing-chart') + '.svg'; a.click();
       });
       const hot = (n, on) => host.querySelectorAll('[data-n="' + n + '"]').forEach((el) => el.classList.toggle('hot', on));
       host.querySelectorAll('[data-n]').forEach((el) => {
@@ -179,6 +201,6 @@ CHART_JS = r"""
 """
 
 AXES = {
-    "xlabel": "Accuracy: delay from the end of the interval a value describes to its stamp (s)",
-    "ylabel": "Resolution: width of the interval a time stands for (s)",
+    "xlabel": "Delay of the stamp after the end of the interval a value describes; after a correction, what is left (s)",
+    "ylabel": "Width of the interval a time stands for (s)",
 }

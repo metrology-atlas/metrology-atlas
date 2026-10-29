@@ -1,27 +1,40 @@
 """The synchronisation planner: a page where a reader picks the signals an analysis uses and reads off how well
 their times line up, how we know, and what window sizes suit cross-modal features.
 
-The model is a screening tool, not a fit (after vitaldb-bench's ``pair_timing_budget.py``). For each signal's
-chosen timing form, ``delay_s = [lo, hi]`` and ``interval_s = [.., y_hi]``:
+A screening tool, not a fit. Every number comes from :func:`metrology_atlas.timing.forms`, which turns each timing
+form into a bias and a standard uncertainty (framework spec of 28 Oct 2026):
 
-- the delay is corrected to the middle of its range; what is left is uniform: ``sd = (hi - lo) / sqrt(12)``;
-- where in its interval a value's time lies is uniform: ``sr = y_hi / sqrt(12)``;
-- signals are taken as independent: ``sigma = sqrt(sum(sd^2 + sr^2))``;
+- a corrected form is not shifted (bias 0, D5); a fixed shift subtracts the release median, known in advance; an
+  as-stored form is not shifted and its bias stays as a systematic offset, reported apart from the spread;
+- ``sigma = sqrt(sum u_c^2)``, the signals taken as independent (shared errors come with stage 4b);
 - coherent band ``0.1325 / sigma``; finest useful shared grid ``sqrt(12) * sigma``;
-- latency floor ``max(hi)``, oldest data ``max(hi + y_hi)`` (the availability rule);
+- latency floor: the latest the data can arrive after the close of what they describe (the availability rule);
 - signals in one clock domain share their drift; across domains the longest window before drift adds another
-  ``sigma`` is ``sigma / |drift_a - drift_b|``, unknown when a drift is unknown.
+  ``sigma`` is ``sigma / |drift_a - drift_b|``, unknown when a drift is unknown;
+- real-time use leaves out corrections fitted on data after the stamp (``uses_future``).
 
-Window advice: a feature window at least as long as the slowest signal's interval and at least ``sigma / tolerance``
-(so the timing error is at most that fraction of the window), no longer than the drift limit, stepped by at least
-the finest grid.
+Window advice: a feature window at least as long as the longest interval a chosen value describes and at least
+``sigma / tolerance``, no longer than the drift limit, stepped by at least the finest grid.
 """
 
 from __future__ import annotations
 
 import json
 
-from metrology_atlas.chart import AXES, chart_forms
+from metrology_atlas.chart import AXES, chart_forms, chart_xy
+from metrology_atlas.timing import forms as timing_forms
+
+
+def planner_form(f: dict, ds) -> dict:
+    """What the page's script needs of one resolved timing form."""
+    x, y = chart_xy(f)
+    return {"id": f["id"], "name": f["name"], "default": f["default"], "kind": f["kind"], "uses_future": f["uses_future"],
+            "legacy": f["legacy"], "synthetic": f["synthetic"], "bias": f["bias"], "shift": f["shift_s"],
+            "removes": f["removes"], "u_c": f["u_c"], "upper_bound": f["upper_bound"], "likely": f["likely_u"],
+            "latency": f["latency_s"], "support_hi": (f["support"] or [0, 0])[1], "domain": f["domain"],
+            "status": f["status"], "evidence": f["evidence"], "correction": f["correction"], "corrects": f["corrects"],
+            "delay": x, "interval": y, "chart_key": f["id"] + "|" + json.dumps([x, y]),
+            "studies": [{"name": ds.items["study"][x]["name"], "href": f"studies/{x}.html"} for x in f["studies"]]}
 
 PAGE = r"""---
 hide:
@@ -38,20 +51,24 @@ timing of each signal in this atlas, not a fit to your data.
 <div id="planner" class="tp"><p><em>The planner needs JavaScript.</em></p></div>
 
 ??? info "How the numbers are worked out"
-    For each signal, the delay from the end of the interval a value describes to its stamp lies in a range
-    `[lo, hi]` against the working reference, and the interval itself is up to `y_hi` wide.
+    Each value describes an interval of time; its time is the **end** of that interval, the moment the value could
+    first exist. For each signal's chosen form the atlas holds a **bias** (how late the stamp sits after that end,
+    systematic within a recording) and a **standard uncertainty** built from named components.
 
-    - **Shift each signal by the middle of its delay range.** What is left is treated as uniform: spread
-      `(hi − lo) / √12`. Where in its interval a value's time lies adds `y_hi / √12`.
-    - **Relative timing error** `σ = √(Σ spread² + Σ interval²)`, over all chosen signals, taken as independent.
+    - **Corrected forms are not shifted**: the correction has already removed the bias. A **fixed shift** subtracts
+      the release median, known in advance, so it also works in real time. A form **as stored** is not shifted: its
+      bias stays, shown apart as a systematic offset.
+    - **Relative timing error** `σ = √(Σ u²)` over the chosen signals, taken as independent (errors they share, such
+      as one clock, are not yet cancelled). Where a correction's uncertainty is an upper bound, σ is one too.
     - **Coherent band** `0.1325 / σ`: the −3 dB frequency of a Gaussian timing blur. Cross-modal structure faster
       than this is smeared.
     - **Finest useful grid** `√12 · σ`: a shared time grid finer than this adds no cross-channel information.
-    - **Latency floor** `max hi` (plus the delay a correction removed, for corrected forms): a feature vector at
-      time *t* can only hold windows that ended this long before *t*.
+    - **Latency floor**: the latest the data can arrive after the end of what they describe, including any delay a
+      correction removed. A feature vector at time *t* can only hold windows that ended this long before *t*.
+    - **Real-time use** leaves out corrections fitted on the whole recording: they use data from after the stamp.
     - **Drift limit** `σ / |Δ drift|`: between clock domains, how long a window can be before drift adds another σ.
       Signals in one domain share their drift, which cancels.
-    - **Window advice:** at least the slowest signal's interval, at least `σ / tolerance`, at most the drift limit;
+    - **Window advice:** at least the longest interval a chosen value describes, at least `σ / tolerance`, at most the drift limit;
       step by at least the finest grid.
 
     {reference}
@@ -90,17 +107,20 @@ CODE = r"""
   const fmt = (x) => {
     if (x === null || x === undefined || Number.isNaN(x)) return 'unknown';
     if (x === Infinity) return 'unlimited';
-    if (x < 1) return (x * 1000).toPrecision(3).replace(/\.?0+$/, '') + ' ms';
-    if (x < 120) return x.toPrecision(3).replace(/\.?0+$/, '') + ' s';
-    if (x < 7200) return (x / 60).toPrecision(3).replace(/\.?0+$/, '') + ' min';
-    return (x / 3600).toPrecision(3).replace(/\.?0+$/, '') + ' h';
+    if (x < 1) return (x * 1000).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + ' ms';
+    if (x < 120) return x.toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + ' s';
+    if (x < 7200) return (x / 60).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + ' min';
+    return (x / 3600).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + ' h';
   };
   const hz = (f) => f === Infinity ? 'unlimited' : (f >= 1 ? f.toPrecision(3) + ' Hz' : (60 * f).toPrecision(3) + ' per min');
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
   const byId = Object.fromEntries(D.signals.map((s) => [s.id, s]));
   const params = new URLSearchParams(location.search);
   const chosen = new Map();
-  (params.get('s') || '').split(',').filter((x) => byId[x]).forEach((x) => chosen.set(x, byId[x].forms.find((f) => f.default)?.id || byId[x].forms[0].id));
+  let realtime = params.get('rt') === '1';
+  const usable = (s) => s.forms.filter((f) => !realtime || !f.uses_future);
+  const best = (s) => { const u = usable(s); return (u.find((f) => f.default) || u.find((f) => f.kind === 'fixed_shift') || u[0]).id; };
+  (params.get('s') || '').split(',').filter((x) => byId[x]).forEach((x) => chosen.set(x, best(byId[x])));
 
   const devices = [];
   D.signals.forEach((s) => { let d = devices.find((x) => x.name === s.device); if (!d) devices.push(d = {name: s.device, signals: []}); d.signals.push(s); });
@@ -109,17 +129,23 @@ CODE = r"""
   const pick = root.querySelector('#tp-pick'), out = root.querySelector('#tp-out');
 
   function drawPicker() {
-    pick.innerHTML = devices.map((d) => '<fieldset><legend>' + esc(d.name) + '</legend>' + d.signals.map((s) => {
+    pick.innerHTML = '<label class="tp-rt"><input type="checkbox" id="tp-rt"' + (realtime ? ' checked' : '') + '> <b>Real-time use</b>: only data and corrections available at the time (leaves out corrections fitted on the whole recording)</label>' + devices.map((d) => '<fieldset><legend>' + esc(d.name) + '</legend>' + d.signals.map((s) => {
       const on = chosen.has(s.id);
-      const sel = on && s.forms.length > 1 ? '<select data-s="' + s.id + '">' + s.forms.map((f) =>
-        '<option value="' + f.id + '"' + (chosen.get(s.id) === f.id ? ' selected' : '') + '>' + esc(f.name) + '</option>').join('') + '</select>' : '';
+      const fs = usable(s);
+      const sel = on && fs.length > 1 ? '<select data-s="' + s.id + '">' + fs.map((f) =>
+        '<option value="' + f.id + '"' + (chosen.get(s.id) === f.id ? ' selected' : '') + '>' + esc(f.name) + (f.uses_future ? ' (whole-recording fit)' : '') + '</option>').join('') + '</select>' : '';
       return '<label><input type="checkbox" data-s="' + s.id + '"' + (on ? ' checked' : '') + '> ' + esc(s.name) + '</label>' + sel;
     }).join('') + '</fieldset>').join('');
     pick.querySelectorAll('input[type=checkbox]').forEach((el) => el.addEventListener('change', () => {
       const s = byId[el.dataset.s];
-      if (el.checked) chosen.set(s.id, (s.forms.find((f) => f.default) || s.forms[0]).id); else chosen.delete(s.id);
+      if (el.checked) chosen.set(s.id, best(s)); else chosen.delete(s.id);
       drawPicker(); drawOut();
     }));
+    pick.querySelector('#tp-rt').addEventListener('change', (e) => {
+      realtime = e.target.checked;
+      [...chosen.keys()].forEach((sid) => { const f = byId[sid].forms.find((g) => g.id === chosen.get(sid)); if (realtime && f.uses_future) chosen.set(sid, best(byId[sid])); });
+      drawPicker(); drawOut();
+    });
     pick.querySelectorAll('select').forEach((el) => el.addEventListener('change', () => { chosen.set(el.dataset.s, el.value); drawOut(); }));
   }
 
@@ -130,20 +156,19 @@ CODE = r"""
       [0.05, 0.1, 0.2].map((t) => '<label><input type="radio" name="tp-tol" value="' + t + '"' + (t === tol ? ' checked' : '') + '> ' + (t * 100) + '%</label>').join(' ') +
       '</span><span><label>Timing difference to resolve (ms, optional): <input id="tp-res" type="number" min="0" step="1" style="width:5rem" value="' + resolveMs + '"></label></span></div>';
     if (rows.length < 2) {
-      out.innerHTML = controls + '<p>Choose at least two signals on the left. Each signal comes in the forms this atlas knows (raw stamps, after a correction ...); the default is the best-corrected form.</p>' +
+      out.innerHTML = controls + '<p>Choose at least two signals on the left. Each signal comes in the forms this atlas knows (as stored, shifted by the release median, corrected per recording ...); the default is the best-corrected form.</p>' +
         '<label style="font-size:.7rem"><input type="checkbox" id="tp-bg"' + (showAll ? ' checked' : '') + '> show every other time source faintly</label><div id="tp-chart"></div>';
       bind(); drawChart(rows); return;
     }
-    const terms = rows.map(({s, f}) => {
-      const sd = (f.delay[1] - f.delay[0]) / SQ12, sr = f.interval[1] / SQ12;
-      return {s, f, sd, sr, bias: (f.delay[0] + f.delay[1]) / 2, v: sd * sd + sr * sr};
-    });
+    const terms = rows.map(({s, f}) => ({s, f, sd: f.u_c, bias: f.bias.mid, v: f.u_c * f.u_c}));
     const sigma = Math.sqrt(terms.reduce((a, t) => a + t.v, 0));
     const band = sigma > 0 ? 0.1325 / sigma : Infinity, grid = SQ12 * sigma;
-    const late = (f) => f.delay[1] + (f.corrected ? f.corrected[1] : 0);
-    const latency = Math.max(...rows.map((r) => late(r.f)));
-    const oldest = Math.max(...rows.map((r) => late(r.f) + r.f.interval[1]));
-    const slowest = Math.max(...rows.map((r) => r.f.interval[1]));
+    const latency = Math.max(...rows.map((r) => r.f.latency));
+    const oldest = Math.max(...rows.map((r) => r.f.latency + r.f.support_hi));
+    const slowest = Math.max(...rows.map((r) => r.f.support_hi));
+    const mids = rows.map((r) => r.f.bias.mid);
+    const offset = Math.max(...mids) - Math.min(...mids);
+    const upper = rows.some((r) => r.f.upper_bound);
     const doms = [...new Set(rows.map((r) => r.f.domain))];
     let drift = Infinity, driftNote = 'all in one clock domain: drift cancels';
     if (doms.length > 1) {
@@ -167,51 +192,56 @@ CODE = r"""
     if (est.length) warn.push('Estimated, not measured: ' + est.map((r) => esc(r.s.name) + ' (' + esc(r.f.name) + ')').join(', ') + '.');
     if (drift === null) warn.push('The drift between some of these clocks is not known, so a safe window length cannot be bounded: ' + esc(driftNote) + '.');
     if (tooLong) warn.push('The shortest sensible window (' + fmt(wMin) + ') is longer than the drift limit (' + fmt(drift) + '): correct the drift (synchronise those signals) or loosen the tolerance.');
-    const raw = rows.filter((r) => r.s.forms.length > 1 && !r.f.default);
+    const raw = rows.filter((r) => r.s.forms.length > 1 && !r.f.default && !(realtime && r.s.forms.find((g) => g.default)?.uses_future));
     if (raw.length) warn.push('Using a less-corrected form for ' + raw.map((r) => esc(r.s.name)).join(', ') + '; the default form lines up better.');
+    if (offset > 0) warn.push('Stamps used as stored keep their bias: a systematic offset of up to ' + fmt(offset) + ' between these signals, not included in σ. Shift them (fixed shift) or correct them to remove it.');
+    const leg = rows.filter((r) => r.f.legacy);
+    if (leg.length) warn.push('Not yet re-evaluated in bias and uncertainty terms (old ranges read as uniform): ' + leg.map((r) => esc(r.s.name)).join(', ') + '.');
+    if (realtime) warn.push('Real-time use: corrections fitted on the whole recording are left out.');
     let res = '';
     if (resolveMs) { const n = Math.ceil(Math.pow(sigma / (resolveMs / 1000), 2)); res = '<div class="tp-card"><b>' + n + '</b><span>events to average to resolve ' + resolveMs + ' ms (random part only; a bias does not average away)</span></div>'; }
 
     out.innerHTML = controls +
-      '<div class="tp-verdict"><strong>These signals line up to about ' + fmt(sigma) + ' (1 SD)</strong>, good enough for ' + tier + '.</div>' +
+      '<div class="tp-verdict"><strong>These signals line up to about ' + fmt(sigma) + ' (1 SD' + (upper ? ', an upper bound' : '') + ')</strong>' + (offset > 0 ? ', plus a systematic offset of up to ' + fmt(offset) + ' from stamps used as stored' : '') + '; good enough for ' + tier + '.</div>' +
       '<div class="tp-cards">' +
-      card(fmt(sigma), 'relative timing error (1 SD)') + card(hz(band), 'coherent cross-modal band') +
+      card(fmt(sigma), 'relative timing uncertainty (1 SD)') + (offset > 0 ? card(fmt(offset), 'systematic offset left (as stored)') : '') + card(hz(band), 'coherent cross-modal band') +
       card(fmt(grid), 'finest useful shared grid') + card(fmt(latency), 'latency floor (availability rule)') +
       card(fmt(oldest), 'oldest data in a feature vector') + card(fmt(drift), 'longest window before drift adds another σ') + res + '</div>' +
       warn.map((w) => '<div class="tp-warn">' + w + '</div>').join('') +
-      '<h3>Where these signals sit: accuracy and resolution</h3><label style="font-size:.7rem"><input type="checkbox" id="tp-bg"' + (showAll ? ' checked' : '') + '> show every other time source faintly</label><div id="tp-chart"></div>' +
+      '<h3>Where these signals sit</h3><label style="font-size:.7rem"><input type="checkbox" id="tp-bg"' + (showAll ? ' checked' : '') + '> show every other time source faintly</label><div id="tp-chart"></div>' +
       '<h3>Window sizing for cross-modal features</h3><ul>' +
-      '<li><strong>Window length: at least ' + fmt(wMin) + '.</strong> ' + (slowest >= sigma / tol ? 'Set by the slowest signal, whose values already describe ' + fmt(slowest) + ' each.' : 'Set by the timing error: σ is then ' + (tol * 100) + '% of the window.') + '</li>' +
+      '<li><strong>Window length: at least ' + fmt(wMin) + '.</strong> ' + (slowest >= sigma / tol ? 'Set by the slowest signal, whose values each describe ' + fmt(slowest) + '.' : 'Set by the timing error: σ is then ' + (tol * 100) + '% of the window.') + '</li>' +
       '<li><strong>At most ' + fmt(drift) + '</strong> without re-synchronising (' + esc(driftNote) + ').</li>' +
       '<li><strong>Step at least ' + fmt(grid) + '.</strong> A finer shared grid adds no cross-channel information.</li>' +
       '<li><strong>Latency:</strong> a feature at time <em>t</em> can only use windows that ended ' + fmt(latency) + ' before <em>t</em>.</li>' +
-      '<li><strong>Line each signal up first:</strong> ' + terms.map((t) => esc(t.s.name) + ': ' + (t.f.corrected ?
-        'apply its ' + esc(t.f.correction || 'correction') + ' (it removes ' + fmt(t.f.corrected[0]) + '–' + fmt(t.f.corrected[1]) + ')' :
-        (t.bias < 0.0005 ? 'no shift' : 'shift back by ' + fmt(t.bias)))).join('; ') + '.</li></ul>' +
+      '<li><strong>Line each signal up first:</strong> ' + terms.map((t) => esc(t.s.name) + ': ' + (
+        t.f.kind === 'per_recording' ? 'apply its ' + esc(t.f.correction || 'correction') + (t.f.removes ? ' (it removes ' + fmt(t.f.removes[0]) + '–' + fmt(t.f.removes[1]) + (t.f.uses_future ? '; fitted on the whole recording' : '') + ')' : (t.f.uses_future ? ' (fitted on the whole recording)' : '')) :
+        t.f.kind === 'fixed_shift' ? 'shift back by ' + fmt(t.f.shift) + ' (' + esc(t.f.correction || 'a fixed shift') + ', known in advance)' :
+        (t.f.bias.hi > 0 ? 'no shift: its stamps are late by ' + fmt(t.f.bias.lo) + '–' + fmt(t.f.bias.hi) + ', median ' + fmt(t.f.bias.mid) : 'no shift'))).join('; ') + '.</li></ul>' +
       '<h3>Where the error comes from, and how we know</h3>' +
-      '<table><thead><tr><th>Signal</th><th>Form</th><th>Delay spread</th><th>Interval</th><th>Share of σ²</th><th>Clock domain</th><th>Evidence</th></tr></thead><tbody>' +
+      '<table><thead><tr><th>Signal</th><th>Form</th><th>Bias left</th><th>Uncertainty (1 SD)</th><th>Share of σ²</th><th>Real time</th><th>Clock domain</th><th>Evidence</th></tr></thead><tbody>' +
       terms.sort((a, b) => b.v - a.v).map((t) => '<tr><td><a href="' + t.s.href + '">' + esc(t.s.name) + '</a></td><td>' + esc(t.f.name) +
-        (t.f.status !== 'measured' ? ' <em>(' + t.f.status + ')</em>' : '') + '</td><td>' + fmt(t.sd) + '</td><td>' + fmt(t.sr) + '</td><td>' +
-        Math.round(100 * t.v / (sigma * sigma)) + '%</td><td>' + (D.domains[t.f.domain]?.href ? '<a href="' + D.domains[t.f.domain].href + '">' + esc(D.domains[t.f.domain].name) + '</a>' : esc(D.domains[t.f.domain]?.name || t.f.domain)) +
+        (t.f.status !== 'measured' ? ' <em>(' + t.f.status + ')</em>' : '') + (t.f.legacy ? ' <em>(old range)</em>' : '') + '</td><td>' + (t.f.bias.hi > 0 ? fmt(t.f.bias.mid) : '0') + '</td><td>' + (t.f.upper_bound ? '≤ ' : '') + fmt(t.sd) + (t.f.likely ? ' (likely ' + fmt(t.f.likely) + ')' : '') + '</td><td>' +
+        (sigma > 0 ? Math.round(100 * t.v / (sigma * sigma)) : 0) + '%</td><td>' + (t.f.uses_future ? 'no' : 'yes') + '</td><td>' + (D.domains[t.f.domain]?.href ? '<a href="' + D.domains[t.f.domain].href + '">' + esc(D.domains[t.f.domain].name) + '</a>' : esc(D.domains[t.f.domain]?.name || t.f.domain)) +
         '</td><td>' + esc(t.f.evidence) + (t.f.studies.length ? '<br>' + t.f.studies.map((x) => '<a href="' + x.href + '">' + esc(x.name) + '</a>').join(', ') : '') + '</td></tr>').join('') +
       '</tbody></table>' + pairs(terms);
     bind();
     drawChart(rows);
-    history.replaceState(null, '', '?s=' + [...chosen.keys()].join(','));
+    history.replaceState(null, '', '?s=' + [...chosen.keys()].join(',') + (realtime ? '&rt=1' : ''));
   }
   let showAll = true, chart = null;
   function drawChart(rows) {
     const host = out.querySelector('#tp-chart');
     if (!host || !window.AtlasChart) return;
-    chart = AtlasChart(host, {...D.chart, stack: true, filename: 'planner-accuracy-resolution'});
+    chart = AtlasChart(host, {...D.chart, stack: true, filename: 'planner-timing'});
     const items = [], arrows = [], mine = new Set();
     rows.forEach(({s, f}) => {
       s.forms.forEach((g) => {
         const key = s.id + '|' + g.id;
-        mine.add(g.id + '|' + JSON.stringify([g.delay, g.interval]));
+        mine.add(g.chart_key);
         items.push({key, group: s.type, delay: g.delay, interval: g.interval, estimated: g.status !== 'measured', status: g.status,
           evidence: g.evidence, label: s.name + ' (' + g.name + ')' + (g.id === f.id ? '' : ': not chosen'), href: s.href, emph: g.id === f.id ? 1 : 0.35});
-        g.corrects.forEach((c) => arrows.push([s.id + '|' + c, key]));
+        g.corrects.filter((c) => s.forms.some((h) => h.id === c)).forEach((c) => arrows.push([s.id + '|' + c, key]));
       });
     });
     if (showAll) D.chart.items.forEach((it) => { if (!mine.has(it.key)) items.push({...it, bg: true}); });
@@ -246,19 +276,13 @@ def planner_page(ds, site) -> str:
         signals.append({
             "id": sid, "name": s["name"], "device": ds.items["device"][s["device"]]["name"], "type": s["type"],
             "href": f"variables/{sid}.md".replace(".md", ".html"),
-            "forms": [{
-                "id": t["id"], "name": t["name"], "default": bool(t.get("default")), "delay": t["delay_s"],
-                "interval": t["interval_s"], "domain": t["domain"], "status": t["status"], "evidence": t["evidence"],
-                "corrected": t.get("corrected_delay_s"), "correction": t.get("correction"),
-                "corrects": t.get("corrects") or [],
-                "studies": [{"name": ds.items["study"][x]["name"], "href": f"studies/{x}.html"} for x in t.get("studies") or []],
-            } for t in s["timing"]],
+            "forms": [planner_form(f, ds) for f in timing_forms(s)],
         })
     domains = {d["id"]: {"name": d["name"], "drift_ppm": d.get("drift_ppm"), "drift_status": d.get("drift_status"),
                          "href": f"clocks/{d['clock']}.html" if d.get("clock") else None}
                for d in ds.meta.get("domains") or []}
     chart = chart_forms(ds)
-    chart.update(AXES, aria="Accuracy against resolution of the chosen signals")
+    chart.update(AXES, aria="Timing of the chosen signals")
     data = json.dumps({"signals": signals, "domains": domains, "chart": chart}, ensure_ascii=False).replace("</", "<\\/")
     ref = site.prose(ds.meta.get("reference") or "").replace("\n", "\n    ")
     return PAGE.format(data=data, code=CODE, reference=ref)

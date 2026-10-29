@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-SCHEMA_VERSION = "metrology-atlas/0.2"
+SCHEMA_VERSION = "metrology-atlas/0.3"
 
 
 @dataclass(frozen=True)
@@ -56,6 +56,8 @@ STATUS = ("measured", "derived", "estimated", "assumed", "withdrawn", "supersede
 OBS_STATUS = ("established", "likely", "open", "withdrawn")
 STUDY_STATUS = ("current", "draft", "open", "superseded", "withdrawn")
 ANCHOR_BASIS = ("tested", "convention", "assumption", "open")
+from metrology_atlas.timing import DISTRIBUTIONS, POSITIONS, SCOPES
+from metrology_atlas.timing import KINDS as FORM_KINDS
 
 FIGURE = (
     Field("id", "str", required=True, help="Unique within its item; [[figure:id]] in the item's prose places it."),
@@ -97,6 +99,46 @@ COMMON = (
     Field("figures", "objs", fields=FIGURE),
 )
 
+BIAS = (
+    Field("name", "str", help="What the bias is, in a few words; required for a bias left after a correction."),
+    Field("value", "number", help="A single bias in seconds (or the variable's unit on the value side)."),
+    Field("median", "number", help="Across the release: the median of the per-recording biases."),
+    Field("p5", "number", help="Across the release: 5th percentile of the per-recording biases."),
+    Field("p95", "number", help="Across the release: 95th percentile of the per-recording biases."),
+    Field("n", "number", help="How many recordings the distribution is from."),
+    Field("scope", "enum", choices=SCOPES, help="What shares this bias (D9); a release distribution is usually "
+                                                 "'recording': fixed within one recording, different between them."),
+    Field("shared_with", "str", help="For scope 'shared': the clock, link, correction or group that shares it."),
+    Field("status", "enum", choices=STATUS),
+    Field("evidence", "str"),
+)
+
+COMPONENT = (
+    Field("name", "str", required=True, help="What this part of the uncertainty is, e.g. 'grid', 'correction'."),
+    Field("type", "enum", required=True, choices=("A", "B"),
+          help="GUM evaluation: A from this dataset's data, B from documentation, related data or judgement."),
+    Field("distribution", "enum", choices=DISTRIBUTIONS),
+    Field("u_s", "number", required=True,
+          help="Standard uncertainty in seconds (on the value side, in the variable's unit; field name kept)."),
+    Field("scope", "enum", required=True, choices=SCOPES,
+          help="What shares it (D9): independent per stamp; structured over a time scale; one recording; a shared "
+               "clock, link, correction or group; the whole release; or unknown."),
+    Field("length_s", "number", help="For scope 'structured': the correlation length in seconds."),
+    Field("shared_with", "str", help="For scope 'shared': what shares it."),
+    Field("included_in", "str", help="Name of another component that already contains this one (not added again)."),
+    Field("status", "enum", choices=STATUS),
+    Field("evidence", "str"),
+)
+
+UNCERTAINTY = (
+    Field("components", "objs", required=True, fields=COMPONENT,
+          help="The uncertainty budget; the combined standard uncertainty is computed from it, never typed."),
+    Field("interval95_s", "range", help="Empirical 95% interval of the held-out errors [low, high] (D3); not 2 x u."),
+    Field("upper_bound", "bool", help="True when the headline includes the checking signal's own noise (D3)."),
+    Field("likely_u_s", "number", help="Where two independent checking signals exist: the shared part's standard "
+                                        "uncertainty, an estimate beside the headline (D3)."),
+)
+
 VALUE = (
     Field("kind", "str", help="The value model's kind, e.g. single_resolution, heaped, mixed_source, derived, exact."),
     Field("resolution", "str", help="Value resolution in words, e.g. '1 cm, often heaped to 5 cm'."),
@@ -107,9 +149,14 @@ VALUE = (
                "effect is negligible, an assumption the data cannot test, or open. Unset means the dataset's "
                "anchor_default applies."),
     Field("anchor_note", "text", help="Why: the evidence, the convention, or what would settle it."),
-    Field("accuracy", "text", help="Instrument or method error: how far the true value can be from the recorded one "
-                                   "beyond resolution."),
-    Field("accuracy_sd", "number", help="Accuracy as one standard deviation, in the variable's unit, when known."),
+    Field("bias", "obj", fields=BIAS, help="Systematic error of the instrument or method, in the variable's unit "
+                                           "(VIM 2.18): recorded minus true, corrected where known."),
+    Field("uncertainty", "obj", fields=(
+        Field("components", "objs", required=True, fields=COMPONENT),
+        Field("note", "text"),
+    ), help="Standard uncertainty beyond resolution (instrument precision, definitional ...), in the variable's unit; "
+            "`u_s` holds the value in that unit."),
+    Field("note", "text", help="The instrument's or method's error in words, where it is not yet a number."),
     Field("model", "str", help="Code reference (software-id/path) of a value model; read from the dataset's "
                                "pinned snapshot of that software."),
     Field("inputs", "refs", ref="variable", help="For a derived value: the variables it is computed from."),
@@ -124,17 +171,32 @@ VALUE = (
 MODE = (Field("id", "str", required=True), Field("name", "str", required=True), Field("description", "text"))
 TIMING = (
     Field("id", "str", required=True),
-    Field("name", "str", required=True, help="Which form of the times this is, e.g. 'raw stamps' or 'after sync'."),
+    Field("name", "str", required=True, help="Which form of the times this is, e.g. 'as stored' or 'after sync'."),
     Field("default", "bool", help="The form an analysis should use; one per signal."),
-    Field("delay_s", "range", required=True,
-          help="Delay from the end of the interval a value describes to its stamp, against the working reference: "
-               "[low, high] in seconds. Corrected to the middle, what is left is the spread."),
-    Field("interval_s", "range", required=True,
-          help="Width of the interval one value or sample stands for: [low, high] in seconds."),
-    Field("corrected_delay_s", "range",
-          help="When this form is a correction (a per-case label, a sync to the reference): the delay it removes, "
-               "[low, high] s. `delay_s` is then what is left after it, and the correction, not a fixed shift, "
-               "lines the signal up. Counts towards latency: the data was still only available that late."),
+    Field("kind", "enum", choices=FORM_KINDS,
+          help="as_stored: the stamps as recorded; fixed_shift: a shift known in advance (e.g. the release median), "
+               "usable in real time; per_recording: a correction fitted per recording."),
+    Field("support_s", "range", help="Length of the interval one value describes (its support), [low, high] s; "
+                                     "[0, 0] for an instant. Part of what the value is, not an error (D10)."),
+    Field("stamp_position", "enum", choices=POSITIONS,
+          help="Where the stamp is meant to sit in the support. The atlas's reference is the close (D10); any other "
+               "position needs a bias giving the displacement."),
+    Field("grid_s", "number", help="Spacing of the stamp or sample grid (resolution, VIM 4.14)."),
+    Field("bias_s", "obj", fields=BIAS,
+          help="Systematic displacement stamp - close, positive when late (VIM 2.18). As stored: per recording, given "
+               "as a release distribution (D2). After a correction: left out (0), or a named remaining bias."),
+    Field("removes_bias_s", "obj", fields=BIAS,
+          help="For a correction: the bias it removes. A fixed shift subtracts its median; it still counts towards "
+               "latency (the data arrived that late)."),
+    Field("uncertainty", "obj", fields=UNCERTAINTY, help="The standard uncertainty and its components (GUM)."),
+    Field("uses_future", "bool", help="True when the correction is fitted on data after the stamp (a whole-recording "
+                                      "fit), so it cannot run in real time."),
+    Field("look_ahead", "obj", fields=(Field("lead_s", "range", required=True), Field("note", "text")),
+          help="When the stamp can sit before the close (a value stamped before it could exist): by how much."),
+    Field("delay_s", "range",
+          help="Legacy (before the VIM/GUM reframe): delay from the end of the interval to the stamp, [low, high] s."),
+    Field("interval_s", "range", help="Legacy: width of the interval one value or sample stands for, [low, high] s."),
+    Field("corrected_delay_s", "range", help="Legacy: the delay a correction removes, [low, high] s."),
     Field("correction", "str", help="What the correction is, in a few words."),
     Field("corrects", "strs", help="Ids of this signal's other forms that this one improves on (drawn as arrows)."),
     Field("domain", "str", required=True, help="Clock domain (dataset.yaml `domains`) whose drift remains."),
@@ -149,8 +211,10 @@ STEP = (
     Field("kind", "enum", required=True,
           choices=("sync", "clock", "stamping", "transport", "processing", "window", "correction")),
     Field("effect", "text", required=True, help="What happens to the time at this step, in a sentence or two."),
-    Field("offset_s", "range", help="Size of the time shift or error this step introduces: [low, high] s."),
-    Field("residual_s", "range", help="What is left of it after the atlas's correction: [low, high] s."),
+    Field("bias_s", "range", help="Systematic time shift this step introduces, across recordings: [low, high] s."),
+    Field("u_s", "number", help="Standard uncertainty left at this step after the atlas's correction, in s."),
+    Field("offset_s", "range", help="Legacy: size of the time shift or error this step introduces, [low, high] s."),
+    Field("residual_s", "range", help="Legacy: what is left of it after the atlas's correction, [low, high] s."),
     Field("drift", "str", help="Drift at this step, in words, e.g. '−62 ppm, pulled back every ~2 h'."),
     Field("status", "enum", required=True, choices=STATUS),
     Field("link", "ref", ref="link"),
@@ -249,7 +313,8 @@ KINDS: dict[str, Kind] = {
                 ), help="Whether the time error and the value error are independent, and why not when they are not."),
             ),
             help="Every recorded quantity: a waveform, a numeric, an event, a clinical field, a lab result. Each is "
-                 "described on two axes, time and value, each with its accuracy and its resolution.",
+                 "described on two axes, time and value, each by its systematic error (bias) and its standard "
+                 "uncertainty, with resolution and the interval a value describes among the components.",
         ),
         Kind(
             "link", "links", "Clock links",
@@ -431,6 +496,8 @@ class Dataset:
     """(kind, id) -> the file it came from."""
     warnings: list[str] = field(default_factory=list)
     """Things worth fixing that do not stop a build (for example code not yet committed)."""
+    legacy_timing: list[str] = field(default_factory=list)
+    """Timing forms still in the pre-reframe fields."""
 
     def get(self, kind: str, id_: str) -> dict | None:
         """The item of a kind with the given id, or None."""

@@ -14,6 +14,9 @@ from metrology_atlas.compile import parameter_text, to_json
 from metrology_atlas.load import XREF, derived
 from metrology_atlas.model import KINDS, QUESTION_KIND_TITLES, QUESTION_KINDS, Dataset
 from metrology_atlas.planner import planner_page
+from metrology_atlas.timing import bias_range, combine, describe_bias
+from metrology_atlas.timing import default as timing_default
+from metrology_atlas.timing import forms as timing_forms
 
 OPEN_QUESTIONS_MARK = "<!-- atlas:open-questions -->"
 """In a free page, replaced by the list of open questions (all kinds except next steps)."""
@@ -454,14 +457,14 @@ class Site:
             out += f'<line x1="{sx(10 ** k):.1f}" x2="{sx(10 ** k):.1f}" y1="0" y2="{h}" class="tc-tick"/>'
         dash = ' stroke-dasharray="3 2"' if step["status"] in ("estimated", "assumed") else ""
         for key, cls in (("offset_s", "tc-off"), ("residual_s", "tc-res")):
-            r = step.get(key)
+            r = _step_range(step, key)
             if r:
                 a, b = sx(r[0]) if r[0] > 0 else 0.0, sx(r[1])
                 if b - a < 3:
                     a, b = max(a - 1.5, 0), min(b + 1.5, w)
                 y, hh = (3, 12) if cls == "tc-off" else (6, 6)
                 out += f'<rect x="{a:.1f}" y="{y}" width="{b - a:.1f}" height="{hh}" rx="2" class="{cls}"{dash}/>'
-        if not step.get("offset_s") and not step.get("residual_s"):
+        if not _step_range(step, "offset_s") and not _step_range(step, "residual_s"):
             out += f'<text x="{w / 2}" y="13" class="tc-na">not measured</text>'
         return out + "</svg>"
 
@@ -490,9 +493,13 @@ class Site:
             refs.append(self.a("parameter", step["parameter"], "parameter"))
         refs += [self.a("study", x) for x in step.get("studies") or []]
         rng = ""
-        if step.get("offset_s"):
+        if step.get("bias_s"):
+            rng += f"bias {_rng(step['bias_s'])}"
+        elif step.get("offset_s"):
             rng += f"{_rng(step['offset_s'])}"
-        if step.get("residual_s"):
+        if step.get("u_s") is not None:
+            rng += f" → u {_rng([step['u_s'], step['u_s']])} after correction"
+        elif step.get("residual_s"):
             rng += f" → {_rng(step['residual_s'])} after correction"
         meta = f'<span class="tc-kind">{step["kind"]}</span> <span class="tc-st tc-{step["status"]}">{step["status"]}</span>'
         if rng:
@@ -504,22 +511,25 @@ class Site:
 
     def auto_chain(self, s: dict) -> list[dict]:
         """A chain from UTC to a variable's stored stamp, derived from its default timing form when none is written."""
-        t = next((x for x in s.get("timing") or [] if x.get("default")), (s.get("timing") or [None])[0])
+        t = timing_default(s)
         if t is None:
             return []
         steps = []
         clock = s.get("sample_clock") or s.get("stamp_clock")
         name = self.name("clock", clock) if clock else "Device"
-        if t.get("corrected_delay_s"):
+        if t["kind"] != "as_stored" and t["removes"]:
             steps.append({"node": name, "clock": clock, "kind": "clock", "status": t["status"],
-                          "effect": f"Delay or clock offset to the stamp; removed by the {t.get('correction', 'correction')}.",
-                          "offset_s": t["corrected_delay_s"], "residual_s": t["delay_s"]})
+                          "effect": f"Delay or clock offset to the stamp; removed by the {t.get('correction') or 'correction'}.",
+                          "bias_s": t["removes"], "u_s": t["u_c"]})
         else:
             steps.append({"node": name, "clock": clock, "kind": "transport", "status": t["status"],
                           "effect": "Delay from the end of the interval a value describes to its stamp.",
-                          "offset_s": t["delay_s"]})
-        steps.append({"node": "Stored time stamp", "kind": "window", "status": t["status"],
-                      "effect": "The width of the interval one value or sample stands for.", "offset_s": t["interval_s"]})
+                          "bias_s": [t["bias"]["lo"], t["bias"]["hi"]]})
+        sup = t["support"] or [0, 0]
+        if sup[1] > 0:
+            steps.append({"node": "Stored time stamp", "kind": "window", "status": t["status"],
+                          "effect": "The interval one value or sample describes; its time is the interval's end.",
+                          "bias_s": sup})
         return steps
 
     def chain(self, s: dict) -> str:
@@ -554,20 +564,7 @@ class Site:
         delays = "\n".join(f"- {self._lag(x)}" for x in s.get("delays") or [])
         window = self._lag(s["window"]) if s.get("window") else ""
         rate = f"{s['rate_hz']} Hz" if s.get("rate_hz") else None
-        timing = ""
-        if s.get("timing"):
-            doms = {d["id"]: d for d in self.ds.meta.get("domains") or []}
-            timing = ("Against the working reference. Delay: from the end of the interval a value describes to its "
-                      "stamp. Interval: how wide that interval is.\n\n"
-                      "| Form | Delay | Interval | Clock domain | Status | Evidence |\n|---|---|---|---|---|---|\n")
-            for t in s["timing"]:
-                d = doms.get(t["domain"], {})
-                dn = self.a("clock", d["clock"], d["name"]) if d.get("clock") else d.get("name", t["domain"])
-                studies = ", ".join(self.a("study", x) for x in t.get("studies") or [])
-                timing += (f"| {t['name']}{' (default)' if t.get('default') else ''} | {_rng(t['delay_s'])} | "
-                           f"{_rng(t['interval_s'])} | {dn} | {t['status']} | {t['evidence']}"
-                           f"{'; ' + studies if studies else ''} |\n")
-            timing += f"\nCombine it with other signals in the [synchronisation planner]({self.base}planner.md?s={i}).\n"
+        timing = self.timing_table(i, s)
         time_side = (self.sub("From UTC to the stored time stamp", self.chain(s)) + self.sub("Timing", timing)
                      + self.sub("Delays", delays) + self.sub("Averaging window", window))
         if not time_side.strip():
@@ -594,19 +591,75 @@ class Site:
             ("Spaced by", self.a("clock", s["sample_clock"]) if s.get("sample_clock") else None),
             ("Rate", rate), ("Unit", s.get("unit"))]), body)
 
+    def timing_table(self, i: str, s: dict) -> str:
+        """The timing forms of a signal: bias, uncertainty and support of each (framework spec, 28 Oct 2026)."""
+        if not s.get("timing"):
+            return ""
+        doms = {d["id"]: d for d in self.ds.meta.get("domains") or []}
+        kinds = {"as_stored": "as stored", "fixed_shift": "fixed shift", "per_recording": "per recording"}
+        out = ("Against the working reference. Each value describes an interval of time; its time is the interval's "
+               "end. **Bias**: how late the stamp sits after that end (systematic within a recording; across the "
+               "release, the spread of recordings). **Uncertainty**: one standard deviation of what is left.\n\n"
+               "| Form | Kind | Bias | Uncertainty (1 SD) | Interval described | Real time | Clock domain | Status | Evidence |\n"
+               "|---|---|---|---|---|---|---|---|---|\n")
+        budgets = ""
+        legacy = False
+        for t in timing_forms(s):
+            if t["synthetic"]:
+                continue
+            d = doms.get(t["domain"], {})
+            dn = self.a("clock", d["clock"], d["name"]) if d.get("clock") else d.get("name", t["domain"])
+            studies = ", ".join(self.a("study", x) for x in t["studies"])
+            u = (("≤ " if t["upper_bound"] else "") + _rng([t["u_c"], t["u_c"]])
+                 + (f" (likely {_rng([t['likely_u'], t['likely_u']])})" if t["likely_u"] else "")
+                 + (f"; 95% {_rng(t['interval95'])}" if t["interval95"] else ""))
+            bias = describe_bias(t["bias"]) + (f" ({t['bias']['name']})" if t["bias"].get("name") else "")
+            if t["kind"] == "fixed_shift":
+                bias += f"; shift {_rng([t['shift_s'], t['shift_s']])}"
+            elif t["kind"] == "per_recording" and t["removes"]:
+                bias += f"; removes {_rng(t['removes'])}"
+            mark = " †" if t["legacy"] else ""
+            legacy |= t["legacy"]
+            out += (f"| {t['name']}{' (default)' if t['default'] else ''}{mark} | {kinds[t['kind']]} | {bias} | {u} | "
+                    f"{_rng(t['support']) if t['support'] else 'not stated'} | {'no' if t['uses_future'] else 'yes'} | "
+                    f"{dn} | {t['status']} | {t['evidence']}{'; ' + studies if studies else ''} |\n")
+            if not t["legacy"] and t["components"]:
+                budgets += self.budget(t)
+        if legacy:
+            out += ("\n† Not yet re-evaluated in bias and uncertainty terms: the old delay range is read as uniform, "
+                    "and the interval (grid or averaging window, not yet told apart) is counted as uncertainty.\n")
+        out += budgets
+        out += f"\nCombine it with other signals in the [synchronisation planner]({self.base}planner.md?s={i}).\n"
+        return out
+
+    def budget(self, t: dict) -> str:
+        """The uncertainty budget of one timing form: each component with its Type, distribution and scope."""
+        rows = "".join(
+            f"| {c['name']} | {c['type']} | {c['distribution']} | {_rng([c['u_s'], c['u_s']])}"
+            f"{' (in ' + c['included_in'] + ')' if c.get('included_in') else ''} | {c['scope']}"
+            f"{' (' + _rng([c['length_s'], c['length_s']]) + ')' if c.get('length_s') else ''}"
+            f"{': ' + c['shared_with'] if c.get('shared_with') else ''} | {c.get('evidence') or ''} |\n"
+            for c in t["components"])
+        return (f"\n**Uncertainty budget, {t['name']}** (combined {_rng([t['u_c'], t['u_c']])}"
+                f"{', an upper bound' if t['upper_bound'] else ''}):\n\n"
+                "| Component | Type | Distribution | Standard uncertainty | Shared by | Evidence |\n"
+                "|---|---|---|---|---|---|\n" + rows)
+
     def sub(self, title: str, body: str) -> str:
         """A level-3 subsection, or nothing when the body is empty."""
         return f"\n### {title}\n\n{body.strip()}\n" if body and body.strip() not in ("", "—") else ""
 
     def value_side(self, s: dict) -> str:
-        """The value side of a variable page: resolution, accuracy and its value model, if any."""
+        """The value side of a variable page: resolution, bias and uncertainty, and its value model, if any."""
         v = s.get("value") or {}
         if not v:
             return "Its value side is still to be described."
         out = self.glance([("Model kind", v.get("kind")), ("Resolution", v.get("resolution")),
                            ("Native step", f"{v['step']} {s.get('unit') or ''}".strip() if v.get("step") else None),
-                           ("Accuracy (1 SD)", f"{v['accuracy_sd']} {s.get('unit') or ''}".strip()
-                            if v.get("accuracy_sd") is not None else None),
+                           ("Bias", f"{bias_range(v['bias'])[1]:g} {s.get('unit') or ''}".strip()
+                            if v.get("bias") else None),
+                           ("Uncertainty beyond resolution (1 SD)",
+                            f"{value_u(v):g} {s.get('unit') or ''}".strip() if value_u(v) is not None else None),
                            ("Anchor", self.anchor_label(v)),
                            ("Status", v.get("status")), ("Studies", self.many("study", v.get("studies")))])
         if v.get("inputs") or v.get("formula"):
@@ -619,7 +672,7 @@ class Site:
         if self.anchor_label(v):
             out += self.sub("Anchor", self.prose(self.anchor_basis(v)[1]) + " See [what an anchor is](../terms.md#anchors) "
                             "and [every variable's anchor](../anchors.md).")
-        out += self.sub("Accuracy", self.prose(v.get("accuracy")))
+        out += self.sub("Instrument and method", self.prose(v.get("note")))
         if v.get("model"):
             out += self.sub("Value model", self.model_summary(v["model"]))
         return out
@@ -794,18 +847,26 @@ class Site:
         A variable with a fitted model shows up to four worked examples (the distribution of true minus recorded,
         averaged over every record with that recorded value) and a joint map of recorded against true, both read
         from the pinned snapshot's slices.json. Any other variable shows one slice built from its rounding rules
-        and accuracy. The time side is given in a line of text below.
+        and its bias and uncertainty. The time side is given in a line of text below.
         """
         from metrology_atlas.readers import summarise
         v = s.get("value") or {}
         m = summarise(self.ds, v["model"]) if v.get("model") else None
         unit = (m or {}).get("unit") or s.get("unit") or ""
-        t = next((x for x in s.get("timing") or [] if x.get("default")), (s.get("timing") or [None])[0])
+        t = timing_default(s)
         time_line = ""
         if t:
-            lo, hi = -(t["delay_s"][1] + t["interval_s"][1]), -t["delay_s"][0]
-            time_line = (f"\n\n**Time side** ({t['name']}): the true time lies between {lo:g} s and {hi:g} s from the "
-                         "stamp: the delay range plus the interval one value describes.")
+            sup = (t["support"] or [0, 0])[1]
+            if t["kind"] == "as_stored":
+                time_line = (f"\n\n**Time side** ({t['name']}): the interval a value describes ends "
+                             f"{describe_bias(t['bias'])} before its stamp (the bias), give or take "
+                             f"{_rng([t['u_c'], t['u_c']])} (1 SD)" + (f", and is {_rng(t['support'])} long" if sup else "")
+                             + ".")
+            else:
+                time_line = (f"\n\n**Time side** ({t['name']}): after the correction, the interval a value describes "
+                             f"ends at the corrected time, give or take {_rng([t['u_c'], t['u_c']])} (1 SD"
+                             + (", an upper bound" if t["upper_bound"] else "") + ")"
+                             + (f", and is {_rng(t['support'])} long" if sup else "") + ".")
         sl = self.slices(v)
         if sl and sl.get("examples"):
             return self.slice_examples(s, sl) + time_line
@@ -820,7 +881,7 @@ class Site:
             st = float(v["step"])
             lo, hi = {"ceiling": (-st, 0.0), "floor": (0.0, st)}.get(v.get("anchor") or "nearest", (-st / 2, st / 2))
             bands.append((lo, hi, 1.0))
-        acc = v.get("accuracy_sd") if v.get("accuracy_sd") is not None else (m or {}).get("accuracy_sd")
+        acc = value_u(v) if value_u(v) is not None else (m or {}).get("accuracy_sd")
         if not bands and acc is None:
             return time_line.strip()
         xs = [b[0] for b in bands] + [b[1] for b in bands] + ([-3 * acc, 3 * acc] if acc else [])
@@ -835,12 +896,12 @@ class Site:
                 y = y if bands else math.exp(-x * x / (2 * acc * acc)) / (acc * math.sqrt(2 * math.pi))
             dens.append(y)
         shape = ("uniform" if len(bands) == 1 and not acc else "a mixture of uniforms" if bands and not acc
-                 else "normal" if not bands else "uniform, plus accuracy")
+                 else "normal" if not bands else "uniform, plus the instrument's uncertainty")
         svg = self.slice_svg(grid, dens, f"true minus recorded ({unit})", None, 640, 220)
         note = (f"*A vertical slice through the measurement space: how the true value is spread around any one "
                 f"recorded value. Its shape is {shape}"
                 + (", one block per rounding rule, weighted by how often it is used" if len(bands) > 1 else "")
-                + (f". The instrument accuracy ({acc:g} {unit} per SD) is not yet combined with the rounding here"
+                + (f". The instrument's uncertainty ({acc:g} {unit}, 1 SD) is not yet combined with the rounding here"
                    if acc and bands else "") + ".*")
         return f'<div class="ms-fig">{svg}</div>\n\n{note}{time_line}'
 
@@ -1148,10 +1209,11 @@ class Site:
                                              f"{val.get('resolution') or '—'} | {st} |")
         out = ("# Value\n\nThe value side of every variable: how far the recorded number can be from the true one. "
                "Two things set that. **Resolution** is how the value was written down: the step it was recorded at, and "
-               "the coarser values people round to (heaping). **Accuracy** is how far the instrument or method is from "
-               "the truth before any rounding.\n\nMost of what is here is resolution, from fitted rounding models "
-               f"({self.a('method', 'value-resolution', 'the method')}). Accuracy is described where it is known; for most "
-               "instruments it is still to be added.\n\n") if "value-resolution" in self.ds.items["method"] else "# Value\n\n"
+               "the coarser values people round to (heaping); it adds uncertainty, and a bias when values are rounded "
+               "down or up. The **instrument or method** adds its own systematic error (bias) and uncertainty before "
+               "any rounding.\n\nMost of what is here is resolution, from fitted rounding models "
+               f"({self.a('method', 'value-resolution', 'the method')}). The instruments' bias and uncertainty are "
+               "described where they are known; for most instruments they are still to be added.\n\n") if "value-resolution" in self.ds.items["method"] else "# Value\n\n"
         order = ["model", "timestamp_model", "derived", "source_dependent", "decimal_dependent", "uniform", "neighbours",
                  "triangular_count", "age", "colloid_rules", "exact", "not_applicable"]
         for kind in sorted(rows, key=lambda k: order.index(k) if k in order else 99):
@@ -1268,14 +1330,16 @@ class Site:
         return out
 
     def time_chart(self) -> str:
-        """The accuracy-against-resolution chart of every time stamp, with its data embedded."""
+        """The chart of every time stamp (delay against the interval a value describes), with its data embedded."""
         if not any(s.get("timing") for s in self.ds.items["variable"].values()):
             return ""
         data = chart_forms(self.ds)
-        data.update(AXES, aria=f"Accuracy against resolution of every time stamp in {self.ds.meta['name']}")
-        return ("## Every time stamp: accuracy and resolution\n\n"
-                "Each kind of time stamp in the dataset, placed by how far it lies after the end of the interval its "
-                "value describes, against the working reference (across), and by how wide that interval is (up). "
+        data.update(AXES, aria=f"Timing of every time stamp in {self.ds.meta['name']}")
+        return ("## Every time stamp\n\n"
+                "Each kind of time stamp in the dataset, placed by how late it lies after the end of the interval its "
+                "value describes, against the working reference (across; for a corrected form, the uncertainty left), "
+                "and by how wide that interval is (up). This chart is being redrawn as bias against standard "
+                "uncertainty. "
                 "Drawn from the atlas data each time the site is built, so it follows every update; the same data "
                 "drives the [synchronisation planner](planner.md).\n\n"
                 '<div id="atlas-chart"></div>\n<script src="js/atlas-chart.js"></script>\n<script>\n'
@@ -1287,9 +1351,12 @@ class Site:
         """The time side at a glance: clocks and how each reaches UTC, then the time stamps and the planner."""
         m = self.ds.meta
         out = ("# Time\n\nThe time side of every variable: how far a recorded time can be from when the thing it "
-               "describes happened. **Accuracy**: the clock that made the stamp drifts and is corrected in jumps, and "
-               "the value often describes a window that ended before its stamp. **Resolution**: the grid the stamp "
-               "sits on, and the width of the interval one value stands for.\n\n")
+               "describes happened. Each value describes an interval of time, and its time is the **end** of that "
+               "interval, the moment it could first exist. Every stamp has a **systematic error (bias)**: the clock "
+               "that made it is offset, drifts and is corrected in jumps, and the value reaches its stamp late; the "
+               "atlas corrects the bias where it can. What is left is the **standard uncertainty**, built from named "
+               "parts: the correction's own error, drift not modelled, and the grid the stamp sits on "
+               "(resolution).\n\n")
         if m.get("reference"):
             out += "## The working reference\n\n" + self.prose(m["reference"]) + "\n\n"
         ref = m.get("reference_clock")
@@ -1299,7 +1366,7 @@ class Site:
         if weak:
             out += ("Every clock's route to UTC passes through " + " and ".join(self.a("link", lk) for lk in weak) + ", "
                     + " and ".join(f"**{self.ds.get('link', lk)['status']}**" for lk in weak) + ". That shared link sets "
-                    "the absolute accuracy of every time in the dataset alike, so it cancels whenever times are compared "
+                    "the absolute time of every record in the dataset alike, so it cancels whenever times are compared "
                     "with each other, which is what synchronising variables needs. The table therefore follows each clock "
                     "to the working reference instead; each clock's page also draws its full route to UTC.\n\n")
         rows = ""
@@ -1427,22 +1494,24 @@ class Site:
         return out
 
     def axes_table(self) -> str:
-        """The two axes (time, value) by the two kinds of error (accuracy, resolution), with what the atlas holds."""
+        """The two axes (time, value), each with its bias and its uncertainty, with what the atlas holds."""
         V = self.ds.items["variable"].values()
         timed = sum(1 for v in V if v.get("timing"))
         chains = sum(1 for v in V if v.get("chain"))
         models = sum(1 for v in V if (v.get("value") or {}).get("model"))
         valued = sum(1 for v in V if (v.get("value") or {}).get("resolution") or (v.get("value") or {}).get("step"))
-        acc = sum(1 for v in V if (v.get("value") or {}).get("accuracy") or (v.get("value") or {}).get("accuracy_sd") is not None)
+        acc = sum(1 for v in V if (v.get("value") or {}).get("bias") or (v.get("value") or {}).get("uncertainty"))
         clocks, links = len(self.ds.items["clock"]), len(self.ds.items["link"])
-        return ("## Measurement space: two axes, two kinds of error\n\n"
-                "Every variable is described on two axes, **time** and **value**, and on each by its **accuracy** (how far "
-                "the record is from the truth: bias, drift, delay, instrument error) and its **resolution** (how finely it "
-                "was recorded: sampling, rounding, heaping). Each variable page draws the four together.\n\n"
-                "| | Accuracy | Resolution |\n|---|---|---|\n"
+        return ("## Measurement space: two axes, bias and uncertainty on each\n\n"
+                "Every variable is described on two axes, **time** and **value**. On each, the record has a "
+                "**systematic error (bias)**, corrected where it is known, and a **standard uncertainty** made of named "
+                "parts, among them the **resolution** it was recorded at (sampling, rounding, heaping). On the time "
+                "side the interval a value describes is part of what the value is; its time is the interval's end. "
+                "Each variable page draws both axes together.\n\n"
+                "| | Bias and its sources | Uncertainty, including resolution |\n|---|---|---|\n"
                 f"| **Time** | {clocks} [clocks](clocks/index.md) and {links} [links](links/index.md) between them; "
                 f"{chains} variables with a written chain from UTC, {timed} with timing against the working reference | "
-                "the interval each value describes, the stamp grids (chart below) |\n"
+                "each timing form's budget; the stamp grids and the intervals values describe (chart below) |\n"
                 f"| **Value** | {(str(acc) + ' variables so far') if acc else 'Not yet described for any variable: it needs the instruments’ calibration records ([why](studies/instrument-calibration.md))'} | {valued} variables, {models} with fitted rounding models "
                 "([Value](value.md)) |\n\n")
 
@@ -1474,6 +1543,21 @@ def _inline_html(md: str) -> str:
     md = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", md)
     md = re.sub(r"(?<![*\w])\*(?!\s)(.+?)(?<!\s)\*(?![*\w])", r"<em>\1</em>", md)
     return re.sub(r"`([^`]+)`", r"<code>\1</code>", md)
+
+
+def _step_range(step: dict, key: str):
+    """A chain step's range for the bar: the current fields (bias_s, u_s) or the legacy ones (offset_s, residual_s)."""
+    if key == "offset_s":
+        return step.get("bias_s") or step.get("offset_s")
+    if step.get("u_s") is not None:
+        return [0.0, step["u_s"]]
+    return step.get("residual_s")
+
+
+def value_u(v: dict) -> float | None:
+    """Combined standard uncertainty of the value side beyond resolution, or None."""
+    comps = ((v.get("uncertainty") or {}).get("components")) or []
+    return combine([{"u_s": float(c["u_s"]), "included_in": c.get("included_in")} for c in comps]) if comps else None
 
 
 def _rng(r) -> str:
@@ -1524,23 +1608,30 @@ here the measurements were made long ago, so each part of the model is reconstru
 
 | In the atlas | Metrology | Note |
 |---|---|---|
-| A variable's "What it measures" | {_vim('2.3', 'measurand')} | Includes, for windowed values, the window: a vague window is {_vim('2.27', 'definitional uncertainty')}. |
-| Time accuracy: clock offset, drift, delay | {_vim('2.17', 'systematic measurement error')}, {_vim('2.18', 'measurement bias')}, {_vim('4.21', 'instrumental drift')} | Corrections remove the known part; what is left is uncertainty. |
-| Time and value resolution: sampling grids, stamp grids, rounding, heaping | {_vim('4.14', 'resolution')} | Heaping is a mixture of resolutions, each with its share of the records. |
-| Value accuracy: instrument error | {_vim('2.13', 'measurement accuracy')}, {_vim('2.14', 'measurement trueness')}, {_vim('2.15', 'measurement precision')} | Mostly still to be described. |
+| A variable's "What it measures" | {_vim('2.3', 'measurand')} | Includes the interval a value describes (its support): part of the measurand, not an error. A vague window is {_vim('2.27', 'definitional uncertainty')}. |
+| A record's time: the end of its interval | the time measurand | The moment the value could first exist; a stamp before it is look-ahead. |
+| Bias: clock offset, drift, delay; instrument offset | {_vim('2.17', 'systematic measurement error')}, {_vim('2.18', 'measurement bias')}, {_vim('4.21', 'instrumental drift')} | Corrected where known ({_vim('2.53', 'correction')}); across the release, a distribution of per-recording biases. |
+| Uncertainty and its components | {_vim('2.26', 'measurement uncertainty')}, {_vim('2.30', 'standard measurement uncertainty')}, {_vim('2.33', 'uncertainty budget')} | Each component has a Type, a distribution and a scope (what shares it); combined, never typed. A correction's own uncertainty stays in the budget (GUM 3.2.3). |
+| Sampling grids, stamp grids, rounding, heaping | {_vim('4.14', 'resolution')} | A component of uncertainty (step/√12); rounding down or up also adds a bias of half a step. Heaping is a mixture of resolutions. |
+| Agreement of repeated measurements | {_vim('2.15', 'measurement precision')} | An SD of replicates. *Accuracy* ({_vim('2.13', 'measurement accuracy')}) is used only in words, never with a number. |
 | A clock's "Route to UTC" | {_vim('2.42', 'metrological traceability chain')} | Each link adds uncertainty. Where a link is assumed, the chain is broken and the time is not {_vim('2.41', 'metrologically traceable')}. |
 | Status **measured** | {_vim('2.28', 'Type A evaluation')} | Evaluated from the data by a study. |
 | Status **estimated** or **assumed** | {_vim('2.29', 'Type B evaluation')} | From documentation, the literature or judgement. |
 | Status **derived** | propagation | Computed from other evaluated quantities. |
-| The measurement-space figure | the joint distribution of the output quantities | A schematic: each part drawn as uniform over its range. |
-| The synchronisation planner | a screening uncertainty budget | Combines standard uncertainties of the time side for several variables (uniform parts, independent). |
+| The measurement-space figure | the joint distribution of the output quantities | A schematic: each part drawn from its bias and uncertainty. |
+| The synchronisation planner | a screening uncertainty budget | Combines the time side's standard uncertainties for several variables (independent; shared parts to come), reports any bias left, and can leave out corrections that use data after the stamp. |
 
 ## Words used here
 
-- **Accuracy** and **resolution** are used as the two kinds of error on each axis: how far the record is from the
-  truth (bias, drift, delay, instrument error), and how finely it was recorded (sampling, rounding, heaping).
-  The VIM uses *accuracy* as a qualitative term; where a number is given, it is a bias or a standard uncertainty
-  and the page says which.
+- **Bias** (systematic error): the part of the error that stays the same within a recording, or changes
+  predictably; it has a sign and is corrected where known. **Standard uncertainty**: one standard deviation of what
+  is left. Every number in the atlas is one or the other, and the page says which.
+- **Resolution** means a grid or a step only. The **interval a value describes** (its support, or window) is part of
+  what the value is; the value's time is the interval's end.
+- **Accuracy** is used only in words ("more accurate after synchronisation"), as in the VIM, never with a number.
+  **Precision** is the agreement of repeated measurements, given as an SD.
+- **Real time**: a correction fitted on a whole recording uses data from after each stamp; the planner leaves it out
+  when asked for real-time use.
 - **True value**: the value of the measurand. The GUM treats it as unknowable and describes knowledge of it by a
   distribution; so does the atlas.
 - **Working reference**: the clock that times are compared against in the planner. It is a practical reference,
