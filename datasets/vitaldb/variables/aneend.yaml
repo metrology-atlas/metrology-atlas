@@ -1,0 +1,4 @@
+# British spelling over the generated name from vitaldb-resolution (_generated/variables/aneend.yaml); other fields come from there.
+id: aneend
+name: Anaesthesia end time
+summary: Anaesthesia end time; from casestart (clinical table).

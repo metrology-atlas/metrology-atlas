@@ -617,7 +617,8 @@ class Site:
             elif t["kind"] == "per_recording" and t["removes"]:
                 bias += f"; removes {_rng(t['removes'])}"
             mark = " ↯" if t["look_ahead"] else ""
-            out += (f"| {t['name']}{' (default)' if t['default'] else ''}{mark} | {kinds[t['kind']]} | {bias} | {u} | "
+            # an anchor per form, so prose can link to one: variables/<id>.md#form-<form id>
+            out += (f"| <a id=\"form-{t['id']}\"></a>{t['name']}{' (default)' if t['default'] else ''}{mark} | {kinds[t['kind']]} | {bias} | {u} | "
                     f"{('instant' if t['support'] == [0, 0] else _rng(t['support'])) if t['support'] else 'not stated'} | {'no' if t['uses_future'] else 'yes'} | "
                     f"{dn} | {t['status']} | {t['evidence']}{'; ' + studies if studies else ''} |\n")
             if t["components"]:

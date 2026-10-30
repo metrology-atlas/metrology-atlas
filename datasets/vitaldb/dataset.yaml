@@ -184,6 +184,10 @@ pages:
     title: Recording setups
     file: setups.md
     section: Time
+  - id: worked-example-record-pdf
+    title: "Worked example: a record as a PDF"
+    file: worked-example-record-pdf.md
+    section: Time
   - id: how-it-was-made
     title: How this atlas was made
     file: how-it-was-made.md

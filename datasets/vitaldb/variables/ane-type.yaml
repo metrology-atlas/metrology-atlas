@@ -1,0 +1,4 @@
+# British spelling over the generated name from vitaldb-resolution (_generated/variables/ane-type.yaml); other fields come from there.
+id: ane-type
+name: Anaesthesia type
+summary: Anaesthesia type (clinical table).

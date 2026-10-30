@@ -1,0 +1,4 @@
+# British spelling over the generated name from vitaldb-resolution (_generated/variables/hct.yaml); other fields come from there.
+id: hct
+name: Haematocrit
+summary: Haematocrit (lab table).
