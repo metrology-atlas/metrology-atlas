@@ -54,6 +54,15 @@ open_questions:
       The deployed version, and which converter channel feeds which track, are not known. The dataset's creator
       pointed to the public repository ([[reference:lee2026correspondence]]); whether it is the version that ran
       during the collection has been asked.
+  - title: "Channel skew as a timing component"
+    kind: next step
+    summary: >-
+      The channels are read in turn, so each SNUADC track sits a fixed fraction of a millisecond after the one read
+      before it (ART leads PLETH by 0.31–0.39 ms, [[study:monitor-lines]]). No timing form carries this yet. It is
+      below the 2 ms sample spacing, whose rectangular component (0.58 ms per track) already dominates any pair
+      within SNUADC, so it is left open. It would matter for sub-millisecond work within SNUADC, such as transit
+      times between arterial pressure and the plethysmogram. Measuring it would take the hum phase across all
+      tracks and the channel-to-track mapping.
   - title: "How Vital Recorder stamps SNUADC samples"
     kind: next step
     summary: >-
