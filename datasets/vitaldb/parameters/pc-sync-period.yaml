@@ -1,6 +1,6 @@
 id: pc-sync-period
 name: Recorder PC synchronisation interval
-quantity: Time between Windows time synchronisations of the recorder PC.
-display: "8–24 h (assumed)"
+quantity: Time between synchronisations of the recorder PC to UTC(KRIS) by KRISS's UTCk.
+display: "not known (asked of the dataset's creator)"
 status: assumed
 about: [recorder-pc-vs-utc]

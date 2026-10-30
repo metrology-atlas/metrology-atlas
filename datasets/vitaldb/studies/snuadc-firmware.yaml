@@ -51,5 +51,13 @@ open_questions:
   - title: "Which firmware ran"
     kind: phenomenon
     summary: >-
-      The deployed version, and which converter channel feeds which track, are not known.
-references: [snuadc]
+      The deployed version, and which converter channel feeds which track, are not known. The dataset's creator
+      pointed to the public repository ([[reference:lee2026correspondence]]); whether it is the version that ran
+      during the collection has been asked.
+  - title: "How Vital Recorder stamps SNUADC samples"
+    kind: next step
+    summary: >-
+      The board sends no time, so Vital Recorder assigns every stamp. Its rule is inferred from the data (the stamp
+      sawtooth and its corrections); a description or the code would test the stamp model directly. Asked of the
+      dataset's creator.
+references: [snuadc, lee2026correspondence]

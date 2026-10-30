@@ -3,14 +3,11 @@ name: Recorder PC clock
 summary: The Windows clock of the PC running Vital Recorder. It stamps every record, and every other clock is linked
   to it, directly or through others.
 type: software
-nominal: Windows time, synchronised by NTP
+nominal: Windows time, synced by KRISS UTCk
 description: 'Vital Recorder stamps each record on arrival with this clock, and every device link is measured against
-  it. Its
-
-  own link to UTC cannot be observed in the release, because dates are shifted to the year 2100, so that link is
-  an
-
-  explicit assumption: a few ppm of drift, corrected by Windows time synchronisation every 8–24 h.
+  it. Its own link to UTC cannot be observed in the release, because dates are shifted to the year 2100. The dataset''s
+  creator reports that the PCs were synchronised to UTC(KRIS) with KRISS''s UTCk program ([[link:recorder-pc-vs-utc]]);
+  how often, and with what offsets, is not known.
 
 
   It does not step visibly: across all 6,388 files no simultaneous jump of every device of 0.5 s or more was found,
@@ -31,6 +28,7 @@ description: 'Vital Recorder stamps each record on arrival with this clock, and 
 
   '
 references: [lee2022vitaldb, rfc5905]
-utc_plan: 'The only link the release cannot show. What is known: no step of 0.5 s or more in any file. To go further
-  needs evidence from outside the release: the recorder PCs'' time-synchronisation logs or settings from the hospital,
-  or recordings with a known external time (a dated event, a GPS-stamped device).'
+utc_plan: 'The only link the release cannot show. What is known: the PCs were synchronised to UTC(KRIS) with KRISS''s
+  UTCk (the dataset''s creator), and no step of 0.5 s or more appears in any file. To go further: UTCk''s interval and
+  any surviving synchronisation logs (asked), a finer search for the small simultaneous steps each synchronisation
+  would leave, or recordings with a known external time (a dated event, a GPS-stamped device).'

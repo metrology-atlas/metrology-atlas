@@ -3,6 +3,6 @@ name: Recorder PC offset from UTC
 quantity: How far the recorder PC's time may sit from UTC at any moment.
 value: 0.003
 unit: s
-display: "3 ms to 0.9 s (assumed)"
+display: "a few ms to a few hundred ms (KRISS's stated range for UTCk; assumed); below 0.5 s at every step"
 status: assumed
 about: [recorder-pc-vs-utc]

@@ -99,10 +99,10 @@ utc_step:
   clock: recorder-pc
   kind: sync
   effect: >-
-    Windows time synchronisation to the hospital's time server every 8–24 h (assumed), drifting a few ppm in
-    between. Not observable in the release: dates are shifted to 2100. No step of 0.5 s or more was found.
+    Synchronised to UTC(KRIS) with KRISS's UTCk (the dataset's creator; interval not known), drifting tens of ppm
+    in between. Not observable in the release: dates are shifted to 2100. No step of 0.5 s or more was found.
   bias_s: [0.003, 0.9]
-  status: assumed
+  status: estimated
   link: recorder-pc-vs-utc
   parameter: pc-utc-offset
 domains:

@@ -35,7 +35,9 @@ open_questions:
   - title: "Was op end imputed deliberately?"
     kind: next step
     summary: >-
-      Was op end imputed from recording end deliberately? This is to be asked of the VitalDB team.
+      Was op end imputed from recording end deliberately? Times were entered by hand, usually at 5-minute resolution
+      ([[reference:lee2026correspondence]]), which does not explain ends 598–604 s before the recording end. Asked of
+      the dataset's creator (October 2026).
   - title: "Why imputed op ends cluster in thoracic and non-general cases"
     kind: phenomenon
     summary: >-

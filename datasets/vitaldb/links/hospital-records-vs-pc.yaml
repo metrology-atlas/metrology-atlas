@@ -6,5 +6,8 @@ summary: >-
 clock: hospital-records
 against: recorder-pc
 correction:
-  rule: Not observable. Both are assumed to keep hospital time synchronised to a common server.
+  rule: >-
+    Not observable. The recorder PCs were synchronised to UTC(KRIS) ([[link:recorder-pc-vs-utc]]); whether the EMR
+    server was too is not known (asked of the dataset's creator). Times in the record were entered by hand, usually
+    at 5-minute resolution ([[parameter:emr-rounding]]).
 status: assumed

@@ -33,7 +33,7 @@ def local_root(ds, sw: dict) -> Path | None:
 @cache
 def _tracked(root: str) -> frozenset[str] | None:
     try:
-        out = subprocess.run(["git", "-C", root, "ls-files", "-z"], capture_output=True, timeout=60, check=True)
+        out = subprocess.run(["git", "--no-optional-locks", "-C", root, "ls-files", "-z"], capture_output=True, timeout=60, check=True)
     except (OSError, subprocess.SubprocessError):
         return None
     return frozenset(p for p in out.stdout.decode("utf-8", "replace").split("\0") if p)

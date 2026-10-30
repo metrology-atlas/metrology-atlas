@@ -74,6 +74,16 @@
   group: Data and recording
   citation: 'VitalDB. Vital file format specification (format version 3). VitalDB documentation. Accessed 19 October 2026.'
   url: https://vitaldb.net/docs/?documentId=VitalRecorder%2FVital_File_Format.md
+- id: lee2026correspondence
+  group: Data and recording
+  citation: 'Lee H-C. Personal communication (email to A. J. Goodwin), October 2026.'
+  note: >-
+    Recorder PCs synchronised with KRISS's UTCk during collection; operation, anaesthesia and operating-room times
+    entered by hand in the EMR, usually at 5-minute resolution; SNUADC is open source.
+- id: kriss-utck
+  group: Data and recording
+  citation: 'Korea Research Institute of Standards and Science (KRISS). UTCk: standard time synchronisation program. Accessed 30 October 2026.'
+  url: https://www.kriss.re.kr/menu.es?mid=a10305030000
 - id: snuadc
   group: Data and recording
   citation: 'VitalDB. SNUADC: firmware and hardware of the VitalDB analogue-to-digital converter. GitHub.'

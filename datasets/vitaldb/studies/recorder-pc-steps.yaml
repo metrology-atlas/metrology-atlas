@@ -45,5 +45,12 @@ open_questions:
     summary: >-
       The analysis assumes the recorder PC's clock corrects in steps. Slow slewing would look like device drift and
       cannot be told apart from it with these data.
+  - title: "The UTCk synchronisations"
+    kind: next step
+    summary: >-
+      The PCs were synchronised with KRISS's UTCk ([[reference:lee2026correspondence]]). At the PCs' tens of ppm
+      against the grid, each synchronisation should leave a simultaneous step of every device of tens to a few hundred
+      milliseconds, below this study's 0.5 s threshold. A finer search would give the interval; UTCk's settings and
+      any surviving logs have been asked of the dataset's creator.
 code:
   - vitaldb-bench/tools/pc_clock_steps.py

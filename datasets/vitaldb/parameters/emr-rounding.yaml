@@ -5,3 +5,6 @@ display: "(t − 300 s, t]; estimate t − 150 s (SD 87 s); observed shift again
 status: measured
 study: emr-rounding
 about: [emr-events]
+notes: >-
+  The dataset's creator confirms that operation, anaesthesia and operating-room times were entered by hand in the EMR,
+  usually at 5-minute resolution ([[reference:lee2026correspondence]]).
