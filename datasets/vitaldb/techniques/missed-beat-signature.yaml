@@ -1,0 +1,22 @@
+id: missed-beat-signature
+name: The signature of a missed beat
+summary: 'Tell how a rate numeric averages from how it disagrees with another measurement of the same rate: a missed or
+  extra beat leaves a ridge at a constant ratio if the window counts beats and averages them by a mean, at a constant offset
+  if the window is a fixed time, and no ridge if it takes a median.'
+description: 'In the joint density of two rates (one numeric against another of the same rhythm), each kind of window leaves
+  its own trace when one beat is missed:
+
+
+  - **a window of a fixed time T** holds one beat fewer, so the rate drops by 60/T per minute whatever the rate: a line
+  parallel to the diagonal;
+
+  - **a window of N beats, averaged by a mean,** spans N + 1 beats with N intervals, so the rate is N/(N + 1) of the true
+  one: a line through the origin;
+
+  - **a median** of the intervals ignores one long interval: no line.
+
+
+  So, for each value of one rate, find the strongest ridge just off the diagonal in the other, and test whether its position
+  is a constant ratio or a constant offset across rates. The ratio also bounds N. Lines at simple fractions far from the
+  diagonal (1/2, 2/3, 3/4) come from sustained rhythms, such as every other beat making no pulse, and appear whatever the
+  window. Needs only the two numerics, not their waveforms, so it works on datasets that store numerics alone.'

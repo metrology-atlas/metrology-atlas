@@ -4,6 +4,7 @@ summary: >-
   Work out how long after the event a value is stamped, and what span of signal it summarises, by recomputing
   monitor numbers from the waveforms they come from.
 order: 5
+techniques: [missed-beat-signature, window-centre-lag]
 description: |
   **The idea.** A heart rate, a mean pressure or a depth-of-anaesthesia index describes a window of signal that
   ended before its stamp. Recompute the number from the raw waveform with candidate algorithms and windows, and

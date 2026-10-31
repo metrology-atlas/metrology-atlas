@@ -26,3 +26,6 @@ references:
 - bland2007agreement
 - goodwin2021blood
 - eytan2019revisiting
+techniques:
+- missed-beat-signature
+- window-centre-lag

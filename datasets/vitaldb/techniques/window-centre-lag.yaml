@@ -1,0 +1,11 @@
+id: window-centre-lag
+name: Window centres from the lag
+summary: The lag at which two smoothed measurements of one quantity agree best is the difference between their windows'
+  centres (delay plus half the window), whatever the signal's volatility. Knowing one numeric's window places the other's.
+description: 'If two numerics each average the same underlying signal over a window symmetric about its centre, the cross-correlation
+  of their changes peaks where the two centres line up: at the difference of (delay + half the window) between them. How
+  fast the signal varies sets only the height and width of the peak, not where it is. So where one numeric''s delay and
+  window are known, the peak places the other''s window centre. Where both numerics arrive on the same grid (both every
+  2 s, say), the correlation is flat between whole records, and the peak is read from the whole-record lags by a parabola.
+  Splitting the centre into delay and window needs more: a window counted in beats moves with the rate, and recomputing
+  the numeric from its waveform settles it.'

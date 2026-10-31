@@ -9,6 +9,9 @@ status: current
 methods:
 - method-comparison
 - delays-and-windows
+techniques:
+- missed-beat-signature
+- window-centre-lag
 devices:
 - solar8000
 variables:
