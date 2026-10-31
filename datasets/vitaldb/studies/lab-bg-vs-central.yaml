@@ -1,0 +1,91 @@
+id: lab-bg-vs-central
+name: Blood-gas analyser against the central laboratory, on the same draw
+summary: 'Sodium, potassium, glucose and haematocrit from the theatre blood-gas analyser against the central laboratory,
+  in 1,248 pairs where the central panel was stamped within 15 minutes of the blood gas. The blood gas reads lower: sodium
+  by 3.0 mmol/L, potassium by 0.3 mmol/L, haematocrit by 0.7 points and glucose by 4 mg/dL (medians). Each lab variable
+  holds both analysers'' results, so a pooled analysis mixes these offsets.'
+date: 2026-11-01
+status: current
+methods:
+- method-comparison
+- clinical-time
+devices:
+- clinical-records
+variables:
+- na
+- k
+- gluc
+- hct
+- lab-blood-gas
+- lab-central
+data: 'lab_data.csv, every case. Results stamped within 60 s of a group''s first are one specimen group; a group with pH
+  and no central-lab marker is a blood gas, one with a central marker (CBC, chemistry or coagulation) and no pH is central.
+  1,248 pairs of a blood gas and the next central group stamped 0–15 minutes after it, with no other blood gas in between:
+  sodium and potassium in 633 (396 patients), glucose in 224, haematocrit in 1,058 (474 patients). A stricter subset, both
+  groups matched to the same arterial-line access ([[study:arterial-line-accesses]]), gives 458 pairs, fewer of them with
+  the same analyte.'
+background: 'The theatre blood-gas analyser and the central laboratory both report sodium, potassium, glucose and haematocrit,
+  and VitalDB stores both in one variable each ([[variable:na]], [[variable:k]], [[variable:gluc]], [[variable:hct]]). They
+  measure in different ways: the blood-gas analyser on heparinised whole blood, with direct ion-selective electrodes and
+  haematocrit from conductivity; the central laboratory on serum or plasma, with indirect electrodes and haematocrit from
+  a cell counter. A sample drawn once and run on both gives a method comparison on the same blood, if the two specimens
+  can be paired. Central panels are stamped about 10 minutes after a blood gas from the same draw ([[study:lab-timestamp-meaning]]),
+  so the pairing is by that window.'
+method: '1. Specimen groups and panels as above; each analyte read at its own stamp within its group.
+
+  2. Pairs: each blood gas with the first central group stamped 0–15 minutes after it, before any further blood gas; and,
+  as a check, pairs whose two groups were matched to the same arterial-line access.
+
+  3. Per analyte, blood gas minus central: the median and a robust SD (1.4826 × the median absolute deviation, since a few
+  pairs are clearly different draws), the 2.5th to 97.5th percentiles, the mean and limits of agreement, the difference
+  by the mean of the two (Bland–Altman bins), and, for patients with two or more pairs, the SD between patients of their
+  mean difference and within a patient.
+
+  4. The time from the blood gas''s stamp to the central one.'
+results: "- **The blood gas reads lower, for every analyte.** Blood gas minus central, median (robust SD; 2.5th–97.5th percentile):\n\
+  \  - sodium −3.0 mmol/L (1.5; −7.0 to +1.0), 633 pairs ([[parameter:bg-central-sodium]]);\n  - potassium −0.3 mmol/L (0.15;\
+  \ −0.8 to 0.0), 633 pairs ([[parameter:bg-central-potassium]]);\n  - haematocrit −0.7 points (1.8; −5.1 to +5.3), 1,058\
+  \ pairs ([[parameter:bg-central-haematocrit]]);\n  - glucose −4 mg/dL (7.4; −36 to +14), 224 pairs ([[parameter:bg-central-glucose]]).\n\
+  - **The same in the stricter pairs.** Where both specimens were matched to the same arterial-line access, the blood gas\
+  \ is lower too: haematocrit by 1.5 points (143 pairs), sodium and potassium by 6 and 0.45 mmol/L in the few pairs that\
+  \ have them (20).\n- **Constant across the range for sodium and potassium;** for haematocrit the blood gas is lower at\
+  \ low values (−1.3 below 24%) and slightly higher above 37% (+0.9).\n- **Mostly fixed per patient for sodium:** SD 1.4\
+  \ mmol/L between patients and 1.8 within (102 patients with two or more pairs); for haematocrit 2.1 and 2.2 points.\n\
+  - **The central panel is stamped 9.4 minutes after the blood gas** (10th–90th percentile 3.5–13.8), as [[study:lab-timestamp-meaning]]\
+  \ found from the draws.\n\n[[figure:lab-bg-vs-central]]"
+discussion: 'These offsets are what the two methods are known to do, though the atlas has not tested the reasons: potassium
+  is higher in serum than in whole blood, because cells release it as the sample clots; sodium differs between direct and
+  indirect electrodes; haematocrit by conductivity depends on the plasma''s protein. Because each lab variable in VitalDB
+  holds both analysers'' results, an analysis that pools [[variable:na]] across a cohort mixes values about 3 mmol/L apart,
+  depending on which analyser each came from, and the analyser can be told from the panel a result was stamped with, as
+  for haematocrit ([[study:lab-haematocrit-two-analysers]]). Neither analyser is the truth, so the offsets are differences
+  between methods, not the error of either.'
+limitations: '- A pair is the next central group within 15 minutes, not a draw known to be shared; a few pairs are clearly
+  different draws (glucose in particular, which also changes within minutes under insulin or infusion), which is why medians
+  and robust SDs are given.
+
+  - Pairs need both analysers within 15 minutes, which selects patients and moments: mostly intraoperative, where a blood
+  gas is followed by a central sample.
+
+  - Sodium and potassium in the stricter, same-access pairs rest on 20 pairs.'
+open_questions:
+- title: The analyser as part of each lab variable's value budget
+  kind: next step
+  summary: Sodium, potassium, glucose and haematocrit each mix two analysers that differ systematically. Each variable's
+    value side could carry the offset as a component tied to its source, identified from the panel, as haematocrit's resolution
+    already is, so that a pooled analysis can correct it or carry it as uncertainty.
+code:
+- vitaldb-bench/tools/lab_bg_vs_central.py
+references:
+- bland1986statistical
+- bland2007agreement
+figures:
+- id: lab-bg-vs-central
+  file: examples/lab-bg-vs-central.png
+  theme: agreement and residuals
+  source: vitaldb-bench tools/lab_bg_vs_central.py
+  caption: 'Blood-gas analyser minus central laboratory against the mean of the two, for sodium, potassium, glucose and
+    haematocrit, pairing each blood gas with the central panel stamped within 15 minutes after it. Orange: mean difference
+    and 95% limits of agreement (the limits are widened by a few pairs that are clearly different draws).'
+  alt: Four Bland–Altman plots; sodium sits about 3 below zero, potassium a little below zero, glucose a tight cloud near
+    zero with a few far outliers, haematocrit a broad cloud just below zero.

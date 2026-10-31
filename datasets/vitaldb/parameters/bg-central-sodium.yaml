@@ -1,0 +1,14 @@
+id: bg-central-sodium
+name: Sodium, blood gas minus central lab
+quantity: 'Sodium, blood gas minus central lab: median difference over pairs stamped within 15 minutes of each other, blood
+  gas first.'
+value: -3.0
+unit: mmol/L
+spread:
+  n: 633
+  text: median; robust SD 1.5; 2.5th–97.5th percentile −7.0 to +1.0
+status: measured
+study: lab-bg-vs-central
+about:
+- na
+date: 2026-11-01

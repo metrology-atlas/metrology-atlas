@@ -2,3 +2,5 @@ id: potassium
 name: Potassium
 summary: Concentration of potassium in serum or blood.
 unit: mmol/L
+studies:
+- lab-bg-vs-central

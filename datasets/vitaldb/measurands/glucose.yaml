@@ -2,3 +2,5 @@ id: glucose
 name: Blood glucose
 summary: Concentration of glucose in blood.
 unit: mg/dL
+studies:
+- lab-bg-vs-central

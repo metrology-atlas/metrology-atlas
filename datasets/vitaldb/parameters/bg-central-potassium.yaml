@@ -1,0 +1,14 @@
+id: bg-central-potassium
+name: Potassium, blood gas minus central lab
+quantity: 'Potassium, blood gas minus central lab: median difference over pairs stamped within 15 minutes of each other,
+  blood gas first.'
+value: -0.3
+unit: mmol/L
+spread:
+  n: 633
+  text: median; robust SD 0.15; 2.5th–97.5th percentile −0.8 to 0.0
+status: measured
+study: lab-bg-vs-central
+about:
+- k
+date: 2026-11-01

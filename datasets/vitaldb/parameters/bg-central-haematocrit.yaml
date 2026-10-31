@@ -1,0 +1,14 @@
+id: bg-central-haematocrit
+name: Haematocrit, blood gas minus central lab
+quantity: 'Haematocrit, blood gas minus central lab: median difference over pairs stamped within 15 minutes of each other,
+  blood gas first.'
+value: -0.7
+unit: '%'
+spread:
+  n: 1058
+  text: median, in points; robust SD 1.8; 2.5th–97.5th percentile −5.1 to +5.3
+status: measured
+study: lab-bg-vs-central
+about:
+- hct
+date: 2026-11-01

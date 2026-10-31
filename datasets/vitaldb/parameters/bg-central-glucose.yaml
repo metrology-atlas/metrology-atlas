@@ -1,0 +1,14 @@
+id: bg-central-glucose
+name: Glucose, blood gas minus central lab
+quantity: 'Glucose, blood gas minus central lab: median difference over pairs stamped within 15 minutes of each other, blood
+  gas first.'
+value: -4
+unit: mg/dL
+spread:
+  n: 224
+  text: median; robust SD 7.4; 2.5th–97.5th percentile −36 to +14
+status: measured
+study: lab-bg-vs-central
+about:
+- gluc
+date: 2026-11-01
