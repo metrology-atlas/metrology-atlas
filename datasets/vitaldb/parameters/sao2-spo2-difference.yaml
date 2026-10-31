@@ -1,0 +1,16 @@
+id: sao2-spo2-difference
+name: SaO₂ minus SpO₂
+quantity: SaO₂ − SpO₂ per blood gas, the oximeter read at the estimated draw.
+value: 0
+unit: '%'
+spread:
+  q1: -0.8
+  q3: 0
+  n: 4281
+  text: SpO₂ is 100 at the draw for 77% of gases
+status: measured
+study: blood-gas-at-the-draw
+about:
+- solar8000-spo2
+- sao2
+date: 2026-10-18

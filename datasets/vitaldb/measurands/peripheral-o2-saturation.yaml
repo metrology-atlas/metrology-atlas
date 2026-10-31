@@ -7,3 +7,5 @@ related:
   relation: related
   note: SpO2 is calibrated against SaO2 and agrees with it within a few percent in the oximeter's specified range; the two
     are compared, never merged.
+studies:
+- blood-gas-at-the-draw

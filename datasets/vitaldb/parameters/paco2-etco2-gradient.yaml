@@ -1,0 +1,16 @@
+id: paco2-etco2-gradient
+name: Arterial to end-tidal CO₂ gradient
+quantity: PaCO₂ − EtCO₂ per blood gas, the monitor read at the estimated draw.
+value: 7
+unit: mmHg
+spread:
+  q1: 5
+  q3: 10
+  n: 4281
+  text: 5th–95th percentile 1–16 mmHg
+status: measured
+study: blood-gas-at-the-draw
+about:
+- primus-numerics
+- pco2
+date: 2026-10-18

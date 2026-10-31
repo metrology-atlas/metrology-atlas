@@ -1,0 +1,14 @@
+id: co2-change-correlation-draw
+name: CO₂ changes tracked at the draw
+quantity: Correlation between changes in PaCO₂ and in EtCO₂ over consecutive gases of one patient, the monitor read at the
+  estimated draw (against 0.54 at the lab stamp).
+value: 0.74
+spread:
+  n: 2911
+  text: 95% interval 0.69–0.78; at the lab stamp 0.54 (0.47–0.61)
+status: measured
+study: blood-gas-at-the-draw
+about:
+- primus-numerics
+- pco2
+date: 2026-10-18

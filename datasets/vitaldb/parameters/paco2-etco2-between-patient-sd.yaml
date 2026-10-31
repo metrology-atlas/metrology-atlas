@@ -1,0 +1,13 @@
+id: paco2-etco2-between-patient-sd
+name: CO₂ gradient between patients
+quantity: SD between patients of their typical arterial to end-tidal CO₂ gradient (set by each patient's dead space).
+value: 4.1
+unit: mmHg
+spread:
+  text: within one patient the gradient varies by about 1.5 mmHg
+status: measured
+study: blood-gas-at-the-draw
+about:
+- primus-numerics
+- pco2
+date: 2026-10-18

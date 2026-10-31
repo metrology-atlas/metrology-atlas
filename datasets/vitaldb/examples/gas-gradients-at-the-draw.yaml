@@ -17,7 +17,7 @@ why: |
   SaO₂ stop at 100%. The SpO₂–SaO₂ comparison follows [[reference:eytan2019revisiting]], which compared bedside
   oximetry with arterial blood gases in critically ill children.
 variables: [pco2, sao2, lab-blood-gas, primus-numerics, solar8000-spo2, snuadc-art]
-studies: [lab-timestamp-meaning, arterial-line-accesses, spo2-latency]
+studies: [blood-gas-at-the-draw, lab-timestamp-meaning, arterial-line-accesses, spo2-latency]
 observations: [lab-time-is-specimen, numerics-not-front-stamped]
 data: |
   Blood gases matched to exactly one arterial-line access in the 15 minutes before their lab stamp
@@ -122,17 +122,6 @@ limitations: |
     both are larger than the rounding.
   - The vitaldb-resolution library gives a recorded SaO₂ of 100 an upper bound of 100.475; the example caps it at
     100.
-open_questions:
-  - title: "SaO₂ above 100 in the library"
-    kind: next step
-    summary: >-
-      vitaldb-resolution treats a recorded SaO₂ of 100 like any other whole number, with the true value up to
-      100.475. A cap at 100 (a top-coded value, like the other reporting limits) would fix this at the source.
-  - title: "Is SaO₂ measured or calculated?"
-    kind: assumption
-    summary: >-
-      Many blood-gas analysers calculate SaO₂ from PO2 and pH rather than measuring it by co-oximetry. Which was used
-      decides whether SaO₂ − SpO₂ compares two measurements or a measurement with a model.
 code:
   - vitaldb-bench/examples/blood_gas_gradients.py
 reproduce: |
