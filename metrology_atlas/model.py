@@ -265,8 +265,9 @@ ESTIMATES = MEASURES[:3] + (
 DERIVED_FROM = (
     Field("variable", "ref", required=True, ref="variable", help="The input."),
     Field("relation", "enum", required=True, choices=RELATIONS,
-          help="computed-from: computed from the input's stored data; same-source: both come from one upstream "
-               "signal inside a device, and the derived value was not computed from the stored input."),
+          help="computed-from: made from the input's stored data, by code or by an annotator viewing it, so the "
+               "input's errors reach it; same-source: both come from one upstream signal inside a device (or one "
+               "original recording an annotator viewed), and the derived value was not made from the stored input."),
     Field("tracks", "strs", help="Which tracks of a grouped variable the link applies to (on either side)."),
     Field("symbol", "str", help="The input's name in the value's formula."),
     Field("form", "str", help="Which of the input's timing forms the derivation uses (its id), so the right bias and "
@@ -371,8 +372,9 @@ KINDS: dict[str, Kind] = {
                            "estimated by a model from the ECG and the plethysmogram: the measurand and the "
                            "validation that gives the model's own error."),
                 Field("origin", "enum", choices=("recorded", "derived"),
-                      help="recorded (the default): a value the dataset recorded; derived: computed from other "
-                           "variables, by the atlas, its labels or an analysis."),
+                      help="recorded (the default): a value the dataset recorded; derived: made from other "
+                           "variables after they were recorded, by an algorithm (the atlas, its labels, an analysis) "
+                           "or by a person annotating them."),
                 Field("derived_from", "objs", fields=DERIVED_FROM,
                       help="The variables this one was derived from, each with its relation. A derivation is written "
                            "here, on the derived variable, never on its input."),
