@@ -20,7 +20,7 @@ algorithm: A lag kernel of the index against features of its own EEG, split into
 code:
 - vitaldb-bench/tools/bis_smoothing_labels.py
 - vitaldb-bench/tools/bis_index_delay.py
-version: 0.1.0
+version: 0.0.1
 propagation:
   method: study
   studies:

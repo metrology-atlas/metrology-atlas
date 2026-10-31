@@ -17,7 +17,7 @@ algorithm: A two-component Gaussian mixture fitted to the good HR delays of all 
   error added to the component variance; early or late where the posterior is at least 0.9, otherwise uncertain.
 code:
 - vitaldb-bench/tools/numeric_delay_labels.py
-version: 0.1.0
+version: 0.0.1
 propagation:
   method: study
   studies:

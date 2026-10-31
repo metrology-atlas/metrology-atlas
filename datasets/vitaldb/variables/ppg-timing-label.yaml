@@ -1,0 +1,105 @@
+id: ppg-timing-label
+name: PPG timing quality
+summary: 'Intervals of one recording''s plethysmogram timing quality: sawtooth corrected (A, B), no sawtooth (N), or not
+  corrected (U).'
+group: Derived labels/PPG timing labels
+origin: derived
+version: 0.0.1
+type: event
+source: ppg_timing_labels.csv (label family ppg_timing)
+source_name: ppg_timing
+measurand: How well the plethysmogram's times are known in each stretch of a recording, as a tier.
+description: Adjacent teeth of the same tier are merged. Tiers below the minimum applied (B) are reported as U. Labelled
+  so far in 266 recordings, over the first 90 minutes of each analysed stretch.
+derived_from:
+- variable: snuadc-ecg-ii
+  relation: computed-from
+  form: snu-raw
+  note: 'R peaks, interpolated: the ECG fiducial.'
+- variable: snuadc-pleth
+  relation: computed-from
+  form: pleth-raw
+  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial.'
+- variable: snuadc-art
+  relation: computed-from
+  form: snu-raw
+  note: Arterial upstrokes, where available, confirm slips (the reference).
+algorithm: The quality intervals of physiosync's ECG-to-PPG fit (fit.quality_intervals), with corrections applied from tier
+  B.
+code:
+- physiosync/physiosync/ecg_ppg.py
+- physiosync/physiosync/labels.py
+- vitaldb-bench/tools/measurement_export.py
+propagation:
+  method: study
+  studies:
+  - ppg-sawtooth
+timing:
+- id: ptl-start
+  name: 'as stored: the interval''s interval, from its start'
+  kind: as_stored
+  support_s:
+  - 7.9
+  - 5399.2
+  stamp_position: open
+  bias_s: &id001
+    median: -1565.2
+    p5: -5398.6
+    p95: -188.2
+    scope: recording
+    status: measured
+    evidence: label lengths, 605 labels; label CSVs of the release run (physiosync labels 0.0.1, 266 recordings), measured
+      31 Oct 2026
+  look_ahead:
+    lead_s:
+    - 7.9
+    - 5399.2
+    basis: real
+    note: 'Used at its start, the interval carries its whole interval, and more: it is fitted over the recording. Both ends
+      are stored, so its availability time is recoverable.'
+  uncertainty:
+    components: &id002
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the ends are the file's own stamps, copied exactly
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: ptl-avail
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 7.9
+  - 5399.2
+  stamp_position: close
+  removes_bias_s: *id001
+  bias_s:
+    name: held to the end of the recording
+    median: 12986.6
+    p5: 907.4
+    p95: 23982.3
+    scope: recording
+    status: measured
+    evidence: from each label's end to the end of its recording (the last numeric delay label), 605 labels; label CSVs of
+      the release run (physiosync labels 0.0.1, 266 recordings), measured 31 Oct 2026
+  uncertainty:
+    upper_bound: false
+    components: *id002
+  correction: read the label once the recording has ended (available_at case_end)
+  corrects:
+  - ptl-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end; the rate and offset priors also pool other recordings of the same
+    setup'
+value:
+  kind: category
+  status: measured
+  studies:
+  - ppg-sawtooth
+  note: 'A 127, B 141, U 290 and N 47 intervals. The error after correction by tier, on injected test data: A 0.2 ms, B
+    1.6 ms, C 5.3 ms RMS ([[study:ppg-sawtooth]]).'

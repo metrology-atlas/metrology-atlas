@@ -1,0 +1,106 @@
+id: ppg-sawtooth-chain-label
+name: PPG sawtooth chained tooth
+summary: 'A second, lower-confidence sawtooth track: teeth found by chaining slips one known tooth length apart.'
+group: Derived labels/PPG timing labels
+origin: derived
+version: 0.0.1
+type: event
+source: ppg_sawtooth_chain_labels.csv (label family ppg_sawtooth_chain)
+source_name: ppg_sawtooth_chain
+measurand: The ECG-to-PPG delay's sawtooth over one chained tooth, where the main fit found none or a weak one.
+description: A chain starts at a strong slip and expects the next one tooth length on, re-anchoring at each one found; it
+  stops at a pause or a phase jump. Checked against arterial pressure these teeth were of B-to-C quality, so they are a
+  separate track, not part of the main fit. Labelled so far in 266 recordings, over the first 90 minutes of each analysed
+  stretch.
+derived_from:
+- variable: snuadc-ecg-ii
+  relation: computed-from
+  form: snu-raw
+  note: 'R peaks, interpolated: the ECG fiducial.'
+- variable: snuadc-pleth
+  relation: computed-from
+  form: pleth-raw
+  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial.'
+- variable: snuadc-art
+  relation: computed-from
+  form: snu-raw
+  note: Arterial upstrokes, where available, confirm slips (the reference).
+algorithm: 'physiosync.chains: rate-consistent slip chains from the recording''s own corroborated rate or its setup''s.'
+code:
+- physiosync/physiosync/chains.py
+- vitaldb-bench/tools/measurement_export.py
+propagation:
+  method: study
+  studies:
+  - ppg-sawtooth
+  note: The error estimate each label carries comes from 150 recordings checked against arterial pressure (vitaldb-bench
+    tools/grid_mode.py).
+timing:
+- id: psc-start
+  name: 'as stored: the chained tooth''s interval, from its start'
+  kind: as_stored
+  support_s:
+  - 351.8
+  - 5066.8
+  stamp_position: open
+  bias_s: &id001
+    median: -666.0
+    p5: -2356.4
+    p95: -620.2
+    scope: recording
+    status: measured
+    evidence: label lengths, 486 labels; label CSVs of the release run (physiosync labels 0.0.1, 266 recordings), measured
+      31 Oct 2026
+  look_ahead:
+    lead_s:
+    - 351.8
+    - 5066.8
+    basis: real
+    note: 'Used at its start, the chained tooth carries its whole interval, and more: it is fitted over the recording. Both
+      ends are stored, so its availability time is recoverable.'
+  uncertainty:
+    components: &id002
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the ends are the file's own stamps, copied exactly
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: psc-avail
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 351.8
+  - 5066.8
+  stamp_position: close
+  removes_bias_s: *id001
+  bias_s:
+    name: held to the end of the recording
+    median: 13373.8
+    p5: 2351.7
+    p95: 22945.1
+    scope: recording
+    status: measured
+    evidence: from each label's end to the end of its recording (the last numeric delay label), 486 labels; label CSVs of
+      the release run (physiosync labels 0.0.1, 266 recordings), measured 31 Oct 2026
+  uncertainty:
+    upper_bound: false
+    components: *id002
+  correction: read the label once the recording has ended (available_at case_end)
+  corrects:
+  - psc-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end; the rate and offset priors also pool other recordings of the same
+    setup'
+value:
+  kind: per-tooth fit
+  status: measured
+  studies:
+  - ppg-sawtooth
+  note: 'Mid-tooth drift left after correction: typically 3.2 ms, 90th percentile 19.6 ms (an upper bound: the arterial
+    reference includes physiology).'

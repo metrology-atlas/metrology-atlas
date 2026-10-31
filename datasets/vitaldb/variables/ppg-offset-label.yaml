@@ -1,0 +1,107 @@
+id: ppg-offset-label
+name: PPG offset removed
+summary: 'One label per recording: the hardware and filter delay taken out of the plethysmogram''s times, and how it was
+  found.'
+group: Derived labels/PPG timing labels
+origin: derived
+version: 0.0.1
+type: numeric
+unit: ms
+source: ppg_offset_labels.csv (label family ppg_offset)
+source_name: ppg_offset
+measurand: The combined hardware and filter delay of the plethysmogram behind the finger, as removed from one recording
+  ([[observation:ppg-hardware-delay]]).
+description: The offset is the setup's median PAT level minus the adopted R-to-foot PAT of 270 ms ([[parameter:adopted-pat]]),
+  or the median over all recordings where the setup has too few. Labelled so far in 266 recordings, over the first 90 minutes
+  of each analysed stretch.
+derived_from:
+- variable: snuadc-ecg-ii
+  relation: computed-from
+  form: snu-raw
+  note: 'R peaks, interpolated: the ECG fiducial.'
+- variable: snuadc-pleth
+  relation: computed-from
+  form: pleth-raw
+  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial.'
+algorithm: 'physiosync.setup_offsets: per recording setup, the median raw PAT level of its recordings (sawtooth removed)
+  minus the adopted PAT.'
+code:
+- physiosync/physiosync/ecg_ppg.py
+- physiosync/physiosync/labels.py
+- vitaldb-bench/tools/measurement_export.py
+propagation:
+  method: study
+  studies:
+  - pat-offset-census
+  - ppg-offset-reference
+  note: Pooled over the recordings of a setup; the label carries the setup's IQR and its count.
+timing:
+- id: pol-start
+  name: 'as stored: the offset''s interval, from its start'
+  kind: as_stored
+  support_s:
+  - 1158.6
+  - 5399.2
+  stamp_position: open
+  bias_s: &id001
+    median: -5398.3
+    p5: -5399.0
+    p95: -3214.2
+    scope: recording
+    status: measured
+    evidence: label lengths, 266 labels; label CSVs of the release run (physiosync labels 0.0.1, 266 recordings), measured
+      31 Oct 2026
+  look_ahead:
+    lead_s:
+    - 1158.6
+    - 5399.2
+    basis: real
+    note: 'Used at its start, the offset carries its whole interval, and more: it is fitted over the recording. Both ends
+      are stored, so its availability time is recoverable.'
+  uncertainty:
+    components: &id002
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the ends are the file's own stamps, copied exactly
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: pol-avail
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 1158.6
+  - 5399.2
+  stamp_position: close
+  removes_bias_s: *id001
+  bias_s:
+    name: held to the end of the recording
+    median: 11276.5
+    p5: 406.4
+    p95: 21913.7
+    scope: recording
+    status: measured
+    evidence: from each label's end to the end of its recording (the last numeric delay label), 266 labels; label CSVs of
+      the release run (physiosync labels 0.0.1, 266 recordings), measured 31 Oct 2026
+  uncertainty:
+    upper_bound: false
+    components: *id002
+  correction: read the label once the recording has ended (available_at case_end)
+  corrects:
+  - pol-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end; the rate and offset priors also pool other recordings of the same
+    setup'
+value:
+  kind: per-setup fit
+  status: measured
+  studies:
+  - pat-offset-census
+  - ppg-offset-reference
+  note: 'Median 383.6 ms (p5-p95 375.4-398.6 ms) over 266 recordings: 260 from their setup, 6 from all recordings. Its accuracy
+    rests on the adopted PAT, an assumption the data cannot test.'

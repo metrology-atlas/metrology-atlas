@@ -1,0 +1,111 @@
+id: ppg-sawtooth-label
+name: PPG sawtooth tooth
+summary: 'One label per tooth of the plethysmogram''s frame sawtooth: its slope and phase, the correction applied, and the
+  sync error left.'
+group: Derived labels/PPG timing labels
+origin: derived
+version: 0.0.1
+type: event
+source: ppg_sawtooth_labels.csv (label family ppg_sawtooth)
+source_name: ppg_sawtooth
+measurand: The ECG-to-PPG delay's sawtooth over one tooth, from one frame slip to the next ([[study:ppg-sawtooth]]), and
+  the timing error left in the plethysmogram once it is corrected.
+description: Each label runs from one slip to the next, or to the start or end of the analysed stretch, and carries the
+  tooth's parameters, the applied correction (so a downstream method can undo it), each fiducial's error model, a tier and
+  whether it is usable for pulse arrival time. Labelled so far in 266 recordings, over the first 90 minutes of each analysed
+  stretch.
+derived_from:
+- variable: snuadc-ecg-ii
+  relation: computed-from
+  form: snu-raw
+  note: 'R peaks, interpolated: the ECG fiducial.'
+- variable: snuadc-pleth
+  relation: computed-from
+  form: pleth-raw
+  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial.'
+- variable: snuadc-art
+  relation: computed-from
+  form: snu-raw
+  note: Arterial upstrokes, where available, confirm slips (the reference).
+algorithm: physiosync's tooth-by-tooth fit of the beat-to-beat ECG-to-PPG delay (slips detected, inserted or predicted from
+  the recording's rate, with its setup's rate as a prior); the sync error left in each tooth is summarised by drawing from
+  the tooth's error model.
+code:
+- physiosync/physiosync/ecg_ppg.py
+- physiosync/physiosync/labels.py
+- vitaldb-bench/tools/measurement_export.py
+propagation:
+  method: study
+  studies:
+  - ppg-sawtooth
+  note: 'Each label carries its own sync error: mean, SD and 95th percentile.'
+timing:
+- id: pst-start
+  name: 'as stored: the tooth''s interval, from its start'
+  kind: as_stored
+  support_s:
+  - 7.9
+  - 5399.2
+  stamp_position: open
+  bias_s: &id001
+    median: -659.2
+    p5: -4620.5
+    p95: -89.8
+    scope: recording
+    status: measured
+    evidence: label lengths, 1237 labels; label CSVs of the release run (physiosync labels 0.0.1, 266 recordings), measured
+      31 Oct 2026
+  look_ahead:
+    lead_s:
+    - 7.9
+    - 5399.2
+    basis: real
+    note: 'Used at its start, the tooth carries its whole interval, and more: it is fitted over the recording. Both ends
+      are stored, so its availability time is recoverable.'
+  uncertainty:
+    components: &id002
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the ends are the file's own stamps, copied exactly
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: pst-avail
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 7.9
+  - 5399.2
+  stamp_position: close
+  removes_bias_s: *id001
+  bias_s:
+    name: held to the end of the recording
+    median: 12986.6
+    p5: 1864.6
+    p95: 24864.3
+    scope: recording
+    status: measured
+    evidence: from each label's end to the end of its recording (the last numeric delay label), 1237 labels; label CSVs
+      of the release run (physiosync labels 0.0.1, 266 recordings), measured 31 Oct 2026
+  uncertainty:
+    upper_bound: false
+    components: *id002
+  correction: read the label once the recording has ended (available_at case_end)
+  corrects:
+  - pst-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end; the rate and offset priors also pool other recordings of the same
+    setup'
+value:
+  kind: per-tooth fit
+  status: measured
+  studies:
+  - ppg-sawtooth
+  note: 'The sync error SD left after correction, median per tier in these labels: A 1.9 ms (342 teeth), B 3.8 ms (190),
+    C 10.9 ms (556), U 9.6 ms (102, not corrected); N (47) has no sawtooth. 579 of 1,237 teeth are usable for pulse arrival
+    time.'

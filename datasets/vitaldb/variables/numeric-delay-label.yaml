@@ -59,7 +59,7 @@ code:
 - vitaldb-bench/tools/numeric_delay_labels.py
 - vitaldb-bench/tools/numeric_delay_variability.py
 - vitaldb-bench/vitaldb_bench/label_families.py
-version: 0.1.0
+version: 0.0.1
 propagation:
   method: study
   studies:
