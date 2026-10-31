@@ -86,3 +86,17 @@ def test_supersession(tmp_path):
              derived_from=[{"variable": "a", "relation": "computed-from"}]),
         **_v("f2", name="F", origin="derived", version="2.10", derived_from=[{"variable": "a", "relation": "computed-from"}]))))
     assert doc["variables"]["f2"]["derived"]["supersedes"] == ["f1"]
+
+
+def test_pages_show_the_links(tmp_path):
+    from metrology_atlas import write_site
+    d = _dataset(tmp_path, **MAP,
+                 **_v("art", unit="mmHg", value={"step": 0.1}, measures=[{"measurand": "map", "method": "invasive"}]),
+                 **_v("num", unit="mmHg", derived_from=[{"variable": "art", "relation": "same-source"}]))
+    docs = write_site(load(d), tmp_path / "site") / "docs"
+    art = (docs / "variables" / "art.md").read_text()
+    assert "## Related variables" in art and "Mean arterial pressure" in art and "(same source)" in art
+    num = (docs / "variables" / "num.md").read_text()
+    assert "same source as" in num
+    m = (docs / "measurands" / "map.md").read_text()
+    assert "## Measured by" in m and "has as a part" not in m and "related to" in m

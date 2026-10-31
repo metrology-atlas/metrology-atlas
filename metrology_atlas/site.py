@@ -574,6 +574,7 @@ class Site:
         coupling = s.get("coupling") or {}
         body = (self.section("What it measures", self.prose(s.get("measurand")))
                 + self.section("Description", self.prose(s.get("description")))
+                + self.section("Related variables", self.related(i, s))
                 + self.section("Measurement space", self.measurement_space(i, s))
                 + self.section("Time", time_side)
                 + self.section("Value", self.value_side(s))
@@ -591,6 +592,106 @@ class Site:
             ("Stamped by", self.a("clock", s["stamp_clock"]) if s.get("stamp_clock") else None),
             ("Spaced by", self.a("clock", s["sample_clock"]) if s.get("sample_clock") else None),
             ("Rate", rate), ("Unit", s.get("unit"))]), body)
+
+    def cell(self, text) -> str:
+        """Prose for one table cell: references resolved, on one line."""
+        return self.prose(text).strip().replace("\n", " ").replace("|", "\\|") if text else ""
+
+    RELATION = {"computed-from": "computed from", "same-source": "same source as"}
+
+    def related(self, i: str, s: dict) -> str:
+        """Links between variables (schema 0.4): what a variable measures or estimates, what it was derived from,
+        what is derived from it, its versions, and what propagation along its links gives."""
+        from metrology_atlas.propagate import propagated
+        r = self.rel["variable"][i]
+        out = ""
+        rows = [f"| {self.a('measurand', m['measurand'])} | {self.cell(m.get('method'))} | "
+                f"{', '.join(f'`{x}`' for x in m.get('tracks') or []) or 'all'} | {self.cell(m.get('note'))} |"
+                for m in s.get("measures") or []]
+        if rows:
+            out += self.sub("What it measures", "| Measurand | Method | Tracks | Note |\n|---|---|---|---|\n"
+                            + "\n".join(rows) + "\n")
+        rows = []
+        for m in s.get("estimates") or []:
+            val = m.get("validation") or {}
+            trained = (" **Trained on this dataset: its validation error is optimistic.**"
+                       if val.get("trained_on_dataset") else "")
+            rows.append(f"| {self.a('measurand', m['measurand'])} | {self.cell(m.get('method'))} | "
+                        f"{self.cell(val.get('reference'))}{(' (' + self.cell(val['where']) + ')') if val.get('where') else ''}"
+                        f"{trained} | {self.many('study', val.get('studies'))} |")
+        if rows:
+            out += self.sub("What it estimates", "It stands for a quantity it does not measure. Its uncertainty has two "
+                            "parts: its inputs' errors carried through, and the model's own error, which only "
+                            "validation against a reference measurement gives.\n\n| Measurand | Method | Validated "
+                            "against | Studies |\n|---|---|---|---|\n" + "\n".join(rows) + "\n")
+        rows = []
+        for d in s.get("derived_from") or []:
+            src = self.ds.get("variable", d["variable"]) or {}
+            form = next((t["name"] for t in src.get("timing") or [] if t.get("id") == d.get("form")), None)
+            rows.append(f"| {self.a('variable', d['variable'])} | {self.RELATION[d['relation']]} | "
+                        f"{', '.join(f'`{x}`' for x in d.get('tracks') or []) or 'all'} | {form or ('its default form' if src.get('timing') else '—')} | "
+                        f"{self.cell(d.get('note'))}{(' ' + self.many('study', d['studies'])) if d.get('studies') else ''} |")
+        if rows:
+            out += self.sub("Derived from", ("Computed from the variables below." if s.get("origin") == "derived"
+                                             else "Related to the variables below.")
+                            + " *Computed from*: the input's stored data, so its time and value "
+                            "errors reach this one. *Same source as*: both come from one signal inside a device, and "
+                            "this one was not computed from the stored input.\n\n| Input | Relation | Tracks | Timing "
+                            "form used | Note |\n|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
+        down = [(x, "computed from it") for x in r.get("derived_into") or []] + \
+               [(x, "same source") for x in r.get("same_source") or []]
+        if down:
+            out += self.sub("Derived from it", "\n".join(f"- {self.a('variable', x)} ({how})" for x, how in down))
+        about = [("Algorithm", self.prose(s.get("algorithm")).strip() if s.get("algorithm") else None),
+                 ("Version", s.get("version")),
+                 ("Code", "\n\n" + self.code_list(s.get("code")) if s.get("code") else None),
+                 ("Superseded by", self.a("variable", s["superseded_by"]) if s.get("superseded_by") else None),
+                 ("Supersedes", self.many("variable", r.get("supersedes")) if r.get("supersedes") else None)]
+        about = [(k, v) for k, v in about if v]
+        if about:
+            out += self.sub("How it is derived", "\n\n".join(f"**{k}.** {v}" for k, v in about))
+        prop = s.get("propagation") or {}
+        res = propagated(self.ds, i)
+        text = ""
+        if prop:
+            how = {"law": "by the GUM law of propagation from its formula", "study": "from the study that measured it",
+                   "none": "not propagated"}[prop["method"]]
+            text += (f"**Uncertainty:** {how}"
+                     + (f" ({self.many('study', prop.get('studies'))})" if prop.get("studies") else "") + "."
+                     + (" " + self.prose(prop["note"]).strip() if prop.get("note") else "") + "\n\n")
+        if res:
+            t = res["time"]
+            if t["inputs"]:
+                text += (f"**From its inputs' timing:** its support is at least {_rng([t['support_min_s']] * 2)} long"
+                         + (f"; an input arrives up to {_rng([t['input_latency_s']] * 2)} after its own interval "
+                            "ends, so this value cannot exist before then (the availability rule)"
+                            if t["input_latency_s"] > 0 else "")
+                         + ("; an input's form uses data from after its stamp, so this one does too" if t["uses_future"] else "")
+                         + ".\n\n")
+            if t["unstated"]:
+                text += ("**Inputs whose timing the atlas does not yet describe:** "
+                         + self.many("variable", t["unstated"]) + ". Until they are, this variable's availability "
+                         "follows from theirs but cannot be stated.\n\n")
+            for c in res["time_conflicts"]:
+                text += f"!!! warning \"Claims less than its inputs allow\"\n\n    {c}.\n\n"
+            v = res.get("value")
+            if v and v.get("u") is not None:
+                unit = s.get("unit") or ""
+                text += (f"**By the law of propagation:** standard uncertainty {v['u']:.4g} {unit}"
+                         + (f", bias {v['bias']:.4g} {unit}" if v.get("bias") else "")
+                         + (" (the formula is linear)" if v["linear"] else
+                            " at " + ", ".join(f"{k} = {x:g}" for k, x in (v.get("at") or {}).items()))
+                         + ".\n\n| Input | Symbol | Sensitivity | Standard uncertainty | Share of the variance |\n"
+                         "|---|---|---|---|---|\n"
+                         + "\n".join(f"| {self.a('variable', x['variable'])} | `{x['symbol']}` | {x['coefficient']:.4g} | "
+                                     f"{_num4(x['u'])} {(self.ds.get('variable', x['variable']) or {}).get('unit') or ''} | "
+                                     f"{round(100 * x['share'])}% |" for x in v["terms"]) + "\n\n"
+                         + ("Shared components add covariance: " + "; ".join(
+                             f"{' and '.join(c['inputs'])} share {c['shared_with']}" for c in v["shared"]) + ".\n"
+                            if v["shared"] else ""))
+        if text:
+            out += self.sub("Propagation", text)
+        return out
 
     def timing_table(self, i: str, s: dict) -> str:
         """The timing forms of a signal: bias, uncertainty and support of each (framework spec, 28 Oct 2026)."""
@@ -1085,14 +1186,28 @@ class Site:
                 for e in v.get(key) or []:
                     if e["measurand"] == i:
                         out += (f"| {self.a('variable', vid)} | {e.get('method') or ''} | "
-                                f"{', '.join(e.get('tracks') or []) or 'all'} |\n")
+                                f"{', '.join(f'`{x}`' for x in e.get('tracks') or []) or 'all'} |\n")
             return "| Variable | Method | Tracks |\n|---|---|---|\n" + out if out else ""
+        word = {"related": "related to", "component-of": "part of", "differs-by": "differs by a known quantity from"}
+        back = {"related": "related to", "component-of": "has as a part", "differs-by": "differs by a known quantity from"}
+        rel = [f"- {word[x['relation']]} {self.a('measurand', x['measurand'])}"
+               + (f": {self.cell(x['note'])}" if x.get("note") else "") for x in m.get("related") or []]
+        for oid, o in sorted(self.ds.items["measurand"].items()):
+            for x in o.get("related") or []:
+                if x["measurand"] == i:
+                    rel.append(f"- {back[x['relation']]} {self.a('measurand', oid)}"
+                               + (f": {self.cell(x['note'])}" if x.get("note") else ""))
+        n = len(r.get("measured_by") or [])
+        compare = ("Two or more variables measure it, so they can be compared directly: their difference is "
+                   "instrument and method, not physiology." if n > 1 else "")
         body = (self.section("Description", self.prose(m.get("description")))
-                + self.section("Measured by", rows(r.get("measured_by"), "measures"))
+                + self.section("Related measurands", "\n".join(rel))
+                + self.section("Measured by", compare + "\n\n" + rows(r.get("measured_by"), "measures"))
                 + self.section("Estimated by", rows(r.get("estimated_by"), "estimates"))
                 + self.section("Studies", self.studies_table(m.get("studies")))
                 + self.section("References", self.refs(m.get("references"))))
-        return self.page(m, self.glance([("Unit", m.get("unit")), ("Related", self.many("measurand", r.get("related")))]),
+        return self.page(m, self.glance([("Unit", m.get("unit")),
+                                         ("Variables", str(len(r.get("measured_by") or []) + len(r.get("estimated_by") or [])))]),
                          body)
 
     def technique(self, i: str, t: dict) -> str:
@@ -1604,6 +1719,11 @@ def value_u(v: dict) -> float | None:
     return combine([{"u_s": float(c["u_s"]), "included_in": c.get("included_in")} for c in comps]) if comps else None
 
 
+def _num4(x: float) -> str:
+    """Four significant figures, without an exponent for numbers up to a billion."""
+    return f"{x:,.0f}" if 1e4 <= abs(x) < 1e9 else f"{x:.4g}"
+
+
 def _rng(r) -> str:
     def one(x: float) -> str:
         if x < 1:
@@ -1786,7 +1906,8 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     if rec_name:
         site.start(None, base="")
         (docs / "records.md").write_text(site.records_page(), encoding="utf-8")
-    nav = [{"Home": "index.md"}, {"Variables": entries.pop("variable")},
+    nav = [{"Home": "index.md"}, {"Variables": entries.pop("variable")}] + (
+        [{KINDS["measurand"].title: entries.pop("measurand")}] if ds.items["measurand"] else []) + [
            {"Time": ["time.md", *section_pages.get("Time", []), {"Synchronisation planner": "planner.md"}, {"Clocks": entries.pop("clock")},
                      {"Clock links": entries.pop("link")}, {"Devices": entries.pop("device")}]},
            {"Value": ["value.md", *section_pages.get("Value", [])] if section_pages.get("Value") else "value.md"},
