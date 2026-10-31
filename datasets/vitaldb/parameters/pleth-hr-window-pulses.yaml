@@ -1,10 +1,12 @@
 id: pleth-hr-window-pulses
 name: PLETH_HR window
-quantity: Number of pulse intervals PLETH_HR averages, from recomputing it from the plethysmogram's pulses.
+quantity: Number of pulse intervals PLETH_HR averages (a mean of those within 25% of the window's median), from recomputing
+  it from the plethysmogram's pulses.
 value: 10
 unit: intervals
 spread:
-  text: means and medians both best at 10; a mean wins in 75% of well-reproduced recordings, narrowly
+  text: wins in 2,446 of the 2,473 best-reproduced recordings; 70.4% of values reproduced exactly, against 62.4% for a median
+    of 10
 status: measured
 study: pleth-hr-derivation
 about:

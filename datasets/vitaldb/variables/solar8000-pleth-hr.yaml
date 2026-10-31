@@ -1,6 +1,6 @@
 id: solar8000-pleth-hr
 name: Solar8000 pulse rate (PLETH_HR)
-summary: Pulse rate from the oximeter, averaged over its last 10 pulse intervals, rounded.
+summary: Pulse rate from the oximeter, a mean of its last 10 pulse intervals leaving out outliers, rounded.
 type: numeric
 source_name: Solar8000/PLETH_HR
 device: solar8000
@@ -35,7 +35,7 @@ timing:
       evidence: robust SD (1.4826 x median absolute deviation) of the per-recording delays, 6,151 recordings
   domain: recorder-pc
   status: measured
-  evidence: 'a window of 10 pulse intervals (6.0-11.0 s at the release''s 5th-95th percentile pulse intervals), reported
+  evidence: 'a mean of the last 10 pulse intervals, leaving out those far from their median (6.0-11.0 s at the release''s 5th-95th percentile pulse intervals), reported
     4.5 s after it ends, so centred about 8.8 s before the stamp, which the comparison with heart rate confirms
     (8.5 s). Replaces, on 1 Nov 2026, the earlier form (delay 2.79 s, 5th-95th percentile -1.8 to 4.97 s, window 8-12 s;
     numerics-derivation-release), which assumed a median of about 12 beats and centred the window about 1 s too late.'

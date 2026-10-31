@@ -83,13 +83,12 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
 
   [[figure:hr-vs-pulse-rate-scatter]]
 
-  - **A window of pulses, averaged by a mean.** Just below the diagonal, the strongest ridge sits at a constant ratio: pulse
-  rate 0.884 times heart rate, for every heart rate from 55 to 140 /min (within 0.36 /min), where a constant offset fits
-  far worse (2.9 /min; [[parameter:pr-hr-ridge-ratio]]). One missed pulse tells the windows apart: in a window of a fixed
-  time T it removes 60/T per minute, a constant offset; in a mean over N pulses it makes the N intervals span N + 1 beats,
-  a constant ratio N/(N + 1); a median ignores it. So PLETH_HR averages a fixed number of pulses with a mean, about 7 to
-  8 by this ratio, not a median as the pilot found. Integer truncation of both numerics blurs the ratio, so it bounds N
-  only roughly.
+  - **A window counted in pulses.** Just below the diagonal, the strongest ridge sits at a constant ratio: pulse rate 0.884
+  times heart rate, for every heart rate from 55 to 140 /min (within 0.36 /min), where a constant offset fits far worse
+  (2.9 /min; [[parameter:pr-hr-ridge-ratio]]). A window of a fixed time would put such a ridge at a constant offset, so
+  PLETH_HR''s window is counted in pulses. It was first read as a plain mean over 7–8 pulses, since one missed pulse in
+  a mean of N gives N/(N + 1); recomputing PLETH_HR ([[study:pleth-hr-derivation]]) found a mean of 10 that leaves out outlying
+  intervals, which ignores a single missed pulse, so what makes the ridge is open there.
 
   - **Worse at high rates.** The SD of the difference grows from 2.4 /min at 40–50 /min to 12.4 at 100–110 and about 20
   above 120 /min: arrhythmias, where beats fail to make a pulse, and artefact.
