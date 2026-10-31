@@ -1,6 +1,6 @@
 [project]
 name = "metrology-atlas"
-version = "0.2.0"
+version = "0.3.0"
 description = "A machine-readable metrology of a recorded dataset: every variable as a distribution over its true time and value, with the clocks, models and studies behind it; compiled to one JSON file and a website."
 readme = "README.md"
 license = "MIT"

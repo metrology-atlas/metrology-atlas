@@ -2,12 +2,13 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "metrology-atlas: a machine-readable metrology of a recorded dataset"
+version: 0.3.0
 authors:
   - family-names: Goodwin
     given-names: "Andrew J."
     affiliation: "School of Biomedical Engineering, The University of Sydney"
     orcid: "https://orcid.org/0000-0002-2776-7039"
-abstract: "A machine-readable metrology of a recorded dataset: every variable as a distribution over its true time and value, with the clocks, models and studies behind it; compiled to one JSON file and a website. Includes the VitalDB atlas as its first dataset."
+abstract: "Describes a recorded dataset as a measurement system, in the terms of the VIM and the GUM: for every variable, the interval each value describes, the bias and standard uncertainty of its time and value, which errors are shared with other signals, how it relates to other variables (what it measures and what it was derived from, with uncertainty and availability propagated along each link), and the evidence behind each number. A schema and engine check an atlas and compile it to one JSON file and a website. Includes the VitalDB atlas (v0.2.0) as its first dataset."
 license: MIT
 repository-code: "https://github.com/metrology-atlas/metrology-atlas"
 url: "https://vitaldb.metrology-atlas.org"
@@ -20,7 +21,7 @@ keywords:
   - "VitalDB"
 preferred-citation:
   type: article
-  title: "The Metrology Atlas: describing recorded physiological data as a measurement system, with VitalDB as a first application"
+  title: "The Metrology Atlas: describing recorded physiological data as a measurement system"
   authors:
     - family-names: Goodwin
       given-names: "Andrew J."
