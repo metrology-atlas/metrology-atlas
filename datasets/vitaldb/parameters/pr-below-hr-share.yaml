@@ -1,0 +1,14 @@
+id: pr-below-hr-share
+name: Pulse rate below heart rate, when they disagree
+quantity: Share of the values more than 10 /min apart in which the pulse rate is below the heart rate.
+value: 77
+unit: '%'
+spread:
+  text: 'values more than 10 /min apart: 3.0% of 33.6 million; on the 3/4, 2/3 and 1/2 lines: 0.70%, 0.36% and 0.20% of
+    all values'
+status: measured
+study: hr-vs-pulse-rate
+about:
+- solar8000-hr
+- solar8000-pleth-hr
+date: 2026-11-01

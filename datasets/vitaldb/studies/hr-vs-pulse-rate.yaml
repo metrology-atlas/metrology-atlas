@@ -64,6 +64,15 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
   against 5.4 /min within one ([[parameter:pr-hr-between-recording-sd]], [[parameter:pr-hr-within-recording-sd]]); 3.0%
   of the time the two differ by more than 10 /min.
 
+  - **When they disagree, the pulse is usually the lower.** 92% of values agree within 3 /min. Of the 3.0% more than 10
+  /min apart, 77% have the pulse rate below the heart rate ([[parameter:pr-below-hr-share]]), and many lie on lines where
+  the pulse rate is a fixed share of the heart rate: 3/4 (0.70% of all values), 2/3 (0.36%) and 1/2 (0.20%), where one beat
+  in four, one in three, or every other beat makes no pulse at the finger, as in ectopy and bigeminy. Pulse rate above heart
+  rate is rarer (4/3: 0.13%, 3/2: 0.05%, double: 0.02%), as when the ECG misses beats.
+
+
+  [[figure:hr-vs-pulse-rate-scatter]]
+
   - **Worse at high rates.** The SD of the difference grows from 2.4 /min at 40–50 /min to 12.4 at 100–110 and about 20
   above 120 /min: arrhythmias, where beats fail to make a pulse, and artefact.
 
@@ -110,3 +119,12 @@ figures:
     recordings, as stamped, at the atlas''s lag and at each group''s best lag.'
   alt: Two humped curves, the orange one about 2 s to the right of the blue; a flat line of means with limits widening above
     100 per minute; bars of within-recording SD near 5 and between-recording SD near 2.
+- id: hr-vs-pulse-rate-scatter
+  file: examples/hr-vs-pulse-rate-scatter.png
+  theme: agreement and residuals
+  source: vitaldb-bench examples/hr_vs_pulse_rate.py
+  caption: 'Pulse rate against heart rate for every 2 s value in 6,386 recordings, as a density on a log scale: as stamped
+    (left) and with the pulse rate one record later (right). Dotted: the pulse rate a fixed share of the heart rate (3/4,
+    2/3, 1/2, and double), along which beats without a pulse, or missed by the ECG, collect.'
+  alt: Two density plots dominated by a bright line of equality, with fainter straight lines fanning below it at three-quarters,
+    two-thirds and half of the heart rate, and a sparse cloud elsewhere.
