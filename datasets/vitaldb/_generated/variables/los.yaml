@@ -22,3 +22,7 @@ derived_from:
   relation: computed-from
 - variable: dis
   relation: computed-from
+propagation:
+  method: law
+  note: Both dates are rounded to the day, so the difference is triangular over n ± 1 days; the law of propagation gives
+    its standard uncertainty.

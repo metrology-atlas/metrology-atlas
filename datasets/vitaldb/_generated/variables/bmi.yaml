@@ -31,3 +31,8 @@ derived_from:
   relation: computed-from
 - variable: weight
   relation: computed-from
+propagation:
+  method: study
+  studies:
+  - value-model-bmi
+  note: The fitted model gives the posterior of BMI from those of height and weight.

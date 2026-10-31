@@ -389,6 +389,10 @@ KINDS: dict[str, Kind] = {
                                "directly by a study, for features defined by code and for estimates; none: not "
                                "propagated."),
                     Field("studies", "refs", ref="study", help="For 'study': the studies that measured it."),
+                    Field("at", "objs", fields=(Field("symbol", "str", required=True),
+                                                Field("value", "number", required=True)),
+                          help="For 'law' with a formula that is not linear: the point (input values) at which the "
+                               "sensitivity coefficients are worked out."),
                     Field("note", "text"),
                 ), help="How the inputs' uncertainty is carried to this variable."),
             ),

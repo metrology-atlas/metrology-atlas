@@ -34,6 +34,11 @@ def to_json(ds: Dataset) -> dict:
             id_: {**_plain(item), "derived": {k: v for k, v in rel[kind.name][id_].items()}}
             for id_, item in sorted(ds.items[kind.name].items())
         }
+    from metrology_atlas.propagate import propagated
+    for id_, item in doc["variables"].items():
+        p = propagated(ds, id_)
+        if p is not None:
+            item["derived"]["propagated"] = p
     for kind in ("study", "observation"):
         for id_, item in doc[KINDS[kind].folder].items():
             if item.get("code"):

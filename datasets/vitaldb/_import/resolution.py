@@ -88,6 +88,17 @@ MEASURES = {   # registry name -> the measurand it measures (schema 0.4), with i
                    "VitalDB describes it as SpO2, but it is recorded to 0.1 % like the lab data, and sits with the "
                    "preoperative blood-gas values; a pulse oximeter shows whole percent. Taken as SaO2."),
 }
+PROPAGATION = {   # registry name -> how the derived value's uncertainty is carried (schema 0.4)
+    "los": {"method": "law", "note": "Both dates are rounded to the day, so the difference is triangular over "
+                                     "n ± 1 days; the law of propagation gives its standard uncertainty."},
+    **{k: {"method": "study", "studies": [f"value-model-{a}" for a in ins],
+           "note": "vitaldb-resolution samples the two event-time posteriors independently and takes the "
+                   "difference; the spread is read from its snapshot."}
+       for k, ins in (("ane_duration", ("anestart", "aneend")), ("op_duration", ("opstart", "opend")),
+                      ("emergence", ("opend", "aneend")), ("ind_to_incision", ("anestart", "opstart")))},
+    "bmi": {"method": "study", "studies": ["value-model-bmi"],
+            "note": "The fitted model gives the posterior of BMI from those of height and weight."},
+}
 MEASURES_EXTRA = {"preop_plt": {"unit": "x1000/mcL", "conversion": "none: the same unit, written with an x"}}
 
 TITLE_FIX = {"icu_days": "ICU days", "preop_ecg": "Preoperative ECG"}   # registry descriptions without proper capitals
@@ -209,6 +220,8 @@ def main(repo: str) -> None:
         if v["method"] == "derived":
             item["origin"] = "derived"
             item["derived_from"] = [{"variable": atlas_id(x), "relation": "computed-from"} for x in v.get("inputs") or []]
+            if name in PROPAGATION:
+                item["propagation"] = PROPAGATION[name]
             item["value"]["formula"] = v.get("formula")
             item["value"]["combination"] = v.get("distribution")
         if name in MEASURES:

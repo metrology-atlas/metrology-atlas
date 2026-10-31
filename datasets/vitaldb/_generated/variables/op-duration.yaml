@@ -21,3 +21,10 @@ derived_from:
   relation: computed-from
 - variable: opend
   relation: computed-from
+propagation:
+  method: study
+  studies:
+  - value-model-opstart
+  - value-model-opend
+  note: vitaldb-resolution samples the two event-time posteriors independently and takes the difference; the spread is read
+    from its snapshot.

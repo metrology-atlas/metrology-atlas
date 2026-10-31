@@ -426,6 +426,12 @@ def _check_derivation(ds: Dataset, v: dict, rel: str, problems: list[str]) -> No
             problems.append(f"{rel}: propagation by the law needs the value's 'formula'")
         if not computed:
             problems.append(f"{rel}: propagation by the law needs inputs it is computed from")
+    if prop.get("method") == "law" and formula and computed:
+        from metrology_atlas.propagate import law
+        problems.extend(f"{rel}: propagation by the law: {p}" for p in law(ds, v["id"])["problems"])
+    if computed and v.get("timing"):
+        from metrology_atlas.propagate import time_conflicts
+        ds.warnings.extend(f"{rel}: {c}" for c in time_conflicts(ds, v["id"]))
     if prop.get("method") == "study" and not prop.get("studies"):
         problems.append(f"{rel}: propagation 'study' needs the studies that measured the uncertainty")
     measured = {m.get("measurand") for m in v.get("measures") or [] if isinstance(m, dict)}

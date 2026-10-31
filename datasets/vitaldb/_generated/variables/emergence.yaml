@@ -21,3 +21,10 @@ derived_from:
   relation: computed-from
 - variable: aneend
   relation: computed-from
+propagation:
+  method: study
+  studies:
+  - value-model-opend
+  - value-model-aneend
+  note: vitaldb-resolution samples the two event-time posteriors independently and takes the difference; the spread is read
+    from its snapshot.

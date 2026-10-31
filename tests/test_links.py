@@ -18,14 +18,14 @@ MAP = {"measurands/map.yaml": {"id": "map", "name": "Mean arterial pressure", "s
 
 def test_links_load_and_derive(tmp_path):
     d = _dataset(tmp_path, **MAP,
-                 **_v("art", unit="mmHg", measures=[{"measurand": "map", "method": "invasive"}]),
+                 **_v("art", unit="mmHg", value={"step": 0.1}, measures=[{"measurand": "map", "method": "invasive"}]),
                  **_v("cuff", unit="mmHg", measures=[{"measurand": "map", "method": "oscillometric"}]),
                  **_v("num", unit="mmHg", derived_from=[{"variable": "art", "relation": "same-source"}]),
                  **_v("est", unit="mmHg", origin="derived", version="1",
                       derived_from=[{"variable": "art", "relation": "computed-from", "symbol": "p"}],
                       estimates=[{"measurand": "sbp",
                                   "validation": {"reference": "arterial line", "trained_on_dataset": True}}],
-                      value={"formula": "max(p)"}, propagation={"method": "law"}))
+                      value={"formula": "1.02 * p"}, propagation={"method": "law"}))
     doc = to_json(load(d))
     assert doc["measurands"]["map"]["derived"]["measured_by"] == ["art", "cuff"]
     assert doc["measurands"]["map"]["derived"]["related"] == ["sbp"]
