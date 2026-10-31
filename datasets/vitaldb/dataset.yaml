@@ -1,8 +1,9 @@
 id: vitaldb
 name: VitalDB metrology atlas
 summary: >-
-  Every recorded value in the VitalDB open dataset (6,388 surgical cases, PhysioNet release 1.0.0) as a
-  probability distribution over when it happened and what it was, with the studies that measured each part.
+  Every recorded value in the VitalDB open dataset (6,388 surgical cases, PhysioNet release 1.0.0) described as a
+  measurement: the interval it describes, the bias and standard uncertainty of its time and value, and the studies
+  behind each number.
 description: |
   A record in VitalDB is a pair: a recorded time and a recorded value. In the language of metrology, each record is
   an indication of two **measurands**: when the thing it describes happened, and what its value was. Neither is
