@@ -46,6 +46,7 @@ timing:
   correction: one global hardware delay, known in advance
   corrects:
   - pleth
+  - pleth-raw
   domain: reference
   status: measured
   evidence: one global hardware delay (pat-offset-census), 0.385 s (0.365-0.405 s with the adopted PAT's 250-290 ms range)
@@ -84,6 +85,47 @@ timing:
   domain: reference
   status: measured
   evidence: one global hardware delay (pat-offset-census), 0.385 s; 30 Hz frames
+- id: pleth-raw
+  name: raw stamps
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.033
+  bias_s:
+    name: stamp sawtooth plus oximeter hardware delay
+    median: 0.625
+    p5: 0.395
+    p95: 0.855
+    scope: structured
+    status: measured
+    evidence: the SNUADC sawtooth on the raw stamps (median 0.24 s, p5-p95 0.01-0.47 s, as snu-raw) plus the oximeter's
+      0.385 s
+  uncertainty:
+    components:
+    - name: sawtooth position
+      type: A
+      distribution: rectangular
+      u_s: 0.1386
+      scope: structured
+      length_s: 7488
+      correlation: rectangular
+      shared_with: SNUADC clock
+      evidence: 'length: the step-mode correction period, 2.08 h'
+    - name: oximeter hardware delay
+      type: B
+      distribution: rectangular
+      u_s: 0.0115
+      scope: release
+    - name: 30 Hz frames
+      type: B
+      distribution: rectangular
+      u_s: 0.0095
+      scope: independent
+  domain: snuadc-raw
+  status: measured
+  evidence: SNUADC raw stamps (sawtooth up to 480 ms) plus the oximeter hardware delay (pat-offset-census)
 tags:
 - stub
 chain:
