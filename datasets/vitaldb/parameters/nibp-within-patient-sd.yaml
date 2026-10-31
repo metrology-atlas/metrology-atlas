@@ -1,0 +1,13 @@
+id: nibp-within-patient-sd
+name: Cuff scatter within a patient
+quantity: 'SD of cuff-minus-arterial differences about each patient''s own mean: the part of the cuff''s error that varies
+  from reading to reading.'
+value: 9.4
+unit: mmHg
+spread:
+  n: 12238
+status: measured
+study: cuff-vs-arterial-agreement
+about:
+- solar8000-nibp
+date: 2026-10-19

@@ -1,0 +1,15 @@
+id: nibp-between-patient-sd
+name: Cuff offset between patients
+quantity: 'SD between patients of each patient''s own mean cuff-minus-arterial difference: the part of the cuff''s error
+  fixed within a patient.'
+value: 10.2
+unit: mmHg
+spread:
+  p10: -11
+  p90: 13
+  n: 2283
+status: measured
+study: cuff-vs-arterial-agreement
+about:
+- solar8000-nibp
+date: 2026-10-19

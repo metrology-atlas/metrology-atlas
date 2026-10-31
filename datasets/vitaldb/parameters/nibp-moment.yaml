@@ -1,0 +1,13 @@
+id: nibp-moment
+name: Cuff reading's moment against its stamp
+quantity: End of the 10 s arterial window whose changes best match changes between consecutive cuff readings, relative to
+  the cuff stamp.
+value: 2
+unit: s
+spread:
+  text: 'bootstrap 95% interval: the same; about the arterial numeric''s own delay'
+status: measured
+study: cuff-vs-arterial-agreement
+about:
+- solar8000-nibp
+date: 2026-10-19

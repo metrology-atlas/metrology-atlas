@@ -48,3 +48,32 @@ measures:
   tracks:
   - NIBP_MBP
   method: oscillometric cuff
+# Value side: from the method comparison against the arterial line
+value:
+  uncertainty:
+    components:
+    - name: offset per patient
+      type: A
+      distribution: empirical
+      u_s: 10.2
+      scope: recording
+      status: measured
+      evidence: SD between patients of each patient's mean cuff-minus-arterial difference, 2,283 patients ([[parameter:nibp-between-patient-sd]])
+    - name: scatter between readings
+      type: A
+      distribution: empirical
+      u_s: 9.4
+      scope: independent
+      status: measured
+      evidence: SD of cuff-minus-arterial differences within a patient, 12,238 readings ([[parameter:nibp-within-patient-sd]])
+    note: Mean pressure only (NIBP_MBP). Measured against the arterial line, whose own error is in the difference, so both
+      components are upper bounds. Only the scatter between readings averages away with repeated readings; the offset per
+      patient does not.
+  bias:
+    value: -0.1
+    scope: release
+    status: measured
+    evidence: cuff minus arterial over the cohort ([[parameter:nibp-art-bias]])
+  status: measured
+  studies:
+  - cuff-vs-arterial-agreement

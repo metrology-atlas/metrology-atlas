@@ -360,3 +360,13 @@
     Relation between respiratory changes in arterial pulse pressure and fluid responsiveness in septic patients
     with acute circulatory failure. Am J Respir Crit Care Med. 2000;162(1):134-138.
   doi: 10.1164/ajrccm.162.1.9903035
+- id: bland1986statistical
+  group: Statistics
+  citation: Bland JM, Altman DG. Statistical methods for assessing agreement between two methods of clinical measurement.
+    Lancet. 1986;327(8476):307-310.
+  doi: 10.1016/S0140-6736(86)90837-8
+- id: bland2007agreement
+  group: Statistics
+  citation: Bland JM, Altman DG. Agreement between methods of measurement with multiple observations per individual. J
+    Biopharm Stat. 2007;17(4):571-582.
+  doi: 10.1080/10543400701329422

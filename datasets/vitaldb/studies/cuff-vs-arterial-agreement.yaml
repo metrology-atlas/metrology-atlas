@@ -1,0 +1,73 @@
+id: cuff-vs-arterial-agreement
+name: Cuff against arterial mean pressure, paired at the cuff's moment
+summary: 12,238 cuff readings against the arterial line in 2,283 patients. A cuff reading belongs to its stamp. Over the
+  cohort the cuff has no bias at any pressure, but each patient's cuff sits a constant offset from their line (SD 10.2 mmHg
+  between patients), as large as the scatter within a patient (SD 9.4 mmHg).
+date: 2026-10-19
+status: current
+methods:
+- method-comparison
+- delays-and-windows
+devices:
+- solar8000
+variables:
+- solar8000-nibp
+- solar8000-art-numerics
+data: 2,457 recordings with cuff readings while the arterial line ran; 12,238 readings with a clean arterial line around
+  them (no flush or zeroing within a minute), in 2,283 patients.
+background: 'The cuff and the arterial line both measure [[measurand:mean-arterial-pressure]]. A cuff reading takes tens
+  of seconds and is reported once, as a held value, so comparing it with the line needs the moment it belongs to. Its error
+  has two parts: one that is the same for every reading in a patient (cuff size, arm, vessel) and one that varies from reading
+  to reading. Only the second averages out within a patient, and neither shows in a cohort''s mean bias.'
+method: '1. A new cuff reading is a change of the held NIBP_MBP value, or a value after a gap.
+
+  2. **Its moment.** For each reading, the arterial mean (ART_MBP) over 10 s windows ending −60 to +60 s from the cuff stamp;
+  the lag at which changes between consecutive readings (4,054 pairs, under 10 minutes apart) best follow changes in the
+  arterial mean, which removes each patient''s level difference.
+
+  3. **Agreement** at that moment: the cohort''s mean difference and its dependence on pressure, binned by the mean of the
+  two as in a Bland–Altman plot (binning by the arterial value alone manufactures a bias at low pressures by regression
+  to the mean); each patient''s mean difference; the spread within a patient.
+
+  4. **Hypotension:** arterial readings below 65 mmHg that the cuff also puts below 65.'
+results: '- **The cuff value belongs to its stamp.** Changes in the cuff follow changes in the arterial mean best for the
+  10 s ending 2 s after the stamp (bootstrap 95% interval: the same), about the arterial numeric''s own delay; the correlation
+  falls from 0.70 there to 0.33 a minute earlier ([[parameter:nibp-moment]]).
+
+  - **No bias over the cohort.** Cuff minus arterial is −0.1 mmHg (limits of agreement −27 to +27 mmHg), within ±2 mmHg
+  from 40 to 110 mmHg ([[parameter:nibp-art-bias]]).
+
+  - **A constant offset per patient.** Each patient''s own mean difference ranges from −11 to +13 mmHg (10th to 90th percentile;
+  SD 10.2 between patients, [[parameter:nibp-between-patient-sd]]), as large as the scatter of readings within a patient
+  (SD 9.4, [[parameter:nibp-within-patient-sd]]).
+
+  - **At the threshold.** Of 2,020 arterial readings below 65 mmHg, the cuff also put 49% below 65.
+
+
+  [[figure:cuff-vs-arterial]]'
+discussion: 'The two parts become the cuff''s value uncertainty budget ([[variable:solar8000-nibp]]): a component fixed
+  within a recording and one independent between readings. Both are upper bounds, since the difference also holds the arterial
+  line''s own error. What the error does to a cohort''s and a patient''s hypotension is worked through in [[example:cuff-vs-arterial]].'
+limitations: '- The arterial line is not the truth either: its level differs between routes ([[example:hypotension-burden]]),
+  and a damped line shows as cuff-minus-arterial error.
+
+  - Mean pressure only; systolic and diastolic cuff values are known to agree worse.
+
+  - Cuff readings are compared only while the arterial line runs, which selects patients and moments.'
+code:
+- vitaldb-bench/examples/cuff_vs_arterial.py
+- vitaldb-bench/examples/run_scan.sh
+references:
+- bland1986statistical
+- bland2007agreement
+- goodwin2021blood
+figures:
+- id: cuff-vs-arterial
+  file: examples/cuff-vs-arterial.png
+  theme: agreement and residuals
+  source: vitaldb-bench examples/cuff_vs_arterial.py
+  caption: 'Cuff against arterial mean pressure. A: how well changes between consecutive cuff readings follow changes in
+    the arterial mean, by where the 10 s arterial window ends against the cuff stamp. B: cuff minus arterial against their
+    mean, with the mean difference per 10 mmHg (orange). C: each patient''s mean difference.'
+  alt: A curve peaking just after zero; a broad cloud around zero with a flat orange line; a wide histogram centred near
+    zero.

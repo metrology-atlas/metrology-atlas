@@ -15,7 +15,7 @@ why: |
   reading in a patient (cuff size, arm, vessel) and one that varies from reading to reading. Only the second
   averages out within a patient; neither shows in a cohort's mean bias.
 variables: [solar8000-nibp, solar8000-art-numerics]
-studies: [numeric-derivation-pilot]
+studies: [cuff-vs-arterial-agreement, numeric-derivation-pilot]
 data: |
   2,457 recordings with cuff readings while the arterial line ran; 12,238 readings with a clean arterial line
   around them (no flush or zeroing within a minute), in 2,283 patients.

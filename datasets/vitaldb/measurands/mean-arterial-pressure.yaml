@@ -5,3 +5,5 @@ unit: mmHg
 related:
 - measurand: arterial-pressure
   relation: component-of
+studies:
+- cuff-vs-arterial-agreement

@@ -1,0 +1,13 @@
+id: nibp-art-bias
+name: Cuff minus arterial mean pressure
+quantity: Mean difference, cuff minus arterial line, over the cohort's readings, with the limits of agreement.
+value: -0.1
+unit: mmHg
+spread:
+  text: limits of agreement −27 to +27 mmHg; within ±2 mmHg from 40 to 110 mmHg
+  n: 12238
+status: measured
+study: cuff-vs-arterial-agreement
+about:
+- solar8000-nibp
+date: 2026-10-19

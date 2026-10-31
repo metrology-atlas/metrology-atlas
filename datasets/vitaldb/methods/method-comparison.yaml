@@ -1,0 +1,28 @@
+id: method-comparison
+name: Method comparison
+order: 8.5
+summary: 'Compare two variables that measure one quantity, paired at the moment each describes: the bias between them, their
+  limits of agreement, and the parts of the difference that are fixed per patient and that vary within one.'
+description: 'Where a dataset records one quantity by two routes, such as arterial pressure by an invasive line and by a
+  cuff, or oxygen saturation by pulse oximetry and by blood gas, the two can be compared reading by reading. The design
+  is the classic method comparison ([[reference:bland1986statistical|Bland and Altman 1986]]): the difference between the
+  two against their mean, its mean (the bias between them), and its limits of agreement. With many readings per patient,
+  the difference splits into a part fixed for each patient and a part that varies within one ([[reference:bland2007agreement|Bland
+  and Altman 2007]]); only the second averages away with repeated readings.
+
+
+  What an atlas adds is the pairing. A comparison is only as good as the moments its pairs are taken at: a cuff reading
+  belongs to the end of its measurement, a blood-gas saturation to its draw rather than its lab timestamp. The atlas''s
+  timing forms say where each value''s interval lies, so pairs are taken at the moment each describes. Neither route is
+  the truth: the difference holds both routes'' errors, so what it gives one route is an upper bound. Where the two measurands
+  differ physiologically, as pulse rate and heart rate do, or SpO2 and SaO2, the difference holds physiology too, and the
+  measurands'' relation says so.
+
+
+  The variables compared share a [[measurand:mean-arterial-pressure|measurand]], and the comparison is listed on the measurand''s
+  page.'
+references:
+- bland1986statistical
+- bland2007agreement
+- goodwin2021blood
+- eytan2019revisiting
