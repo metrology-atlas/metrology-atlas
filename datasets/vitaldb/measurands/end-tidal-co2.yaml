@@ -1,0 +1,10 @@
+id: end-tidal-co2
+name: End-tidal carbon dioxide (ETCO2)
+summary: Partial pressure of carbon dioxide at the end of expiration.
+unit: mmHg
+related:
+- measurand: airway-co2
+  relation: component-of
+- measurand: arterial-co2-tension
+  relation: differs-by
+  note: ETCO2 is lower than PaCO2 by the arterial to end-tidal gradient, which grows with dead space; see [[example:gas-gradients-at-the-draw]].

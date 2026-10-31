@@ -131,3 +131,7 @@ timing:
   - primus-awp-conversion
 tags:
 - stub
+# Links between variables (schema 0.4)
+measures:
+- measurand: airway-pressure
+  method: ventilator pressure sensor

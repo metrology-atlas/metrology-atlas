@@ -37,3 +37,10 @@ timing:
   evidence: 'SVV vs arterial PPV: aligned in 25 of 343 cases, |offset| 4.7 s median, p95 26 s'
 tags:
 - stub
+# Links between variables (schema 0.4)
+measures:
+- measurand: cardiac-output
+  tracks:
+  - CO
+  unit: L/min
+  method: arterial pulse contour

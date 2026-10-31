@@ -66,6 +66,30 @@ GROUP = {name: g for g, names in _G.items() for name in names.split()}
 
 
 
+LAB = "laboratory result (lab table)"
+PREOP = "preoperative laboratory result, copied into the clinical table"
+GAS_NOTE = ("The lab table does not record the sample site; intraoperative gases are taken mostly from the arterial "
+            "line (to check per record).")
+MEASURES = {   # registry name -> the measurand it measures (schema 0.4), with its method and any note
+    **{k: (m, LAB) for k, m in (("hb", "haemoglobin"), ("hct", "haematocrit"), ("alb", "albumin"), ("alt", "alt"),
+                                ("ast", "ast"), ("aptt", "aptt"), ("be", "base-excess"), ("bun", "bun"),
+                                ("cr", "creatinine"), ("gluc", "glucose"), ("hco3", "bicarbonate"), ("k", "potassium"),
+                                ("na", "sodium"), ("ph", "ph"), ("plt", "platelet-count"))},
+    **{"preop_" + k: (m, PREOP) for k, m in (("hb", "haemoglobin"), ("alb", "albumin"), ("alt", "alt"), ("ast", "ast"),
+                                             ("aptt", "aptt"), ("be", "base-excess"), ("bun", "bun"),
+                                             ("cr", "creatinine"), ("gluc", "glucose"), ("hco3", "bicarbonate"),
+                                             ("k", "potassium"), ("na", "sodium"), ("ph", "ph"),
+                                             ("plt", "platelet-count"), ("pao2", "arterial-o2-tension"),
+                                             ("paco2", "arterial-co2-tension"))},
+    "po2": ("arterial-o2-tension", "blood gas (lab table)", GAS_NOTE),
+    "pco2": ("arterial-co2-tension", "blood gas (lab table)", GAS_NOTE),
+    "sao2": ("arterial-o2-saturation", "blood gas (lab table)", GAS_NOTE),
+    "preop_sao2": ("arterial-o2-saturation", PREOP,
+                   "VitalDB describes it as SpO2, but it is recorded to 0.1 % like the lab data, and sits with the "
+                   "preoperative blood-gas values; a pulse oximeter shows whole percent. Taken as SaO2."),
+}
+MEASURES_EXTRA = {"preop_plt": {"unit": "x1000/mcL", "conversion": "none: the same unit, written with an x"}}
+
 TITLE_FIX = {"icu_days": "ICU days", "preop_ecg": "Preoperative ECG"}   # registry descriptions without proper capitals
 
 def atlas_id(name: str) -> str:
@@ -187,6 +211,10 @@ def main(repo: str) -> None:
             item["derived_from"] = [{"variable": atlas_id(x), "relation": "computed-from"} for x in v.get("inputs") or []]
             item["value"]["formula"] = v.get("formula")
             item["value"]["combination"] = v.get("distribution")
+        if name in MEASURES:
+            m, method, *note = MEASURES[name]
+            item["measures"] = [{"measurand": m, "method": method, **MEASURES_EXTRA.get(name, {}),
+                                 **({"note": note[0]} if note else {})}]
         if name in spread:
             item["value"]["spread"] = f"vitaldb-resolution/spread.json#{name}"
         if v.get("model"):

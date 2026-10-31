@@ -145,3 +145,11 @@ value:
   anchor_note: 'Truncation fits better than rounding in 98.6% of 6,343 recordings (numeric derivation, whole release, 29
     Oct): a recorded 72 means 72 to 73; on average the record is 0.5 /min low.'
   status: measured
+# Links between variables (schema 0.4)
+measures:
+- measurand: heart-rate
+  method: ECG, monitor algorithm
+derived_from:
+- variable: snuadc-ecg-ii
+  relation: same-source
+  note: The Solar8000 computes HR from its own ECG; SNUADC records that monitor's analogue ECG output.

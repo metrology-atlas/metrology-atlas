@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 6,022 records, median 20 IU/L; 47 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_ast.
+measures:
+- measurand: ast
+  method: preoperative laboratory result, copied into the clinical table

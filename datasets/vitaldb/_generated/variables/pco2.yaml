@@ -30,3 +30,8 @@ figures:
   caption: 'Recorded values in the release: 14,590 records, median 41 mmHg; 130 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of pco2.
+measures:
+- measurand: arterial-co2-tension
+  method: blood gas (lab table)
+  note: The lab table does not record the sample site; intraoperative gases are taken mostly from the arterial line (to
+    check per record).

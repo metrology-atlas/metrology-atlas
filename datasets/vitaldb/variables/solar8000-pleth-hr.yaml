@@ -44,3 +44,12 @@ timing:
   - spo2-latency
 tags:
 - stub
+# Links between variables (schema 0.4)
+measures:
+- measurand: pulse-rate
+  method: plethysmogram, monitor algorithm
+derived_from:
+- variable: snuadc-pleth
+  relation: same-source
+  note: 'Both come from the Solar8000''s oximeter module: the rate from its own processing, the waveform from its analogue
+    output.'

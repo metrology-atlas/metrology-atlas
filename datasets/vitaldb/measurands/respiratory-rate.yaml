@@ -1,0 +1,4 @@
+id: respiratory-rate
+name: Respiratory rate
+summary: Breaths per minute.
+unit: /min

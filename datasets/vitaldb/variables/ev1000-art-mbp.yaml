@@ -58,3 +58,7 @@ timing:
   evidence: 'from the end of an assumed 20 s window: median 1.6 s (p25 0.9, p95 3.2; 579 cases)'
 tags:
 - stub
+# Links between variables (schema 0.4)
+measures:
+- measurand: mean-arterial-pressure
+  method: invasive, the EV1000's own pressure sensor (to check)

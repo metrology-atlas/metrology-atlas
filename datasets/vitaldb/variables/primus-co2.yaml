@@ -147,3 +147,7 @@ timing:
   - primus-co2-update-grid
 tags:
 - stub
+# Links between variables (schema 0.4)
+measures:
+- measurand: airway-co2
+  method: sidestream capnography

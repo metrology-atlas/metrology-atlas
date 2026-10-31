@@ -41,3 +41,12 @@ delays:
 - name: Onset
   parameter: spo2-onset
   description: From step events; the window itself is estimated.
+# Links between variables (schema 0.4)
+measures:
+- measurand: peripheral-o2-saturation
+  method: pulse oximetry
+derived_from:
+- variable: snuadc-pleth
+  relation: same-source
+  note: 'Both come from the Solar8000''s oximeter module: the saturation from its own processing, the waveform from its
+    analogue output.'

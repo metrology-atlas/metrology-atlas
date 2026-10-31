@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 20,542 records, median 32.3 sec; 101 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of aptt.
+measures:
+- measurand: aptt
+  method: laboratory result (lab table)

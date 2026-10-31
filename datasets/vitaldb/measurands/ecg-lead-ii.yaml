@@ -1,0 +1,4 @@
+id: ecg-lead-ii
+name: ECG lead II voltage
+summary: Voltage between the right arm and the left leg electrodes, over time.
+unit: mV

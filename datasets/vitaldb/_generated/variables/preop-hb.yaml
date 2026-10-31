@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 6,047 records, median 13 g/dL; 56 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_hb.
+measures:
+- measurand: haemoglobin
+  method: preoperative laboratory result, copied into the clinical table

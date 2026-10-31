@@ -213,3 +213,7 @@ chain:
   - 0.0078
   - 0.0078
   status: measured
+# Links between variables (schema 0.4)
+measures:
+- measurand: scalp-eeg
+  method: BIS forehead sensor

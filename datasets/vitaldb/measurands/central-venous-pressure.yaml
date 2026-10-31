@@ -1,0 +1,4 @@
+id: central-venous-pressure
+name: Central venous pressure
+summary: Blood pressure in the superior vena cava or right atrium.
+unit: mmHg

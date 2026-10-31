@@ -1,0 +1,4 @@
+id: arterial-o2-tension
+name: Arterial oxygen tension (PaO2)
+summary: Partial pressure of oxygen in arterial blood.
+unit: mmHg

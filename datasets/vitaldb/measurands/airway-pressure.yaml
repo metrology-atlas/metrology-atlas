@@ -1,0 +1,4 @@
+id: airway-pressure
+name: Airway pressure
+summary: Pressure at the airway, over time.
+unit: hPa

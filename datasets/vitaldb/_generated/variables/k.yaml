@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 55,486 records, median 4 mmol/L; 516 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of k.
+measures:
+- measurand: potassium
+  method: laboratory result (lab table)

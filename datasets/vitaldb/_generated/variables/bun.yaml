@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 37,213 records, median 15 mg/dL; 235 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of bun.
+measures:
+- measurand: bun
+  method: laboratory result (lab table)

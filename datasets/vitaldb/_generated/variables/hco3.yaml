@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 14,578 records, median 25.4 mmol/L; 135 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of hco3.
+measures:
+- measurand: bicarbonate
+  method: laboratory result (lab table)

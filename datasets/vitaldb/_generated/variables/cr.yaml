@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 37,311 records, median 0.78 mg/dL; 369 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of cr.
+measures:
+- measurand: creatinine
+  method: laboratory result (lab table)

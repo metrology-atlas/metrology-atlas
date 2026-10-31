@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 6,016 records, median 0.78 mg/dL; 59 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of preop_cr.
+measures:
+- measurand: creatinine
+  method: preoperative laboratory result, copied into the clinical table

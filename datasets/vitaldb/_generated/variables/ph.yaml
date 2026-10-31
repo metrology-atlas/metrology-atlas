@@ -28,3 +28,6 @@ figures:
   source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
   caption: 'Recorded values in the release: 14,597 records, median 7.4; 125 outside the 0.5–99.5th percentiles are not shown.'
   alt: Histogram of the recorded values of ph.
+measures:
+- measurand: ph
+  method: laboratory result (lab table)

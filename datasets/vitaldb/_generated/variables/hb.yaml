@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 43,976 records, median 10.9 g/dL; 428 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of hb.
+measures:
+- measurand: haemoglobin
+  method: laboratory result (lab table)

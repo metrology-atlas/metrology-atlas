@@ -1,0 +1,7 @@
+id: peak-inspiratory-pressure
+name: Peak inspiratory pressure
+summary: The highest airway pressure during inspiration.
+unit: hPa
+related:
+- measurand: airway-pressure
+  relation: component-of

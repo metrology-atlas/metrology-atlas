@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 35,918 records, median 24 IU/L; 342 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of alt.
+measures:
+- measurand: alt
+  method: laboratory result (lab table)

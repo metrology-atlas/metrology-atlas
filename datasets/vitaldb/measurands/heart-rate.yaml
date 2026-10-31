@@ -1,0 +1,4 @@
+id: heart-rate
+name: Heart rate
+summary: Rate of ventricular depolarisations, from the ECG.
+unit: /min

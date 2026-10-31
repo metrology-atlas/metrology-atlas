@@ -1,0 +1,7 @@
+id: diastolic-arterial-pressure
+name: Diastolic arterial pressure
+summary: The lowest arterial pressure in a cardiac cycle.
+unit: mmHg
+related:
+- measurand: arterial-pressure
+  relation: component-of

@@ -1,0 +1,4 @@
+id: arterial-co2-tension
+name: Arterial carbon dioxide tension (PaCO2)
+summary: Partial pressure of carbon dioxide in arterial blood.
+unit: mmHg

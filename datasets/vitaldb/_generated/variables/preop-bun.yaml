@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 6,023 records, median 14 mg/dL; 44 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_bun.
+measures:
+- measurand: bun
+  method: preoperative laboratory result, copied into the clinical table

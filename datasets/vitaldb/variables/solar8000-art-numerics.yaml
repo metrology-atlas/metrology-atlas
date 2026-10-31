@@ -71,3 +71,29 @@ delays:
 - name: CVP
   parameter: cvp-delay
   description: Waveform mean over 4 s; the slowest Solar8000 numeric.
+# Links between variables (schema 0.4)
+measures:
+- measurand: systolic-arterial-pressure
+  tracks:
+  - ART_SBP
+  method: invasive, monitor numerics
+- measurand: diastolic-arterial-pressure
+  tracks:
+  - ART_DBP
+  method: invasive, monitor numerics
+- measurand: mean-arterial-pressure
+  tracks:
+  - ART_MBP
+  method: invasive, monitor numerics
+- measurand: central-venous-pressure
+  tracks:
+  - CVP
+  method: invasive, monitor numerics
+derived_from:
+- variable: snuadc-art
+  relation: same-source
+  tracks:
+  - ART_SBP
+  - ART_DBP
+  - ART_MBP
+  note: The Solar8000 computes these from its arterial pressure channel; SNUADC records that channel's analogue output.

@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 5,765 records, median 140 mmol/L; 46 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of preop_na.
+measures:
+- measurand: sodium
+  method: preoperative laboratory result, copied into the clinical table

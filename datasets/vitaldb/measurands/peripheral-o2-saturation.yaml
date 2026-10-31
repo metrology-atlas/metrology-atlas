@@ -1,0 +1,9 @@
+id: peripheral-o2-saturation
+name: Peripheral oxygen saturation (SpO2)
+summary: Haemoglobin oxygen saturation estimated by pulse oximetry.
+unit: '%'
+related:
+- measurand: arterial-o2-saturation
+  relation: related
+  note: SpO2 is calibrated against SaO2 and agrees with it within a few percent in the oximeter's specified range; the two
+    are compared, never merged.

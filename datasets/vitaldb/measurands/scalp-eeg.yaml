@@ -1,0 +1,4 @@
+id: scalp-eeg
+name: Scalp EEG voltage
+summary: 'Voltage between scalp electrodes, over time: the electroencephalogram.'
+unit: uV

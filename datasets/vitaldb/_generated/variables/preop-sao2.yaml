@@ -25,3 +25,8 @@ figures:
   source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
   caption: 'Recorded values in the release: 533 records, median 97 %; 4 outside the 0.5–99.5th percentiles are not shown.'
   alt: Histogram of the recorded values of preop_sao2.
+measures:
+- measurand: arterial-o2-saturation
+  method: preoperative laboratory result, copied into the clinical table
+  note: VitalDB describes it as SpO2, but it is recorded to 0.1 % like the lab data, and sits with the preoperative blood-gas
+    values; a pulse oximeter shows whole percent. Taken as SaO2.

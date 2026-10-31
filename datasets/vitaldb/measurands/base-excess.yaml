@@ -1,0 +1,4 @@
+id: base-excess
+name: Base excess
+summary: Base excess of blood, from a blood gas.
+unit: mmol/L

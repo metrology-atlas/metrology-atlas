@@ -1,0 +1,7 @@
+id: mean-arterial-pressure
+name: Mean arterial pressure
+summary: The mean of arterial pressure over a cardiac cycle, or over the averaging window of the device.
+unit: mmHg
+related:
+- measurand: arterial-pressure
+  relation: component-of

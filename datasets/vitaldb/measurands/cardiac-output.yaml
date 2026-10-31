@@ -1,0 +1,4 @@
+id: cardiac-output
+name: Cardiac output
+summary: Volume of blood the heart pumps per minute.
+unit: L/min

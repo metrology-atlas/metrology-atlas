@@ -1,0 +1,4 @@
+id: platelet-count
+name: Platelet count
+summary: Number of platelets per volume of blood.
+unit: ×1000/mcL

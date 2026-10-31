@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 55,463 records, median 138 mmol/L; 504 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of na.
+measures:
+- measurand: sodium
+  method: laboratory result (lab table)

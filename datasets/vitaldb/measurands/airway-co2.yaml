@@ -1,0 +1,4 @@
+id: airway-co2
+name: Airway carbon dioxide
+summary: 'Partial pressure of carbon dioxide in the gas sampled at the airway, over time: the capnogram.'
+unit: mmHg

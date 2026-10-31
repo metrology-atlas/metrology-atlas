@@ -24,3 +24,6 @@ figures:
   source: metrology-atlas datasets/vitaldb/_import/value_distributions.py
   caption: 'Recorded values in the release: 546 records, median 7.401; 6 outside the 0.5–99.5th percentiles are not shown.'
   alt: Histogram of the recorded values of preop_ph.
+measures:
+- measurand: ph
+  method: preoperative laboratory result, copied into the clinical table

@@ -26,3 +26,8 @@ figures:
   caption: 'Recorded values in the release: 6,047 records, median 235 x1000/mcL; 62 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of preop_plt.
+measures:
+- measurand: platelet-count
+  method: preoperative laboratory result, copied into the clinical table
+  unit: x1000/mcL
+  conversion: 'none: the same unit, written with an x'

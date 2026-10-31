@@ -168,3 +168,7 @@ chain:
   - 0.002
   - 0.002
   status: measured
+# Links between variables (schema 0.4)
+measures:
+- measurand: arterial-pressure
+  method: invasive, arterial line (the Solar8000's analogue output)

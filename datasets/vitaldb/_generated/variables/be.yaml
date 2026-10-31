@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 3,911 records, median 3 mmol/L; 20 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of be.
+measures:
+- measurand: base-excess
+  method: laboratory result (lab table)

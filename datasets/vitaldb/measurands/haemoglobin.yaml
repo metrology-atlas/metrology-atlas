@@ -1,0 +1,4 @@
+id: haemoglobin
+name: Haemoglobin concentration
+summary: Concentration of haemoglobin in blood.
+unit: g/dL

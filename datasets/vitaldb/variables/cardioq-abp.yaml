@@ -70,3 +70,10 @@ timing:
   evidence: lag vs SNUADC ART p5-p95 0.4-4.4 s; re-anchors about 40 times per case
 tags:
 - stub
+# Links between variables (schema 0.4)
+measures:
+- measurand: arterial-pressure
+  tracks:
+  - ABP
+  unit: mmHg
+  method: 'invasive, the CardioQ''s pressure input (to check: its own transducer or the monitor''s output)'

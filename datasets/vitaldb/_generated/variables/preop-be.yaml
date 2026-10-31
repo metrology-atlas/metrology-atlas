@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 532 records, median -0.1 mmol/L; 6 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_be.
+measures:
+- measurand: base-excess
+  method: preoperative laboratory result, copied into the clinical table

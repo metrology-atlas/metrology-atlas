@@ -40,3 +40,8 @@ delays:
 - name: From the EEG window end
   parameter: bis-index-delay
   description: The same in every smoothing group.
+# Links between variables (schema 0.4)
+derived_from:
+- variable: bis-eeg
+  relation: same-source
+  note: The BIS computes its index from its own EEG; the recorded EEG is that EEG, as the BIS exports it.

@@ -1,0 +1,6 @@
+id: arterial-pressure
+name: Arterial pressure
+summary: 'Blood pressure in a systemic artery, over time: the quantity an arterial waveform records.'
+unit: mmHg
+description: Its systolic, diastolic and mean values per beat are measurands of their own. Invasive and cuff measurements
+  are compared in [[example:cuff-vs-arterial]].

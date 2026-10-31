@@ -30,3 +30,6 @@ figures:
   caption: 'Recorded values in the release: 35,919 records, median 26 IU/L; 349 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of ast.
+measures:
+- measurand: ast
+  method: laboratory result (lab table)

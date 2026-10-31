@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 6,016 records, median 4.2 g/dL; 41 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_alb.
+measures:
+- measurand: albumin
+  method: preoperative laboratory result, copied into the clinical table

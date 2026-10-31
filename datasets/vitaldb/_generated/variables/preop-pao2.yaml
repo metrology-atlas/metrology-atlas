@@ -25,3 +25,6 @@ figures:
   caption: 'Recorded values in the release: 538 records, median 95.95 mmHg; 6 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_pao2.
+measures:
+- measurand: arterial-o2-tension
+  method: preoperative laboratory result, copied into the clinical table

@@ -1,0 +1,7 @@
+id: systolic-arterial-pressure
+name: Systolic arterial pressure
+summary: The peak of arterial pressure in a cardiac cycle.
+unit: mmHg
+related:
+- measurand: arterial-pressure
+  relation: component-of

@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 6,010 records, median 103 mg/dL; 62 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_gluc.
+measures:
+- measurand: glucose
+  method: preoperative laboratory result, copied into the clinical table

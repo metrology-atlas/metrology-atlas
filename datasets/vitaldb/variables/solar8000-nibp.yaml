@@ -34,3 +34,17 @@ timing:
 tags:
 - stub
 references: [goodwin2021blood]
+# Links between variables (schema 0.4)
+measures:
+- measurand: systolic-arterial-pressure
+  tracks:
+  - NIBP_SBP
+  method: oscillometric cuff
+- measurand: diastolic-arterial-pressure
+  tracks:
+  - NIBP_DBP
+  method: oscillometric cuff
+- measurand: mean-arterial-pressure
+  tracks:
+  - NIBP_MBP
+  method: oscillometric cuff

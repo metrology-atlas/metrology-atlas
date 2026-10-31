@@ -1,0 +1,8 @@
+id: pulse-rate
+name: Pulse rate
+summary: Rate of arterial pulses at a peripheral site, from the plethysmogram.
+unit: /min
+related:
+- measurand: heart-rate
+  relation: related
+  note: Equal to the heart rate unless beats fail to produce a palpable pulse (a pulse deficit), as in some arrhythmias.

@@ -26,3 +26,6 @@ figures:
   caption: 'Recorded values in the release: 533 records, median 24.3 mmol/L; 4 outside the 0.5–99.5th percentiles are not
     shown.'
   alt: Histogram of the recorded values of preop_hco3.
+measures:
+- measurand: bicarbonate
+  method: preoperative laboratory result, copied into the clinical table

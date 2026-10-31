@@ -1,0 +1,4 @@
+id: arterial-o2-saturation
+name: Arterial oxygen saturation (SaO2)
+summary: Haemoglobin oxygen saturation of arterial blood, measured by a blood-gas analyser.
+unit: '%'

@@ -1,0 +1,4 @@
+id: glucose
+name: Blood glucose
+summary: Concentration of glucose in blood.
+unit: mg/dL

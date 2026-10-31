@@ -1,0 +1,6 @@
+id: haematocrit
+name: Haematocrit
+summary: Volume fraction of red cells in blood.
+unit: '%'
+studies:
+- lab-haematocrit-two-analysers

@@ -83,3 +83,31 @@ delays:
 - name: RR
   parameter: rr-delay
   description: 60 / mean breath interval over 30 s.
+# Links between variables (schema 0.4)
+measures:
+- measurand: end-tidal-co2
+  tracks:
+  - ETCO2
+  method: sidestream capnography, ventilator algorithm
+- measurand: peak-inspiratory-pressure
+  tracks:
+  - PIP_MBAR
+  unit: mbar
+  conversion: 1 mbar = 1 hPa
+  method: ventilator pressure sensor
+- measurand: respiratory-rate
+  tracks:
+  - RR_CO2
+  method: from the capnogram
+derived_from:
+- variable: primus-co2
+  relation: same-source
+  tracks:
+  - ETCO2
+  - RR_CO2
+  note: The Primus computes ETCO2 and the rate from its capnograph, whose waveform it also exports.
+- variable: primus-awp
+  relation: same-source
+  tracks:
+  - PIP_MBAR
+  note: The Primus computes PIP from its airway pressure sensor, whose waveform it also exports.
