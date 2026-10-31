@@ -49,6 +49,7 @@ CORRECTION = {
                                           "PLETH factors ([[observation:art-with-pleth-factors|evidence]])"),
 }
 ROUNDING = {"Solar8000/HR": "truncate ([[observation:hr-truncated]])",
+            "Solar8000/PLETH_HR": "round ([[study:pleth-hr-derivation]])",
             "Primus/RR_CO2": "round ([[study:numeric-derivation-pilot]])",
             "Primus/ETCO2": "round, likely ([[study:track-value-resolution]])",
             "Primus/PIP_MBAR": "round, likely ([[study:track-value-resolution]])",

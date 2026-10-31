@@ -90,7 +90,8 @@ discussion: |
   waveforms, the step is the quantisation of the measurement (uniform within ±½ step, 1 SD = step/√12; truncated
   rather than rounded in the SNUADC, [[observation:snuadc-value-truncation]]). For numerics, the grid is the
   device's display resolution; whether the device rounded or truncated to it is known only for the Solar8000
-  heart rate (truncated) and respiratory rate (rounded) ([[observation:hr-truncated]]).
+  heart rate (truncated) and respiratory rate (rounded) ([[observation:hr-truncated]]), and its pulse rate
+  (rounded, [[study:pleth-hr-derivation]]).
 limitations: |
   - The documentation describes the current VitalRecorder; the release was recorded with earlier versions and
     SNUADC hardware whose resolution may differ from the documented one.

@@ -2,8 +2,8 @@ id: pleth-hr-derivation
 name: How the Solar8000 computes its pulse rate
 summary: 'PLETH_HR recomputed from the plethysmogram''s pulses in 6,151 recordings: an average over the last 10 pulse intervals,
   rounded, reported 4.5 s after the window ends (5th–95th percentile 3.25–5.75 s). Its window is centred 8.8 s before the
-  stamp, as the comparison with heart rate found (8.5 s), and later than the atlas''s form for it assumed. A mean and a
-  median of 10 intervals fit almost equally well.'
+  stamp, as the comparison with heart rate found (8.5 s), and later than the atlas''s earlier form for it assumed. A mean
+  and a median of 10 intervals fit almost equally well.'
 date: 2026-11-01
 status: current
 methods:
@@ -44,13 +44,13 @@ results: '- **About 10 pulses.** Means and medians both fit best at N = 10. Pool
 
   - **Reported 4.5 s after its window ends** (median over recordings; 5th–95th percentile 3.25–5.75 s; [[parameter:pleth-hr-delay]]),
   so its window, 10 intervals of the median 0.84 s, is centred 8.8 s before the stamp. The comparison with heart rate put
-  that centre at 8.5 s ([[parameter:pleth-hr-window-centre]]). The atlas''s form for PLETH_HR (delay 2.79 s, window 8–12
-  s) puts it at about 7.8 s.'
+  that centre at 8.5 s ([[parameter:pleth-hr-window-centre]]). The atlas''s earlier form for PLETH_HR (delay 2.79 s, window
+  8–12 s) put it at about 7.8 s; the form now uses this study''s numbers.'
 discussion: 'Two independent routes, one through heart rate and one through the plethysmogram''s own pulses, place PLETH_HR''s
   window at the same moment, about 8.5–8.8 s before its stamp, and both say the window is a count of pulses, about 10. The
-  atlas''s current form for PLETH_HR describes a shorter delay over a window of 8–12 s; this study''s numbers would replace
-  it. Whether the pulses are averaged by a mean, a median or something between is left open: it changes little in the value,
-  but it decides how a missed pulse shows.'
+  atlas''s form for PLETH_HR described a shorter delay over a window of 8–12 s; it now uses this study''s numbers ([[variable:solar8000-pleth-hr]]),
+  and keeps the earlier ones in its evidence. Whether the pulses are averaged by a mean, a median or something between is
+  left open: it changes little in the value, but it decides how a missed pulse shows.'
 limitations: '- Pulses are found by our own detector, not the monitor''s; where the two disagree, no candidate can match,
   which caps the exact-match share (median 71% per recording).
 

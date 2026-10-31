@@ -18,6 +18,7 @@ tracks:
   recordings: 6387
   grid: 1.0
   coarser_share: 0.198
+  rounding: round ([[study:pleth-hr-derivation]])
   range: 6 to 300
 - track: PLETH_SPO2
   kind: numeric

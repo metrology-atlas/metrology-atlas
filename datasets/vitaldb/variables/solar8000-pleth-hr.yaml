@@ -1,6 +1,6 @@
 id: solar8000-pleth-hr
 name: Solar8000 pulse rate (PLETH_HR)
-summary: Pulse rate from the oximeter, over about 12 beats.
+summary: Pulse rate from the oximeter, averaged over its last 10 pulse intervals, rounded.
 type: numeric
 source_name: Solar8000/PLETH_HR
 device: solar8000
@@ -12,34 +12,36 @@ timing:
   default: true
   kind: as_stored
   support_s:
-  - 8
-  - 12
+  - 6.0
+  - 11.0
   stamp_position: close
   bias_s:
-    median: 2.79
-    p5: -1.8
-    p95: 4.97
-    n: 6150
+    median: 4.5
+    p5: 3.25
+    p95: 5.75
+    n: 6151
     scope: recording
     status: measured
-  look_ahead:
-    lead_s:
-    - 0
-    - 1.8
-    basis: apparent
-    note: The lower tail (down to -1.8 s) comes from poorly identified fits, not from a true lead (to check).
+    evidence: delay from the end of a window of 10 pulse intervals, per recording, recomputing PLETH_HR from the
+      plethysmogram's pulses ([[parameter:pleth-hr-delay]])
   uncertainty:
     components:
     - name: between recordings
       type: A
       distribution: empirical
-      u_s: 2.0578
+      u_s: 0.74
       scope: recording
+      status: measured
+      evidence: robust SD (1.4826 x median absolute deviation) of the per-recording delays, 6,151 recordings
   domain: recorder-pc
   status: measured
-  evidence: 'delay from window end, against the recorded PLETH plus its 0.385 s delay: median 2.8 s (6,150 recordings, 29
-    Oct); median of about 12 beats'
+  evidence: 'a window of 10 pulse intervals (6.0-11.0 s at the release''s 5th-95th percentile pulse intervals), reported
+    4.5 s after it ends, so centred about 8.8 s before the stamp, which the comparison with heart rate confirms
+    (8.5 s). Replaces, on 1 Nov 2026, the earlier form (delay 2.79 s, 5th-95th percentile -1.8 to 4.97 s, window 8-12 s;
+    numerics-derivation-release), which assumed a median of about 12 beats and centred the window about 1 s too late.'
   studies:
+  - pleth-hr-derivation
+  - hr-vs-pulse-rate
   - numerics-derivation-release
   - spo2-latency
 tags:
