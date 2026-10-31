@@ -111,12 +111,11 @@ limitations: '- Both numerics are truncated or rounded to whole beats per minute
 
   - Recordings with an uncertain HR group are left out of the group comparison.'
 open_questions:
-- title: 'PLETH_HR: a mean of about 8 pulses, or a median of 12?'
+- title: PLETH_HR's form
   kind: next step
-  summary: This comparison centres PLETH_HR's window about 8.5 s before its stamp, about 0.7 s earlier than its atlas form
-    (delay 2.79 s, window 8–12 s), and its ratio ridge points to a mean over about 7–8 pulses, where the pilot found a median
-    of about 12 beats. vitaldb-bench tools/pleth_hr_derivation.py recomputes PLETH_HR from the plethysmogram's pulses with
-    each kind of window and delay, per recording, to settle both and say how the form should change.
+  summary: Recomputing PLETH_HR from the plethysmogram ([[study:pleth-hr-derivation]]) confirms a window of about 10 pulses
+    centred 8.8 s before the stamp, later than the atlas's form; whether it is a mean or a median stays open there. The
+    form should move to the new delay and window.
 code:
 - vitaldb-bench/examples/hr_vs_pulse_rate.py
 - vitaldb-bench/examples/run_scan.sh
