@@ -1,0 +1,97 @@
+id: bis-smoothing-label
+name: BIS smoothing group
+summary: 'One label per recording with a BIS index: the 15 s smoothing setting, a longer setting, or uncertain.'
+type: text
+group: Derived labels/Delay labels
+source: bis_smoothing_labels.csv (label family bis_smoothing)
+source_name: bis_smoothing
+measurand: Which smoothing setting the BIS used in a recording, read from how its index responds to its own EEG ([[observation:bis-index-slow]]).
+origin: derived
+derived_from:
+- variable: bis-index
+  relation: computed-from
+  form: bis-num
+- variable: bis-eeg
+  relation: computed-from
+  form: bis-raw
+algorithm: A lag kernel of the index against features of its own EEG, split into a trailing boxcar (length and delay), a
+  slow tail and a floor; 15s when the fit is good and the boxcar 13-17 s long, long when it is at least 28 s, otherwise
+  uncertain. An uncertain recording on a PC whose good fits are at most 5% 15s takes long from its PC.
+code:
+- vitaldb-bench/tools/bis_smoothing_labels.py
+- vitaldb-bench/tools/bis_index_delay.py
+version: 0.1.0
+propagation:
+  method: study
+  studies:
+  - bis-index-delay
+timing:
+- id: bsl-start
+  name: 'as stored: spans the recording, from its start'
+  kind: as_stored
+  support_s:
+  - 1640
+  - 62494
+  stamp_position: open
+  bias_s:
+    median: -9924
+    p5: -23784
+    p95: -3724
+    scope: recording
+    status: measured
+    evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
+  look_ahead:
+    lead_s:
+    - 1640
+    - 62494
+    basis: real
+    note: 'The group is fitted over the whole recording, but its interval starts at the recording''s start: used there,
+      it carries the rest of the recording. Both ends are stored, so its availability time is recoverable.'
+  uncertainty:
+    components:
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the label's ends are copied exactly from the first and last records of the track
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: bsl-end
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 1640
+  - 62494
+  stamp_position: close
+  removes_bias_s:
+    median: -9924
+    p5: -23784
+    p95: -3724
+    scope: recording
+    status: measured
+    evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the end is the track's last record, copied exactly
+  correction: read the label at its end (available_at case_end)
+  corrects:
+  - bsl-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end; the fit also pools other recordings, so it is known only once they
+    are'
+value:
+  kind: category
+  note: 15s, long or uncertain; the row also carries the fitted window, delay and the PC prior. Of 3,297 good fits, 48%
+    are 15s and 40% long ([[study:bis-index-delay]]).
+  status: measured
+  studies:
+  - bis-index-delay

@@ -1,0 +1,136 @@
+id: numeric-delay-label
+name: Per-recording delay of a monitor numeric
+summary: 'One label per recording and numeric track: the recording''s own delay from the end of the numeric''s window to
+  its stamp, with a standard error and a quality flag.'
+type: numeric
+group: Derived labels/Delay labels
+unit: s
+source: numeric_delay_labels.csv (label family numeric_delay)
+source_name: numeric_delay
+measurand: 'The delay, in one recording, from the end of the interval a monitor numeric describes to the stamp the recorder
+  gives it: one number per recording and track, since the delay does not drift within a recording ([[observation:numeric-delays-per-case]]).'
+description: Fitted per recording by [[study:numeric-delay-variability]] with each numeric's algorithm held fixed. The per-recording
+  corrections of the monitor numerics use these labels (the forms 'after the per-case delay label').
+origin: derived
+derived_from:
+- variable: solar8000-hr
+  relation: computed-from
+  tracks:
+  - HR
+  form: hr-late
+  note: 'Either as-stored form: they are the same stamps, read from the file.'
+- variable: snuadc-ecg-ii
+  relation: computed-from
+  form: snu-raw
+  note: The waveform HR is timed against.
+- variable: solar8000-art-numerics
+  relation: computed-from
+  tracks:
+  - ART_SBP
+  - ART_MBP
+  - ART_DBP
+  - CVP
+  form: solar-win
+- variable: snuadc-art
+  relation: computed-from
+  form: snu-raw
+  note: The waveform the arterial numerics are timed against; CVP is timed against the SNUADC CVP track, which is not yet
+    an atlas variable.
+- variable: primus-numerics
+  relation: computed-from
+  tracks:
+  - ETCO2
+  - PIP_MBAR
+  - RR_CO2
+  form: primus-num
+- variable: primus-co2
+  relation: computed-from
+  form: primus-raw
+  note: For ETCO2 and RR.
+- variable: primus-awp
+  relation: computed-from
+  form: primus-raw
+  note: For PIP.
+algorithm: 'The delay from the window''s end to the stamp that best aligns the numeric with the same quantity computed from
+  its waveform, fitted over the whole recording (and per 30-minute block for the standard error: block SD over the square
+  root of the number of blocks, at least 0.05 s). Quality good with two or more blocks and SE at most 0.5 s, else weak;
+  a negative delay is marked and made weak (the availability rule).'
+code:
+- vitaldb-bench/tools/numeric_delay_labels.py
+- vitaldb-bench/tools/numeric_delay_variability.py
+- vitaldb-bench/vitaldb_bench/label_families.py
+version: 0.1.0
+propagation:
+  method: study
+  studies:
+  - numeric-delay-variability
+  note: Each label carries its own standard error from the scatter of its 30-minute blocks.
+timing:
+- id: ndl-start
+  name: 'as stored: spans the recording, from its start'
+  kind: as_stored
+  support_s:
+  - 1640
+  - 62494
+  stamp_position: open
+  bias_s:
+    median: -9924
+    p5: -23784
+    p95: -3724
+    scope: recording
+    status: measured
+    evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
+  look_ahead:
+    lead_s:
+    - 1640
+    - 62494
+    basis: real
+    note: 'The delay is fitted over the whole recording, but its interval starts at the recording''s start: used there,
+      it carries the rest of the recording. Both ends are stored, so its availability time is recoverable.'
+  uncertainty:
+    components:
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the label's ends are copied exactly from the first and last records of the track
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: ndl-end
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: false
+  support_s:
+  - 1640
+  - 62494
+  stamp_position: close
+  removes_bias_s:
+    median: -9924
+    p5: -23784
+    p95: -3724
+    scope: recording
+    status: measured
+    evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the end is the track's last record, copied exactly
+  correction: read the label at its end (available_at case_end)
+  corrects:
+  - ndl-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end'
+value:
+  kind: per-recording fit
+  note: Each row has its own standard error (column se_s) and a quality flag; the between-recording spread per track is
+    in [[study:numeric-delay-variability]].
+  status: measured
+  studies:
+  - numeric-delay-variability

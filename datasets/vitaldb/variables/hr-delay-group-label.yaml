@@ -1,0 +1,95 @@
+id: hr-delay-group-label
+name: Heart rate delay group
+summary: 'One label per recording with an HR delay: early (about 1.9 s), late (about 4.2 s) or uncertain.'
+type: text
+group: Derived labels/Delay labels
+source: hr_delay_group_labels.csv (label family hr_delay_group)
+source_name: hr_delay_group
+measurand: Which of the two delay groups a recording's Solar8000 heart rate belongs to ([[observation:hr-two-delay-groups]]).
+origin: derived
+derived_from:
+- variable: numeric-delay-label
+  relation: computed-from
+  tracks:
+  - HR
+  note: The recordings' HR delays.
+algorithm: A two-component Gaussian mixture fitted to the good HR delays of all recordings, each recording's own standard
+  error added to the component variance; early or late where the posterior is at least 0.9, otherwise uncertain.
+code:
+- vitaldb-bench/tools/numeric_delay_labels.py
+version: 0.1.0
+propagation:
+  method: study
+  studies:
+  - hr-delay-groups
+  note: Misclassification about 0.7% (early cases on late-majority PCs).
+timing:
+- id: hdg-start
+  name: 'as stored: spans the recording, from its start'
+  kind: as_stored
+  support_s:
+  - 1640
+  - 62494
+  stamp_position: open
+  bias_s:
+    median: -9924
+    p5: -23784
+    p95: -3724
+    scope: recording
+    status: measured
+    evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
+  look_ahead:
+    lead_s:
+    - 1640
+    - 62494
+    basis: real
+    note: 'The group is fitted over the whole recording, but its interval starts at the recording''s start: used there,
+      it carries the rest of the recording. Both ends are stored, so its availability time is recoverable.'
+  uncertainty:
+    components:
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the label's ends are copied exactly from the first and last records of the track
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: start and end columns'
+- id: hdg-end
+  name: at the end of the recording (its availability time)
+  default: true
+  kind: per_recording
+  uses_future: true
+  support_s:
+  - 1640
+  - 62494
+  stamp_position: close
+  removes_bias_s:
+    median: -9924
+    p5: -23784
+    p95: -3724
+    scope: recording
+    status: measured
+    evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
+  uncertainty:
+    upper_bound: false
+    components:
+    - name: label ends
+      type: B
+      u_s: 0
+      scope: recording
+      evidence: the end is the track's last record, copied exactly
+  correction: read the label at its end (available_at case_end)
+  corrects:
+  - hdg-start
+  domain: recorder-pc
+  status: measured
+  evidence: 'label_families.py: available_at case_end; the fit also pools other recordings, so it is known only once they
+    are'
+value:
+  kind: category
+  note: 'early, late or uncertain: 1,775, 3,652 and 795 recordings. About 0.7% of recordings are put in the wrong group
+    ([[study:hr-delay-groups]]).'
+  status: measured
+  studies:
+  - hr-delay-groups
