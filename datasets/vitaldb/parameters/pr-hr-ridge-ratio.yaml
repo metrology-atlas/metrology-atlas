@@ -1,0 +1,12 @@
+id: pr-hr-ridge-ratio
+name: Pulse-to-heart-rate ratio on the ridge below the diagonal
+quantity: Ratio of pulse rate to heart rate along the strongest ridge just below the diagonal of their joint density, fitted
+  from 55 to 140 /min.
+value: 0.884
+spread:
+  text: within 0.36 /min of a constant ratio; a constant offset fits to 2.9 /min
+status: measured
+study: hr-vs-pulse-rate
+about:
+- solar8000-pleth-hr
+date: 2026-11-01
