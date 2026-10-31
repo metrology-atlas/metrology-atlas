@@ -40,6 +40,13 @@ discussion: |
   These numbers are from the 191-case pilot; over the whole release the constant is −804 ms in step mode and
   −660 ms in frequent-correction mode ([[parameter:eeg-ecg-offset]], [[observation:eeg-ecg-offset-by-mode]]).
 limitations: Needs bursts; about one case in eight with BIS has none.
+open_questions:
+  - title: "Burst times as a derived variable"
+    kind: next step
+    summary: >-
+      The electrocautery and muscle bursts found here in the SNUADC ECG and the BIS EEG are not a published
+      label family, so they are not an atlas variable. Published with a version, they would be derived from
+      [[variable:snuadc-ecg-ii]] and [[variable:bis-eeg]].
 code:
   - vitaldb-bench/tools/shared_artifacts.py
 figures:

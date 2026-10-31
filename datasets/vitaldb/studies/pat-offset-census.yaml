@@ -84,6 +84,14 @@ open_questions:
     summary: >-
       Fast heart rates and noisy ECG make the modal delay ambiguous. A beat-to-beat pairing that uses the ECG's RR
       interval explicitly would bring most of the 600 back into the census.
+  - title: "R-peak times as a derived variable"
+    kind: next step
+    summary: >-
+      Every ECG-to-PPG measure here, and the PPG timing labels ([[variable:ppg-sawtooth-label]]), starts from R
+      peaks found in [[variable:snuadc-ecg-ii]], but the atlas has no R-peak variable: their timing error in
+      VitalDB has not been measured against a reference. The PPG labels assume the ECG fiducial rounds to one 2
+      ms sample, interpolated. An R-peak variable with its own timing form, and a version, would let pulse
+      arrival time and heart-rate features propagate from it (schema 0.4).
 references: [ruffolo2025high]
 figures:
   - id: pat-offset-census

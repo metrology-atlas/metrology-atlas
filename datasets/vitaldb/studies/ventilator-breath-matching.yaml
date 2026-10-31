@@ -68,6 +68,12 @@ open_questions:
     kind: next step
     summary: >-
       The physiological delay from airway pressure to CVP is inside the measured offset and has not been separated.
+  - title: "Breath times as a derived variable"
+    kind: next step
+    summary: >-
+      The breaths this study finds in the Primus airway pressure and CO2 are not a published label family, so
+      they are not an atlas variable. Published with a version, they would be derived from [[variable:primus-
+      awp]] and [[variable:primus-co2]], and features per breath would propagate from them.
 code:
   - vitaldb-bench/tools/vent_sync_pilot.py
   - vitaldb-bench/tools/primus_drift_probe.py

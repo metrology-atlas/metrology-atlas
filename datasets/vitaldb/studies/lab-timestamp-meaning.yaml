@@ -71,6 +71,12 @@ open_questions:
     summary: >-
       The release has no result times, so the turnaround from the lab timestamp to the result is assumed, not
       measured.
+  - title: "Sample site of the blood gases"
+    kind: next step
+    summary: >-
+      The lab table does not say whether a gas was arterial. The atlas takes PaO2, PaCO2 and SaO2 as arterial
+      ([[measurand:arterial-o2-tension]]), since most intraoperative gases are drawn from the arterial line
+      ([[study:arterial-line-accesses]]); venous samples, if any, would sit in the same variables.
 code:
   - vitaldb-bench/tools/lab_draw_labels.py
 figures:

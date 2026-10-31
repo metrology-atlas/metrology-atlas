@@ -37,6 +37,15 @@ discussion: |
   The access is the best available estimate of a lab draw, and the lab_draw label marks it where one matched.
   Arterial timing (for example as a check on the PPG correction) should skip accesses and occlusions.
 limitations: No ground truth for accesses; recall is unchecked. Long real stretches without a pulse (for example bypass) would be labelled unavailable.
+open_questions:
+  - title: "Line accesses and lab draws as derived variables"
+    kind: next step
+    summary: >-
+      The access labels (art_line, art_zero, art_pressure_suspect, art_flush_response) and the lab draws matched
+      to them (lab_draw) are published label families, but are not yet atlas variables: how well an access's
+      start and end are placed has not been quantified, so their timing forms would have no uncertainty to
+      state. Settling that, for example against hand-marked accesses, would let both become derived variables of
+      [[variable:snuadc-art]] and the lab tables.
 code:
   - lineaccess
   - vitaldb-bench/tools/line_access_scan.py

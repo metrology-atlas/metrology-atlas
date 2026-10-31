@@ -67,6 +67,14 @@ limitations: |
     and a damped line would show as cuff-minus-arterial error.
   - Mean pressure only; systolic and diastolic cuff values are known to agree worse.
   - Cuff readings are compared only while the arterial line runs, which selects patients and moments.
+open_questions:
+  - title: "Pressure and heart-rate sources of the EV1000, CardioQ and Vigilance"
+    kind: next step
+    summary: >-
+      Whether the EV1000 uses its own pressure sensor, and whether the CardioQ's pressure is its own transducer
+      or the monitor's output, decides whether they measure arterial pressure independently or share the
+      monitor's source; likewise where the Vigilance's averaged heart rate comes from. The atlas marks all three
+      to check.
 code:
   - vitaldb-bench/examples/cuff_vs_arterial.py
   - vitaldb-bench/examples/run_scan.sh

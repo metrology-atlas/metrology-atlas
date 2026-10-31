@@ -56,6 +56,11 @@ open_questions:
       The release gives red cells and plasma in units. A unit's volume (typically 250–350 mL for red cells) is not
       recorded, so the balance leaves these cases out; an assumed range would bring them in with a wider
       distribution.
+  - title: "Pumps, rapid infuser and charted fluids"
+    kind: next step
+    summary: >-
+      Which pump and rapid-infuser tracks ([[variable:pump-rates]], [[variable:fms-infusion]]) are counted in
+      the charted crystalloid and colloid totals has not been checked, so no measurand links them yet.
 code:
   - vitaldb-bench/examples/fluid_balance.py
 reproduce: |

@@ -17,3 +17,10 @@ takeaways: |
   but only 2 of those 846 also have a charted propofol bolus: pump cases are infusions, and the charted total is
   the manual bolus. The two records mostly describe different doses, so this needs the pump's own bolus deliveries,
   not its total volume.
+open_questions:
+  - title: "Pump propofol and charted propofol as one measurand"
+    kind: next step
+    summary: >-
+      Whether the charted propofol ([[variable:intraop-ppf]]) records boluses only, or includes the infusion the
+      pumps record ([[variable:pump-rates]]), decides whether the two measure one quantity. Until it is checked,
+      neither names a measurand for propofol given.

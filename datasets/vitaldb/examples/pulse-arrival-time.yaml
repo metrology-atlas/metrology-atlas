@@ -174,6 +174,12 @@ open_questions:
       The window length (30 s), the outlier floor (2%) and the error model's terms are this example's choices; the
       estimator has not been checked against the original implementation, or against injected PAT changes of
       known size.
+  - title: "Pulse arrival time as a derived variable"
+    kind: next step
+    summary: >-
+      Pulse arrival time would be computed from two inputs on the SNUADC clock: R peaks in the ECG and pulse
+      feet in the plethysmogram, so the stamp-model error cancels and the oximeter's delay and sawtooth remain.
+      It waits for an R-peak variable ([[study:pat-offset-census]]).
 code:
   - vitaldb-bench/examples/pulse_arrival_time.py
   - physiosync/physiosync/ecg_ppg.py
