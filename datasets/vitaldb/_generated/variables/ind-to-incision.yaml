@@ -9,12 +9,15 @@ unit: min
 value:
   kind: 'derived: computed from other variables'' posteriors'
   resolution: derived from anestart, opstart
-  inputs:
-  - anestart
-  - opstart
   formula: (opstart - anestart) / 60
   combination: difference of the two event posteriors, sampled independently given the device references
   spread: vitaldb-resolution/spread.json#ind_to_incision
 tags:
 - generated
 - vitaldb-resolution
+origin: derived
+derived_from:
+- variable: anestart
+  relation: computed-from
+- variable: opstart
+  relation: computed-from

@@ -7,7 +7,9 @@ Relations are written once, on one side, and the other side is derived:
 
 - a signal names its device and its clocks; a device's page lists its signals;
 - a parameter names the study that produced it and the items it is about; a study's page lists its parameters;
-- a link names the two clocks it relates; each clock's page lists its links.
+- a link names the two clocks it relates; each clock's page lists its links;
+- a variable names the measurands it measures or estimates, and the variables it was derived from; a measurand's page
+  lists its variables, and an input's page lists what was derived from it (schema 0.4).
 
 Prose fields are Markdown. ``[[kind:id]]`` inside prose is a cross-reference, checked like any other reference.
 """
@@ -16,7 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-SCHEMA_VERSION = "metrology-atlas/0.3"
+SCHEMA_VERSION = "metrology-atlas/0.4"
 
 
 @dataclass(frozen=True)
@@ -165,8 +167,9 @@ VALUE = (
     Field("note", "text", help="The instrument's or method's error in words, where it is not yet a number."),
     Field("model", "str", help="Code reference (software-id/path) of a value model; read from the dataset's "
                                "pinned snapshot of that software."),
-    Field("inputs", "refs", ref="variable", help="For a derived value: the variables it is computed from."),
-    Field("formula", "str", help="For a derived value: how it is computed from its inputs."),
+    Field("inputs", "refs", ref="variable", help="Retired in schema 0.4: the variable's `derived_from` names its inputs."),
+    Field("formula", "str", help="For a derived value: how it is computed from its inputs, in the symbols their "
+                                 "`derived_from` entries give (or the inputs' ids)."),
     Field("combination", "str", help="For a derived value: how the inputs' uncertainties are combined."),
     Field("spread", "str", help="Aggregate width of the true-value distributions in the release: "
                                 "'software-id/path.json#key', read from the pinned snapshot."),
@@ -227,6 +230,48 @@ STEP = (
     Field("status", "enum", required=True, choices=STATUS),
     Field("link", "ref", ref="link"),
     Field("parameter", "ref", ref="parameter"),
+    Field("studies", "refs", ref="study"),
+)
+
+RELATIONS = ("computed-from", "same-source")
+"""How a derived variable relates to an input (schema 0.4). computed-from: computed from the input's stored data, so
+the input's time and value errors reach it. same-source: both come from one upstream signal inside a device and the
+derived value was not computed from the stored input; they share the signal and part of the chain, not the
+converter's errors."""
+PROPAGATION = ("law", "study", "none")
+MEASURAND_RELATIONS = ("related", "component-of", "differs-by")
+
+MEASURES = (
+    Field("measurand", "ref", required=True, ref="measurand"),
+    Field("tracks", "strs", help="For a variable that groups several tracks: the tracks this entry is about."),
+    Field("method", "str", help="How it is measured, e.g. 'invasive, radial line' or 'oscillometric cuff'."),
+    Field("unit", "str", help="The unit these tracks give it in, when not the variable's own unit."),
+    Field("conversion", "str", help="How the unit converts to the measurand's, when they differ."),
+    Field("note", "text"),
+)
+
+ESTIMATES = MEASURES[:3] + (
+    Field("validation", "obj", required=True, fields=(
+        Field("reference", "str", required=True, help="The reference measurement the estimate was validated against."),
+        Field("where", "str", help="The data or site the validation used."),
+        Field("trained_on_dataset", "bool", required=True,
+              help="True when the model was trained on this dataset: its validation error is then optimistic."),
+        Field("studies", "refs", ref="study", help="The validation studies."),
+        Field("note", "text"),
+    ), help="Where the model's own error comes from: only validation against a reference measurement gives it."),
+    Field("note", "text"),
+)
+
+DERIVED_FROM = (
+    Field("variable", "ref", required=True, ref="variable", help="The input."),
+    Field("relation", "enum", required=True, choices=RELATIONS,
+          help="computed-from: computed from the input's stored data; same-source: both come from one upstream "
+               "signal inside a device, and the derived value was not computed from the stored input."),
+    Field("tracks", "strs", help="Which tracks of a grouped variable the link applies to (on either side)."),
+    Field("symbol", "str", help="The input's name in the value's formula."),
+    Field("form", "str", help="Which of the input's timing forms the derivation uses (its id), so the right bias and "
+                              "uncertainty enter."),
+    Field("note", "text"),
     Field("studies", "refs", ref="study"),
 )
 
@@ -319,10 +364,55 @@ KINDS: dict[str, Kind] = {
                     Field("status", "enum", required=True, choices=("independent", "coupled", "unknown")),
                     Field("note", "text"),
                 ), help="Whether the time error and the value error are independent, and why not when they are not."),
+                Field("measures", "objs", fields=MEASURES,
+                      help="The measurands this variable measures (schema 0.4), each with its method."),
+                Field("estimates", "objs", fields=ESTIMATES,
+                      help="For a derived value that stands for a measurand it never measured, e.g. a pressure "
+                           "estimated by a model from the ECG and the plethysmogram: the measurand and the "
+                           "validation that gives the model's own error."),
+                Field("origin", "enum", choices=("recorded", "derived"),
+                      help="recorded (the default): a value the dataset recorded; derived: computed from other "
+                           "variables, by the atlas, its labels or an analysis."),
+                Field("derived_from", "objs", fields=DERIVED_FROM,
+                      help="The variables this one was derived from, each with its relation. A derivation is written "
+                           "here, on the derived variable, never on its input."),
+                Field("algorithm", "text", help="For a derived variable: how it is computed, in words."),
+                Field("code", "strs", help="For a derived variable: the code that computes it, as software-id/path."),
+                Field("version", "str", help="For a derived variable: the version of its algorithm. Each version of a "
+                                             "feature is its own variable."),
+                Field("superseded_by", "ref", ref="variable",
+                      help="A later version of this derived variable: same name, later version."),
+                Field("propagation", "obj", fields=(
+                    Field("method", "enum", required=True, choices=PROPAGATION,
+                          help="law: the GUM law of propagation from the inputs (needs a formula), with covariances "
+                               "from the error components they share; study: the output's uncertainty measured "
+                               "directly by a study, for features defined by code and for estimates; none: not "
+                               "propagated."),
+                    Field("studies", "refs", ref="study", help="For 'study': the studies that measured it."),
+                    Field("note", "text"),
+                ), help="How the inputs' uncertainty is carried to this variable."),
             ),
             help="Every recorded quantity: a waveform, a numeric, an event, a clinical field, a lab result. Each is "
                  "described on two axes, time and value, each by its systematic error (bias) and its standard "
                  "uncertainty, with resolution and the interval a value describes among the components.",
+        ),
+        Kind(
+            "measurand", "measurands", "Measurands",
+            COMMON + (
+                Field("unit", "str", help="The unit the measurand is stated in."),
+                Field("related", "objs", fields=(
+                    Field("measurand", "ref", required=True, ref="measurand"),
+                    Field("relation", "enum", required=True, choices=MEASURAND_RELATIONS,
+                          help="related: different quantities routinely compared (SpO2 and SaO2); component-of: this "
+                               "is part of the other (systolic of arterial pressure); differs-by: the two differ by "
+                               "a known physiological quantity (ETCO2 and PaCO2, by the gradient)."),
+                    Field("note", "text"),
+                ), help="Other measurands this one is compared with. Written once, on one side."),
+                Field("studies", "refs", ref="study", help="Studies comparing its variables (method comparison)."),
+            ),
+            help="One physical or clinical quantity that variables measure or estimate, such as mean arterial "
+                 "pressure. Two variables measuring one measurand can be compared directly; related measurands "
+                 "differ, but are routinely compared.",
         ),
         Kind(
             "link", "links", "Clock links",

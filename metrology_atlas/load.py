@@ -85,11 +85,13 @@ def load(folder: str | Path) -> Dataset:
             _check_link_modes(ds, item, rel, problems)
         if kind_name == "variable":
             _check_timing(ds, item, rel, problems)
+            _check_derivation(ds, item, rel, problems)
         if kind_name == "software":
             for k, part in enumerate(item.get("parts") or []):
                 if isinstance(part, dict) and isinstance(part.get("path"), str):
                     check_code(ds, f"{id_}/{part['path']}", f"{rel}: 'parts'[{k}]", problems, ds.warnings)
         _check_figures(ds, item, rel, problems)
+    _check_derivation_graph(ds, problems)
     for k, src in enumerate(meta.get("sources") or []):
         if isinstance(src, dict) and src.get("folder") and not (folder / src["folder"]).is_dir():
             problems.append(f"dataset.yaml: sources[{k}]: no folder {src['folder']}")
@@ -372,6 +374,121 @@ def _check_form(t: dict, at: str, problems: list[str]) -> None:
         problems.append(f"{at}: say whether the correction's uncertainty is an upper bound (D3)")
 
 
+def _version_key(v: object) -> tuple:
+    return tuple((0, int(x)) if x.isdigit() else (1, x) for x in re.findall(r"\d+|[a-z]+", str(v).lower()))
+
+
+def _check_derivation(ds: Dataset, v: dict, rel: str, problems: list[str]) -> None:
+    """Links between variables (schema 0.4): measures, estimates, derived_from, versions and propagation."""
+    value = v.get("value") if isinstance(v.get("value"), dict) else {}
+    if value.get("inputs"):
+        problems.append(f"{rel}: value 'inputs' was retired in schema 0.4: list the inputs under 'derived_from' "
+                        "(relation computed-from)")
+    inputs = [d for d in v.get("derived_from") or [] if isinstance(d, dict)]
+    computed = [d for d in inputs if d.get("relation") == "computed-from"]
+    origin = v.get("origin") or "recorded"
+    if origin == "derived" and not inputs:
+        problems.append(f"{rel}: origin 'derived' needs at least one 'derived_from' entry")
+    if computed and origin != "derived":
+        problems.append(f"{rel}: computed from {', '.join(d['variable'] for d in computed)}, so 'origin' must be "
+                        "'derived'")
+    if v.get("estimates") and origin != "derived":
+        problems.append(f"{rel}: a variable that estimates a measurand is derived: set 'origin: derived'")
+    for key in ("algorithm", "version", "superseded_by", "propagation"):
+        if v.get(key) is not None and origin != "derived":
+            problems.append(f"{rel}: '{key}' is for derived variables (set 'origin: derived')")
+    seen: set[tuple] = set()
+    for i, d in enumerate(inputs):
+        at = f"{rel}: 'derived_from'[{i}]"
+        target = d.get("variable")
+        if target == v.get("id"):
+            problems.append(f"{at}: a variable cannot be derived from itself")
+        key = (target, tuple(d.get("tracks") or ()))
+        if key in seen:
+            problems.append(f"{at}: '{target}' is listed twice")
+        seen.add(key)
+        src = ds.get("variable", target) if isinstance(target, str) else None
+        if src is not None and d.get("form"):
+            forms = {t.get("id") for t in src.get("timing") or [] if isinstance(t, dict)}
+            if d["form"] not in forms:
+                problems.append(f"{at}: form '{d['form']}' is not a timing form of '{target}'")
+    symbols = [d.get("symbol") for d in inputs if d.get("symbol")]
+    for dup in {x for x in symbols if symbols.count(x) > 1}:
+        problems.append(f"{rel}: symbol '{dup}' is given to two inputs")
+    formula = value.get("formula")
+    if formula and symbols:
+        for x in symbols:
+            if not re.search(rf"(?<![\w-]){re.escape(x)}(?![\w-])", formula):
+                problems.append(f"{rel}: symbol '{x}' does not appear in the formula '{formula}'")
+    prop = v.get("propagation") if isinstance(v.get("propagation"), dict) else {}
+    if prop.get("method") == "law":
+        if not formula:
+            problems.append(f"{rel}: propagation by the law needs the value's 'formula'")
+        if not computed:
+            problems.append(f"{rel}: propagation by the law needs inputs it is computed from")
+    if prop.get("method") == "study" and not prop.get("studies"):
+        problems.append(f"{rel}: propagation 'study' needs the studies that measured the uncertainty")
+    measured = {m.get("measurand") for m in v.get("measures") or [] if isinstance(m, dict)}
+    for i, m in enumerate(v.get("estimates") or []):
+        if isinstance(m, dict) and m.get("measurand") in measured:
+            problems.append(f"{rel}: 'estimates'[{i}]: '{m['measurand']}' is also listed under 'measures'")
+    for key in ("measures", "estimates"):
+        for i, m in enumerate(v.get(key) or []):
+            if not isinstance(m, dict):
+                continue
+            ms = ds.get("measurand", m.get("measurand")) if isinstance(m.get("measurand"), str) else None
+            unit = m.get("unit") or (v.get("unit") if not m.get("tracks") else None)
+            if ms and ms.get("unit") and unit and unit != ms["unit"] and not m.get("conversion"):
+                problems.append(f"{rel}: '{key}'[{i}]: unit '{unit}' differs from the measurand's '{ms['unit']}': "
+                                "give the 'conversion', or the tracks' own 'unit'")
+    nxt = v.get("superseded_by")
+    if isinstance(nxt, str):
+        later = ds.get("variable", nxt)
+        if later is not None:
+            if later.get("name") != v.get("name"):
+                problems.append(f"{rel}: superseded by '{nxt}', which has another name ('{later.get('name')}')")
+            if not v.get("version") or not later.get("version"):
+                problems.append(f"{rel}: a superseded variable and its successor both need a 'version'")
+            elif _version_key(later["version"]) <= _version_key(v["version"]):
+                problems.append(f"{rel}: superseded by '{nxt}', whose version {later['version']} is not later "
+                                f"than {v['version']}")
+
+
+def _check_derivation_graph(ds: Dataset, problems: list[str]) -> None:
+    """No variable may be derived, through any chain of inputs, from itself; related measurands not both ways."""
+    graph = {vid: [d.get("variable") for d in v.get("derived_from") or [] if isinstance(d, dict)]
+             for vid, v in ds.items["variable"].items()}
+    state: dict[str, int] = {}
+    reported: set[frozenset] = set()
+
+    def visit(node: str, path: list[str]) -> None:
+        state[node] = 1
+        for nxt in graph.get(node, []):
+            if nxt not in graph:
+                continue
+            if state.get(nxt) == 1:
+                cyc = path[path.index(nxt):] + [nxt]
+                if frozenset(cyc) not in reported:
+                    reported.add(frozenset(cyc))
+                    problems.append(f"{ds.sources[('variable', cyc[0])]}: derived from itself through "
+                                    + " <- ".join(cyc))
+            elif not state.get(nxt):
+                visit(nxt, path + [nxt])
+        state[node] = 2
+
+    for vid in graph:
+        if not state.get(vid):
+            visit(vid, [vid])
+    pairs = {(mid, r.get("measurand")) for mid, m in ds.items["measurand"].items()
+             for r in m.get("related") or [] if isinstance(r, dict)}
+    for a, b in sorted(pairs):
+        if a == b:
+            problems.append(f"{ds.sources[('measurand', a)]}: a measurand cannot be related to itself")
+        elif (b, a) in pairs and a < b:
+            problems.append(f"{ds.sources[('measurand', a)]}: related to '{b}', which also lists '{a}': write the "
+                            "relation once, on one side")
+
+
 def _check_figures(ds: Dataset, item: dict, rel: str, problems: list[str]) -> None:
     figs = [f for f in item.get("figures") or [] if isinstance(f, dict)]
     ids = [f.get("id") for f in figs]
@@ -428,6 +545,20 @@ def derived(ds: Dataset) -> dict[str, dict[str, dict[str, list[str]]]]:
             add("clock", s["stamp_clock"], "stamps", sid)
         for st in (s.get("value") or {}).get("studies") or []:
             add("study", st, "variables", sid)
+        for m in s.get("measures") or []:
+            add("measurand", m["measurand"], "measured_by", sid)
+        for m in s.get("estimates") or []:
+            add("measurand", m["measurand"], "estimated_by", sid)
+            for st in (m.get("validation") or {}).get("studies") or []:
+                add("study", st, "variables", sid)
+        for d in s.get("derived_from") or []:
+            add("variable", d["variable"], "derived_into" if d["relation"] == "computed-from" else "same_source", sid)
+            for st in d.get("studies") or []:
+                add("study", st, "variables", sid)
+        for st in (s.get("propagation") or {}).get("studies") or []:
+            add("study", st, "variables", sid)
+        if s.get("superseded_by"):
+            add("variable", s["superseded_by"], "supersedes", sid)
         if s.get("sample_clock"):
             add("clock", s["sample_clock"], "spaces", sid)
     for did, d in ds.items["device"].items():
@@ -453,6 +584,12 @@ def derived(ds: Dataset) -> dict[str, dict[str, dict[str, list[str]]]]:
                 add(kind, x, "studies", stid)
         for x in st.get("supersedes") or []:
             add("study", x, "superseded_by", stid)
+    for mid, m in ds.items["measurand"].items():
+        for r in m.get("related") or []:
+            add("measurand", r["measurand"], "related", mid)
+            add("measurand", mid, "related", r["measurand"])
+        for st in m.get("studies") or []:
+            add("study", st, "measurands", mid)
     for oid, o in ds.items["observation"].items():
         for kind, key in (("clock", "clocks"), ("device", "devices"), ("variable", "variables"), ("study", "studies")):
             for x in o.get(key) or []:
@@ -466,11 +603,12 @@ def derived(ds: Dataset) -> dict[str, dict[str, dict[str, list[str]]]]:
     for mid, m in ds.items["method"].items():
         for t in m.get("techniques") or []:
             add("technique", t, "methods", mid)
-    for kind in ("study", "observation", "example"):
+    for kind in ("study", "observation", "example", "variable"):
         for id_, item in ds.items.get(kind, {}).items():
             for ref in item.get("code") or []:
                 if ref.split("/")[0] in ds.items["software"]:
-                    add("software", split(ref)[0], {"study": "studies", "observation": "observations", "example": "examples"}[kind], id_)
+                    add("software", split(ref)[0], {"study": "studies", "observation": "observations",
+                                                    "example": "examples", "variable": "variables"}[kind], id_)
     for (kind, id_) in ds.sources:
         if kind == "reference":
             continue

@@ -664,9 +664,10 @@ class Site:
                             f"{value_u(v):g} {s.get('unit') or ''}".strip() if value_u(v) is not None else None),
                            ("Anchor", self.anchor_label(v)),
                            ("Status", v.get("status")), ("Studies", self.many("study", v.get("studies")))])
-        if v.get("inputs") or v.get("formula"):
+        computed = [d["variable"] for d in s.get("derived_from") or [] if d.get("relation") == "computed-from"]
+        if computed or v.get("formula"):
             out += self.sub("Derived from", (
-                ("Computed from " + " and ".join(self.a("variable", x) for x in v.get("inputs") or []) + ". " if v.get("inputs") else "")
+                ("Computed from " + " and ".join(self.a("variable", x) for x in computed) + ". " if computed else "")
                 + (f"Formula: `{v['formula']}`. " if v.get("formula") else "")
                 + (f"Uncertainty: {v['combination']}." if v.get("combination") else "")))
         if v.get("spread"):
@@ -1073,6 +1074,26 @@ class Site:
                 + self.section("Techniques", techs)
                 + self.section("References", self.refs(m.get("references"))))
         return self.page(m, self.glance([("Techniques", self.many("technique", m.get("techniques")))]), body)
+
+    def measurand(self, i: str, m: dict) -> str:
+        """The page for one measurand: the variables that measure or estimate it, and related measurands."""
+        r = self.rel["measurand"][i]
+        def rows(ids, key):
+            out = ""
+            for vid in ids or []:
+                v = self.ds.get("variable", vid)
+                for e in v.get(key) or []:
+                    if e["measurand"] == i:
+                        out += (f"| {self.a('variable', vid)} | {e.get('method') or ''} | "
+                                f"{', '.join(e.get('tracks') or []) or 'all'} |\n")
+            return "| Variable | Method | Tracks |\n|---|---|---|\n" + out if out else ""
+        body = (self.section("Description", self.prose(m.get("description")))
+                + self.section("Measured by", rows(r.get("measured_by"), "measures"))
+                + self.section("Estimated by", rows(r.get("estimated_by"), "estimates"))
+                + self.section("Studies", self.studies_table(m.get("studies")))
+                + self.section("References", self.refs(m.get("references"))))
+        return self.page(m, self.glance([("Unit", m.get("unit")), ("Related", self.many("measurand", r.get("related")))]),
+                         body)
 
     def technique(self, i: str, t: dict) -> str:
         """The page for one technique."""

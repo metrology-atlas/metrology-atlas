@@ -183,7 +183,8 @@ def main(repo: str) -> None:
                                 "source": "metrology-atlas datasets/vitaldb/_import/value_distributions.py",
                                 "caption": cap, "alt": f"Histogram of the recorded values of {name}."}]
         if v["method"] == "derived":
-            item["value"]["inputs"] = [atlas_id(x) for x in v.get("inputs") or []]
+            item["origin"] = "derived"
+            item["derived_from"] = [{"variable": atlas_id(x), "relation": "computed-from"} for x in v.get("inputs") or []]
             item["value"]["formula"] = v.get("formula")
             item["value"]["combination"] = v.get("distribution")
         if name in spread:

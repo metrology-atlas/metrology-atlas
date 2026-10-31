@@ -9,12 +9,15 @@ unit: min
 value:
   kind: 'derived: computed from other variables'' posteriors'
   resolution: derived from opstart, opend
-  inputs:
-  - opstart
-  - opend
   formula: (opend - opstart) / 60
   combination: difference of the two event posteriors, sampled independently given the device references
   spread: vitaldb-resolution/spread.json#op_duration
 tags:
 - generated
 - vitaldb-resolution
+origin: derived
+derived_from:
+- variable: opstart
+  relation: computed-from
+- variable: opend
+  relation: computed-from

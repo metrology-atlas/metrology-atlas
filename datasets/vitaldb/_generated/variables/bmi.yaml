@@ -9,9 +9,6 @@ unit: kg/m2
 value:
   kind: 'derived: computed from other variables'' posteriors'
   resolution: derived from height, weight
-  inputs:
-  - height
-  - weight
   spread: vitaldb-resolution/spread.json#bmi
   model: vitaldb-resolution/vitaldb_resolution/data/models/bmi.model.json
   status: measured
@@ -28,3 +25,9 @@ figures:
   caption: 'Recorded values in the release: 6,388 records, median 23.1 kg/m2; 61 outside the 0.5–99.5th percentiles are
     not shown.'
   alt: Histogram of the recorded values of bmi.
+origin: derived
+derived_from:
+- variable: height
+  relation: computed-from
+- variable: weight
+  relation: computed-from
