@@ -1,0 +1,112 @@
+id: hr-vs-pulse-rate
+name: Pulse rate against heart rate, paired at the moment each describes
+summary: 'The Solar8000''s pulse rate against its heart rate in 6,386 recordings. They agree with no bias (limits of agreement
+  −11.7 to +11.7 /min), and disagree more as the rate rises. Their changes line up 2.3 s later in recordings whose HR is
+  in the early delay group than in the late one, the gap between the groups'' delays: the two HR delay groups seen again,
+  in a signal independent of the ECG. The comparison also places PLETH_HR''s window: centred about 8.5 s before its stamp.'
+date: 2026-11-01
+status: current
+methods:
+- method-comparison
+- delays-and-windows
+devices:
+- solar8000
+variables:
+- solar8000-hr
+- solar8000-pleth-hr
+- numeric-delay-label
+- hr-delay-group-label
+data: 'Every recording with both Solar8000 HR and PLETH_HR: 6,386 of 6,388, with 33.6 million paired values. 5,310 have
+  a good HR delay label; 1,774 recordings are in the early HR delay group and 3,651 in the late.'
+background: 'Heart rate (from the ECG) and pulse rate (from the plethysmogram) are related measurands, not one ([[measurand:pulse-rate]]):
+  they agree only while every beat makes a pulse at the finger. Each is stamped some seconds after the interval it describes
+  ends: HR by its recording''s own delay, in one of two groups about one 2 s poll apart ([[study:hr-delay-groups]]), and
+  PLETH_HR by about 2.8 s ([[variable:solar8000-pleth-hr]]). If the atlas''s timing is right, the lag at which the two agree
+  best should follow each recording''s HR delay group.'
+method: '1. Both numerics held between their records and read at each HR stamp; PLETH_HR read at the HR stamp plus a lag
+  from −20 to +20 s, in 0.5 s steps. Values outside 30–200 /min, and records older than 6 s, are left out.
+
+  2. **When they agree.** For each lag, the correlation of changes between consecutive 10 s blocks, pooled within recordings,
+  overall and in each HR delay group. Both numerics arrive in one message every 2 s, so the correlation is flat between
+  whole-record lags (2k s); the peak is read from those lags by a parabola through the highest and its neighbours (bootstrap
+  over recordings).
+
+  2a. **What the peak means.** For windows symmetric about their centres, the lag at which changes agree best is the difference
+  between the two windows'' centres (delay plus half the window), whatever the signal''s volatility, which sets only the
+  height and width of the curve. So the lag plus HR''s delay and half its 6 s window gives where PLETH_HR''s window is centred
+  before its stamp. Repeated by the recording''s mean rate, to see whether that centre moves with the rate, as a window
+  counted in beats would.
+
+  3. **The atlas''s prediction.** The lag at which the two intervals line up, from the recording''s HR delay label and window
+  (6 s) and PLETH_HR''s delay (2.79 s) and window (taken as 10 s): with their centres together, L = d_PR − d_HR + (w_PR
+  − w_HR)/2.
+
+  4. **Agreement:** PLETH_HR minus HR, as stamped, at the atlas''s lag and at each group''s best lag: the mean difference
+  and limits of agreement, binned by the mean of the two as in a Bland–Altman plot; the SD between recordings of each recording''s
+  mean difference, and within a recording; the share of time more than 10 /min apart.'
+results: '- **The HR delay groups show in the pulse rate.** Changes line up with pulse rate read 3.71 s after the HR stamp
+  in the early group (95% interval 3.59–3.83 s, 1,628 recordings) and 1.45 s after it in the late group (1.34–1.56 s, 3,111):
+  2.26 s apart ([[parameter:hr-group-lag-in-pulse-rate]]), against 2.28 s between the groups'' delays ([[parameter:hr-delay-early]],
+  [[parameter:hr-delay-late]]). Pulse rate is computed from the plethysmogram by another module, so this confirms the HR
+  groups independently of the ECG analysis that found them ([[study:hr-delay-groups]]).
+
+  - **Where PLETH_HR''s window sits.** Adding each group''s HR delay and half its window puts PLETH_HR''s window centre
+  8.46 s before its stamp in the early group and 8.76 s in the late: about 8.5 s ([[parameter:pleth-hr-window-centre]]).
+  The atlas''s form for PLETH_HR (delay 2.79 s, window 8–12 s) puts it at about 7.8 s; the pilot''s direct recomputation
+  (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]]) puts it at 8.5 s at 70 /min.
+  The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s at 90 /min), as a window counted
+  in beats would, but the HR delay labels move with the rate too, so this comparison cannot split PLETH_HR''s delay from
+  its window.
+
+  - **No bias.** Pulse rate minus HR is 0.0 /min over the cohort (limits of agreement −11.7 to +11.7 /min; [[parameter:pr-hr-difference]]).
+
+  - **Mostly within a recording.** Each recording''s mean difference spreads with an SD of 2.5 /min between recordings,
+  against 5.4 /min within one ([[parameter:pr-hr-between-recording-sd]], [[parameter:pr-hr-within-recording-sd]]); 3.0%
+  of the time the two differ by more than 10 /min.
+
+  - **Worse at high rates.** The SD of the difference grows from 2.4 /min at 40–50 /min to 12.4 at 100–110 and about 20
+  above 120 /min: arrhythmias, where beats fail to make a pulse, and artefact.
+
+  - **Alignment barely changes agreement.** In the 5,310 labelled recordings the within-recording SD is 5.04 /min as stamped,
+  5.00 at the atlas''s lag and 4.70 at each group''s best lag (4,739 recordings). Rates change slowly against a few seconds,
+  so for the value the moment matters little; for timing it is what the comparison measures.
+
+
+  [[figure:hr-vs-pulse-rate]]'
+discussion: 'The comparison works in both directions. On the timing side it is an independent check of the atlas: the HR
+  delay groups, found from the ECG, reappear in a different module''s signal, 2.26 s apart against 2.28 s between the groups''
+  delays. It also measures where PLETH_HR''s window sits, about 0.7 s earlier than the atlas''s form for it puts it. On
+  the value side the difference holds physiology as well as error: its spread rises with the rate as beats fail to make
+  a pulse, so it is not a measure of either numeric''s error, and it gives neither variable a value budget. That is the
+  line between related measurands and one measurand measured twice ([[study:cuff-vs-arterial-agreement]]).'
+limitations: '- Both numerics are truncated or rounded to whole beats per minute and update every 2 s, so the lag is read
+  between whole-record lags by a parabola; truncation adds a fixed share to the spread.
+
+  - PLETH_HR''s window is taken as 10 s (the atlas gives 8–12 s); a different window moves the predicted lag by half the
+  change.
+
+  - Recordings with an uncertain HR group are left out of the group comparison.'
+open_questions:
+- title: PLETH_HR's delay and window
+  kind: next step
+  summary: This comparison centres PLETH_HR's window about 8.5 s before its stamp, about 0.7 s earlier than its atlas form
+    (delay 2.79 s, window 8–12 s) and in line with the pilot's 12 beats and 3.4 s. A per-recording fit of PLETH_HR against
+    beats found in the plethysmogram, as done for HR, would split the delay from the window, and say whether the form should
+    move.
+code:
+- vitaldb-bench/examples/hr_vs_pulse_rate.py
+- vitaldb-bench/examples/run_scan.sh
+references:
+- bland1986statistical
+- bland2007agreement
+figures:
+- id: hr-vs-pulse-rate
+  file: examples/hr-vs-pulse-rate.png
+  theme: agreement and residuals
+  source: vitaldb-bench examples/hr_vs_pulse_rate.py
+  caption: 'Pulse rate against heart rate. A: correlation of 10 s changes by the lag at which pulse rate is read after the
+    HR stamp, for recordings in the early (orange) and late (blue) HR delay groups; dashed, the lag the atlas predicts for
+    each. B: pulse rate minus HR by the mean of the two, mean and 95% limits. C: SD of the difference within and between
+    recordings, as stamped, at the atlas''s lag and at each group''s best lag.'
+  alt: Two humped curves, the orange one about 2 s to the right of the blue; a flat line of means with limits widening above
+    100 per minute; bars of within-recording SD near 5 and between-recording SD near 2.

@@ -1,0 +1,13 @@
+id: pr-hr-between-recording-sd
+name: Pulse rate minus heart rate, between recordings
+quantity: SD between recordings of each recording's mean PLETH_HR minus HR.
+value: 2.5
+unit: /min
+spread:
+  n: 6386
+status: measured
+study: hr-vs-pulse-rate
+about:
+- solar8000-hr
+- solar8000-pleth-hr
+date: 2026-11-01

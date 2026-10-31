@@ -1,0 +1,14 @@
+id: pr-hr-difference
+name: Pulse rate minus heart rate
+quantity: Mean difference, Solar8000 PLETH_HR minus HR, as stamped, over the cohort, with the limits of agreement.
+value: 0.0
+unit: /min
+spread:
+  n: 6386
+  text: limits of agreement −11.7 to +11.7 /min; 3.0% of the time more than 10 /min apart
+status: measured
+study: hr-vs-pulse-rate
+about:
+- solar8000-hr
+- solar8000-pleth-hr
+date: 2026-11-01

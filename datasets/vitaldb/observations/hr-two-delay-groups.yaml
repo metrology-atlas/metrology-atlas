@@ -6,6 +6,6 @@ summary: >-
 status: established
 devices: [solar8000, vital-recorder]
 variables: [solar8000-hr]
-studies: [hr-delay-groups]
+studies: [hr-delay-groups, hr-vs-pulse-rate]
 consequence: A single HR delay is wrong by about 2 s in a third of cases.
 handling: The hr_delay_group label gives each case's group; the PC gives a prior for uncertain cases.

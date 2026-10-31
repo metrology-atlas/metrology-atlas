@@ -1,0 +1,13 @@
+id: pr-hr-within-recording-sd
+name: Pulse rate minus heart rate, within a recording
+quantity: SD of PLETH_HR minus HR about each recording's own mean.
+value: 5.4
+unit: /min
+spread:
+  n: 6386
+status: measured
+study: hr-vs-pulse-rate
+about:
+- solar8000-hr
+- solar8000-pleth-hr
+date: 2026-11-01

@@ -6,3 +6,5 @@ related:
 - measurand: heart-rate
   relation: related
   note: Equal to the heart rate unless beats fail to produce a palpable pulse (a pulse deficit), as in some arrhythmias.
+studies:
+- hr-vs-pulse-rate
