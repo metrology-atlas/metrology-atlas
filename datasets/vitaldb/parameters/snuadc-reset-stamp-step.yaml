@@ -1,0 +1,15 @@
+id: snuadc-reset-stamp-step
+name: SNUADC step-mode correction as the stamps show it
+quantity: Step of the SNUADC record stamps at a step-mode correction (the stamps' share of the true correction).
+value: -0.4804
+unit: s
+spread: {q1: -0.48069, q3: -0.4802, n: 3417, text: "3,417 resets in 2,540 recordings; SD 0.74 ms (min −0.488, max −0.451 s)"}
+status: measured
+study: device-correction-schedules
+about: [snuadc-step-vs-pc]
+date: 2026-11-01
+notes: >-
+  From signal_survey/continuity/snuadc_reset_events.csv (tools/correction_schedules.py), column size: median
+  −0.48039 s. With the signal never sampled at each correction ([[parameter:snuadc-reset-loss]]) it makes up the
+  true correction ([[parameter:snuadc-step-correction-size]]); tools/clock_edges.py scales reset-based SNUADC
+  rates by their ratio.

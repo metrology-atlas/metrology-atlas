@@ -43,7 +43,7 @@ results: |
   | Ventilation | 72% of 57 large lag changes fall on a Primus stamp jump; the physiological arms differ by 37–46 ppm | Partly closes; physiological arms too weak |
   | EMR and recorder | Both arms are measured from the recorder's case start, so any offset cancels; the recorder EVENT track repeats the clinical table's times exactly | Degenerate: not a loop |
 
-  **Network adjustment over the whole release (19 October).** Every measured link of every recording is now an edge
+  **Network adjustment over the whole release (19 October; rerun 1 November with the remeasured SNUADC correction, [[value:snuadc-step-correction-size]]).** Every measured link of every recording is now an edge
   with a value and a standard error (2,077 recordings; [[code:vitaldb-bench/tools/clock_edges.py]]), and each
   recording's clock network is adjusted by weighted least squares
   ([[code:vitaldb-bench/tools/clock_reconcile.py]], on the dataset-independent [[code:physiosync/physiosync/network.py]]).
