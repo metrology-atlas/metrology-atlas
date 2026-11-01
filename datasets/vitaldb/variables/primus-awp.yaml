@@ -20,19 +20,19 @@ timing:
   stamp_position: instant
   grid_s: 0.016
   removes_bias_s:
-    median: -1.787
-    p5: -5.782
-    p95: 0.693
+    median: {parameter: primus-awp-bias}
+    p5: {parameter: primus-awp-bias, use: p5}
+    p95: {parameter: primus-awp-bias, use: p95}
     n: 1067
     scope: recording
     status: measured
-    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording (the matching lag is CVP minus AWP, so
-      its sign is reversed here); includes airway-to-CVP physiology
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath
+      (primus-awp-anchoring); includes airway-to-CVP physiology
   uncertainty:
     upper_bound: true
     interval95_s:
-    - -0.262
-    - 0.272
+    - -4.41
+    - 4.4
     likely_u_s: 0.0395
     components:
     - name: breath matching within the recording (a line per stretch between AWP pauses)
@@ -55,37 +55,51 @@ timing:
       distribution: rectangular
       u_s: 0.0046
       scope: independent
-  correction: breath matching to SNUADC (a slope and an offset per AWP stretch)
+    - name: breath identity (a stretch a whole breath off)
+      type: A
+      distribution: mixture
+      u_s: {parameter: primus-breath-error-sd}
+      scope: structured
+      length_s: 3642
+      correlation: rectangular
+      shared_with: Primus breath matching
+      evidence: after the breath rule, 12.4% of windows sit in a stretch still a whole breath off (0% with the stretch's
+        own CVP pauses, 19% carried, 14% from the main mode); one error per stretch between AWP pauses (median 1 h);
+        not Gaussian, so the 95% interval is the mixture's (primus-awp-anchoring)
+  correction: breath matching to SNUADC (a slope and an offset per AWP stretch), each stretch's breath fixed by
+    pauses in ventilation where they resolve it, else carried or taken nearest the main mode
   corrects:
   - primus-raw
   domain: reference
   status: measured
-  evidence: 'held-out windows against CVP, signed: robust SD 79 ms, median absolute error 53 ms, 95% -262 to +272 ms (1,067
-    recordings, 37,881 windows); likely value 40 ms from the part shared with the ART check (25%)'
+  evidence: 'held-out windows against CVP, signed, on the right breath: robust SD 79 ms, median absolute error 53 ms, 95% -262
+    to +272 ms (1,067 recordings, 37,881 windows); likely value 40 ms from the part shared with the ART check (25%); with
+    the breath error, 95% -4.41 to +4.40 s'
   studies:
   - primus-awp-conversion
+  - primus-awp-anchoring
 - id: primus-shift
   name: raw stamps shifted by the release median
   kind: fixed_shift
   support_s: *id001
   stamp_position: instant
   grid_s: 0.016
-  removes_bias_s: &id002
-    median: -1.787
-    p5: -5.782
-    p95: 0.693
+  removes_bias_s:
+    median: {parameter: primus-awp-bias}
+    p5: {parameter: primus-awp-bias, use: p5}
+    p95: {parameter: primus-awp-bias, use: p95}
     n: 1067
     scope: recording
     status: measured
-    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording (the matching lag is CVP minus AWP, so
-      its sign is reversed here); includes airway-to-CVP physiology
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath
+      (primus-awp-anchoring); includes airway-to-CVP physiology
   uncertainty:
     upper_bound: true
     components:
     - name: between recordings (includes airway-to-CVP physiology)
       type: A
       distribution: empirical
-      u_s: 1.325
+      u_s: {parameter: primus-awp-between-rsd}
       scope: recording
       shared_with: Primus clock
     - name: drift within a stretch (+104 ppm against the PC)
@@ -101,39 +115,51 @@ timing:
   - primus-raw
   domain: primus
   status: measured
-  evidence: 'per-recording raw lag (CVP minus AWP stamp): median 1.8 s, so a bias of -1.8 s; robust SD 1.33 s (1,067 recordings)'
+  evidence: 'per-recording lag (CVP minus AWP stamp), each stretch on its right breath: median 1.47 s, so a bias of -1.47 s;
+    robust SD 0.70 s (1,067 recordings)'
   studies:
   - primus-awp-conversion
+  - primus-awp-anchoring
 - id: primus-raw
   name: raw stamps
   kind: as_stored
   support_s: *id001
   stamp_position: instant
   grid_s: 0.016
-  bias_s: *id002
+  bias_s:
+    median: {parameter: primus-awp-bias}
+    p5: {parameter: primus-awp-bias, use: p5}
+    p95: {parameter: primus-awp-bias, use: p95}
+    n: 1067
+    scope: recording
+    status: measured
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath
+      (primus-awp-anchoring); includes airway-to-CVP physiology
   uncertainty:
     components:
     - name: between recordings (includes airway-to-CVP physiology)
       type: A
       distribution: empirical
-      u_s: 1.325
+      u_s: {parameter: primus-awp-between-rsd}
       scope: recording
       shared_with: Primus clock
   domain: primus
   status: measured
-  evidence: offset median -1.8 s, p5-p95 -5.8 to +0.7 s (1,067 recordings, CVP breaths; the stamps sit before the breath
-    seen in the CVP), incl. AWP-CVP physiology; drifts +104 ppm against the PC between AWP pauses
+  evidence: offset median -1.47 s, p5-p95 -3.55 to -0.44 s (1,067 recordings, CVP breaths, each stretch on its right
+    breath; the stamps sit before the breath seen in the CVP), incl. AWP-CVP physiology; drifts +104 ppm against the PC
+    between AWP pauses
   look_ahead:
     lead_s:
-    - 0
-    - 5.78
+    - 0.44
+    - 3.55
     basis: apparent
-    note: In most recordings the AWP stamps sit before the breath seen in the SNUADC CVP (median 1.8 s; 5th percentile
-      5.8 s). Against the working reference this is a lead; whether it is one against true time depends on the
+    note: In nearly all recordings the AWP stamps sit before the breath seen in the SNUADC CVP (median 1.47 s; 5th-95th
+      percentile 0.44 to 3.55 s, each stretch on its right breath). Against the working reference this is a lead; whether it is one against true time depends on the
       reference's own delay, which the release does not show (the BIS EEG also sits early, by 0.79 s). Airway-to-CVP
       physiology explains at most a small part.
   studies:
   - primus-awp-conversion
+  - primus-awp-anchoring
 tags:
 - stub
 # Links between variables (schema 0.4)

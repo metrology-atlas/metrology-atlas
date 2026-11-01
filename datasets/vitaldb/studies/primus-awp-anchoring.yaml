@@ -99,6 +99,14 @@ results: |
     ART-only ones. The corrected start offsets of the stretches fixed by their own pauses are a median 1.28 s,
     IQR 0.67–2.08 s, 5th–95th percentile 0.06–4.54 s: wide, so the main mode cannot be right for all, and about
     one stretch in seven that relies on it is still a breath off.
+  - **The Primus numbers with each stretch on its right breath (2 November).** tools/primus_numbers.py (which
+    reproduces the earlier numbers exactly with no breath correction): the AWP bias against the breath on CVP is a
+    median [[value:primus-awp-bias]] per recording (5th–95th percentile −3.552 to −0.443 s, was −1.787 s, −5.782 to
+    +0.693 s), and its spread between recordings [[value:primus-awp-between-rsd]] (was 1.325 s). Within a stretch on
+    its right breath the matching is as before (robust SD 79 ms). After the rule, [[value:primus-breath-error-share]]
+    of windows sit in a stretch still a whole breath off; as a mixture its standard deviation is
+    [[value:primus-breath-error-sd]], and the 95% interval of the matching error with it −4.41 to +4.40 s. The
+    timing forms of primus-awp and primus-co2 carry these, the breath error as its own component.
 discussion: |
   The wide per-recording offset is mostly the measurement's: a stretch that starts on the wrong breath stays on it,
   and its windows agree with each other, so leave-one-out within a stretch cannot see it. The breath-matching
@@ -134,3 +142,6 @@ code:
   - vitaldb-bench/tools/primus_vent_events.py
   - vitaldb-bench/tools/primus_breath_rule.py
   - vitaldb-bench/examples/ppv_by_breath.py
+typed_ok:
+  - {parameter: primus-awp-between-rsd, text: "0.7", why: "the breathing band's edge (0.7 Hz) and lags and correlations of 0.7 in the four-recording test, not the spread between recordings"}
+  - {parameter: primus-breath-error-sd, text: "1.5", why: "an ART event lag in the four-recording test, not the breath-error SD"}

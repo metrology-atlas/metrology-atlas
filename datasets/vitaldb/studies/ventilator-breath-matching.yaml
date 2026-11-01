@@ -64,7 +64,9 @@ open_questions:
       The release-wide run (tools/primus_sync_accuracy.py) finds each window's lag within half a breath of a coarse
       estimate, without this study's breath-identity check. About a quarter to a third of its stretches sit a whole
       breath off ([[study:primus-awp-anchoring]]), so its per-stretch accuracy holds only for stretches on the right
-      breath, and the between-recording spread is inflated. The Primus numbers built on it are under revision.
+      breath, and the between-recording spread is inflated. The Primus timing forms now take each stretch's breath
+      from [[study:primus-awp-anchoring]] (pauses in ventilation, else a rule), with the remaining breath error
+      ([[value:primus-breath-error-share]] of the matched time) as its own component.
   - title: "What sets the steps at the AWP pauses"
     kind: phenomenon
     summary: >-
