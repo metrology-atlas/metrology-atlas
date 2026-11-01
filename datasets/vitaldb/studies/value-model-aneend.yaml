@@ -16,7 +16,7 @@ results: |
   - Minutes :00, :10, :20, :30, :40 and :50 have 706–872 cases each, against 192–271 at the 5s. :00 and :30 are slightly higher (872 each).
   - Rounded ends are written up to the next mark: ceiling beats nearest by 168 BIC points and floor by 782. An end charted as 11:30 means "finished by 11:30".
   - Hour, emergency status and department made no difference.
-  - On average the true end is about 4 min before the charted end, so anaesthesia durations computed from charted times run long by a few minutes.
+  - The true end is a median 3.4 min before the charted end (p10–p90 2.1–6.0 min), so anaesthesia durations computed from charted times run long by a few minutes.
   - Since vitaldb-resolution v0.6.0 (18 October; model version 2): the two out-of-range records are excluded
     (not corrected), and the stored and recomputed log-likelihoods now agree: the whole gap came from those two
     records. The parameters are unchanged.
