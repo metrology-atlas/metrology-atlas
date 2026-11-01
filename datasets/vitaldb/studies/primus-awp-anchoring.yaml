@@ -120,10 +120,10 @@ results: |
     release-wide fit of the PIP rule ([[study:numerics-derivation-release]]; the peak of the last breath in 924 of
     the 1,064 recordings that also have a CVP lag) gives per recording the delay d from the end of a breath's
     inspiration on the AWP stamps to the PIP stamp: d = (the device's true delay, never negative) minus the AWP bias,
-    so the AWP cannot be early by more than d. d is a median 1.40 s (p5–p95 0.35–3.40 s), against the AWP lag
+    so the AWP cannot be early by more than d. d is a median [[value:primus-awp-lead-bound]] (p5–p95 0.35–3.40 s), against the AWP lag
     behind CVP of 1.43 s (0.43–3.54 s) in the same recordings. Their difference, d minus the CVP lag, is the
     device's true delay less the CVP reference's own delay and the airway-to-CVP physiology: a median −0.15 s
-    (IQR −0.55 to +0.35 s; d is shorter in 59% of recordings). So most of the lead, about 1–1.4 s typically, is
+    (IQR −0.55 to +0.35 s; d is shorter in 59% of recordings). So most of the lead, up to [[value:primus-awp-lead-bound]] typically, is
     the AWP stamps sitting early on the recorder's own timeline, and a few tenths of a second is the reference and
     physiology. Across recordings d rises with the CVP lag (Theil slope 0.47, 95% 0.40–0.53; Spearman 0.37): part
     of the spread between recordings is in the AWP stamps, the rest in the reference, the fits or the breath
@@ -161,7 +161,7 @@ open_questions:
   - title: "What sets the anchor"
     kind: phenomenon
     summary: >-
-      The AWP stamps sit early on the recorder's timeline by about 1–1.4 s typically (bounded by the PC-stamped PIP),
+      The AWP stamps sit early on the recorder's timeline by up to [[value:primus-awp-lead-bound]] typically (bounded by the PC-stamped PIP),
       and the anchor is reset at irregular gaps with an error of up to about ±2 s. What the recorder anchors to, so
       that the stamps come out early rather than late, is not known: Vital Recorder's handling of the Primus stream
       is not documented in the release.

@@ -1,0 +1,14 @@
+id: primus-awp-lead-bound
+name: Upper bound on the Primus AWP lead on the recorder's timeline
+quantity: Delay from the end of a breath's inspiration on the AWP stamps to the PC stamp of the PIP that reports it; the AWP stamps cannot sit early by more than this.
+value: 1.40
+unit: s
+spread: {p5: 0.35, p95: 3.40, n: 924, text: "per recording, the release-wide PIP fit (rule: peak of the last breath); d minus the AWP lag behind CVP, median -0.15 s (IQR -0.55 to +0.35 s)"}
+status: measured
+study: primus-awp-anchoring
+about: [primus-awp]
+date: 2026-11-02
+notes: >-
+  tools/primus_anchor_check.py numerics, from the PIP fits of tools/numeric_derivation_pilot.py (work/overnight/numeric)
+  and tools/primus_numbers.py per_recording.json. A bound by causality: the PIP is stamped by the PC on arrival and
+  cannot exist before its breath, so d = the device's true delay (never negative) minus the AWP bias.

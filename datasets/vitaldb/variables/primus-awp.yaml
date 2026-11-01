@@ -152,16 +152,24 @@ timing:
     lead_s:
     - 0.44
     - 3.55
-    basis: apparent
-    note: In nearly all recordings the AWP stamps sit before the breath seen in the SNUADC CVP (median 1.47 s; 5th-95th
-      percentile 0.44 to 3.55 s, each stretch on its right breath). Against the working reference this is a lead; whether it is one against true time depends on the
-      reference's own delay, which the release does not show (the BIS EEG also sits early, by 0.79 s). Airway-to-CVP
-      physiology explains at most a small part.
+    basis: real
+    note: >-
+      The AWP stamps sit before the breath they record. Against the breath seen in the SNUADC CVP the lead is a median
+      1.47 s (5th-95th percentile 0.44 to 3.55 s, each stretch on its right breath). Most of it is real on the recorder's
+      own timeline: the PIP numerics, stamped by the PC on arrival, cannot exist before their breath, and they bound the
+      AWP lead at a median [[value:primus-awp-lead-bound]] (5th-95th percentile 0.35 to 3.40 s), close to the lead
+      against CVP; a few tenths of a second of that lead are the CVP reference's own delay and the airway-to-CVP
+      physiology. The stamps are early because the recorder anchors each AWP stretch and counts samples from the
+      anchor, and the anchor is set early (primus-awp-anchoring).
   studies:
   - primus-awp-conversion
   - primus-awp-anchoring
 tags:
 - stub
+typed_ok:
+- field: timing[primus-shift].uncertainty.components[1].u_s
+  parameter: primus-awp-lead-bound
+  why: the estimated drift within a stretch (0.3 s), not the lead bound's 5th percentile (0.35 s)
 # Links between variables (schema 0.4)
 measures:
 - measurand: airway-pressure

@@ -164,6 +164,10 @@ timing:
   - primus-awp-anchoring
 tags:
 - stub
+typed_ok:
+- field: timing[primus-shift].uncertainty.components[1].u_s
+  parameter: primus-awp-lead-bound
+  why: the estimated drift within a stretch (0.3 s), not the lead bound's 5th percentile (0.35 s)
 # Links between variables (schema 0.4)
 measures:
 - measurand: airway-co2
