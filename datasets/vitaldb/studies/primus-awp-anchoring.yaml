@@ -35,6 +35,11 @@ method: |
   - **Two references.** In recordings with both arms, ART minus CVP per stretch, in breath periods.
   - **Gap kind.** Each pause step matched to its AWP gap: a whole number of records (the 0.48 s grid carries on) or
     not (a new anchor).
+  - **Breath identity from the signals (test on two recordings).** tools/primus_breath_id.py repeats the
+    release-wide lag and keeps, per window, the shape correlation's peaks over −3 to +8 s, and per 30-minute block
+    the pilot's breath-size check ([[study:ventilator-breath-matching]], breath i against breath i + k). Run on
+    one recording in the main mode and one placed a breath above it, before any release-wide run
+    (work/primus_breath_id/test/).
 results: |
   - **The AWP stamps are an anchor plus a sample count.** In 6,312 of 6,360 recordings every record is exactly
     0.48 s after the one before; none is stamped on arrival. AWP and CO2 are anchored separately: their gaps coincide
@@ -48,6 +53,11 @@ results: |
     stretches of 459 recordings with both references, ART minus CVP is within a quarter breath in 63% (median
     +0.26 s) and about one whole breath in 34%, its side modes moving with the set rate; within a stretch the two
     agree to 0.09 s (SD). Pause steps are rarely whole breaths (under 2% of either gap kind).
+  - **Matching breaths cannot tell which breath is right (null result, two recordings).** The shape correlation is
+    nearly equal one breath apart (0.971 against 0.970), and the breath-size check is weak (correlations 0.02–0.40),
+    changes between blocks (k = 0, 1, 0) and disagrees between the two references (CVP mostly k = 0, ART k = 2).
+    In the recording placed a breath above the main mode, CVP (5.2–5.8 s) and ART (5.7–6.2 s) agree at about
+    5.5 s, so not every offset a breath above the main mode is a slip: some may be real.
 discussion: |
   The wide per-recording offset is mostly the measurement's: a stretch that starts on the wrong breath stays on it,
   and its windows agree with each other, so leave-one-out within a stretch cannot see it. The breath-matching
@@ -63,9 +73,12 @@ open_questions:
   - title: "Which breath is right"
     kind: next step
     summary: >-
-      Fix the breath of each stretch: the branch nearest the release-wide main mode, the arm nearer it where two
-      disagree, and an unambiguous anchor (the start of mechanical ventilation) to test both; then rerun the
-      breath matching saving each window's score over the whole lag range, and redo the Primus numbers.
+      Fix the breath of each stretch. Matching breaths cannot do it: on test recordings the shape correlation is
+      nearly equal one breath apart, and the breath-size check (tools/vent_sync_pilot.py breath_match) is weak and
+      inconsistent. Some offsets one breath above the main mode may also be real (both references agree in at
+      least one recording), so a rule such as "nearest the main mode" is not safe. Next: lags from events that are
+      not periodic (pauses in ventilation, set-rate changes, the start of ventilation), which fix the breath to
+      about a second; then redo the Primus numbers.
   - title: "What sets the anchor"
     kind: next step
     summary: >-
@@ -74,4 +87,5 @@ open_questions:
 code:
   - vitaldb-bench/tools/primus_awp_anchor.py
   - vitaldb-bench/tools/primus_sync_accuracy.py
+  - vitaldb-bench/tools/primus_breath_id.py
   - vitaldb-bench/examples/ppv_by_breath.py
