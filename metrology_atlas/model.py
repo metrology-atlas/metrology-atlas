@@ -91,6 +91,14 @@ QUESTION = (
     Field("summary", "text", required=True, help="What is seen, why it matters and, where known, what would settle it."),
 )
 
+TYPED_OK = (
+    Field("parameter", "ref", required=True, ref="parameter", help="The parameter whose value the number equals."),
+    Field("text", "str", help="In a study: the number as typed (sign optional), e.g. '0.5'."),
+    Field("field", "str", help="In a variable: the form field, as the warning names it, e.g. "
+                               "'timing[primus-lab].removes_bias_s.median'."),
+    Field("why", "str", required=True, help="Why it is a different quantity, not a copy."),
+)
+
 COMMON = (
     Field("id", "str", required=True, help="Unique within its kind; equals the file name without .yaml."),
     Field("name", "str", required=True),
@@ -382,6 +390,9 @@ KINDS: dict[str, Kind] = {
                       help="The variables this one was derived from, each with its relation. A derivation is written "
                            "here, on the derived variable, never on its input."),
                 Field("algorithm", "text", help="For a derived variable: how it is computed, in words."),
+                Field("typed_ok", "objs", fields=TYPED_OK,
+                      help="Form numbers checked and found to be a different quantity that happens to equal a "
+                           "parameter's number (give field and parameter); the typed-copy check skips them."),
                 Field("code", "strs", help="For a derived variable: the code that computes it, as software-id/path."),
                 Field("version", "str", help="For a derived variable: the version of its algorithm. Each version of a "
                                              "feature is its own variable."),
@@ -495,6 +506,10 @@ KINDS: dict[str, Kind] = {
                 Field("model", "str", help="Code reference of the model this study fitted; its numbers are read "
                                            "from the dataset's pinned snapshot, never copied."),
                 Field("supersedes", "refs", ref="study"),
+                Field("typed_ok", "objs", fields=TYPED_OK,
+                      help="Typed numbers checked and found to be a different quantity that happens to equal a "
+                           "parameter's value; the typed-copy check skips them, and warns when an entry matches "
+                           "nothing."),
             ),
             help="One piece of work that produced insight: a mini report.",
         ),

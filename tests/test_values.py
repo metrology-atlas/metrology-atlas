@@ -40,6 +40,17 @@ def test_typed_copy_warns(tmp_path):
     assert any("study 'st': types the value of na-diff (1x)" in w for w in ds.warnings)
 
 
+def test_typed_ok_silences_a_checked_coincidence_and_flags_a_stale_entry(tmp_path):
+    files = _files("Sodium reads −3.0 mmol/L lower.")
+    files["studies/st.yaml"]["typed_ok"] = [{"parameter": "na-diff", "text": "-3.0", "why": "a different sodium"}]
+    ds = load(_dataset(tmp_path, **files))
+    assert not any("types the value of na-diff" in w or "typed_ok" in w for w in ds.warnings)
+    files["studies/st.yaml"]["typed_ok"] = [{"parameter": "na-diff", "text": "-4.0", "why": "stale"}]
+    ds = load(_dataset(tmp_path / "b", **files))
+    assert any("types the value of na-diff (1x)" in w for w in ds.warnings)
+    assert any("typed_ok entry (na-diff, '-4.0') matches no typed number now" in w for w in ds.warnings)
+
+
 def test_typed_copies_precision_and_small_integers():
     params = {"a": {"value": 2.26}, "b": {"value": 4}, "c": {"value": 2446}}
     assert typed_copies(["lag 2.26 s, about 2.3 s, N = 4, 2,446 recordings, `2.26` in code"], params) == {"a": 2, "c": 1}

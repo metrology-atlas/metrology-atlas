@@ -125,9 +125,15 @@ def unit_follows(text: str, end: int, unit: str | None) -> bool:
     return bool(unit) and text[end:end + len(unit) + 2].lstrip("\u2009\u00a0 ").startswith(unit)
 
 
-def typed_copies(texts, params: dict[str, dict]) -> dict[str, int]:
+def norm_number(text: str) -> str:
+    """A typed number as typed_ok entries compare it: Unicode minus as '-', no leading '+'."""
+    return str(text).strip().replace("\u2212", "-").lstrip("+")
+
+
+def typed_copies(texts, params: dict[str, dict], ok: set | None = None, used: set | None = None) -> dict[str, int]:
     """Parameter id -> how many times its value is typed in the texts (outside [[...]] and inline code), matched at
-    the precision it is typed to. Small whole numbers (under 10) are skipped: too many coincide by chance."""
+    the precision it is typed to. Small whole numbers (under 10) are skipped: too many coincide by chance. Hits whose
+    (parameter id, number as typed) is in ``ok`` are skipped and added to ``used``."""
     out: dict[str, int] = {}
     vals = {pid: float(p["value"]) for pid, p in params.items()
             if isinstance(p.get("value"), (int, float)) and not isinstance(p.get("value"), bool)}
@@ -146,5 +152,10 @@ def typed_copies(texts, params: dict[str, dict]) -> dict[str, int]:
             for pid, pv in vals.items():
                 if dec <= wd[pid] and round(pv, dec) == v and (
                         dec > 0 or pv.is_integer() or unit_follows(masked, m.end(), params[pid].get("unit"))):
+                    key = (pid, norm_number(m.group(1)))
+                    if ok is not None and key in ok:
+                        if used is not None:
+                            used.add(key)
+                        continue
                     out[pid] = out.get(pid, 0) + 1
     return out

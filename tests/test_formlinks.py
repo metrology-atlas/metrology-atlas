@@ -76,6 +76,18 @@ def test_typed_copy_in_a_form_warns(tmp_path):
     assert any("bias_s.median = 4.2 is typed; parameter late" in w for w in ds.warnings)
 
 
+def test_typed_ok_in_a_form(tmp_path):
+    def run(path, entry):
+        files = {**_signal([_form(studies=["st"])]), "studies/st.yaml": STUDY, **_param("late", 4.2)}
+        files["variables/s.yaml"]["typed_ok"] = [entry]
+        return load(_with_domains(_dataset(path, **files))).warnings
+    w = run(tmp_path / "a", {"field": "timing[raw].bias_s.median", "parameter": "late", "why": "a different delay"})
+    assert not any("is typed; parameter late" in x or "typed_ok" in x for x in w)
+    w = run(tmp_path / "b", {"field": "timing[raw].bias_s.p5", "parameter": "late", "why": "stale"})
+    assert any("bias_s.median = 4.2 is typed; parameter late" in x for x in w)
+    assert any("typed_ok entry (timing[raw].bias_s.p5, late) matches no typed form number now" in x for x in w)
+
+
 def test_form_checked_before_its_parameters_warns(tmp_path):
     ds = _load(tmp_path, _form(studies=["st"], checked=dt.date(2026, 10, 15)), _param("other", 9.9))
     assert any("checked on 2026-10-15, before its studies' parameters other changed" in w for w in ds.warnings)

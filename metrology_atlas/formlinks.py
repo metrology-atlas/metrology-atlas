@@ -134,6 +134,8 @@ def typed_form_copies(ds) -> list[str]:
     linked = {(vid, l["field"]) for vid, ls in getattr(ds, "links", {}).items() for l in ls}
     out = []
     for vid, v in sorted(ds.items["variable"].items()):
+        ok = {(e.get("field"), e.get("parameter")) for e in v.get("typed_ok") or [] if isinstance(e, dict)}
+        used = set()
         units = [(f"timing[{f.get('id', i)}]", f, set(f.get("studies") or []))
                  for i, f in enumerate(v.get("timing") or []) if isinstance(f, dict)]
         units += [(f"chain[{i}]", s, set(s.get("studies") or []))
@@ -161,7 +163,12 @@ def typed_form_copies(ds) -> list[str]:
                     continue  # small whole numbers coincide by chance, as in prose
                 for pid, key, val, pd in cands:
                     if d <= pd and round(val, d) == round(float(x), d) and abs(val) >= 0.01:
+                        if (full, pid) in ok:
+                            used.add((full, pid))
+                            break
                         out.append(f"variable '{vid}': {full} = {x:g} is typed; parameter {pid} ({key}) holds it: "
                                    f"link it ({{parameter: {pid}{'' if key == 'value' else ', use: ' + key}}})")
                         break
+        for f, pid in sorted(ok - used, key=str):
+            out.append(f"variable '{vid}': typed_ok entry ({f}, {pid}) matches no typed form number now; remove it")
     return out

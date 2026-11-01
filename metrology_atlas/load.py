@@ -13,7 +13,7 @@ import yaml
 from metrology_atlas.code import CODE_XREF, check_code, snapshot_path, split
 from metrology_atlas.model import DATASET, KINDS, REFERENCE, Dataset, Field, Kind
 from metrology_atlas.formlinks import resolve_links, typed_form_copies
-from metrology_atlas.values import parse_spec, safe_load, typed_copies
+from metrology_atlas.values import norm_number, parse_spec, safe_load, typed_copies
 
 XREF = re.compile(r"\[\[([a-z]+):([a-z0-9][a-z0-9-]*)(?:\|([^\]]+))?\]\]")
 """``[[kind:id]]`` or ``[[kind:id|label]]`` in prose."""
@@ -185,7 +185,13 @@ def _check_typed_values(ds: Dataset) -> None:
                     params.setdefault(ref, ds.items["parameter"][ref])
         if not params:
             continue
-        hits = typed_copies(_strings({k: v for k, v in st.items() if k not in {"id", "name"}}), params)
+        ok = {(e.get("parameter"), norm_number(e.get("text", ""))) for e in st.get("typed_ok") or []
+              if isinstance(e, dict) and e.get("text") is not None}
+        used: set = set()
+        hits = typed_copies(_strings({k: v for k, v in st.items() if k not in {"id", "name", "typed_ok"}}), params,
+                            ok, used)
+        for pid, t in sorted(ok - used):
+            ds.warnings.append(f"study '{sid}': typed_ok entry ({pid}, '{t}') matches no typed number now; remove it")
         if hits:
             ds.warnings.append(f"study '{sid}': types the value of " + ", ".join(
                 f"{pid} ({n}x)" for pid, n in sorted(hits.items())) + "; write [[value:id]] instead")
