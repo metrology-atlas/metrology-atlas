@@ -3,9 +3,10 @@ name: How the Primus AWP is stamped, and which breath the lag locks onto
 summary: >-
   The Primus airway-pressure stamps are an anchor plus a sample count; the anchor holds across the regular pauses
   and is reset, with an error of up to about ±2 s, at irregular gaps. Separately, about a quarter to a third of the
-  stretches in the release-wide breath matching are measured a whole breath off, which inflated the apparent
-  per-recording offset.
-date: 2026-11-01
+  stretches in the release-wide breath matching were measured a whole breath off, which inflated the apparent
+  per-recording offset. Each stretch's breath is now set from pauses in ventilation or a rule, and the breath error
+  that remains is stated on its own.
+date: 2026-11-02
 status: draft
 methods: [stamp-reading, shared-events]
 techniques: [windowed-cross-correlation, null-controls]
@@ -24,6 +25,8 @@ background: |
   a breath in the airway pressure and its effect on CVP or ART is only defined to within a breath unless something
   else picks the breath; the release-wide run finds each window's lag within half a breath of a coarse envelope
   estimate and starts each window from the previous one, without the breath-identity check of the pilot.
+
+  [[figure:primus-awp-breath-ambiguity]]
 method: |
   - **Record times.** For AWP and CO2: the share of consecutive records exactly one record (30 samples, 0.48 s) apart,
     and each gap (stamp step over 5 s) in record lengths.
@@ -60,6 +63,9 @@ results: |
     stretches of 459 recordings with both references, ART minus CVP is within a quarter breath in 63% (median
     +0.26 s) and about one whole breath in 34%, its side modes moving with the set rate; within a stretch the two
     agree to 0.09 s (SD). Pause steps are rarely whole breaths (under 2% of either gap kind).
+
+    [[figure:primus-awp-offsets-by-rate]]
+
   - **Matching breaths cannot tell which breath is right (null result, two recordings).** The shape correlation is
     nearly equal one breath apart (0.971 against 0.970), and the breath-size check is weak (correlations 0.02–0.40),
     changes between blocks (k = 0, 1, 0) and disagrees between the two references (CVP mostly k = 0, ART k = 2).
@@ -107,40 +113,85 @@ results: |
     of windows sit in a stretch still a whole breath off; as a mixture its standard deviation is
     [[value:primus-breath-error-sd]], and the 95% interval of the matching error with it −4.41 to +4.40 s. The
     timing forms of primus-awp and primus-co2 carry these, the breath error as its own component.
+
+    [[figure:primus-awp-correction]]
 discussion: |
-  The wide per-recording offset is mostly the measurement's: a stretch that starts on the wrong breath stays on it,
-  and its windows agree with each other, so leave-one-out within a stretch cannot see it. The breath-matching
-  uncertainty quoted for the Primus (about 55 ms) therefore holds only for stretches on the right breath, and the
-  spread behind the shift known in advance is inflated by the slipped ones. What is left of the offset is the
-  anchor: set when the AWP stream starts or restarts after an irregular gap, kept across the regular pauses. Its
-  true size and spread can only be stated once each stretch's breath is fixed.
+  The wide per-recording offset was mostly the measurement's: a stretch that starts on the wrong breath stays on it,
+  and its windows agree with each other, so leave-one-out within a stretch cannot see it. Pauses in ventilation are
+  not periodic and fix the breath where they resolve it; with them and the rule, each stretch's breath is now set,
+  and the offset that is left is the anchor's: set when the AWP stream starts or restarts after an irregular gap,
+  kept across the regular pauses, a median [[value:primus-awp-bias]] against the breath on CVP with a spread between
+  recordings of [[value:primus-awp-between-rsd]]. The matching places a stretch on its right breath to about 80 ms;
+  the remaining breath error ([[value:primus-breath-error-share]] of the matched time) is stated as its own
+  component, not folded into one standard uncertainty, because it is a whole breath or nothing. Analyses that need
+  every breath right can keep to stretches with their own resolved CVP pauses.
+
 limitations: |
-  Draft. The breath periods come from the ventilator's settings, sampled every fourth record. The two-reference test
-  needs both arms and covers 459 recordings. Physiology between the airway pressure and CVP or ART is not separated
-  from the stamp offset here.
+  Draft. The breath of most stretches comes from the rule, not from their own pauses, and the rule is right for about
+  86% of those it reaches (leave-one-out on 498 stretches with their own pauses, which are themselves the reference).
+  ART pauses answer later than ART matching (+0.16 s where they agree, more in the tails), so recordings with ART only
+  rest on a correction. The breath periods come from the ventilator's settings, sampled every fourth record.
+  Physiology between the airway pressure and CVP is not separated from the stamp offset.
+
 open_questions:
-  - title: "Which breath is right"
+  - title: "A better rule for stretches without their own pauses"
     kind: next step
     summary: >-
-      Fix the breath of each stretch. Matching breaths cannot do it: on test recordings the shape correlation is
-      nearly equal one breath apart, and the breath-size check (tools/vent_sync_pilot.py breath_match) is weak and
-      inconsistent. Some offsets one breath above the main mode may also be real (both references agree in at
-      least one recording), so a rule such as "nearest the main mode" is not safe. Next: lags from events that are
-      not periodic: tools/primus_vent_events.py, run release-wide; no bias against CVP; a rule
-      (tools/primus_breath_rule.py) right for about 86% of stretches without their own pauses. Next: decide how the
-      remaining breath errors enter the Primus forms (a probability of a one-breath error per stretch, by the step
-      that set it), and redo the Primus numbers.
+      The rule is right for about 86% of the stretches it sets without their own pauses. Possible gains: combining
+      carrying with the main mode, using both references where both exist, and other non-periodic events (changes of
+      the set rate, the start of ventilation inside a recording). Each would be checked by the same leave-one-out.
   - title: "What sets the anchor"
     kind: next step
     summary: >-
       Compare each new AWP anchor, and the recording's first, with the Primus numerics stamped on arrival around it
       (every ~7 s), to see whether the anchor error is the arrival latency of the first block.
+figures:
+  - id: primus-awp-breath-ambiguity
+    file: primus-awp-breath-ambiguity.png
+    alt: >-
+      Three panels: averaged airway pressure and CVP repeating every 5 s; a correlation curve with two equal peaks 5.1 s apart; airway-pressure and CVP breathing envelopes dropping to zero together during a pause in ventilation and rising together after it.
+    theme: example traces
+    source: vitaldb-bench tools/primus_awp_anchor_figs.py
+    records: [136, 200]
+    caption: >-
+      Why breath matching can sit a whole breath off. (A) In one 10-minute window of [[case:136]], the airway
+      pressure and the CVP averaged over every breath: ventilation is so regular that each breath looks like the
+      next. (B) Matching the two shapes: the lag that fits best (0.5 s) and the lag one breath later (5.6 s) fit
+      almost equally well, so the matching alone cannot tell them apart. (C) A pause in ventilation in [[case:200]]:
+      the breathing envelope of the airway pressure stops and restarts, and so does the CVP's; only one lag lines
+      the two up, because a pause does not repeat.
+  - id: primus-awp-offsets-by-rate
+    file: primus-awp-offsets-by-rate.png
+    alt: >-
+      Four histograms of stretch offsets, one per set rate (18, 16, 14 and 12 per minute); the uncorrected histograms have a second peak at the dashed line one breath above the main peak, which moves right as the rate falls; the corrected histograms have one peak.
+    theme: population results
+    source: vitaldb-bench tools/primus_awp_anchor_figs.py
+    caption: >-
+      The evidence that the second peak is a wrong breath, not a real offset. Offsets at the start of each stretch,
+      by the ventilator's set rate. As matched (pale), there is a main peak and a second one a breath period above it
+      (dashed line), and the second moves with the rate: from +3.33 s at 18 breaths a minute to +5.00 s at 12. A
+      stamp offset would not follow the ventilator's rate. After the breath rule (blue), the second peak is gone.
+  - id: primus-awp-correction
+    file: primus-awp-correction.png
+    alt: >-
+      Three panels: per-recording AWP offsets, the uncorrected ones with a long tail to minus 7 s and the corrected ones concentrated near minus 1.5 s; bars of 72, 81 and 86 percent right; step histograms, narrow around zero for whole-record gaps and broad for other gaps.
+    theme: population results
+    source: vitaldb-bench tools/primus_awp_anchor_figs.py
+    caption: >-
+      What the correction changes. (A) The AWP offset per recording, as matched and with each stretch on its right
+      breath: the long tail of large offsets was mostly wrong breaths. (B) How often each way of choosing the breath
+      is right, checked on the stretches whose own pauses in ventilation fix it: trusting the matching, carrying the
+      breath from a neighbouring stretch, and taking the breath nearest the main mode. (C) Why carrying works across
+      some pauses and not others: where the AWP gap is a whole number of records the stamp anchor carries on and the
+      offset barely moves; at other gaps the anchor is reset and the offset jumps by up to about ±2 s.
 code:
   - vitaldb-bench/tools/primus_awp_anchor.py
   - vitaldb-bench/tools/primus_sync_accuracy.py
   - vitaldb-bench/tools/primus_breath_id.py
   - vitaldb-bench/tools/primus_vent_events.py
   - vitaldb-bench/tools/primus_breath_rule.py
+  - vitaldb-bench/tools/primus_numbers.py
+  - vitaldb-bench/tools/primus_awp_anchor_figs.py
   - vitaldb-bench/examples/ppv_by_breath.py
 typed_ok:
   - {parameter: primus-awp-between-rsd, text: "0.7", why: "the breathing band's edge (0.7 Hz) and lags and correlations of 0.7 in the four-recording test, not the spread between recordings"}
