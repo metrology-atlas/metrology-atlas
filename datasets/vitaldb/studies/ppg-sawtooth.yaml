@@ -46,7 +46,7 @@ discussion: |
   choose how much time to trust.
 
   The last step of the fit, shifting each recording's median to the adopted pulse arrival time, also removes real
-  differences between patients. [[study:pat-offset-census]] later showed that one global delay (385 ms,
+  differences between patients. [[study:pat-offset-census]] later showed that one global delay ([[value:pleth-chain-delay]],
   [[parameter:pleth-chain-delay]]) fits the whole release, so the atlas removes that instead and keeps those
   differences ([[example:pulse-arrival-time]]).
 code:

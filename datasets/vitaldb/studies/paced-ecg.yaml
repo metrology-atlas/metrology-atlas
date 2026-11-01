@@ -37,7 +37,7 @@ results: |
   - **No other breaks.** Apart from corrections and gaps, no phase step of 6 ms or more went without an intervening
     beat or a poorly matched beat. No hidden concatenation was found in the paced stretches.
 discussion: |
-  The −0.48 s correction quoted for step mode is the visible part of a 0.5 s resynchronisation. Without the loss,
+  The −0.48 s correction quoted for step mode is the visible part of a [[value:snuadc-step-correction-size]] resynchronisation. Without the loss,
   every sample after a correction sits about [[value:snuadc-reset-loss|.0]] early, adding up over a case's one to three corrections. The
   ECG–EEG burst lag confirms the sign without pacing: it steps by +13.0 ± 1.7 ms at each correction (93 cases),
   a little under the direct measurement.
