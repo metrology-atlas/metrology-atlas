@@ -58,6 +58,8 @@ def to_json(ds: Dataset) -> dict:
         for id_, item in doc[KINDS[kind].folder].items():
             if item.get("code"):
                 item["derived"]["code_urls"] = {c: code_url(ds, c) for c in item["code"]}
+    for vid, ls in getattr(ds, "links", {}).items():
+        doc["variables"][vid]["derived"]["links"] = _plain(ls)  # the form numbers taken from parameters
     for id_, p in ds.items["parameter"].items():
         if p.get("value") is not None:
             doc["parameters"][id_]["derived"]["value_text"] = value_text(p)  # as written: 3.60 stays 3.60
@@ -92,6 +94,8 @@ def parameter_text(p: dict) -> str:
     text = f"{_num(p['value'])}{sep}{unit}"
     s = p.get("spread") or {}
     parts = []
+    if "p5" in s and "p95" in s:
+        parts.append(f"p5–p95 {_num(s['p5'])} to {_num(s['p95'], signed=s['p5'] < 0 < s['p95'])}")
     if "p10" in s and "p90" in s:
         parts.append(f"p10–p90 {_num(s['p10'])} to {_num(s['p90'], signed=s['p10'] < 0 < s['p90'])}")
     if "q1" in s and "q3" in s:

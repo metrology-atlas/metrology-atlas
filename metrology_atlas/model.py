@@ -213,6 +213,8 @@ TIMING = (
     Field("status", "enum", required=True, choices=STATUS),
     Field("evidence", "str", required=True, help="Where the numbers come from, in a line."),
     Field("studies", "refs", ref="study"),
+    Field("checked", "date", help="When the form's numbers were last checked against its studies: a study parameter "
+                                  "dated later is flagged."),
 )
 
 STEP = (
@@ -231,6 +233,7 @@ STEP = (
     Field("link", "ref", ref="link"),
     Field("parameter", "ref", ref="parameter"),
     Field("studies", "refs", ref="study"),
+    Field("checked", "date", help="When the step's numbers were last checked against its studies."),
 )
 
 RELATIONS = ("computed-from", "same-source")
@@ -445,7 +448,8 @@ KINDS: dict[str, Kind] = {
                 Field("value", "number"),
                 Field("unit", "str"),
                 Field("spread", "obj", fields=(
-                    Field("p10", "number"), Field("p90", "number"), Field("q1", "number"), Field("q3", "number"),
+                    Field("p5", "number"), Field("p10", "number"), Field("p90", "number"), Field("p95", "number"),
+                    Field("q1", "number"), Field("q3", "number"),
                     Field("sd", "number"), Field("min", "number"), Field("max", "number"), Field("n", "number"),
                     Field("text", "str"),
                 )),
@@ -600,6 +604,8 @@ class Dataset:
     """(kind, id) -> the file it came from."""
     warnings: list[str] = field(default_factory=list)
     """Things worth fixing that do not stop a build (for example code not yet committed)."""
+    links: dict[str, list[dict]] = field(default_factory=dict)
+    """variable id -> the form and chain numbers taken from parameters (formlinks), as resolved at load."""
 
     def get(self, kind: str, id_: str) -> dict | None:
         """The item of a kind with the given id, or None."""

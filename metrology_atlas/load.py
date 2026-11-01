@@ -12,6 +12,7 @@ import yaml
 
 from metrology_atlas.code import CODE_XREF, check_code, snapshot_path, split
 from metrology_atlas.model import DATASET, KINDS, REFERENCE, Dataset, Field, Kind
+from metrology_atlas.formlinks import resolve_links, typed_form_copies
 from metrology_atlas.values import parse_spec, safe_load, typed_copies
 
 XREF = re.compile(r"\[\[([a-z]+):([a-z0-9][a-z0-9-]*)(?:\|([^\]]+))?\]\]")
@@ -78,6 +79,10 @@ def load(folder: str | Path) -> Dataset:
         for item in safe_load(refs_path.read_text(encoding="utf-8")) or []:
             _store(ds, REFERENCE, item, "references.yaml", problems)
 
+    link_problems: list[str] = []
+    resolve_links(ds, link_problems)  # form numbers taken from parameters, before anything reads them
+    if link_problems:  # an unresolved link is not a number: stop before the checks trip over it
+        raise AtlasError(problems + link_problems)
     for (kind_name, id_), rel in ds.sources.items():
         kind = KINDS.get(kind_name, REFERENCE)
         item = ds.items[kind_name][id_]
@@ -144,9 +149,25 @@ def load(folder: str | Path) -> Dataset:
     _check_forbidden(ds, problems)
     _check_terms(ds, problems)
     _check_typed_values(ds)
+    ds.warnings.extend(typed_form_copies(ds))
+    _check_form_dates(ds)
     if problems:
         raise AtlasError(problems)
     return ds
+
+
+def _check_form_dates(ds: Dataset) -> None:
+    """Warn where a form or chain step was last checked (``checked``) before a parameter of a study it cites."""
+    for vid, v in sorted(ds.items["variable"].items()):
+        for unit in [*(v.get("timing") or []), *(v.get("chain") or [])]:
+            if not isinstance(unit, dict) or not isinstance(unit.get("checked"), dt.date):
+                continue
+            later = sorted(pid for pid, p in ds.items["parameter"].items()
+                           if p.get("study") in (unit.get("studies") or []) and isinstance(p.get("date"), dt.date)
+                           and p["date"] > unit["checked"])
+            if later:
+                ds.warnings.append(f"variable '{vid}': {unit.get('id') or unit.get('node')} was checked on "
+                                   f"{unit['checked']}, before its studies' parameters " + ", ".join(later) + " changed")
 
 
 def _check_typed_values(ds: Dataset) -> None:
@@ -652,6 +673,9 @@ def derived(ds: Dataset) -> dict[str, dict[str, dict[str, list[str]]]]:
                 if ref.split("/")[0] in ds.items["software"]:
                     add("software", split(ref)[0], {"study": "studies", "observation": "observations",
                                                     "example": "examples", "variable": "variables"}[kind], id_)
+    for vid, ls in getattr(ds, "links", {}).items():
+        for link in ls:
+            add("parameter", link["parameter"], "used_in_forms", f"variable:{vid}")
     for (kind, id_) in ds.sources:
         if kind == "reference":
             continue
