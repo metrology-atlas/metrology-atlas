@@ -1,0 +1,10 @@
+id: lab-access-length
+name: Arterial-line access matched to a blood gas
+quantity: Length of the arterial-line access (the blood draw) matched to each blood gas.
+value: 53
+unit: s
+spread: {p5: 21, p10: 28, p90: 115, p95: 144, n: 4742, text: "every matched blood gas; results/pat/lab_draw_labels.csv (end_s - start_s)"}
+status: measured
+study: arterial-line-accesses
+about: [lab-blood-gas]
+date: 2026-11-01

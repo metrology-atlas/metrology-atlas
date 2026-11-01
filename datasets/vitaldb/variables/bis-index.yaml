@@ -15,9 +15,9 @@ timing:
   - 61
   stamp_position: close
   bias_s:
-    median: 3.5
-    p5: 3.0
-    p95: 4.0
+    median: {parameter: bis-index-delay}
+    p5: {parameter: bis-index-delay, use: p5}
+    p95: {parameter: bis-index-delay, use: p95}
     scope: recording
     status: measured
   uncertainty:
@@ -29,7 +29,11 @@ timing:
       scope: recording
   domain: bis
   status: measured
-  evidence: 3-4 s after its EEG window ends; window 16 s (48%) or 32-61 s (40%); half the weight older than 30 s
+  evidence: stamped 3-4 s after the newest EEG it averages (p10-p90; p95 6 s), 3,297 good fits; window about 16 s (48%)
+    or 29-61 s (40%); half the weight older than 31 s
+  checked: 2026-11-01
+  studies:
+  - bis-index-delay
 tags:
 - stub
 window:

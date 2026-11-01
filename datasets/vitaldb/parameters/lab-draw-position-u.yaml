@@ -1,0 +1,11 @@
+id: lab-draw-position-u
+name: Where in its access a draw is
+quantity: Standard uncertainty of a blood gas's draw time from its position in its own matched access (the access length
+  over sqrt(12), rectangular), root mean square over draws.
+value: 22.1
+unit: s
+spread: {n: 4742, text: "15.3 s for a draw in a median 53 s access; results/pat/lab_draw_labels.csv"}
+status: measured
+study: arterial-line-accesses
+about: [lab-blood-gas]
+date: 2026-11-01

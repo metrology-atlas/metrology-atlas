@@ -19,14 +19,14 @@ Status: measured</title></a>
 <a class="hit" href="../links/cardioq-vs-snuadc.html" target="_top" data-tip='["6. CardioQ against SNUADC", "Correction size: 0.4\u20134.4 s (p5\u2013p95); matched-beat MAD 0.24 s (24 cases)", "Status: measured"]'><path class="line" d="M574,470 L608,470" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M574,470 L608,470" fill="none" stroke="transparent" stroke-width="14"/><circle cx="591" cy="470" r="11" fill="#1b7f4b"/><text x="591" y="474" text-anchor="middle" class="n">6</text><title>6. CardioQ against SNUADC
 Correction size: 0.4–4.4 s (p5–p95); matched-beat MAD 0.24 s (24 cases)
 Status: measured</title></a>
-<a class="hit" href="../links/snuadc-frequent-vs-pc.html" target="_top" data-tip='["7. SNUADC (frequent-correction mode) against the recorder PC", "Drift: -0.954 ppm", "Correction size: +5 to +15 ms (median +10), about one an hour (median 1.1 per hour per recording)", "Status: measured", "7. SNUADC (step mode) against the recorder PC", "Drift: -63 ppm", "Corrected every 2.08 h", "Correction size: about 0.498 s true (paced: 0.4981\u20130.4988 s); \u22120.480 s on the stamps", "Status: measured"]'><path class="line" d="M733,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M733,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="733" cy="414" r="11" fill="#1b7f4b"/><text x="733" y="418" text-anchor="middle" class="n">7</text><title>7. SNUADC (frequent-correction mode) against the recorder PC
+<a class="hit" href="../links/snuadc-frequent-vs-pc.html" target="_top" data-tip='["7. SNUADC (frequent-correction mode) against the recorder PC", "Drift: -0.954 ppm", "Correction size: +5 to +15 ms (median +10), about one an hour (median 1.1 per hour per recording)", "Status: measured", "7. SNUADC (step mode) against the recorder PC", "Drift: -63 ppm", "Corrected every 2.08 h", "Correction size: about 0.500 s true (paced: 0.498\u20130.502 s); \u22120.480 s on the stamps", "Status: measured"]'><path class="line" d="M733,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M733,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="733" cy="414" r="11" fill="#1b7f4b"/><text x="733" y="418" text-anchor="middle" class="n">7</text><title>7. SNUADC (frequent-correction mode) against the recorder PC
 Drift: -0.954 ppm
 Correction size: +5 to +15 ms (median +10), about one an hour (median 1.1 per hour per recording)
 Status: measured
 7. SNUADC (step mode) against the recorder PC
 Drift: -63 ppm
 Corrected every 2.08 h
-Correction size: about 0.498 s true (paced: 0.4981–0.4988 s); −0.480 s on the stamps
+Correction size: about 0.500 s true (paced: 0.498–0.502 s); −0.480 s on the stamps
 Status: measured</title></a>
 <a class="hit" href="../links/bis-vs-pc.html" target="_top" data-tip='["8. BIS against the recorder PC", "Drift: +25 ppm", "Corrected every 8,192 s (2 h 16.5 min), \u00b1 20 s in 95% of intervals", "Correction size: 0.2 s", "Status: measured"]'><path class="line" d="M1017,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M1017,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="960" cy="414" r="11" fill="#1b7f4b"/><text x="960" y="418" text-anchor="middle" class="n">8</text><title>8. BIS against the recorder PC
 Drift: +25 ppm

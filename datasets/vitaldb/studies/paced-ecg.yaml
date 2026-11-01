@@ -27,9 +27,10 @@ method: |
 results: |
   - **The pacing intervals agree between stretches** to 0.05–0.1 ms on the sample count.
   - **Each step-mode correction loses about [[value:snuadc-reset-loss|.0]] of signal.** At the three corrections inside paced rhythm (two
-    cases, both leads where available), the pacing train steps on the sample count by −17.2 to −18.2 ms. The record
-    stamps step by −480.6 to −481.0 ms, and the train on stamp time by −498.1 to −498.8 ms. So the true correction
-    is about [[value:snuadc-step-correction-size]], close to a 0.5 s threshold, and the stamps show only 0.48 s of it because about 9 samples are
+    cases, both leads where available), the pacing train steps on the sample count by −17.3 to −20.3 ms (two corrections, [[case:830]] on
+    both leads). The record stamps step by −480.6 to −481.0 ms, and the train on stamp time by −498.0 to −502.2 ms
+    ([[case:830]]'s two readings are stored wrapped by one pacing period, +500.4 and +499.8 ms). So the true correction
+    is about [[value:snuadc-step-correction-size]], close to a 0.5 s threshold, and the stamps show only 0.48 s of it because about 9–10 samples are
     never taken. Every record still holds 100 samples, so nothing in the file shows the loss.
   - **Recording gaps of 16–18 s shift the stamps by 124–136 ms** against the pacing train (two gaps in two cases, one
     seen on both leads).

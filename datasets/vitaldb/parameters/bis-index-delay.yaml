@@ -1,9 +1,10 @@
 id: bis-index-delay
 name: BIS index delay
-quantity: Delay from the end of the EEG window to the start of the index's trailing average.
+quantity: Delay from the newest EEG the index's trailing average uses to the index's stamp (the fast part's delay),
+  per recording.
 value: 3
 unit: s
-spread: {p10: 3, p90: 4}
+spread: {p5: 3, p10: 3, p90: 4, p95: 6, n: 3297, text: "good fits; whole seconds; results/pat/bis_smoothing_labels.csv"}
 status: measured
 study: bis-index-delay
 about: [bis-index]

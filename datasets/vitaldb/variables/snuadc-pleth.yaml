@@ -163,8 +163,8 @@ chain:
     ms frames on its own clock. Its content runs 18–52 ppm against those frames, so every 11–31 min the delay
     steps by one frame: a sawtooth in the delay.'
   bias_s:
-  - 0.365
-  - 0.405
+  - {parameter: pleth-chain-delay, use: min}
+  - {parameter: pleth-chain-delay, use: max}
   drift: 18–52 ppm against its frames; one 33.3 ms slip every 11–31 min
   status: measured
   clock: oximeter-frame-clock

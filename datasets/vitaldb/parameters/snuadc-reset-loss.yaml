@@ -1,14 +1,16 @@
 id: snuadc-reset-loss
 name: Signal lost at a SNUADC step-mode correction
 quantity: Signal time that is never sampled at each step-mode correction, on the sample count.
-value: 17.7
+value: 18.7
 unit: ms
-spread: {min: 17.2, max: 18.2, n: 3, text: "3 corrections in 2 paced cases; ECG–EEG bursts give 13.0 ± 1.7 ms"}
+spread: {min: 17.3, max: 20.3, n: 3, text: "three measurements of two corrections in paced rhythm (20.0 ms, seen on both leads, and 17.3 ms), mean per correction; ECG–EEG bursts give 13.0 ± 1.7 ms"}
 status: measured
 study: paced-ecg
 about: [snuadc-step-vs-pc, snuadc-ecg-ii]
-date: 2026-10-17
+date: 2026-11-01
 notes: >-
-  Adopted in the stamp model as 17.7 ms. A refit with this loss left a burst-lag step of −3.3 ± 1.8 ms, which
+  Remeasured on 1 November from results/paced/breaks.jsonl; the first reading (17.2–18.2 ms) did not match it. The
+  stamp model adopted 17.7 ms from that reading and still uses it: about 1 ms per reset less than this mean, or about
+  0.15 ppm at one reset every 2 h, well inside the spread of the estimates. A refit with this loss left a burst-lag step of −3.3 ± 1.8 ms, which
   suggests the average loss may be nearer 15 ms.
 headline: true

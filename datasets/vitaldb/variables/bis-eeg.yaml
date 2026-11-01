@@ -118,12 +118,12 @@ timing:
     - name: 'between recordings: the constant is not known in advance'
       type: A
       distribution: empirical
-      u_s: 0.1129
+      u_s: {parameter: bis-shift-between-rsd}
       scope: recording
     - name: 'within the recording: drift and BIS corrections'
       type: A
       distribution: empirical
-      u_s: 0.1143
+      u_s: {parameter: bis-shift-within-rsd}
       scope: structured
       length_s: 8192
       correlation: rectangular
@@ -133,6 +133,13 @@ timing:
       distribution: rectangular
       u_s: 0.0023
       scope: independent
+    - name: tails heavier than the two robust parts add up to
+      type: A
+      distribution: empirical
+      u_s: 0.0575
+      scope: recording
+      evidence: 'the robust SD of all windows (bis-shift-total-rsd, 170.7 ms) less the other three in quadrature: robust SDs
+        of the parts do not add to the robust SD of the whole when the tails are heavy'
   correction: the release median, known in advance
   corrects:
   - bis-raw
@@ -162,12 +169,12 @@ timing:
     - name: between recordings
       type: A
       distribution: empirical
-      u_s: 0.1129
+      u_s: {parameter: bis-shift-between-rsd}
       scope: recording
     - name: 'within the recording: drift and BIS corrections'
       type: A
       distribution: empirical
-      u_s: 0.1143
+      u_s: {parameter: bis-shift-within-rsd}
       scope: structured
       length_s: 8192
       correlation: rectangular
@@ -177,6 +184,12 @@ timing:
       distribution: rectangular
       u_s: 0.0023
       scope: independent
+    - name: tails heavier than the two robust parts add up to
+      type: A
+      distribution: empirical
+      u_s: 0.0575
+      scope: recording
+      evidence: as in bis-shift (the robust SD of all windows less the other three in quadrature)
   domain: bis
   status: measured
   evidence: 'EEG minus ECG for the same burst on the raw stamps: median -787 ms, p5-p95 -970 to -601 ms (2,702 recordings)'
@@ -190,7 +203,7 @@ chain:
   clock: bis-clock
   kind: clock
   effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps come 0.60–0.97 s before
-    the ECG's (look-ahead). It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +0.17 s).
+    the ECG's (look-ahead). It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +[[value:bis-step]]).
   bias_s: [-0.97, -0.601]
   drift: +25 ppm against the PC; corrected every 8,192 s
   status: measured

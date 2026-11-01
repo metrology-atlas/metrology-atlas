@@ -38,9 +38,7 @@ timing:
   name: draw time from arterial access
   kind: per_recording
   uses_future: true
-  support_s:
-  - 28
-  - 117
+  support_s: {parameter: lab-access-length, use: p10-p90}
   stamp_position: unknown
   removes_bias_s: *id001
   uncertainty:
@@ -49,16 +47,21 @@ timing:
     - name: where in the access the draw is
       type: B
       distribution: rectangular
-      u_s: 25.6921
+      u_s: {parameter: lab-draw-position-u}
       scope: independent
-      status: estimated
+      status: measured
+      evidence: each draw's own access length over sqrt(12), root mean square over 4,742 draws (15.3 s for a median
+        access)
   correction: matched arterial-line access
   corrects:
   - lab-bg
   domain: records
   status: estimated
-  evidence: access 28-117 s (p10-p90); matched 0-15 min (gas) or 0-30 min (central) before; uses the waveform during and
-    after the draw; a wrong match is not included
+  evidence: access a median 53 s (p10-p90 28-115 s); matched 0-15 min (gas) or 0-30 min (central) before; uses the
+    waveform during and after the draw; a wrong match is not included
+  studies:
+  - arterial-line-accesses
+  checked: 2026-11-01
 tags:
 - stub
 chain:
@@ -71,12 +74,12 @@ chain:
 - node: Blood draw
   kind: processing
   status: measured
-  effect: Blood is drawn from the arterial line (an access, 28–117 s long) and analysed in theatre or sent on. The
+  effect: Blood is drawn from the arterial line (an access, a median [[value:lab-access-length]] long) and analysed in theatre or sent on. The
     specimen is stamped 3–12 min after the draw; the lab_draw label marks the matched access.
   bias_s:
   - {parameter: lab-bg-lag, use: p10}
   - {parameter: lab-bg-lag, use: p90}
-  u_s: 25.7
+  u_s: {parameter: lab-draw-position-u}
   parameter: lab-bg-lag
   studies:
   - lab-timestamp-meaning

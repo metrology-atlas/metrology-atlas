@@ -1,0 +1,10 @@
+id: bis-shift-within-rsd
+name: BIS EEG stamps against the release median, within
+quantity: Robust SD of the EEG-minus-ECG burst offset within a recording (drift and BIS corrections, about the recording's own constant), raw BIS stamps shifted by the release median.
+value: 0.1143
+unit: s
+spread: {n: 2702, text: "36,788 windows; reframe_stage3/bis_numbers.json (fixed_shift)"}
+status: measured
+study: shared-bursts
+about: [bis-eeg]
+date: 2026-11-01

@@ -2,7 +2,7 @@ id: reset-signal-lost
 name: About 20 ms of signal lost at every SNUADC reset
 summary: >-
   At each step-mode reset the acquisition pauses for about 20 ms inside the last record before the new timing, and
-  that time is never sampled: 17.7 ms on the sample count ([[parameter:snuadc-reset-loss]]), about 19.7 ms once the filler sample is counted. Every record still holds 100 samples, so nothing in the file shows it.
+  that time is never sampled: about 19 ms on the sample count (17.3–20.3 ms; [[parameter:snuadc-reset-loss]]), about 2 ms more once the filler sample is counted. Every record still holds 100 samples, so nothing in the file shows it.
 status: established
 clocks: [snuadc-sample]
 devices: [snuadc]
