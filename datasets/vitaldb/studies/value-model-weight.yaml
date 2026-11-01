@@ -7,7 +7,7 @@ background: |
   - About 30% of weights come from a scale that reads to 0.05 kg and the rest from one that reads to 0.1 kg; about 3% are whole kilograms written in.
 data: |
   - 6,388 values, none missing or zero; 5 values finer than 0.05 kg are flagged off-grid.
-  - Fitted to adults, first case per patient (6,041). 137 of 237 repeat patients have the same weight in every case.
+  - Fitted to adults, first case per patient, ages over 89 left out as top-coded (6,041). 137 of 237 repeat patients have the same weight in every case.
   - 57 children get native resolution (flag `child_native_resolution`).
 method: |
   - Digits were screened at the finest observed resolution (two decimals).

@@ -43,7 +43,7 @@ results: |
   - **In every file (census):** 1,785 files write their reset clusters out of order (2,569 resets, 178 of them
     with a repeated stamp), and 820 files write them already in order (988 resets). **No file does both**, which
     points to two recorder or firmware versions. 12 backward steps of reset size match neither (left as written;
-    most are small interleaved steps of 8–12 ms), and 496 are small steps of the frequent-correction mode.
+    half are small interleaved steps of 8–12 ms), and 496 are small steps of the frequent-correction mode.
   - **34 files must be excluded from the rule.** Their records overlap the next record far more often than resets
     do (in 20 of them, 4–95% of all record junctions step back). There the rule matches 115,487 times by
     coincidence and would scramble the signal. None of these files is in the current builds or clock fits; the

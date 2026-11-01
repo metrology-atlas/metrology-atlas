@@ -7,7 +7,8 @@ unit: mmHg
 spread:
   p10: -11
   p90: 13
-  n: 2283
+  n: 1639
+  text: patients with three or more paired readings
 status: measured
 study: cuff-vs-arterial-agreement
 about:

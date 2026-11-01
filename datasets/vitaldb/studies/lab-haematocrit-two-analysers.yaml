@@ -8,7 +8,7 @@ methods:
 - value-resolution
 background: |
   - Lab analytes are machine-reported, so most should show a single resolution.
-  - Haematocrit looked like the exception: about a quarter of values are whole numbers, and its coarser share is 32.4% against 10% expected.
+  - Haematocrit looked like the exception: about a third of values (32.4%) are whole numbers against 10% expected.
 data: |
   - 58,498 haematocrit results in `lab_data.csv`, with the source taken from the panel sharing the timestamp (blood-gas panels contain pH).
   - 1,328 pairs where a blood gas precedes a CBC by up to 15 min.

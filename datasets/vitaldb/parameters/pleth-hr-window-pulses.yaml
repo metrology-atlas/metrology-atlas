@@ -5,7 +5,7 @@ quantity: Number of pulse intervals PLETH_HR averages (a mean of those within 25
 value: 10
 unit: intervals
 spread:
-  text: wins in 2,446 of the 2,473 best-reproduced recordings; 70.4% of values reproduced exactly, against 62.4% for a median
+  text: the rule's family wins in 2,446 of the 2,473 best-reproduced recordings and N = 10 in 4,513 of all 6,151; 70.4% of values reproduced exactly, against 62.4% for a median
     of 10
 status: measured
 study: pleth-hr-derivation

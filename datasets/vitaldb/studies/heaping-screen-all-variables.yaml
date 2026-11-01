@@ -22,8 +22,9 @@ results: |
   - Lab analytes with decimals sit near the 10% coarser share. Exceptions: haematocrit (32.4%, two analysers), total bilirubin (6.5%), lactate (12.5%) and bicarbonate (7.9%).
   - No whole-number analyte shows a preference for multiples of 5 or 10 once the shape of the distribution is allowed for.
   - Sodium and SaO2 only look heaped, because 140, 135 and 95 sit at a peak or on a steep slope. Simulating a smooth peaked distribution gives deviations of the same size at the mode.
-  - Total bilirubin's low range (0.2–1.0 mg/dL, 22,240 results) shows no excess at any value: each count is
-    within about 10% of the mean of its neighbours. Its lower coarser share comes from the shape of the
+  - Total bilirubin's low range (0.2–1.0 mg/dL, 23,802 results) shows no heaping: from 0.5 mg/dL up each count is
+    within 5% of the mean of its neighbours, and below that the counts follow the rise of the distribution (0.3 and
+    0.4 sit 8% and 16% above their neighbours' mean, 0.2 below it), not a preference for any value. Its lower coarser share comes from the shape of the
     distribution.
   - Lactate is measured on the blood-gas analysers only (14,512 of 14,516 results share a timestamp with a pH),
     so there is no second instrument to compare, and era cannot be tested. No value below 15 is heaped. Its excess

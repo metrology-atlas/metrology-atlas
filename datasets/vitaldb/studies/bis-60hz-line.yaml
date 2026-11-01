@@ -12,7 +12,7 @@ clocks: [bis-clock, snuadc-sample]
 devices: [bis, snuadc]
 variables: [bis-eeg]
 data: |
-  Pilot: 30 recordings (21 with a strong line); the same-window tests on 4 recordings of 259–476 minutes. Whole
+  Pilot: 30 recordings (23 with a strong line, signal-to-noise above 20); the same-window tests on 4 recordings of 259–476 minutes. Whole
   release: the line in 2,672 of 5,564 recordings with BIS EEG ([[study:mains-grid-pc-rate]]).
 background: |
   If the line were mains hum, the BIS would see the grid on its own sample count as SNUADC does, and the two together

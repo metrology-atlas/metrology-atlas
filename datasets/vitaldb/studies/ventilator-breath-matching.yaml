@@ -42,7 +42,7 @@ results: |
   - **Error over the whole release, held out (19 October;
     [[code:vitaldb-bench/tools/primus_sync_accuracy.py]]).** Each 10-minute window predicted from all the others
     (a slope and an offset in each stretch between AWP pauses): a median error of 55 ms (p90 187 ms, p95 284 ms)
-    in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording
+    in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording and a new offset at every AWP pause
     ([[code:vitaldb-bench/tools/primus_pause_aware.py]]). The arterial mean pressure as a second reference is
     noisier (83 ms; p90 343 ms, 1,384 recordings),
     sometimes a breath out; where both exist (462) their drifts differ by a median 49 ppm. An injected shift of

@@ -1,8 +1,8 @@
 id: ppg-sawtooth
 name: The ECG→PPG delay is a sawtooth
 summary: >-
-  Inside the oximeter the PPG content creeps 18–52 ppm against its 30 Hz frames; every 11–31 minutes a frame repeats
-  and the delay jumps up by 33 ms. The rate is fixed per recording setup.
+  Inside the oximeter the PPG content creeps 18–52 ppm against its 30 Hz frames; every 11–31 minutes the delay steps up
+  by one 33 ms frame (no repeated frame shows in the waveform). The rate is fixed per recording setup.
 status: established
 clocks: [oximeter-frame-clock]
 devices: [solar8000, snuadc]

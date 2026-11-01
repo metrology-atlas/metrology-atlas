@@ -27,7 +27,7 @@ results: |
   - The log-spline beats the log-normal by 14.6 log-likelihood units for 2 extra parameters. A gamma latent fits clearly worse than the log-normal.
   - A 25 mL mode is not needed: its fitted propensity goes to zero.
   - A recorded 50, 100 or 500 mL is uncertain by roughly ±20–40 mL. A recorded 160 mL is uncertain by only ±5 mL, because 160 can only come from the 5 and 10 mL modes.
-  - A recorded 100 mL has only a 22% chance of having been read to 10 mL or finer.
+  - A recorded 100 mL has only a 23% chance of having been read to 10 mL or finer.
   - Grid of positive urine records by department (100 mL / 50 mL / 10 mL / 5 mL): gynaecology 40% / 33% / 27% /
     0%, urology 29% / 49% / 22% / 0%, general 23% / 21% / 47% / 8%, thoracic 14% / 14% / 59% / 13% (chi-squared p
     < 10⁻³⁰). Among values of 100 mL or more, the share on the 100 mL grid is 55% in gynaecology, 43% in urology,
@@ -43,7 +43,7 @@ discussion: |
   - Summing readings (H2) can explain multiples of 10, but not the extra 50 and 100 mL peaks. Those point to a charting preference (H3).
   - The steep decay reads naturally as behaviour: a reading of 40 or 60 mL is rounded to 50 almost as often as one right on it, while readings 20–25 mL away are nearly as close to another 10 mL value.
   - The threshold form was chosen over the smooth steep decay because it is simpler to explain and better identified. The best step, at 20 mL, is within 1.4 log-likelihood units of the smooth decay.
-  - The latent slope tilts each posterior. At 50 mL the latent is still rising, so the mean is pulled up to 50.9. At 500 mL it is falling, so the mean drops to 498.9.
+  - The latent slope tilts each posterior. At 50 mL the latent is still rising, so the mean is pulled up to 50.8. At 500 mL it is falling, so the mean drops to 498.8.
   - The 50 mL component spans ±20 mL, not ±25: the interval is the capture window, not the full half-resolution.
 limitations: |
   - The decay steepness κ is not identifiable: in about half the simulation refits it ran off towards infinity. The data say "near-step" but cannot tell κ = 5 from a true step.

@@ -10,7 +10,7 @@ background: |
   A recorded value differs from the true one for two reasons: how it was written down (resolution: rounding,
   heaping, sampling) and how well the instrument measured it (its bias, imprecision and drift between
   calibrations). The atlas so far covers the first. For the second it has, at best, manufacturers' specifications,
-  and no variable yet carries a measured instrument bias or uncertainty.
+  and no variable yet carries a measured instrument bias or uncertainty; the one in-theatre calibration it detects is the arterial transducer zeroing (art_zero labels).
 data: None from the release. The VitalDB data hold the readings, not the instruments' calibration history.
 discussion: |
   The hospital will have the records that would settle this: laboratory internal quality control and external

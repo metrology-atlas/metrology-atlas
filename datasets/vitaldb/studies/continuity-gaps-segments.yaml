@@ -88,7 +88,7 @@ discussion: |
   ([[study:record-messages-and-steps]]).
 limitations: |
   - The gap rule looks forward only and ignores steps under 1.5 samples.
-  - The 5-hour and 2.2-hour breaks are inferred from the stamps; the recorder's own logs, if they exist, would
+  - The 5-hour and the Primus and BIS correction breaks (about 2.0 and 2.3 h) are inferred from the stamps; the recorder's own logs, if they exist, would
     name them.
 open_questions:
   - title: "Which gaps lose data?"

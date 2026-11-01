@@ -4,7 +4,7 @@ quantity: Mean difference, cuff minus arterial line, over the cohort's readings,
 value: -0.1
 unit: mmHg
 spread:
-  text: limits of agreement −27 to +27 mmHg; within ±2 mmHg from 40 to 110 mmHg
+  text: limits of agreement −27 to +27 mmHg; within about ±2 mmHg (at most 2.0) from 40 to 110 mmHg
   n: 12238
 status: measured
 study: cuff-vs-arterial-agreement

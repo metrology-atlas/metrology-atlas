@@ -24,8 +24,8 @@ results: |
   - **The census holds it, with exceptions:** the median slope is −0.9535 ppm, and 89.5% of the recording hours
     lie within 0.05 ppm of [[value:snuadc-stamp-arithmetic|number]]. But 747 files (12%) sit elsewhere, from about −0.90 to −0.55 ppm (median
     −0.85), with no trend through the release.
-  - **Stamp-based loaders lose about 1.6 samples per hour** (32,020 in all): one about every 37 minutes, as
-    predicted.
+  - **Stamp-based loaders lose about 1.6 samples per hour** (32,020 in all): one about every 37 minutes,
+    close to the 35 minutes −0.954 ppm predicts.
 
   [[figure:slopes]]
   - **The paced recordings agree:** their pacing interval on stamp time and on the sample count differs by

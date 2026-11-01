@@ -23,7 +23,7 @@ results: |
     built up (+83 to +289 ms, median +155 ms); 0.155 s per 8,192 s implies 19 ppm, against 23 ppm from the tooth
     fits (25 ppm and a median step of +0.17 s in the full release).
   - **Primus AWP shows small corrections** of −64 to +80 ms (median +8 ms) about every 7,230 s (2.0 h; p90 twice
-    that), besides gaps of +20 to +22 s (median 5.5 per case).
+    that), besides gaps of +20 to +22 s (a median 2 per case; 5.5 counts every step of 0.1 s or more).
 discussion: |
   The Primus corrections imply a drift of only about 1–11 ppm against the recorder. Breath matching later measured
   the drift itself at about +[[value:primus-drift-breath]] ([[study:ventilator-breath-matching]]):

@@ -11,7 +11,7 @@ data: |
   - 6,388 values, none missing or zero. One value is off the 0.1 cm grid (157.36).
   - 57 cases are children (42 patients), down to 42 cm. They get native resolution only (flag `child_native_resolution`).
   - Repeat cases copy the height: of 237 patients with more than one case, 158 have the same height every time.
-  - The fit uses adults, first case per patient (6,041). Later cases with the same height get the same posterior.
+  - The fit uses adults, first case per patient, ages over 89 left out as top-coded (6,041). Later cases with the same height get the same posterior.
   - Within each sex, height is close to normal (women 156.5 ± 6.1 cm, men 168.3 ± 6.4 cm).
 method: |
   - Screened the last digit by emergency status, department, age, sex and calendar position.
@@ -23,7 +23,7 @@ method: |
 results: |
   [[figure:observed-vs-model]]
 
-  - After removing the 10% expected by chance, about 11% of elective and 21% of emergency heights were written as whole centimetres. Thoracic surgery is also higher (26% against 20% overall).
+  - After removing the 10% expected by chance, about 11% of elective and 22% of emergency heights were written as whole centimetres. Before that correction, thoracic surgery also has more (26% on whole centimetres, against 21% overall).
   - The .9 digit is depleted (7.3% of elective heights, against about 9% for .1 to .4): a height just under a whole centimetre is often written as the centimetre above.
   - There is a small excess at .5 (10.3%).
   - Among whole-centimetre heights, 150, 160 and 170 are about 1.5 times their neighbours, but 155 and 165 are not.

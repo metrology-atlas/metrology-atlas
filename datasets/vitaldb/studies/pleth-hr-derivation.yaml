@@ -36,7 +36,7 @@ method: '1. Pulses: SNUADC/PLETH on its own sample times, band-passed 0.5–10 H
 results: '- **A mean of [[value:pleth-hr-window-pulses|number]] pulse intervals that leaves out outliers.** A mean of the last [[value:pleth-hr-window-pulses]], keeping only those
   within 25% of their median, reproduces 70.4% of values exactly, pooled; a plain mean of 10 reproduces 61.9%, a median
   of 10 62.4%, a mean without the longest and shortest 62.8%, and windows of a fixed time less. In the 2,473 recordings
-  reproduced best (at least 80% exact by some candidate), it wins in 2,446 (99%), and over all recordings in 4,513 of 6,151
+  reproduced best (at least 80% exact by some candidate), the outlier-rejecting mean (at some N of 6–14) wins in 2,446 (99%), and the 10-interval rule over all recordings in 4,513 of 6,151
   ([[parameter:pleth-hr-window-pulses]]). Neighbouring windows (9, 11, 12 intervals) of the same rule come next, so the count is [[value:pleth-hr-window-pulses|number]].
 
   - **Why the first comparison was a tie.** A plain mean and a median each match the monitor wherever the window holds no
@@ -54,7 +54,7 @@ discussion: Two independent routes, one through heart rate and one through the p
   and keeps the earlier ones in its evidence. The pulses are averaged by a mean that leaves out outlying intervals, so a
   single missed pulse, whose interval is about double, does not move the rate.
 limitations: '- Pulses are found by our own detector, not the monitor''s; where the two disagree, no candidate can match,
-  which caps the exact-match share (median 71% per recording).
+  which caps the exact-match share (77% of values per recording, median; 70.4% pooled).
 
   - The delay is the delay of the best candidate; it moves by about half a second between a mean and a median of 12.
 

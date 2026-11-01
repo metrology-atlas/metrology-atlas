@@ -20,7 +20,7 @@ method: |
 results: |
   - **Not locked.** The update rate is 24.974 Hz on the file's clock (median of 30 recordings; all between 24.973 and
     24.976 Hz; −980 to −1,080 ppm against 25 Hz), steady within each recording.
-  - **The grid slides smoothly**, one full 40 ms wrap every 39–48 s. Through 16 ms samples it seems to hold for about
+  - **The grid slides smoothly**, one full 40 ms wrap every 37–41 s at those rates (39–48 s from the phase slope). Through 16 ms samples it seems to hold for about
     8 s and then jump 8 ms; a simulation of one 24.974 Hz grid read on a 62.5 Hz grid gives exactly that staircase, so
     the steps are how the measurement sees a smooth slide.
   - About 1,000 ppm is ten times the Primus clock's drift against SNUADC (+104 ppm by breaths): a nominal update

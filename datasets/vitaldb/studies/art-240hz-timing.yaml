@@ -13,7 +13,7 @@ devices: [snuadc]
 variables: [snuadc-art, snuadc-ecg-ii]
 data: The 30 recordings of the 240 Hz fold batch ([[study:waveform-deltas]]); up to 90 min from minute 10; 29 with more than 1,000 beats.
 background: |
-  The arterial pressure's step sizes follow a cycle at 239.986–239.994 Hz on the SNUADC sample count
+  The arterial pressure's step sizes follow a cycle at 239.987–239.994 Hz on the SNUADC sample count
   ([[study:waveform-deltas]]). If the pressure were acquired on that clock and placed on the 500 Hz grid without timing
   correction, its content would either slide against the ECG by one 240 Hz period (4.17 ms) every time the cycle turns
   over (a sawtooth, every 75–181 s in these recordings), or drift steadily by 23–55 ppm (up to 300 ms over the 90 minutes analysed).

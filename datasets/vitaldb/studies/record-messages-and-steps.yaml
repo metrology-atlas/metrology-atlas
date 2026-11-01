@@ -2,7 +2,7 @@ id: record-messages-and-steps
 name: Message sizes and the steps between records
 summary: >-
   Every record in every waveform: SNUADC writes messages of 100 samples (0.2 s), Primus 30 (0.48 s), BIS 16
-  (0.125 s), CardioQ no fixed size. Backward steps outnumber gaps by about a hundred to one and come from a few
+  (0.125 s), CardioQ no fixed size. In SNUADC and BIS, backward steps outnumber gaps by about a hundred to one (Primus 5–25 to one, CardioQ about one to one); they come from a few
   recordings with duplicated or interleaved records. Primus AWP gaps are whole lost messages (CO2 gaps mostly are not); most SNUADC and BIS gaps
   are not.
 date: 2026-10-19
@@ -18,7 +18,7 @@ code:
   - vitaldb-bench/tools/record_steps_collect.py
   - vitaldb-bench/tools/record_steps_figs.py
 data: |
-  All 6,388 recordings; every waveform record (about 2.5 billion records). Run-length encoded record sizes and
+  All 6,388 recordings; every waveform record (about 2.6 billion records). Run-length encoded record sizes and
   every non-zero step (5.2 million) were cached per recording.
 background: |
   Each record carries one stamp and a block of samples. The next record should start where the last one ended;
@@ -32,7 +32,7 @@ method: |
 results: |
   - **Message sizes.** SNUADC: 100 samples at 500 Hz, 0.2 s (99.9% of records; a few 50-sample halves and about
     300 rarer sizes). Primus: 30 samples at 62.5 Hz, 0.48 s. BIS: 16 samples at 128 Hz, 0.125 s (all but a
-    handful). CardioQ: no fixed size (about 2,500 distinct sizes, median about 117 samples, 0.65 s).
+    handful). CardioQ: no fixed size (about 2,500 distinct sizes; the commonest, 117 samples or 0.65 s, is only 1.6% of messages).
   - **Backward steps dominate.** SNUADC ECG II: 761,225 backward against 6,205 forward; BIS EEG: 1.05 million
     against 10,789; Primus AWP 101,805 against 20,397. They form a comb of discrete values from about 10 ms up
     to one message, and 98% of SNUADC's are in 27 recordings. Two mechanisms explain them:

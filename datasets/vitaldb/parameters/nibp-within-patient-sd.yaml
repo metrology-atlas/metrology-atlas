@@ -5,7 +5,7 @@ quantity: 'SD of cuff-minus-arterial differences about each patient''s own mean:
 value: 9.4
 unit: mmHg
 spread:
-  n: 12238
+  text: about each of the 1,639 patients with three or more paired readings
 status: measured
 study: cuff-vs-arterial-agreement
 about:

@@ -15,7 +15,7 @@ variables: [snuadc-pleth, snuadc-ecg-ii, snuadc-art]
 code:
   - vitaldb-bench/tools/pat_offset_census.py
 data: |
-  Every recording with ECG lead II and PLETH at 500 Hz (6,136 of 6,388); 5,536 passed the quality rule below, 2,900
+  Every recording with ECG lead II and PLETH at 500 Hz (6,136 of 6,388); 5,536 passed the quality rule below, 2,936
   of them with an arterial line. Setups are the PC keys of [[study:setup-identification]].
 background: |
   The PLETH reaches the recorder about 0.4 s late ([[observation:ppg-hardware-delay]]). The PAT example first removed
@@ -37,8 +37,8 @@ method: |
 results: |
   - **One peak.** Stored ECG→PLETH delay to the steepest upstroke: 715 ms in the median recording (interquartile range 699–730 ms). Finger
     minus arterial PAT: 497 ms (484–510 ms; 5th–95th percentile 456–532 ms). Neither has a second cluster.
-  - **The setup explains almost nothing:** 4% of the variance of finger minus arterial PAT between recordings (PC
-    key, 57 keys) and 2% (SNUADC port). Every one of the 31 keys with at least 20 recordings has its median within
+  - **The setup explains almost nothing:** 3–4% of the variance of finger minus arterial PAT between recordings (PC
+    key, 57 keys) and 1–2% (SNUADC port, 16 ports), at the upstroke and the foot. Every one of the 31 keys with at least 20 recordings has its median within
     about ±15 ms of the global value, and each key's own spread is wider than the gaps between keys. The earlier
     per-setup delays (368–399 ms, from 293 cases) were mostly sampling noise.
   - **No epochs along the case order.** In 16 bins of 400 cases the median moves by at most 4 ms.

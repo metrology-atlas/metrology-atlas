@@ -1,6 +1,6 @@
 id: value-model-bmi
 background: |
-  - BMI is computed, not entered. Every one of the 6,388 recorded values equals weight ÷ (height/100)² rounded to 0.1.
+  - BMI is computed, not entered. Every one of the 6,388 recorded values equals weight ÷ (height/100)² rounded half up to 0.1 (cases 757 and 3576 are exact ties, which the library flags as `recorded_bmi_mismatch`).
   - So it has no rounding behaviour of its own, and the recorded value says nothing about true height and weight beyond those two fields.
 data: |
   - All 6,388 recorded BMI values, recomputed from height and weight as a check.

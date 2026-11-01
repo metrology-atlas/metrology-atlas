@@ -11,12 +11,12 @@ background: |
   - All times are in seconds relative to case start, the recording start set to 0 for de-identification. Absolute clock times are removed.
   - Admission is stored as a date, so its value is the time from midnight to recording start. That gives the clock time of recording start, and from it the clock time of every event.
 data: |
-  - `clinical_data.csv`: 6,375 cases with valid admission dates.
+  - `clinical_data.csv`: 6,388 cases with admission dates (one, [[case:1563]], a 1900 placeholder).
 method: |
   - Checked that −adm is a whole number of minutes from midnight to recording start.
   - Checked where reconstructed recording starts fall in the day, and whether charted events land on 5-minute clock marks.
 results: |
-  - −adm is a whole number of minutes in 6,373 of 6,375 cases. The exceptions, [[case:1342]] and [[case:5723]], are flagged `clock_uncertain`.
+  - −adm is a whole number of minutes in 6,386 of 6,388 cases. The exceptions, [[case:1342]] and [[case:5723]], are flagged `clock_uncertain`.
   - Reconstructed recording starts cluster at 07:00–07:59 (1,634 cases) and run through the working day: 07:40 to 18:53 (5th–95th percentile), median 11:33.
   - Op start falls on a 5-minute clock mark in 92% of cases, op end in 91% and anaesthesia end in 95%; anaesthesia start in only 52%.
 discussion: |

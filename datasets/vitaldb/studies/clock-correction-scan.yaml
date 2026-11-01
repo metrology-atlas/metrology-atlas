@@ -51,7 +51,7 @@ results: |
 discussion: |
   A correction can be recognised by its pattern (SNUADC's 0.484–0.492 s step, BIS's cut at 8,192 s), by every track
   of the device jumping together, and by an implied rate that fits the case. Other jumps on these devices are
-  gaps or dropouts. Within a case the rate holds to about 0.2 ppm, so one rate per device per case is enough. The
+  gaps or dropouts. Within a case the rate holds to about 0.2 ppm for the SNUADC and 0.6 ppm for the BIS (interquartile range), so one rate per device per case is enough. The
   drift values from this scan are wrong for some cases; the stamp sawtooth model
   ([[study:snuadc-stamp-sawtooth]]) replaced them. The SNUADC jump here (−0.487 s median) is measured from the start
   of the run before it, so it includes the −0.954 ppm stamp arithmetic built up over that run

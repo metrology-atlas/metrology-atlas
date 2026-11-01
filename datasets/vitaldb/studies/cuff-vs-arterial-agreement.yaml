@@ -34,7 +34,7 @@ results: '- **The cuff value belongs to its stamp.** Changes in the cuff follow 
   10 s ending 2 s after the stamp (bootstrap 95% interval: the same), about the arterial numeric''s own delay; the correlation
   falls from 0.70 there to 0.33 a minute earlier ([[parameter:nibp-moment]]).
 
-  - **No bias over the cohort.** Cuff minus arterial is [[value:nibp-art-bias]] (limits of agreement −27 to +27 mmHg), within ±2 mmHg
+  - **No bias over the cohort.** Cuff minus arterial is [[value:nibp-art-bias]] (limits of agreement −27 to +27 mmHg), within about ±2 mmHg (at most 2.0)
   from 40 to 110 mmHg ([[parameter:nibp-art-bias]]).
 
   - **A constant offset per patient.** Each patient''s own mean difference ranges from −11 to +13 mmHg (10th to 90th percentile;

@@ -1,7 +1,7 @@
 id: bis-index-delay
 name: How the BIS index trails its EEG
 summary: >-
-  Modelling the BIS index as a lagged mix of EEG features shows a trailing average starting about 3 s after its EEG
+  Modelling the BIS index as a lagged mix of EEG features shows a trailing average that ends about 3 s before the index's stamp, after its EEG
   window ends: about 16 s long in half the cases (the 15 s smoothing setting) and about 30–60 s in most others. Half the
   response weight is older than 30 s.
 date: 2026-10-13

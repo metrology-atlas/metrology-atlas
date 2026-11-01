@@ -11,7 +11,7 @@ techniques: [unit-mixture]
 clocks: [snuadc-sample, bis-clock, recorder-pc]
 devices: [snuadc, bis, vital-recorder]
 data: |
-  Per-case drift rates from [[study:clock-correction-scan]]: 460 step-mode SNUADC cases, 1,627 BIS cases, 399 with
+  Per-case drift rates from [[study:clock-correction-scan]]: 460 step-mode SNUADC cases, 1,627 BIS cases, 396 with
   both, with the serial port each device was attached to.
 background: |
   The release names a device by its model and gives no serial numbers, so which physical unit made a recording is
@@ -26,7 +26,7 @@ results: |
   - **SNUADC, step mode:** 8 units of width 1.13 ppm, chiefly near −80.4, −72.5, −67.3, −65.2 and −60.4 ppm; 80% of
     cases are assigned with over 90% confidence.
   - **BIS:** between 8 and 18 units of width about 1.0 ppm; only 40% of cases are confidently assigned.
-  - **About 14 recording setups** (pairs of ports) have at least 5 cases; within a port the spread is often only
+  - **19 recording setups** (pairs of ports) have at least 5 cases; within a port the spread is often only
     1–2 ppm.
   - **Most of the spread within a setup is shared:** 0.6–1.3 ppm (SD), against under 0.6 ppm for each SNUADC alone
     and 0.3–1.3 ppm for each BIS. The shared term is fixed within a case (interval-to-interval changes of the two
