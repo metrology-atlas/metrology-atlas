@@ -87,6 +87,18 @@ results: |
     CVP pause fixes the breath. For ART the same comparison gives +0.16 s (IQR −0.03 to +0.35 s, 587 edges).
     The selection (k within a quarter breath) limits the differences to about ±1 s, so this tests bias, not the
     tails.
+  - **A rule for every stretch, checked by leaving stretches out (2 November).** tools/primus_breath_rule.py
+    (work/primus_breath_rule/) gives each stretch a whole number of breaths k to take off its matched lag:
+    (1) from its own resolved CVP pauses; (2) carried from a neighbour across a gap that keeps the 0.48 s grid,
+    so that the corrected offset is continuous; (3) otherwise the k that puts its corrected start nearest the main
+    mode, 1.28 s (the median over stretches fixed by their own CVP pauses); (4) recordings with ART only, the same
+    with ART pauses corrected by their +0.16 s. Of 3,121 CVP stretches, 498 are set by their own pauses, 393 by
+    carrying and 2,230 by the main mode (ART-only: 185, 141 and 2,079 of 2,405). Leaving out each of the 498
+    stretches with its own pauses: trusting the matching (k = 0) is right for 72%; carrying, where it reaches
+    (116), is right for 81%; the main mode (382) for 86%. The rule changes k in 28% of CVP stretches and 44% of
+    ART-only ones. The corrected start offsets of the stretches fixed by their own pauses are a median 1.28 s,
+    IQR 0.67–2.08 s, 5th–95th percentile 0.06–4.54 s: wide, so the main mode cannot be right for all, and about
+    one stretch in seven that relies on it is still a breath off.
 discussion: |
   The wide per-recording offset is mostly the measurement's: a stretch that starts on the wrong breath stays on it,
   and its windows agree with each other, so leave-one-out within a stretch cannot see it. The breath-matching
@@ -106,9 +118,10 @@ open_questions:
       nearly equal one breath apart, and the breath-size check (tools/vent_sync_pilot.py breath_match) is weak and
       inconsistent. Some offsets one breath above the main mode may also be real (both references agree in at
       least one recording), so a rule such as "nearest the main mode" is not safe. Next: lags from events that are
-      not periodic: tools/primus_vent_events.py, run release-wide; no bias against CVP. Next: a rule for each
-      stretch (its resolved CVP events where it has them; otherwise a rule calibrated on stretches that have them),
-      and the Primus numbers redone.
+      not periodic: tools/primus_vent_events.py, run release-wide; no bias against CVP; a rule
+      (tools/primus_breath_rule.py) right for about 86% of stretches without their own pauses. Next: decide how the
+      remaining breath errors enter the Primus forms (a probability of a one-breath error per stretch, by the step
+      that set it), and redo the Primus numbers.
   - title: "What sets the anchor"
     kind: next step
     summary: >-
@@ -119,4 +132,5 @@ code:
   - vitaldb-bench/tools/primus_sync_accuracy.py
   - vitaldb-bench/tools/primus_breath_id.py
   - vitaldb-bench/tools/primus_vent_events.py
+  - vitaldb-bench/tools/primus_breath_rule.py
   - vitaldb-bench/examples/ppv_by_breath.py
