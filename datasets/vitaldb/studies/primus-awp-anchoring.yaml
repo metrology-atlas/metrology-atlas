@@ -79,8 +79,14 @@ results: |
     offsets have one. Where a matched window is within 10 minutes, the matched lag agrees with the event (k within
     a quarter of 0) for about 70% of CVP edges and is about one breath late for about 20%. The ART events sit later
     than the matched ART lag by a third to half a breath, so the arterial breathing modulation answers a pause
-    later than its breath-by-breath shape does: ART pauses are not used as a reference. Still to check: the
-    difference between event and matched lag where they agree, which would show any bias of the envelope method.
+    later than its breath-by-breath shape does: ART pauses are not used as a reference.
+  - **The pause method has no bias against CVP (bias check, 2 November).** Where a CVP event and the matching agree
+    on the breath (1,350 edges, k within a quarter of 0), event minus matched lag is a median 0.000 s (IQR −0.11 to
+    +0.14 s; p10–p90 −0.24 to +0.33 s), the same at stops and restarts, at weaker and stronger correlations, and
+    with the matched window within 2 minutes. Its spread, about 0.2 s, is far inside half a breath, so a resolved
+    CVP pause fixes the breath. For ART the same comparison gives +0.16 s (IQR −0.03 to +0.35 s, 587 edges).
+    The selection (k within a quarter breath) limits the differences to about ±1 s, so this tests bias, not the
+    tails.
 discussion: |
   The wide per-recording offset is mostly the measurement's: a stretch that starts on the wrong breath stays on it,
   and its windows agree with each other, so leave-one-out within a stretch cannot see it. The breath-matching
@@ -100,9 +106,9 @@ open_questions:
       nearly equal one breath apart, and the breath-size check (tools/vent_sync_pilot.py breath_match) is weak and
       inconsistent. Some offsets one breath above the main mode may also be real (both references agree in at
       least one recording), so a rule such as "nearest the main mode" is not safe. Next: lags from events that are
-      not periodic: tools/primus_vent_events.py, run release-wide (preliminary result above). Next: check its bias
-      where it agrees with the matching, then a rule for stretches without a resolved CVP event, calibrated on
-      those with one, and the Primus numbers redone.
+      not periodic: tools/primus_vent_events.py, run release-wide; no bias against CVP. Next: a rule for each
+      stretch (its resolved CVP events where it has them; otherwise a rule calibrated on stretches that have them),
+      and the Primus numbers redone.
   - title: "What sets the anchor"
     kind: next step
     summary: >-
