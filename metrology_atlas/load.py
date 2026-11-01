@@ -12,7 +12,7 @@ import yaml
 
 from metrology_atlas.code import CODE_XREF, check_code, snapshot_path, split
 from metrology_atlas.model import DATASET, KINDS, REFERENCE, Dataset, Field, Kind
-from metrology_atlas.values import parse_spec, typed_copies
+from metrology_atlas.values import parse_spec, safe_load, typed_copies
 
 XREF = re.compile(r"\[\[([a-z]+):([a-z0-9][a-z0-9-]*)(?:\|([^\]]+))?\]\]")
 """``[[kind:id]]`` or ``[[kind:id|label]]`` in prose."""
@@ -53,7 +53,7 @@ def load(folder: str | Path) -> Dataset:
     meta_path = folder / "dataset.yaml"
     if not meta_path.exists():
         raise AtlasError([f"{folder}: no dataset.yaml"])
-    meta = yaml.safe_load(meta_path.read_text(encoding="utf-8")) or {}
+    meta = safe_load(meta_path.read_text(encoding="utf-8")) or {}
     ds = Dataset(meta=meta, folder=str(folder), items={k: {} for k in KINDS} | {"reference": {}})
 
     for kind in KINDS.values():
@@ -61,7 +61,7 @@ def load(folder: str | Path) -> Dataset:
         for path in generated + sorted((folder / kind.folder).glob("*.yaml")):
             rel = str(path.relative_to(folder)).replace("\\", "/")
             try:
-                item = yaml.safe_load(path.read_text(encoding="utf-8"))
+                item = safe_load(path.read_text(encoding="utf-8"))
             except yaml.YAMLError as error:
                 problems.append(f"{rel}: not valid YAML ({error})")
                 continue
@@ -75,7 +75,7 @@ def load(folder: str | Path) -> Dataset:
             _store(ds, kind, item, rel, problems)
     refs_path = folder / "references.yaml"
     if refs_path.exists():
-        for item in yaml.safe_load(refs_path.read_text(encoding="utf-8")) or []:
+        for item in safe_load(refs_path.read_text(encoding="utf-8")) or []:
             _store(ds, REFERENCE, item, "references.yaml", problems)
 
     for (kind_name, id_), rel in ds.sources.items():
@@ -157,7 +157,11 @@ def _check_typed_values(ds: Dataset) -> None:
         if p.get("study"):
             own[p["study"]][pid] = p
     for sid, st in sorted(ds.items["study"].items()):
-        params = own.get(sid)
+        params = dict(own.get(sid) or {})
+        for text in _strings(st):  # and the parameters it links to: copies of another study's numbers drift too
+            for kind, ref, _ in XREF.findall(bare(text)):
+                if kind in {"parameter", "value"} and ref in ds.items["parameter"]:
+                    params.setdefault(ref, ds.items["parameter"][ref])
         if not params:
             continue
         hits = typed_copies(_strings({k: v for k, v in st.items() if k not in {"id", "name"}}), params)

@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from metrology_atlas import load  # noqa: E402
-from metrology_atlas.values import _NUMBER, _SKIP, _parse  # noqa: E402
+from metrology_atlas.values import _NUMBER, _SKIP, _parse, unit_follows, written_decimals  # noqa: E402
 
 
 def walk(v, path=""):
@@ -37,6 +37,14 @@ def hits(ds, only=None):
     for pid, p in ds.items["parameter"].items():
         if p.get("study") and isinstance(p.get("value"), (int, float)) and not isinstance(p["value"], bool):
             own[p["study"]][pid] = p
+    from metrology_atlas.load import XREF, _strings, bare
+    for sid, st in ds.items["study"].items():  # and the parameters each study links to
+        for text in _strings(st):
+            for kind, ref, _ in XREF.findall(bare(text)):
+                p = ds.items["parameter"].get(ref)
+                if kind in {"parameter", "value"} and p and isinstance(p.get("value"), (int, float)) \
+                        and not isinstance(p.get("value"), bool):
+                    own[sid].setdefault(ref, p)
     out = []
     for sid in sorted(own):
         if only and sid != only or sid not in ds.items["study"]:
@@ -52,13 +60,14 @@ def hits(ds, only=None):
                     continue
                 for pid, p in own[sid].items():
                     pv = float(p["value"])
-                    if round(pv, dec) == v and (dec > 0 or pv.is_integer()):
+                    if round(pv, dec) == v and (dec > 0 or pv.is_integer()  # more precise copies are listed
+                                                or unit_follows(masked, m.end(), p.get("unit"))):
                         unit = (p.get("unit") or "").strip()
                         after = text[m.end():m.end() + len(unit) + 2].lstrip("  ")
                         out.append({"study": sid, "field": path, "parameter": pid, "typed": m.group(1),
                                     "value": p["value"], "unit": unit,
                                     "unit_follows": bool(unit) and after.startswith(unit),
-                                    "exact": dec == len(repr(pv).split(".")[1]) if "." in repr(pv) else dec == 0,
+                                    "exact": dec == written_decimals(p["value"]),
                                     "context": text[max(0, m.start() - 60):m.end() + 60].replace("\n", " "),
                                     "start": m.start(), "end": m.end()})
     return out

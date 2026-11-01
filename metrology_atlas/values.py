@@ -11,6 +11,58 @@ from __future__ import annotations
 
 import re
 
+import yaml
+
+class Written(float):
+    """A number as written in the YAML: a float that remembers its text, so 3.60 is not read back as 3.6.
+
+    The trailing zero is a statement of precision. YAML would drop it on reading; this keeps it for every page, the
+    JSON's rendered values and any file written back (:func:`yaml_loader`, :data:`SafeDumper`)."""
+
+    text: str
+
+    def __new__(cls, value: float, text: str):
+        obj = super().__new__(cls, value)
+        obj.text = text
+        return obj
+
+    def __reduce__(self):
+        return (Written, (float(self), self.text))
+
+
+def written_decimals(x) -> int:
+    """How many decimals a number was written with (from its text if it remembers one)."""
+    t = getattr(x, "text", None) or repr(x)
+    t = t.replace("_", "")
+    if "e" in t.lower() or "." not in t:
+        return 0 if float(x).is_integer() else len(repr(float(x)).split(".")[1])
+    return len(t.split(".")[1])
+
+
+def _float(loader, node):
+    value = yaml.SafeLoader.construct_yaml_float(loader, node)
+    text = loader.construct_scalar(node)
+    return Written(value, text) if isinstance(value, float) and value == value and abs(value) != float("inf") else value
+
+
+class SafeLoader(yaml.SafeLoader):
+    """yaml.SafeLoader, with floats that remember how they were written."""
+
+
+SafeLoader.add_constructor("tag:yaml.org,2002:float", _float)
+
+
+class SafeDumper(yaml.SafeDumper):
+    """yaml.SafeDumper that writes a remembered float as it was written."""
+
+
+SafeDumper.add_representer(Written, lambda d, x: d.represent_scalar("tag:yaml.org,2002:float", x.text))
+
+
+def safe_load(text: str):
+    return yaml.load(text, Loader=SafeLoader)  # noqa: S506 (a SafeLoader subclass)
+
+
 VALUE_XREF = re.compile(r"\[\[value:([a-z0-9][a-z0-9-]*)(?:\|([^\]]+))?\]\]")
 _NUMBER = re.compile(r"(?<![\w.\-−])([−-]?\d{1,3}(?:,\d{3})+|[−-]?\d+(?:\.\d+)?)(?![\w.]*\d)")
 _SKIP = re.compile(r"`[^`\n]*`|\[\[[^\]]*\]\]")
@@ -37,6 +89,9 @@ def _fmt(x: float, decimals: int | None = None) -> str:
         if decimals == 0:
             x = int(x)
         s = f"{x:,.{decimals}f}" if abs(x) >= 1000 else f"{x:.{decimals}f}"
+    elif isinstance(x, Written):
+        d = written_decimals(x)
+        s = f"{float(x):,.{d}f}" if abs(x) >= 1000 else f"{float(x):.{d}f}"
     else:
         if isinstance(x, float) and x.is_integer() and abs(x) >= 100:
             x = int(x)
@@ -64,6 +119,12 @@ def _parse(tok: str) -> tuple[float, int] | None:
     return v, (len(t.split(".")[1]) if "." in t else 0)
 
 
+def unit_follows(text: str, end: int, unit: str | None) -> bool:
+    """Whether a unit is written straight after a number ending at ``end`` (a space or thin space between)."""
+    unit = (unit or "").strip()
+    return bool(unit) and text[end:end + len(unit) + 2].lstrip("\u2009\u00a0 ").startswith(unit)
+
+
 def typed_copies(texts, params: dict[str, dict]) -> dict[str, int]:
     """Parameter id -> how many times its value is typed in the texts (outside [[...]] and inline code), matched at
     the precision it is typed to. Small whole numbers (under 10) are skipped: too many coincide by chance."""
@@ -72,8 +133,10 @@ def typed_copies(texts, params: dict[str, dict]) -> dict[str, int]:
             if isinstance(p.get("value"), (int, float)) and not isinstance(p.get("value"), bool)}
     if not vals:
         return out
+    wd = {pid: written_decimals(params[pid]["value"]) for pid in vals}
     for text in texts:
-        for m in _NUMBER.finditer(_SKIP.sub(" ", text)):
+        masked = _SKIP.sub(lambda m: " " * len(m.group(0)), text)
+        for m in _NUMBER.finditer(masked):
             parsed = _parse(m.group(1))
             if parsed is None:
                 continue
@@ -81,6 +144,7 @@ def typed_copies(texts, params: dict[str, dict]) -> dict[str, int]:
             if dec == 0 and abs(v) < 10:
                 continue
             for pid, pv in vals.items():
-                if round(pv, dec) == v and (dec > 0 or pv.is_integer()):
+                if dec <= wd[pid] and round(pv, dec) == v and (
+                        dec > 0 or pv.is_integer() or unit_follows(masked, m.end(), params[pid].get("unit"))):
                     out[pid] = out.get(pid, 0) + 1
     return out

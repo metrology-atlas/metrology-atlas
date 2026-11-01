@@ -1,7 +1,7 @@
 id: blood-gas-at-the-draw
 name: End-tidal and arterial CO₂, and SpO₂ and SaO₂, compared at the draw
 summary: 4,281 blood gases compared with the monitor at the estimated draw. Within patients, changes in arterial CO₂ follow
-  changes in end-tidal CO₂ with a correlation of 0.74 at the draw against 0.54 at the lab stamp, and agreement peaks at
+  changes in end-tidal CO₂ with a correlation of [[value:co2-change-correlation-draw]] at the draw against 0.54 at the lab stamp, and agreement peaks at
   the draw for CO₂ and for oximetry. PaCO₂ − EtCO₂ is a median 7 mmHg, set mostly by each patient; SaO₂ − SpO₂ is hidden
   by the 100% ceiling for three gases in four.
 date: 2026-10-18
@@ -58,7 +58,7 @@ results: '**Two gases.** In [[case:136]] end-tidal CO₂ falls sharply about 2½
 
   **Does the draw time matter? Yes, within patients.** Between consecutive gases of the same patient (2,911 pairs),
 
-  the change in PaCO₂ follows the change in EtCO₂ with a correlation of 0.74 (95% interval 0.69–0.78) when the
+  the change in PaCO₂ follows the change in EtCO₂ with a correlation of [[value:co2-change-correlation-draw]] (95% interval 0.69–0.78) when the
 
   monitor is read at the estimated draw, against 0.54 (0.47–0.61) at the lab stamp. Read minutes late, the monitor
 

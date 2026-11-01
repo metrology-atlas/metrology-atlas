@@ -1,9 +1,9 @@
 id: pleth-hr-derivation
 name: How the Solar8000 computes its pulse rate
-summary: 'PLETH_HR recomputed from the plethysmogram''s pulses in 6,151 recordings: a mean of the last 10 pulse intervals
+summary: 'PLETH_HR recomputed from the plethysmogram''s pulses in 6,151 recordings: a mean of the last [[value:pleth-hr-window-pulses|number]] pulse intervals
   that leaves out intervals far from their median, rounded, reported [[value:pleth-hr-delay]] after the window ends (5th–95th percentile 3.25–5.75
   s). It wins in 99% of the recordings reproduced best. Its window is centred 8.8 s before the stamp, as the comparison
-  with heart rate found (8.5 s), and later than the atlas''s earlier form for it assumed.'
+  with heart rate found ([[value:pleth-hr-window-centre]]), and later than the atlas''s earlier form for it assumed.'
 date: 2026-11-01
 status: current
 methods:
@@ -19,7 +19,7 @@ data: 'Every recording with SNUADC/PLETH and Solar8000/PLETH_HR: 6,151 of 6,388 
 background: 'Two earlier results disagreed about PLETH_HR''s window: the numeric derivation pilot found a median of about
   12 beats ([[study:numeric-derivation-pilot]]), and the comparison with heart rate found a ridge at a constant ratio of
   pulse to heart rate, which a mean over a fixed number of pulses gives and a median does not ([[study:hr-vs-pulse-rate]]).
-  That comparison also centred the window about 8.5 s before the stamp, later than the atlas''s form for PLETH_HR. Recomputing
+  That comparison also centred the window about [[value:pleth-hr-window-centre]] before the stamp, later than the atlas''s form for PLETH_HR. Recomputing
   PLETH_HR from the plethysmogram, record by record, settles what can be settled.'
 method: '1. Pulses: SNUADC/PLETH on its own sample times, band-passed 0.5–10 Hz, one pulse per steepest upstroke (at least
   0.3 s apart), moved 0.385 s earlier by the plethysmogram''s hardware delay ([[parameter:pleth-chain-delay]]), so pulse
@@ -32,12 +32,11 @@ method: '1. Pulses: SNUADC/PLETH on its own sample times, band-passed 0.5–10 H
 
   3. Per recording, each candidate''s best delay and the share of PLETH_HR values it reproduces exactly; across recordings,
   the share pooled, and how often each wins.'
-results: '- **A mean of 10 pulse intervals that leaves out outliers.** A mean of the last [[value:pleth-hr-window-pulses]], keeping only those
+results: '- **A mean of [[value:pleth-hr-window-pulses|number]] pulse intervals that leaves out outliers.** A mean of the last [[value:pleth-hr-window-pulses]], keeping only those
   within 25% of their median, reproduces 70.4% of values exactly, pooled; a plain mean of 10 reproduces 61.9%, a median
   of 10 62.4%, a mean without the longest and shortest 62.8%, and windows of a fixed time less. In the 2,473 recordings
   reproduced best (at least 80% exact by some candidate), it wins in 2,446 (99%), and over all recordings in 4,513 of 6,151
-  ([[parameter:pleth-hr-window-pulses]]). Neighbouring windows (9, 11, 12 intervals) of the same rule come next, so the
-  count is 10.
+  ([[parameter:pleth-hr-window-pulses]]). Neighbouring windows (9, 11, 12 intervals) of the same rule come next, so the count is [[value:pleth-hr-window-pulses|number]].
 
   - **Why the first comparison was a tie.** A plain mean and a median each match the monitor wherever the window holds no
   outlying interval, and each fails differently where it does; the rule that leaves outliers out matches in both.
@@ -46,10 +45,10 @@ results: '- **A mean of 10 pulse intervals that leaves out outliers.** A mean of
 
   - **Reported [[value:pleth-hr-delay]] after its window ends** (median over recordings; 5th–95th percentile 3.25–5.75 s; [[parameter:pleth-hr-delay]]),
   so its window, [[value:pleth-hr-window-pulses]] of the median 0.84 s, is centred 8.8 s before the stamp. The comparison with heart rate put
-  that centre at 8.5 s ([[parameter:pleth-hr-window-centre]]). The atlas''s earlier form for PLETH_HR (delay 2.79 s, window
+  that centre at [[value:pleth-hr-window-centre]]. The atlas''s earlier form for PLETH_HR (delay 2.79 s, window
   8–12 s) put it at about 7.8 s; the form now uses this study''s numbers.'
 discussion: Two independent routes, one through heart rate and one through the plethysmogram's own pulses, place PLETH_HR's
-  window at the same moment, about 8.5–8.8 s before its stamp, and both say the window is a count of pulses, about 10. The
+  window at the same moment, about 8.5–8.8 s before its stamp, and both say the window is a count of pulses, about [[value:pleth-hr-window-pulses|number]]. The
   atlas's form for PLETH_HR described a shorter delay over a window of 8–12 s; it now uses this study's numbers ([[variable:solar8000-pleth-hr]]),
   and keeps the earlier ones in its evidence. The pulses are averaged by a mean that leaves out outlying intervals, so a
   single missed pulse, whose interval is about double, does not move the rate.
@@ -64,7 +63,7 @@ open_questions:
   kind: next step
   summary: The 25% band around the median was a first guess; narrower and wider bands, and rejection against the previous
     value rather than the window's median, would say what the monitor does. Such a rule ignores a single missed pulse, so
-    the ridge at 0.884 times the heart rate in [[study:hr-vs-pulse-rate]] does not come from single missed pulses as first
+    the ridge at [[value:pr-hr-ridge-ratio]] times the heart rate in [[study:hr-vs-pulse-rate]] does not come from single missed pulses as first
     read; intervals lengthened by less than the band, as around ectopic beats, may make it.
 code:
 - vitaldb-bench/tools/pleth_hr_derivation.py

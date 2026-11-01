@@ -114,7 +114,7 @@ open_questions:
       recorder PC (the census gives −1.0 ppm, the stamp arithmetic, for all of them). It needs a clock tied to the
       PC that shares events with the SNUADC (bursts against a BIS with whole teeth, in 122 recordings; calibration,
       so tested on held-out windows), or the setup's unit. Where the BIS has teeth the bursts imply the SNUADC
-      drifts about −36 ppm rather than −63, the fast-BIS, slow-SNUADC pattern of
+      drifts about −36 ppm rather than [[value:snuadc-step-rate|number]], the fast-BIS, slow-SNUADC pattern of
       [[study:device-correction-schedules]]'s open question.
   - title: "Recordings that change correction mode partway"
     kind: phenomenon

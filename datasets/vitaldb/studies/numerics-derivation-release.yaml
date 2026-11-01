@@ -54,7 +54,7 @@ results: |
   (3.5 s) low; [[study:numeric-delay-variability]] had found this on 13 October and uses one record's phase (0.48 s)
   instead. Per recording, its labels sit above this fit by a median 3.55 s for ETCO2 (6,186 recordings; IQR 3.05–4.65)
   and 3.30 s for PIP (5,894; IQR 3.05–3.60), against a half gap of 3.51 s. Corrected, ETCO2 is stamped about +1.5 s
-  after the breath's peak on the CO2 waveform ([[parameter:etco2-delay]], 1.55 s) and PIP about +4.6 s after its
+  after the breath's peak on the CO2 waveform ([[value:etco2-delay]]) and PIP about +4.6 s after its
   breath; PEEP's median becomes +1.6 s. The atlas's timing forms already rest on the labels. The disagreement was
   found by asking an AI assistant a planning question against the atlas file.
 

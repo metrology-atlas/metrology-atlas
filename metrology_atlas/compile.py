@@ -9,10 +9,12 @@ from pathlib import Path
 from metrology_atlas.code import code_url
 from metrology_atlas.load import derived
 from metrology_atlas.model import KINDS, SCHEMA_VERSION, Dataset
-from metrology_atlas.values import VALUE_XREF, value_text
+from metrology_atlas.values import VALUE_XREF, Written, value_text, written_decimals
 
 
 def _plain(value):
+    if isinstance(value, Written):
+        return float(value)
     if isinstance(value, dt.date):
         return value.isoformat()
     if isinstance(value, dict):
@@ -56,6 +58,9 @@ def to_json(ds: Dataset) -> dict:
         for id_, item in doc[KINDS[kind].folder].items():
             if item.get("code"):
                 item["derived"]["code_urls"] = {c: code_url(ds, c) for c in item["code"]}
+    for id_, p in ds.items["parameter"].items():
+        if p.get("value") is not None:
+            doc["parameters"][id_]["derived"]["value_text"] = value_text(p)  # as written: 3.60 stays 3.60
     for kind in KINDS.values():
         for id_, item in doc[kind.folder].items():
             refs = sorted({m.group(0)[2:-2] for t in _texts(item) for m in VALUE_XREF.finditer(t)
@@ -103,6 +108,10 @@ def parameter_text(p: dict) -> str:
 
 
 def _num(x, signed: bool = False) -> str:
+    if isinstance(x, Written):
+        d = written_decimals(x)
+        s = f"{float(x):,.{d}f}" if abs(x) >= 10000 else f"{float(x):.{d}f}"
+        return ("+" + s if signed and x > 0 else s).replace("-", "−")
     if isinstance(x, float) and x.is_integer() and abs(x) >= 100:
         x = int(x)
     s = f"{x:,}" if isinstance(x, int) and abs(x) >= 10000 else str(x)

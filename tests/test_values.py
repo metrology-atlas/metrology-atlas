@@ -57,3 +57,18 @@ def test_format_spec(tmp_path):
 def test_retyped_label_is_refused(tmp_path):
     with pytest.raises(AtlasError, match="is not a value format"):
         load(_dataset(tmp_path, **_files("See [[value:na-diff|minus three]].")))
+
+
+def test_trailing_zero_is_kept(tmp_path):
+    files = _files("The lag is [[value:na-diff]].")
+    d = _dataset(tmp_path, **files)
+    (d / "parameters" / "na-diff.yaml").write_text((d / "parameters" / "na-diff.yaml").read_text().replace("-3.0", "3.60"))
+    ds = load(d)
+    doc = to_json(ds)
+    assert doc["studies"]["st"]["derived"]["values"] == {"na-diff": "3.60 mmol/L"}
+    assert doc["parameters"]["na-diff"]["derived"]["value_text"] == "3.60 mmol/L"
+    assert doc["parameters"]["na-diff"]["value"] == 3.6
+    assert typed_copies(["3.60 and 3.6 and 3.600"], {"x": ds.items["parameter"]["na-diff"]}) == {"x": 2}
+    import yaml
+    from metrology_atlas.values import SafeDumper
+    assert "3.60" in yaml.dump({"v": ds.items["parameter"]["na-diff"]["value"]}, Dumper=SafeDumper)

@@ -36,7 +36,7 @@ method: |
     October, WSL): the stamp-clock fit of each SNUADC and BIS track, giving a drift for every recording with at
     least one correction.
   - **BIS:** a correction is a forward step of 10 ms to 1 s in the EEG track that no other device shares. The drift
-    is the step divided by the time since the previous correction, for corrections 8,192 ± 20 s apart.
+    is the step divided by the time since the previous correction, for corrections [[value:bis-period|number]] ± 20 s apart.
   - **SNUADC:** a reset is a run of backward steps summing to −0.45 to −0.52 s ([[study:step-classification]]).
     The drift is its size divided by the time since the previous reset. For the first reset, size divided by the
     time since the SNUADC track started gives an approximate value. Six recordings with −0.5 s steps throughout
@@ -44,7 +44,7 @@ method: |
   - **Primus:** corrections are AWP steps of 10 to 200 ms in either direction; pauses are AWP forward steps of 19
     to 23.5 s that no other device shares.
 results: |
-  - **BIS: every [[value:bis-period]], on the BIS's own timer.** 95% of corrections after the first come 8,192 ± 20 s after the
+  - **BIS: every [[value:bis-period]], on the BIS's own timer.** 95% of corrections after the first come [[value:bis-period|number]] ± 20 s after the
     previous one; the first comes at any time after the BIS starts (uniform over 0–[[value:bis-period]]), so the timer does not
     start with the recording. The median correction is [[value:bis-step]]. BIS drift against the recorder PC, in the 1,939
     recordings with two corrections or more: median 24.8 ppm (5th–95th percentile 7.3–51.1), in several clusters
@@ -80,7 +80,7 @@ results: |
   - **Primus: every [[value:primus-period]], also on its own timer, and the AWP pauses belong to the cycle.** 8,077 corrections in
     4,529 recordings, each a whole number of 16 ms samples (one sample at 62.5 Hz) in either direction, often two
     at once (median −16 ms; p10–p90 −144 to +144 ms); [[value:primus-period]] apart, or twice that. These steps are far too small
-    for the Primus drift, which breath matching measures at +104 ppm against the PC ([[parameter:primus-drift-breath]]),
+    for the Primus drift, which breath matching measures at +[[value:primus-drift-breath]] against the PC,
     so they do not give its rate. The 10,496 AWP pauses of 19–23.5 s in 5,502 recordings recur at the same interval, and where a correction lies within 60 s (69% of pauses) it follows the pause by about 21.6 s.
     The CO2 track has no gap at the same moment in 90% of them, and the AWP data in the pause are lost, not
     re-stamped: after each pause AWP still lines up with CO2 at the lag it had before ([[observation:primus-awp-pauses]]).

@@ -30,7 +30,7 @@ method: |
     (physiosync.stamp_clock; negative = SNUADC fast), g = r − line = f_PC − f_grid: positive means the PC runs fast.
   - **Controls.** Two SNUADC channels' hum phases against each other; minute-by-minute line frequency in two channels.
 results: |
-  - **Hum present** in 2,455 of 6,348 recordings with SNUADC, mainly at 120 Hz and 360 Hz (seen at 140 Hz). The 60 Hz
+  - **Hum present** in [[value:snuadc-hum-share|number]] of 6,348 recordings with SNUADC, mainly at 120 Hz and 360 Hz (seen at 140 Hz). The 60 Hz
     fundamental is weak and inconsistent. 240 Hz mixes mains with the monitor's own output line, so its estimates
     scatter ([[clock:monitor-output-clock]]).
   - **Not mains:** the PLETH lines at 60, 120 and 180 Hz belong to its 30 Hz frame family; the Primus pressure lines

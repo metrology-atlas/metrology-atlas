@@ -22,7 +22,7 @@ results: |
   - **Frequent-correction mode is not drifting.** Its "about −1 ppm" of stamps against the count is this
     arithmetic; the real drift in that mode is under about 1 ppm.
   - **The census holds it, with exceptions:** the median slope is −0.9535 ppm, and 89.5% of the recording hours
-    lie within 0.05 ppm of −0.954. But 747 files (12%) sit elsewhere, from about −0.90 to −0.55 ppm (median
+    lie within 0.05 ppm of [[value:snuadc-stamp-arithmetic|number]]. But 747 files (12%) sit elsewhere, from about −0.90 to −0.55 ppm (median
     −0.85), with no trend through the release.
   - **Stamp-based loaders lose about 1.6 samples per hour** (32,020 in all): one about every 37 minutes, as
     predicted.
@@ -37,7 +37,7 @@ discussion: |
   [[value:snuadc-stamp-arithmetic|.2]], which is negligible beside their spread.
 limitations: |
   What sets the slope in the 12% of files that differ is not known (a different recorder build, or a different
-  increment), and the cause of −0.954 itself (fixed-point arithmetic) is unproven.
+  increment), and the cause of [[value:snuadc-stamp-arithmetic|number]] itself (fixed-point arithmetic) is unproven.
 open_questions:
   - title: "How far does the SNUADC drift in frequent-correction mode?"
     kind: conflict
@@ -51,7 +51,7 @@ open_questions:
   - title: "Why 12% of files run at a different slope"
     kind: phenomenon
     summary: >-
-      747 files sit between −0.90 and −0.55 ppm instead of −0.954, with no trend through the release. A different
+      747 files sit between −0.90 and −0.55 ppm instead of [[value:snuadc-stamp-arithmetic|number]], with no trend through the release. A different
       recorder build or a different stamp increment are the obvious candidates; comparing these files' header
       version, device list and correction mode with the rest would test it.
   - title: "A fixed-point stamp behind [[value:snuadc-stamp-arithmetic]]"
@@ -66,4 +66,4 @@ figures:
     source: vitaldb-bench tools/snuadc_stamp_census.py
     file: stamp-census-slopes.png
     caption: Slope of record stamp minus sample count within each stretch between corrections, weighted by recording hours, for every file in the release.
-    alt: Histogram of stamp slopes in ppm; a sharp peak at −0.954 holds most recording hours, with a tail towards −0.70.
+    alt: Histogram of stamp slopes in ppm; a sharp peak at [[value:snuadc-stamp-arithmetic|number]] holds most recording hours, with a tail towards −0.70.

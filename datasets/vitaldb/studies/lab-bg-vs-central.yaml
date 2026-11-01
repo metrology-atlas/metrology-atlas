@@ -43,8 +43,8 @@ method: '1. Specimen groups and panels as above; each analyte read at its own st
 
   4. The time from the blood gas''s stamp to the central one.'
 results: "- **The blood gas reads lower, for every analyte.** Blood gas minus central, median (robust SD; 2.5th–97.5th percentile):\n\
-  \  - sodium −3.0 mmol/L (1.5; −7.0 to +1.0), 633 pairs ([[parameter:bg-central-sodium]]);\n  - potassium [[value:bg-central-potassium]] (0.15;\
-  \ −0.8 to 0.0), 633 pairs ([[parameter:bg-central-potassium]]);\n  - haematocrit −0.7 points (1.8; −5.1 to +5.3), 1,058\
+  \  - sodium [[value:bg-central-sodium]] (1.5; −7.0 to +1.0), 633 pairs ([[parameter:bg-central-sodium]]);\n  - potassium [[value:bg-central-potassium]] (0.15;\
+  \ −0.8 to 0.0), 633 pairs ([[parameter:bg-central-potassium]]);\n  - haematocrit [[value:bg-central-haematocrit|number]] points (1.8; −5.1 to +5.3), 1,058\
   \ pairs ([[parameter:bg-central-haematocrit]]);\n  - glucose −4 mg/dL (7.4; −36 to +14), 224 pairs ([[parameter:bg-central-glucose]]).\n\
   - **The same in the stricter pairs.** Where both specimens were matched to the same arterial-line access, the blood gas\
   \ is lower too: haematocrit by 1.5 points (143 pairs), sodium and potassium by 6 and 0.45 mmol/L in the few pairs that\

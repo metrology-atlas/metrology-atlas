@@ -2,7 +2,7 @@ id: shared-bursts
 name: Shared bursts between the ECG and the EEG
 summary: >-
   Electrocautery and muscle bursts appear in both the SNUADC ECG and the BIS EEG. Cross-correlating their envelopes
-  gives the offset between the two devices' stamps every 10 minutes: about −0.8 s, in a sawtooth that follows both
+  gives the offset between the two devices' stamps every 10 minutes: about [[value:eeg-ecg-offset|.1]], in a sawtooth that follows both
   clocks' corrections.
 date: 2026-10-12
 status: current

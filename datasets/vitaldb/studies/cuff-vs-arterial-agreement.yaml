@@ -38,8 +38,8 @@ results: '- **The cuff value belongs to its stamp.** Changes in the cuff follow 
   from 40 to 110 mmHg ([[parameter:nibp-art-bias]]).
 
   - **A constant offset per patient.** Each patient''s own mean difference ranges from −11 to +13 mmHg (10th to 90th percentile;
-  SD 10.2 between patients, [[parameter:nibp-between-patient-sd]]), as large as the scatter of readings within a patient
-  (SD 9.4, [[parameter:nibp-within-patient-sd]]).
+  SD [[value:nibp-between-patient-sd]] between patients), as large as the scatter of readings within a patient
+  (SD [[value:nibp-within-patient-sd]]).
 
   - **At the threshold.** Of 2,020 arterial readings below 65 mmHg, the cuff also put 49% below 65.
 

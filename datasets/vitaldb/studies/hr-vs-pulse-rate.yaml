@@ -56,19 +56,19 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
   '
 results: '- **The HR delay groups show in the pulse rate.** Changes line up with pulse rate read 3.71 s after the HR stamp
   in the early group (95% interval 3.59–3.83 s, 1,628 recordings) and 1.45 s after it in the late group (1.34–1.56 s, 3,111):
-  [[value:hr-group-lag-in-pulse-rate]] apart ([[parameter:hr-group-lag-in-pulse-rate]]), against 2.28 s between the groups'' delays ([[parameter:hr-delay-early]],
+  [[value:hr-group-lag-in-pulse-rate]] apart, against 2.28 s between the groups'' delays ([[parameter:hr-delay-early]],
   [[parameter:hr-delay-late]]). Pulse rate is computed from the plethysmogram by another module, so this confirms the HR
   groups independently of the ECG analysis that found them ([[study:hr-delay-groups]]).
 
   - **Where PLETH_HR''s window sits.** Adding each group''s HR delay and half its window puts PLETH_HR''s window centre
-  8.46 s before its stamp in the early group and 8.76 s in the late: about [[value:pleth-hr-window-centre]] ([[parameter:pleth-hr-window-centre]]).
+  8.46 s before its stamp in the early group and 8.76 s in the late: about [[value:pleth-hr-window-centre]].
   The atlas''s earlier form for PLETH_HR (delay 2.79 s, window 8–12 s; replaced from [[study:pleth-hr-derivation]]) put
   it at about 7.8 s; the pilot''s direct recomputation (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]])
   puts it at [[value:pleth-hr-window-centre]] at 70 /min. The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
   at 90 /min), as a window counted in beats would, but the HR delay labels move with the rate too, so this comparison cannot
   split PLETH_HR''s delay from its window.
 
-  - **No bias.** Pulse rate minus HR is 0.0 /min over the cohort (limits of agreement −11.7 to +11.7 /min; [[parameter:pr-hr-difference]]).
+  - **No bias.** Pulse rate minus HR is [[value:pr-hr-difference]] over the cohort (limits of agreement −11.7 to +11.7 /min; [[parameter:pr-hr-difference]]).
 
   - **Mostly within a recording.** Each recording''s mean difference spreads with an SD of [[value:pr-hr-between-recording-sd]] between recordings,
   against [[value:pr-hr-within-recording-sd]] within one ([[parameter:pr-hr-between-recording-sd]], [[parameter:pr-hr-within-recording-sd]]); 3.0%
@@ -83,7 +83,7 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
 
   [[figure:hr-vs-pulse-rate-scatter]]
 
-  - **A window counted in pulses.** Just below the diagonal, the strongest ridge sits at a constant ratio: pulse rate 0.884
+  - **A window counted in pulses.** Just below the diagonal, the strongest ridge sits at a constant ratio: pulse rate [[value:pr-hr-ridge-ratio]]
   times heart rate, for every heart rate from 55 to 140 /min (within 0.36 /min), where a constant offset fits far worse
   (2.9 /min; [[parameter:pr-hr-ridge-ratio]]). A window of a fixed time would put such a ridge at a constant offset, so
   PLETH_HR''s window is counted in pulses. It was first read as a plain mean over 7–8 pulses, since one missed pulse in

@@ -2,7 +2,7 @@ id: correction-periods
 name: How often each device is corrected
 summary: >-
   The devices re-synchronise in different ways: SNUADC when its drift reaches about half a second, BIS on a fixed
-  8,192 s timer, and the Primus by small steps about every two hours that do not keep up with its drift (+104 ppm,
+  8,192 s timer, and the Primus by small steps about every two hours that do not keep up with its drift (+[[value:primus-drift-breath]],
   measured later by breath matching).
 date: 2026-10-17
 status: current
@@ -26,13 +26,13 @@ results: |
     that), besides gaps of +20 to +22 s (median 5.5 per case).
 discussion: |
   The Primus corrections imply a drift of only about 1–11 ppm against the recorder. Breath matching later measured
-  the drift itself at about +104 ppm ([[parameter:primus-drift-breath]], [[study:ventilator-breath-matching]]):
+  the drift itself at about +[[value:primus-drift-breath]] ([[study:ventilator-breath-matching]]):
   these small corrections do not track the Primus drift, so their size is not its rate.
 open_questions:
   - title: "What the Primus's small corrections correct"
     kind: phenomenon
     summary: >-
-      The corrections imply 1–11 ppm, but breath matching measures the Primus drifting about +104 ppm against the
+      The corrections imply 1–11 ppm, but breath matching measures the Primus drifting about +[[value:primus-drift-breath]] against the
       recorder PC ([[parameter:primus-drift-breath]]), and the stamps also step at the AWP pauses by amounts unrelated
       to the drift built up. What the small steps correct, if not the drift, is open. (This replaces the earlier
       conflict between 1–11 ppm and the assumed 115 ppm, which breath matching settled.)

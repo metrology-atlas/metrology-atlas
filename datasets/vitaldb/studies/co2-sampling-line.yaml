@@ -1,7 +1,7 @@
 id: co2-sampling-line
 name: The CO2 sampling-line delay
 summary: >-
-  Breath by breath, the stored Primus CO2 waveform trails the airway pressure by a median 3.60 s (IQR 3.45–3.79 s):
+  Breath by breath, the stored Primus CO2 waveform trails the airway pressure by a median [[value:co2-sampling-line-lag]] (IQR 3.45–3.79 s):
   the time the gas takes to travel down the sidestream sampling line. It is steady within a recording and across the
   release, and it is why the ETCO2 numeric is stamped about 3 s sooner than the peak pressure against their own
   waveforms.
@@ -33,7 +33,7 @@ method: |
 results: |
   | | Value |
   |---|---|
-  | Lag per recording, median | **3.60 s** |
+  | Lag per recording, median | **[[value:co2-sampling-line-lag]]** |
   | IQR; p10–p90; p5–p95 | 3.45–3.79 s; 2.62–3.98 s; 0.85–4.05 s |
   | Spread between recordings (robust SD from the IQR) | 0.25 s |
   | Within a recording, middle half of breaths | within 0.08 s (median; p90 2.1 s) |

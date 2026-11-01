@@ -23,13 +23,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from metrology_atlas import load  # noqa: E402
-from metrology_atlas.values import VALUE_XREF, value_text  # noqa: E402
+from metrology_atlas.values import VALUE_XREF, value_text, written_decimals  # noqa: E402
 from value_hits import hits, walk  # noqa: E402
 
 
 def decimals(x) -> int:
-    r = repr(float(x))
-    return 0 if float(x).is_integer() else len(r.split(".")[1])
+    return written_decimals(x)
 
 
 def plan(ds):
@@ -39,6 +38,8 @@ def plan(ds):
         by[(h["study"], h["field"], h["start"])].append(h)
     auto, left = [], []
     for key, group in by.items():
+        if len(group) > 1 and sum(x["unit_follows"] for x in group) == 1:
+            group = [x for x in group if x["unit_follows"]]  # the unit says which
         h = group[0]
         typed_dec = len(h["typed"].split(".")[1]) if "." in h["typed"] else 0
         if len(group) > 1:
