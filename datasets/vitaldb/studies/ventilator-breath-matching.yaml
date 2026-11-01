@@ -3,7 +3,7 @@ name: The Primus ventilator against SNUADC, by breaths
 summary: >-
   Each breath shows in the Primus airway pressure and, through the chest, in SNUADC's central venous pressure.
   Tracking that lag puts the Primus on the SNUADC timeline to about 55 ms over the whole release, with a line
-  per stretch between its AWP pauses (49 ms in the pilot). At scale it measures the Primus drifting a median +104 ppm against the recorder PC between its AWP
+  per stretch between its AWP pauses (49 ms in the pilot). At scale it measures the Primus drifting a median +[[value:primus-drift-breath]] against the recorder PC between its AWP
   pauses, with steps at the pauses that do not reset it.
 date: 2026-10-12
 status: open
@@ -35,7 +35,7 @@ results: |
     ([[example:ppv-by-breath]]): the Primus sits a median 1.8 s off the SNUADC (p10–p90 0.6 to 5.1 s), and a line
     through each whole recording gives +87 ppm (p10–p90 −49 to +229). Fitted with one slope and one offset per stretch
     between AWP pauses, in 178 recordings with pauses ([[code:vitaldb-bench/tools/primus_drift_probe.py]]): the drift
-    within stretches is a median **+104 ppm** (p10–p90 +28 to +184), and the per-stretch offsets halve the residual
+    within stretches is a median **+[[value:primus-drift-breath]]** (p10–p90 +28 to +184), and the per-stretch offsets halve the residual
     (195 to 99 ms). The steps at the 390 pauses (median −29 ms, p10–p90 −685 to +494 ms) are unrelated to the drift
     built up in the stretch before (correlation 0.0): the pauses move the stamps but do not reset the drift.
   - **Error over the whole release, held out (19 October;
@@ -51,7 +51,7 @@ results: |
   [[figure:sync-demo-breath]]
 discussion: |
   The SNUADC stamp model places the SNUADC on the recorder PC's timeline, so the lag's slope is the Primus drift
-  against the PC: about +104 ppm, close to the 115 ppm assumed earlier from this pilot. The Primus's own small
+  against the PC: about +[[value:primus-drift-breath]], close to the 115 ppm assumed earlier from this pilot. The Primus's own small
   corrections ([[study:correction-periods]]) imply only 1–11 ppm, so they do not track the drift. The measured lag
   includes the physiological airway-to-CVP delay, which is constant within a recording and does not affect the
   slope.

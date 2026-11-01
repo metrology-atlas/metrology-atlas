@@ -1,7 +1,7 @@
 id: hr-delay-groups
 name: Two heart-rate delay groups, one poll apart
 summary: >-
-  Solar8000 heart rate reaches the recorder either about 1.9 s or about 4.2 s after its window ends: one 2 s poll
+  Solar8000 heart rate reaches the recorder either about [[value:hr-delay-early|.1]] or about [[value:hr-delay-late]] after its window ends: one 2 s poll
   apart. The group belongs to the recording PC, stays fixed through a case, and on some PCs varies from case to case.
 date: 2026-10-13
 status: current
@@ -14,7 +14,7 @@ method: |
   variance; a posterior of 0.9 assigns a group. Groups compared with the Solar8000 port, then with the full PC key
   (the ports of the four core devices), department, surgery, rhythm, case order and the HR records themselves.
 results: |
-  - **Groups at 1.92 s (SD 0.51, 36%) and 4.20 s (SD 0.65, 64%):** 1,775 cases early, 3,652 late, 795 uncertain.
+  - **Groups at [[value:hr-delay-early]] (SD 0.51, 36%) and 4.20 s (SD 0.65, 64%):** 1,775 cases early, 3,652 late, 795 uncertain.
   - **Not a different window:** both groups fit 6–8 s best; the 2.1 s gap matches one Solar8000 record period.
     The arterial pressure numerics show no such split, so it is specific to HR.
   - **The PC decides, not the port:** ports shared by several PCs separate almost completely by the full device

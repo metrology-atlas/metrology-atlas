@@ -9,6 +9,7 @@ from pathlib import Path
 from metrology_atlas.code import code_url
 from metrology_atlas.load import derived
 from metrology_atlas.model import KINDS, SCHEMA_VERSION, Dataset
+from metrology_atlas.values import VALUE_XREF, value_text
 
 
 def _plain(value):
@@ -19,6 +20,18 @@ def _plain(value):
     if isinstance(value, list):
         return [_plain(v) for v in value]
     return value
+
+
+def _texts(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for k, v in value.items():
+            if k != "derived":
+                yield from _texts(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from _texts(v)
 
 
 def to_json(ds: Dataset) -> dict:
@@ -43,6 +56,14 @@ def to_json(ds: Dataset) -> dict:
         for id_, item in doc[KINDS[kind].folder].items():
             if item.get("code"):
                 item["derived"]["code_urls"] = {c: code_url(ds, c) for c in item["code"]}
+    for kind in KINDS.values():
+        for id_, item in doc[kind.folder].items():
+            refs = sorted({m.group(0)[2:-2] for t in _texts(item) for m in VALUE_XREF.finditer(t)
+                           if m.group(1) in ds.items["parameter"]})
+            vals = {r[6:]: value_text(ds.items["parameter"][r[6:].split("|")[0]], (r.split("|") + [None])[1])
+                    for r in refs}
+            if vals:
+                item["derived"]["values"] = vals
     doc["references"] = {id_: _plain(r) for id_, r in sorted(ds.items["reference"].items())}
     return doc
 

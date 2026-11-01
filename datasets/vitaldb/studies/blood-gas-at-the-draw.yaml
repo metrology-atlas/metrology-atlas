@@ -90,7 +90,7 @@ results: '**Two gases.** In [[case:136]] end-tidal CO₂ falls sharply about 2½
 
   patients the two agree only moderately (correlation 0.61 at the draw, 0.50 at the stamp), because each patient has
 
-  their own gradient: the patients'' typical gradients spread with an SD of about 4.1 mmHg, while one patient''s
+  their own gradient: the patients'' typical gradients spread with an SD of about [[value:paco2-etco2-between-patient-sd]], while one patient''s
 
   gradient varies by about 1.5 mmHg. Pooled, reading at the stamp instead of the draw barely changes the
 

@@ -27,7 +27,7 @@ results: |
     Vigilance, CardioQ) ever steps backwards. The only back-steps are in BIS numerics, in 9 files, which suggests
     the BIS monitor stamps its own numerics.
   - **Recording pauses explain the familiar gaps.** In 1,846 files (29%) there are 2,025 moments when every device
-    jumps forward together, by a median 19.6 s (p10–p90 15.7–29.8 s). Data are missing there, and the stamps
+    jumps forward together, by a median [[value:recording-pause]] (p10–p90 15.7–29.8 s). Data are missing there, and the stamps
     show it honestly.
   - **Small simultaneous delays are not PC steps.** 25 delays of 0.5–0.9 s in 17 files hit both numerics with no
     waveform jump, and are followed by an ordinary next SNUADC reset (−0.481 s) and ordinary BIS corrections. The

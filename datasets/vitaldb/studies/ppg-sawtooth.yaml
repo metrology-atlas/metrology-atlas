@@ -23,7 +23,7 @@ method: |
   clean slips, low noise), B, C, N (no sawtooth evident for 45 minutes or 1.5 teeth) or U (possibly affected, not
   corrected).
 results: |
-  - **One frame per slip:** the step has a median of 32.3 ms (IQR 30.4–34.8); other sizes are no more common than in
+  - **One frame per slip:** the step has a median of [[value:pleth-slip-step]] (IQR 30.4–34.8); other sizes are no more common than in
     a sign-flipped control.
   - **Regular:** slips recur every frame ÷ rate, stable to about 0.2 ppm; a few recordings creep by about 1 ppm over
     90 minutes.

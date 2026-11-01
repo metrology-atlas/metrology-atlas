@@ -12,6 +12,7 @@ import yaml
 
 from metrology_atlas.code import CODE_XREF, check_code, snapshot_path, split
 from metrology_atlas.model import DATASET, KINDS, REFERENCE, Dataset, Field, Kind
+from metrology_atlas.values import parse_spec, typed_copies
 
 XREF = re.compile(r"\[\[([a-z]+):([a-z0-9][a-z0-9-]*)(?:\|([^\]]+))?\]\]")
 """``[[kind:id]]`` or ``[[kind:id|label]]`` in prose."""
@@ -130,6 +131,10 @@ def load(folder: str | Path) -> Dataset:
                 for kind, ref, _ in XREF.findall(bare(text)):
                     if kind == (meta.get("records") or {}).get("name"):
                         continue
+                    if kind == "value":
+                        if ref not in ds.items["parameter"]:
+                            problems.append(f"pages/{pg['file']}: [[value:{ref}]]: no parameter '{ref}'")
+                        continue
                     if kind != "figure" and (kind not in ds.items or ref not in ds.items[kind]):
                         problems.append(f"pages/{pg['file']}: [[{kind}:{ref}]] does not exist")
                 for ref, _ in CODE_XREF.findall(bare(text)):
@@ -138,9 +143,27 @@ def load(folder: str | Path) -> Dataset:
     _check_figures(ds, meta, "dataset.yaml", problems)
     _check_forbidden(ds, problems)
     _check_terms(ds, problems)
+    _check_typed_values(ds)
     if problems:
         raise AtlasError(problems)
     return ds
+
+
+def _check_typed_values(ds: Dataset) -> None:
+    """Warn where a study types a number equal to one of its own parameters' values: written as [[value:id]] it
+    cannot drift from the parameter when the parameter is revised."""
+    own: dict[str, dict[str, dict]] = defaultdict(dict)
+    for pid, p in ds.items["parameter"].items():
+        if p.get("study"):
+            own[p["study"]][pid] = p
+    for sid, st in sorted(ds.items["study"].items()):
+        params = own.get(sid)
+        if not params:
+            continue
+        hits = typed_copies(_strings({k: v for k, v in st.items() if k not in {"id", "name"}}), params)
+        if hits:
+            ds.warnings.append(f"study '{sid}': types the value of " + ", ".join(
+                f"{pid} ({n}x)" for pid, n in sorted(hits.items())) + "; write [[value:id]] instead")
 
 
 QUANT_ACCURACY = re.compile(r"(?i)\baccura(?:cy|te)\b[^.\n]{0,40}?\d")
@@ -217,9 +240,19 @@ def _check_fields(ds: Dataset, fields: tuple[Field, ...], item: dict, where: str
                         mx = (ds.meta.get("records") or {}).get("max")
                         if mx and not 0 < int(rid) <= mx:
                             problems.append(f"{at}: record {rid} is out of range (1-{int(mx)})")
-                for kind, ref, _ in XREF.findall(bare(value)):
+                for kind, ref, label in XREF.findall(bare(value)):
                     if kind == "figure" or kind == (ds.meta.get("records") or {}).get("name"):
                         continue  # figures are checked per item, against its own figures
+                    if kind == "value":
+                        if ref not in ds.items["parameter"]:
+                            problems.append(f"{at}: [[value:{ref}]]: no parameter '{ref}'")
+                        elif ds.items["parameter"][ref].get("value") is None:
+                            problems.append(f"{at}: [[value:{ref}]]: the parameter has no value to show")
+                        try:
+                            parse_spec(label)
+                        except ValueError as error:
+                            problems.append(f"{at}: [[value:{ref}|{label}]]: {error}")
+                        continue
                     if kind not in ds.items:
                         problems.append(f"{at}: [[{kind}:{ref}]] names an unknown kind")
                     elif ref not in ds.items[kind]:
@@ -619,6 +652,9 @@ def derived(ds: Dataset) -> dict[str, dict[str, dict[str, list[str]]]]:
         if kind == "reference":
             continue
         for text in _strings(ds.items[kind][id_]):
+            for k, ref, _ in XREF.findall(bare(text)):
+                if k == "value" and ref in ds.items["parameter"]:
+                    add("parameter", ref, "quoted_in", f"{kind}:{id_}")
             names = {split(r)[0] for r, _ in CODE_XREF.findall(bare(text))}
             names |= {ref for k, ref, _ in XREF.findall(bare(text)) if k == "software"}
             for n in names:

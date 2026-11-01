@@ -15,6 +15,7 @@ from metrology_atlas.load import XREF, derived
 from metrology_atlas.model import KINDS, QUESTION_KIND_TITLES, QUESTION_KINDS, Dataset
 from metrology_atlas.planner import planner_page
 from metrology_atlas.timing import bias_range, combine, describe_bias
+from metrology_atlas.values import value_text
 from metrology_atlas.timing import default as timing_default
 from metrology_atlas.timing import forms as timing_forms
 
@@ -95,6 +96,9 @@ class Site:
             if m.group(1) == rec.get("name"):
                 label = m.group(3) or (rec.get("label") or rec["name"] + " {id}").format(id=m.group(2))
                 return f"[{label}]({self.base}records.md#{rec['name']}-{m.group(2)})"
+            if m.group(1) == "value":
+                p = self.ds.items["parameter"][m.group(2)]
+                return f"[{value_text(p, m.group(3))}]({self.href('parameter', m.group(2))})"
             if m.group(1) == "figure":
                 fig = next(f for f in (self.item or {}).get("figures", []) if f["id"] == m.group(2))
                 self.placed.add(fig["id"])

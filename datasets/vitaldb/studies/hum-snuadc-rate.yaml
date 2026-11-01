@@ -35,9 +35,9 @@ results: |
 
   | Rate used | Zero-centred robust SD | Median drift | Recordings drifting more than 0.1 s/h |
   |---|---|---|---|
-  | The port's assumed rate (the stamp model today) | 31 ppm (95% 25–36) | 76 ms/h | 33% |
+  | The port's assumed rate (the stamp model today) | 31 ppm (95% 25–36) | [[value:snuadc-uncorrected-drift-hourly]] | 33% |
   | The typical rate of the recording's SNUADC mode | 19 ppm (17–21) | 46 ms/h | |
-  | **The hum rate** | **13 ppm** | **31 ms/h** | **13%** |
+  | **The hum rate** | **13 ppm** | **[[value:snuadc-uncorrected-drift-hum-hourly]]** | **13%** |
 
   - The hum rate follows the burst drift (rank correlation +0.54). Mode "none" recordings run a median 27 ppm off the
     assumed rate; the hum sees this. After the hum rate the two modes are alike (13.8 and 12.6 ppm).

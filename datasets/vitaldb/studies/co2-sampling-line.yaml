@@ -46,13 +46,13 @@ results: |
     than the measured lag (IQR −0.97 to +0.8 s). The two hardly correlate per recording (r = 0.09), because the
     numeric fit's delays are coarse; on average they agree.
 discussion: |
-  The stored CO2 waveform runs about 3.6 s behind the breath, so ETCO2's delay against its waveform is about 3 s
+  The stored CO2 waveform runs about [[value:co2-sampling-line-lag]] behind the breath, so ETCO2's delay against its waveform is about 3 s
   shorter than PIP's against the airway pressure; against the breath itself the two are close. The negative ETCO2
   delay first reported was a separate matter, the fit's phase model ([[study:numerics-derivation-release]]).
 
   For the atlas, the CO2 waveform carries the sampling line as a bias of its own in every timing form, including
   the one after breath matching: breath matching aligns the Primus *clock* (through AWP), but the CO2 content still
-  trails the airway by 3.6 s. Between recordings it spreads by about 0.25 s, which enters the uncertainty with scope
+  trails the airway by [[value:co2-sampling-line-lag]]. Between recordings it spreads by about 0.25 s, which enters the uncertainty with scope
   'recording'. The atlas's earlier summary ("the sampling line adds at least 1 s") understated it.
 limitations: |
   The AWP rise marks the ventilator's breath, not the gas reaching the sampling point; the lag includes the short

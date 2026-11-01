@@ -1,9 +1,9 @@
 id: hr-vs-pulse-rate
 name: Pulse rate against heart rate, paired at the moment each describes
 summary: 'The Solar8000''s pulse rate against its heart rate in 6,386 recordings. They agree with no bias (limits of agreement
-  −11.7 to +11.7 /min), and disagree more as the rate rises. Their changes line up 2.3 s later in recordings whose HR is
+  −11.7 to +11.7 /min), and disagree more as the rate rises. Their changes line up [[value:hr-group-lag-in-pulse-rate|.1]] later in recordings whose HR is
   in the early delay group than in the late one, the gap between the groups'' delays: the two HR delay groups seen again,
-  in a signal independent of the ECG. The comparison also places PLETH_HR''s window: centred about 8.5 s before its stamp.'
+  in a signal independent of the ECG. The comparison also places PLETH_HR''s window: centred about [[value:pleth-hr-window-centre]] before its stamp.'
 date: 2026-11-01
 status: current
 methods:
@@ -56,26 +56,26 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
   '
 results: '- **The HR delay groups show in the pulse rate.** Changes line up with pulse rate read 3.71 s after the HR stamp
   in the early group (95% interval 3.59–3.83 s, 1,628 recordings) and 1.45 s after it in the late group (1.34–1.56 s, 3,111):
-  2.26 s apart ([[parameter:hr-group-lag-in-pulse-rate]]), against 2.28 s between the groups'' delays ([[parameter:hr-delay-early]],
+  [[value:hr-group-lag-in-pulse-rate]] apart ([[parameter:hr-group-lag-in-pulse-rate]]), against 2.28 s between the groups'' delays ([[parameter:hr-delay-early]],
   [[parameter:hr-delay-late]]). Pulse rate is computed from the plethysmogram by another module, so this confirms the HR
   groups independently of the ECG analysis that found them ([[study:hr-delay-groups]]).
 
   - **Where PLETH_HR''s window sits.** Adding each group''s HR delay and half its window puts PLETH_HR''s window centre
-  8.46 s before its stamp in the early group and 8.76 s in the late: about 8.5 s ([[parameter:pleth-hr-window-centre]]).
+  8.46 s before its stamp in the early group and 8.76 s in the late: about [[value:pleth-hr-window-centre]] ([[parameter:pleth-hr-window-centre]]).
   The atlas''s earlier form for PLETH_HR (delay 2.79 s, window 8–12 s; replaced from [[study:pleth-hr-derivation]]) put
   it at about 7.8 s; the pilot''s direct recomputation (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]])
-  puts it at 8.5 s at 70 /min. The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
+  puts it at [[value:pleth-hr-window-centre]] at 70 /min. The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
   at 90 /min), as a window counted in beats would, but the HR delay labels move with the rate too, so this comparison cannot
   split PLETH_HR''s delay from its window.
 
   - **No bias.** Pulse rate minus HR is 0.0 /min over the cohort (limits of agreement −11.7 to +11.7 /min; [[parameter:pr-hr-difference]]).
 
-  - **Mostly within a recording.** Each recording''s mean difference spreads with an SD of 2.5 /min between recordings,
-  against 5.4 /min within one ([[parameter:pr-hr-between-recording-sd]], [[parameter:pr-hr-within-recording-sd]]); 3.0%
+  - **Mostly within a recording.** Each recording''s mean difference spreads with an SD of [[value:pr-hr-between-recording-sd]] between recordings,
+  against [[value:pr-hr-within-recording-sd]] within one ([[parameter:pr-hr-between-recording-sd]], [[parameter:pr-hr-within-recording-sd]]); 3.0%
   of the time the two differ by more than 10 /min.
 
   - **When they disagree, the pulse is usually the lower.** 92% of values agree within 3 /min. Of the 3.0% more than 10
-  /min apart, 77% have the pulse rate below the heart rate ([[parameter:pr-below-hr-share]]), and many lie on lines where
+  /min apart, [[value:pr-below-hr-share]] have the pulse rate below the heart rate ([[parameter:pr-below-hr-share]]), and many lie on lines where
   the pulse rate is a fixed share of the heart rate: 3/4 (0.70% of all values), 2/3 (0.36%) and 1/2 (0.20%), where one beat
   in four, one in three, or every other beat makes no pulse at the finger, as in ectopy and bigeminy. Pulse rate above heart
   rate is rarer (4/3: 0.13%, 3/2: 0.05%, double: 0.02%), as when the ECG misses beats.
@@ -100,7 +100,7 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
 
   [[figure:hr-vs-pulse-rate]]'
 discussion: 'The comparison works in both directions. On the timing side it is an independent check of the atlas: the HR
-  delay groups, found from the ECG, reappear in a different module''s signal, 2.26 s apart against 2.28 s between the groups''
+  delay groups, found from the ECG, reappear in a different module''s signal, [[value:hr-group-lag-in-pulse-rate]] apart against 2.28 s between the groups''
   delays. It also measures where PLETH_HR''s window sits, about 0.7 s earlier than the atlas''s earlier form for it put
   it. On the value side the difference holds physiology as well as error: its spread rises with the rate as beats fail to
   make a pulse, so it is not a measure of either numeric''s error, and it gives neither variable a value budget. That is
