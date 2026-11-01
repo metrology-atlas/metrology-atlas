@@ -12,15 +12,13 @@ timing:
   default: true
   kind: per_recording
   uses_future: true
-  support_s:
-  - 4.9
-  - 8.3
+  support_s: {parameter: hr-window-span, use: p10-p90}
   stamp_position: close
   removes_bias_s:
-    median: 3.75
-    p5: 1.3
-    p95: 5.35
-    n: 6222
+    median: {parameter: hr-label-delay}
+    p5: {parameter: hr-label-delay, use: p5}
+    p95: {parameter: hr-label-delay, use: p95}
+    n: 6233
     scope: recording
     status: measured
   uncertainty:
@@ -29,9 +27,9 @@ timing:
     - name: per-case label
       type: A
       distribution: empirical
-      u_s: 0.256
+      u_s: {parameter: hr-label-se}
       scope: recording
-      evidence: label SE p10-p90 0.12-0.61 s; the 795 group-uncertain recordings carry a two-group mixture (2.3 s apart),
+      evidence: label SE p10-p90 0.09-0.55 s; the 234 group-uncertain recordings carry a two-group mixture (2.3 s apart),
         not included
   correction: per-case delay label (early or late group)
   corrects:
@@ -39,21 +37,22 @@ timing:
   - hr-late
   domain: recorder-pc
   status: measured
-  evidence: numeric_delay labels, 6,222 recordings, whole release 29 Oct; support the last 8 R-R intervals, p10-p90 4.9-8.3 s over recordings (hr-derivation)
+  evidence: numeric_delay labels with the 8-interval HR rule, 6,233 recordings, whole release 1 Nov; support the last 8 R-R
+    intervals, p10-p90 over recordings (hr-derivation)
   studies:
   - numerics-derivation-release
   - hr-delay-groups
+  - hr-derivation
+  checked: 2026-11-01
 - id: hr-early
   name: as stamped, early group
   kind: as_stored
-  support_s:
-  - 4.9
-  - 8.3
+  support_s: {parameter: hr-window-span, use: p10-p90}
   stamp_position: close
   bias_s:
-    median: 1.75
-    p5: 0.8
-    p95: 2.4
+    median: {parameter: hr-early-label-delay}
+    p5: {parameter: hr-early-label-delay, use: p5}
+    p95: {parameter: hr-early-label-delay, use: p95}
     scope: shared
     shared_with: the recording PC's delay group
     status: measured
@@ -62,25 +61,25 @@ timing:
     - name: within the group
       type: A
       distribution: empirical
-      u_s: 0.4863
+      u_s: {parameter: hr-early-delay-rsd}
       scope: recording
   domain: recorder-pc
   status: measured
-  evidence: label delays of the early group, 1,775 recordings
+  evidence: label delays of the early group, 2,228 recordings (labels of 1 Nov); within-group spread as a robust SD
   studies:
   - numerics-derivation-release
   - hr-delay-groups
+  - hr-derivation
+  checked: 2026-11-01
 - id: hr-late
   name: as stamped, late group
   kind: as_stored
-  support_s:
-  - 4.9
-  - 8.3
+  support_s: {parameter: hr-window-span, use: p10-p90}
   stamp_position: close
   bias_s:
-    median: 4.35
-    p5: 3.45
-    p95: 5.7
+    median: {parameter: hr-late-label-delay}
+    p5: {parameter: hr-late-label-delay, use: p5}
+    p95: {parameter: hr-late-label-delay, use: p95}
     scope: shared
     shared_with: the recording PC's delay group
     status: measured
@@ -89,30 +88,33 @@ timing:
     - name: within the group
       type: A
       distribution: empirical
-      u_s: 0.6839
+      u_s: {parameter: hr-late-delay-rsd}
       scope: recording
   domain: recorder-pc
   status: measured
-  evidence: label delays of the late group, 3,652 recordings; one extra 2 s poll; follows the PC
+  evidence: label delays of the late group, 3,771 recordings (labels of 1 Nov); within-group spread as a robust SD; one
+    extra 2 s poll; follows the PC
   studies:
   - numerics-derivation-release
   - hr-delay-groups
+  - hr-derivation
+  checked: 2026-11-01
 chain:
 - node: Heart rate algorithm
   kind: window
   effect: 'The Solar8000 computes heart rate as 60 over the mean of the last [[value:hr-window|number]] R–R intervals,
     leaving out those far from their median ([[study:hr-derivation]]), so [[value:hr-window-span]] of ECG at the median rate.'
-  span_s:
-  - 4.9
-  - 8.3
+  span_s: {parameter: hr-window-span, use: p10-p90}
   status: measured
 - node: Polled by the recorder
   kind: transport
-  effect: The value reaches the recorder 1.05–2.3 s after its window ends in the early group of cases, or 3.6–5.25
-    s in the late group (one extra 2 s poll cycle). A per-case delay label fixes the offset to 0.12–0.61 s (standard
-    error, p10–p90).
-  bias_s: [0.8, 5.7]
-  u_s: 0.256
+  effect: The value reaches the recorder 1.25–2.4 s after its window ends in the early group of cases, or 3.7–4.8 s
+    in the late group (one extra 2 s poll cycle; p10–p90). A per-case delay label fixes the offset to a median
+    [[value:hr-label-se]] (standard error).
+  bias_s:
+  - {parameter: hr-early-label-delay, use: p5}
+  - {parameter: hr-late-label-delay, use: p95}
+  u_s: {parameter: hr-label-se}
   status: measured
 - node: Stored stamp
   clock: recorder-pc

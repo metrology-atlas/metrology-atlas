@@ -150,8 +150,8 @@ chain:
     samples. The stamp model adds the loss back at the end of the last record before the new grid; samples inside
     that record can still be up to about 20 ms late.
   bias_s:
-  - 0.0172
-  - 0.0182
+  - {parameter: snuadc-reset-loss, use: min}
+  - {parameter: snuadc-reset-loss, use: max}
   u_s: 0.0058
   status: measured
   parameter: snuadc-reset-loss
@@ -160,8 +160,8 @@ chain:
 - node: Pulse oximeter module
   kind: processing
   effect: 'The oximeter filters the plethysmogram and plays it out about 0.4 s late (one delay for the release: 0.385 s, with the adopted 0.27 s finger PAT; 0.365–0.405 s over its plausible range), in 33.3
-    ms frames on its own clock. Its content runs 18–52 ppm against those frames, so one frame repeats every 11–31
-    min: a sawtooth in the delay.'
+    ms frames on its own clock. Its content runs 18–52 ppm against those frames, so every 11–31 min the delay
+    steps by one frame: a sawtooth in the delay.'
   bias_s:
   - 0.365
   - 0.405

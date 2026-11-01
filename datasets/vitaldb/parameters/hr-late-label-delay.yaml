@@ -1,0 +1,10 @@
+id: hr-late-label-delay
+name: Solar8000 HR label delay, late group
+quantity: Per-case HR delay label in the late delay group, median over its cases.
+value: 4.20
+unit: s
+spread: {p5: 3.55, p10: 3.70, p90: 4.80, p95: 5.10, n: 3771, text: "labels of 1 Nov 2026; results/pat/hr_delay_group_labels.csv"}
+status: measured
+study: hr-delay-groups
+about: [solar8000-hr]
+date: 2026-11-01

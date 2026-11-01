@@ -16,7 +16,7 @@ timing:
   - 11.0
   stamp_position: close
   bias_s:
-    median: 4.5
+    median: {parameter: pleth-hr-delay}
     p5: 3.25
     p95: 5.75
     n: 6151

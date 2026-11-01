@@ -153,8 +153,8 @@ chain:
     samples. The stamp model adds the loss back at the end of the last record before the new grid; samples inside
     that record can still be up to about 20 ms late.
   bias_s:
-  - 0.0172
-  - 0.0182
+  - {parameter: snuadc-reset-loss, use: min}
+  - {parameter: snuadc-reset-loss, use: max}
   u_s: 0.0058
   status: measured
   parameter: snuadc-reset-loss

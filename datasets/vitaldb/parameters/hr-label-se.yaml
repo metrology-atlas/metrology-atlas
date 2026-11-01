@@ -1,0 +1,10 @@
+id: hr-label-se
+name: Solar8000 HR label standard error
+quantity: Standard error of a case's HR delay label (the scatter of its 30-minute blocks), median over cases.
+value: 0.219
+unit: s
+spread: {p10: 0.092, p90: 0.548, n: 6233, text: "labels of 1 Nov 2026 (8-interval HR rule); results/pat/numeric_delay_labels.csv"}
+status: measured
+study: hr-delay-groups
+about: [solar8000-hr]
+date: 2026-11-01

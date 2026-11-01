@@ -1,0 +1,10 @@
+id: hr-label-delay
+name: Solar8000 HR label delay, all cases
+quantity: Per-case delay from the end of the HR window to its stamp (the numeric delay label), over the release.
+value: 3.85
+unit: s
+spread: {p5: 1.35, p95: 4.85, n: 6233, text: "labels of 1 Nov 2026 (8-interval HR rule); results/pat/numeric_delay_labels.csv"}
+status: measured
+study: hr-delay-groups
+about: [solar8000-hr]
+date: 2026-11-01

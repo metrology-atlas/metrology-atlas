@@ -74,8 +74,8 @@ chain:
   effect: Blood is drawn from the arterial line (an access, 28–117 s long) and analysed in theatre or sent on. The
     specimen is stamped 3–12 min after the draw; the lab_draw label marks the matched access.
   bias_s:
-  - 181
-  - 720
+  - {parameter: lab-bg-lag, use: p10}
+  - {parameter: lab-bg-lag, use: p90}
   u_s: 25.7
   parameter: lab-bg-lag
   studies:

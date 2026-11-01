@@ -1,0 +1,10 @@
+id: hr-late-delay-rsd
+name: Spread of the HR delay within the late group
+quantity: Robust standard deviation (interquartile range / 1.349) of the per-case HR delay labels in the late group.
+value: 0.408
+unit: s
+spread: {n: 3771, text: "replaces 0.6839 s, which no saved output reproduces"}
+status: measured
+study: hr-delay-groups
+about: [solar8000-hr]
+date: 2026-11-01
