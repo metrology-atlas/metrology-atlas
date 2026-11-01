@@ -32,7 +32,8 @@ results: |
   - **The drift is 31–200 ppm** (median +141) and not constant within a case. A sweep of assumed drifts is
     inconclusive: 170 ppm fits no better than 115.
   - **At scale (19 October).** The same lag, on the SNUADC stamp model, in 1,061 recordings with CVP
-    ([[example:ppv-by-breath]]): the Primus sits a median 1.8 s off the SNUADC (p10–p90 0.6 to 5.1 s), and a line
+    ([[example:ppv-by-breath]]): the Primus AWP stamps sit a median 1.8 s before the breath seen in the SNUADC CVP (p10–p90 0.6 to 5.1 s; a
+    bias of −1.8 s), and a line
     through each whole recording gives +87 ppm (p10–p90 −49 to +229). Fitted with one slope and one offset per stretch
     between AWP pauses, in 178 recordings with pauses ([[code:vitaldb-bench/tools/primus_drift_probe.py]]): the drift
     within stretches is a median **+[[value:primus-drift-breath]]** (p10–p90 +28 to +184), and the per-stretch offsets halve the residual

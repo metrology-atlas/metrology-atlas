@@ -6,7 +6,7 @@ unit: '%'
 spread:
   q1: -0.8
   q3: 0
-  n: 4281
+  n: 4272
   text: SpO₂ is 100 at the draw for 77% of gases
 status: measured
 study: blood-gas-at-the-draw

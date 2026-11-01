@@ -20,13 +20,14 @@ timing:
   stamp_position: close
   grid_s: 0.016
   removes_bias_s:
-    median: 1.787
-    p5: -0.693
-    p95: 5.782
+    median: -1.787
+    p5: -5.782
+    p95: 0.693
     n: 1067
     scope: recording
     status: measured
-    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording; includes airway-to-CVP physiology
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording (the matching lag is CVP minus AWP, so
+      its sign is reversed here); includes airway-to-CVP physiology
   uncertainty:
     upper_bound: true
     interval95_s:
@@ -88,13 +89,13 @@ timing:
   stamp_position: close
   grid_s: 0.016
   removes_bias_s: &id003
-    median: 5.41
-    p5: 2.93
-    p95: 9.41
+    median: 1.838
+    p5: -2.157
+    p95: 4.318
     n: 1067
     scope: recording
     status: measured
-    evidence: 'the AWP lag plus the CO2 sampling line (3.6 s): sums of medians and of the tails, approximate'
+    evidence: 'the AWP bias (-1.787 s) plus the CO2 sampling line (3.625 s): sums of medians and of the tails, approximate'
   uncertainty:
     upper_bound: true
     components:
@@ -118,7 +119,7 @@ timing:
   - primus-raw
   domain: primus
   status: measured
-  evidence: 'per-recording raw lag: median 5.4 s, robust SD 1.33 s (1,067 recordings)'
+  evidence: 'per-recording offset: median 1.8 s (AWP bias plus the sampling line), robust SD 1.33 s (1,067 recordings)'
   studies:
   - co2-sampling-line
   - primus-co2-update-grid
@@ -140,8 +141,15 @@ timing:
     - *id002
   domain: primus
   status: measured
-  evidence: offset median 1.8 s, p5-p95 -0.7 to +5.8 s (1,067 recordings, CVP breaths), incl. AWP-CVP physiology; drifts
-    +104 ppm against the PC between AWP pauses; plus the 3.6 s sampling line
+  evidence: AWP offset median -1.8 s, p5-p95 -5.8 to +0.7 s (1,067 recordings, CVP breaths), incl. AWP-CVP physiology;
+    drifts +104 ppm against the PC between AWP pauses; plus the 3.6 s sampling line, so +1.8 s (p5-p95 -2.2 to +4.3 s)
+  look_ahead:
+    lead_s:
+    - 0
+    - 2.16
+    basis: apparent
+    note: In the recordings whose AWP stamps lead the most (primus-awp), the CO2 stamp can come before the breath it
+      describes, despite the 3.6 s sampling line. A lead against the working reference; see primus-awp.
   studies:
   - co2-sampling-line
   - primus-co2-update-grid

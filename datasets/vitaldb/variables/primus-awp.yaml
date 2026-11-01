@@ -20,13 +20,14 @@ timing:
   stamp_position: instant
   grid_s: 0.016
   removes_bias_s:
-    median: 1.787
-    p5: -0.693
-    p95: 5.782
+    median: -1.787
+    p5: -5.782
+    p95: 0.693
     n: 1067
     scope: recording
     status: measured
-    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording; includes airway-to-CVP physiology
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording (the matching lag is CVP minus AWP, so
+      its sign is reversed here); includes airway-to-CVP physiology
   uncertainty:
     upper_bound: true
     interval95_s:
@@ -70,13 +71,14 @@ timing:
   stamp_position: instant
   grid_s: 0.016
   removes_bias_s: &id002
-    median: 1.787
-    p5: -0.693
-    p95: 5.782
+    median: -1.787
+    p5: -5.782
+    p95: 0.693
     n: 1067
     scope: recording
     status: measured
-    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording; includes airway-to-CVP physiology
+    evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording (the matching lag is CVP minus AWP, so
+      its sign is reversed here); includes airway-to-CVP physiology
   uncertainty:
     upper_bound: true
     components:
@@ -99,7 +101,7 @@ timing:
   - primus-raw
   domain: primus
   status: measured
-  evidence: 'per-recording raw lag: median 1.8 s, robust SD 1.33 s (1,067 recordings)'
+  evidence: 'per-recording raw lag (CVP minus AWP stamp): median 1.8 s, so a bias of -1.8 s; robust SD 1.33 s (1,067 recordings)'
   studies:
   - primus-awp-conversion
 - id: primus-raw
@@ -119,14 +121,17 @@ timing:
       shared_with: Primus clock
   domain: primus
   status: measured
-  evidence: offset median 1.8 s, p5-p95 -0.7 to +5.8 s (1,067 recordings, CVP breaths), incl. AWP-CVP physiology; drifts
-    +104 ppm against the PC between AWP pauses
+  evidence: offset median -1.8 s, p5-p95 -5.8 to +0.7 s (1,067 recordings, CVP breaths; the stamps sit before the breath
+    seen in the CVP), incl. AWP-CVP physiology; drifts +104 ppm against the PC between AWP pauses
   look_ahead:
     lead_s:
     - 0
-    - 0.69
+    - 5.78
     basis: apparent
-    note: The lower tail (stamp before the CVP breath) is mostly airway-to-CVP physiology in the reference, not a true lead.
+    note: In most recordings the AWP stamps sit before the breath seen in the SNUADC CVP (median 1.8 s; 5th percentile
+      5.8 s). Against the working reference this is a lead; whether it is one against true time depends on the
+      reference's own delay, which the release does not show (the BIS EEG also sits early, by 0.79 s). Airway-to-CVP
+      physiology explains at most a small part.
   studies:
   - primus-awp-conversion
 tags:

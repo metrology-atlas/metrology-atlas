@@ -8,9 +8,9 @@ Corrected every not known (asked of the dataset's creator)
 Status: estimated</title></a>
 <a class="hit" href="../links/mains-grid-vs-utc.html" target="_top" data-tip='["3. Mains grid against UTC", "Status: assumed"]'><path class="line" d="M1017,250 L875,120" fill="none" stroke="#7a7a7a" stroke-width="2.6" stroke-dasharray="2,5"/><path d="M1017,250 L875,120" fill="none" stroke="transparent" stroke-width="14"/><circle cx="989" cy="224" r="11" fill="#7a7a7a"/><text x="989" y="228" text-anchor="middle" class="n">3</text><title>3. Mains grid against UTC
 Status: assumed</title></a>
-<a class="hit" href="../links/primus-vs-pc.html" target="_top" data-tip='["4. Primus against the recorder PC", "Drift: +104 ppm", "Corrected every about 7,230 s (2.0 h; p90 twice that)", "Correction size: -0.016 s (whole 16 ms samples either way; median \u221216 ms (one sample back), p10\u2013p90 \u2212144 to +144 ms)", "Status: measured"]'><path class="line" d="M165,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M165,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="279" cy="414" r="11" fill="#1b7f4b"/><text x="279" y="418" text-anchor="middle" class="n">4</text><title>4. Primus against the recorder PC
+<a class="hit" href="../links/primus-vs-pc.html" target="_top" data-tip='["4. Primus against the recorder PC", "Drift: +104 ppm", "Corrected every about 7,230 s (2.0 h; p90 7,277 s, p95 twice that)", "Correction size: -0.016 s (whole 16 ms samples either way; median \u221216 ms (one sample back), p10\u2013p90 \u2212144 to +144 ms)", "Status: measured"]'><path class="line" d="M165,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M165,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="279" cy="414" r="11" fill="#1b7f4b"/><text x="279" y="418" text-anchor="middle" class="n">4</text><title>4. Primus against the recorder PC
 Drift: +104 ppm
-Corrected every about 7,230 s (2.0 h; p90 twice that)
+Corrected every about 7,230 s (2.0 h; p90 7,277 s, p95 twice that)
 Correction size: -0.016 s (whole 16 ms samples either way; median −16 ms (one sample back), p10–p90 −144 to +144 ms)
 Status: measured</title></a>
 <a class="hit" href="../links/cardioq-vs-pc.html" target="_top" data-tip='["5. CardioQ against the recorder PC", "Corrected every at most about 300 s; about 40 re-anchors per case", "Status: measured"]'><path class="line" d="M449,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M449,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="506" cy="414" r="11" fill="#1b7f4b"/><text x="506" y="418" text-anchor="middle" class="n">5</text><title>5. CardioQ against the recorder PC
@@ -28,13 +28,13 @@ Drift: -63 ppm
 Corrected every 2.08 h
 Correction size: about 0.498 s true (paced: 0.4981–0.4988 s); −0.480 s on the stamps
 Status: measured</title></a>
-<a class="hit" href="../links/bis-vs-pc.html" target="_top" data-tip='["8. BIS against the recorder PC", "Drift: +25 ppm", "Corrected every 8,192 s (2 h 16.5 min), \u00b1 20 s in 95% of intervals", "Correction size: 0.17 s median", "Status: measured"]'><path class="line" d="M1017,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M1017,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="960" cy="414" r="11" fill="#1b7f4b"/><text x="960" y="418" text-anchor="middle" class="n">8</text><title>8. BIS against the recorder PC
+<a class="hit" href="../links/bis-vs-pc.html" target="_top" data-tip='["8. BIS against the recorder PC", "Drift: +25 ppm", "Corrected every 8,192 s (2 h 16.5 min), \u00b1 20 s in 95% of intervals", "Correction size: 0.2 s", "Status: measured"]'><path class="line" d="M1017,440 L733,310" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M1017,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="960" cy="414" r="11" fill="#1b7f4b"/><text x="960" y="418" text-anchor="middle" class="n">8</text><title>8. BIS against the recorder PC
 Drift: +25 ppm
 Corrected every 8,192 s (2 h 16.5 min), ± 20 s in 95% of intervals
-Correction size: 0.17 s median
+Correction size: 0.2 s
 Status: measured</title></a>
-<a class="hit" href="../links/bis-vs-snuadc.html" target="_top" data-tip='["9. BIS against SNUADC", "Drift: -72 ppm", "Status: measured"]'><path class="line" d="M892,470 L858,470" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M892,470 L858,470" fill="none" stroke="transparent" stroke-width="14"/><circle cx="875" cy="470" r="11" fill="#1b7f4b"/><text x="875" y="474" text-anchor="middle" class="n">9</text><title>9. BIS against SNUADC
-Drift: -72 ppm
+<a class="hit" href="../links/bis-vs-snuadc.html" target="_top" data-tip='["9. BIS against SNUADC", "Drift: -84.8 ppm", "Status: measured"]'><path class="line" d="M892,470 L858,470" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M892,470 L858,470" fill="none" stroke="transparent" stroke-width="14"/><circle cx="875" cy="470" r="11" fill="#1b7f4b"/><text x="875" y="474" text-anchor="middle" class="n">9</text><title>9. BIS against SNUADC
+Drift: -84.8 ppm
 Status: measured</title></a>
 <a class="hit" href="../links/hospital-records-vs-pc.html" target="_top" data-tip='["10. Hospital records clock against the recorder PC", "Status: assumed"]'><path class="line" d="M1301,440 L733,310" fill="none" stroke="#7a7a7a" stroke-width="2.6" stroke-dasharray="2,5"/><path d="M1301,440 L733,310" fill="none" stroke="transparent" stroke-width="14"/><circle cx="1187" cy="414" r="11" fill="#7a7a7a"/><text x="1187" y="418" text-anchor="middle" class="n">10</text><title>10. Hospital records clock against the recorder PC
 Status: assumed</title></a>

@@ -28,6 +28,11 @@ results: |
   - **Precision:** EEG1 and EEG2 agree to 11 ms (median; p90 36 ms); the control sits at 0 ± 7 ms.
   - **A sawtooth, not a constant.** The offset ramps for 30–90 minutes and jumps back. The ramp slope matches the
     difference of the two devices' drifts from their stamps (r = 0.88; within 25 ppm in 108 of 145 cases).
+  - **The direct rate over the release.** From the stamp-model burst check of the whole release (10-minute windows), the
+    BIS runs [[value:bis-snuadc-rate]] against the SNUADC (median of 1,805 recordings; IQR −93.4 to −76.5 ppm),
+    −87.9 ppm where both clocks have whole sawtooth teeth (339). The 191 cases above gave −72 ppm. Against the two
+    devices' drifts from their correction steps the direct rate closes to −2.1 ppm (median; IQR −11.7 to +0.3; 358
+    recordings).
   - **The jumps are stamp steps:** 79% of 216 lag jumps have a SNUADC or BIS record-stamp step in the same window,
     against 12% for the same interval 40 minutes later.
   - **Other shared signals fail.** Bursts within SNUADC are rare and point to interference entering after the
@@ -49,6 +54,7 @@ open_questions:
       [[variable:snuadc-ecg-ii]] and [[variable:bis-eeg]].
 code:
   - vitaldb-bench/tools/shared_artifacts.py
+  - vitaldb-bench/tools/direct_rate_from_bursts.py
 figures:
   - id: shared-bursts-examples
     file: shared-bursts-examples.png

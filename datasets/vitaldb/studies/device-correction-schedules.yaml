@@ -57,8 +57,9 @@ results: |
     (5th–95th −80.3 to −36.9) against the recorder PC, again in clusters, and the same within 0.01 ppm from the
     census fit. The census gives it in all 2,728 SNUADC recordings with a correction (median −49.5 ppm, 5th–95th
     −79.1 to −8.1). The earlier per-recording
-    drift ([[study:clock-correction-scan]]) differs by 0.95 ppm in every one of 418 recordings: the stamp
-    arithmetic ([[observation:snuadc-stamp-arithmetic]]), which that fit included.
+    drift ([[study:clock-correction-scan]]) differs from it by a median 0.949 ppm in the 418 recordings both give,
+    within 0.1 ppm of that in 72%: the stamp arithmetic ([[observation:snuadc-stamp-arithmetic]]), which that fit
+    included. In 20% the two differ by more than 1 ppm beyond it (5th percentile 15.8 ppm), for reasons not checked.
   - **The SNUADC count usually starts with the recording, but not reliably enough to time drift from it.** The
     first reset comes at 0.99 × (0.49 s ÷ drift) after the SNUADC starts in the median recording (interquartile
     range 0.87–1.01), with wide tails (5th–95th 0.56–1.75). Drift timed that way in the 1,898 single-reset
@@ -78,10 +79,10 @@ results: |
     found. Within a recording the SNUADC drift swings more than the BIS drift (standard deviation 8.9 against
     2.6 ppm).
   - **Primus: every [[value:primus-period]], also on its own timer, and the AWP pauses belong to the cycle.** 8,077 corrections in
-    4,529 recordings, each a whole number of 16 ms samples (one sample at 62.5 Hz) in either direction, often two
-    at once (median −16 ms; p10–p90 −144 to +144 ms); [[value:primus-period]] apart, or twice that. These steps are far too small
+    4,529 recordings, 95% of them a whole number of 16 ms samples (one sample at 62.5 Hz) in either direction, often two
+    at once (median −16 ms; p10–p90 −144 to +144 ms); [[value:primus-period]] apart, or twice that (the 95th percentile of the intervals). These steps are far too small
     for the Primus drift, which breath matching measures at +[[value:primus-drift-breath]] against the PC,
-    so they do not give its rate. The 10,496 AWP pauses of 19–23.5 s in 5,502 recordings recur at the same interval, and where a correction lies within 60 s (69% of pauses) it follows the pause by about 21.6 s.
+    so they do not give its rate. The 10,496 AWP pauses of 19–23.5 s in 5,502 recordings recur at the same interval, and where a correction lies within 60 s (60% of all pauses; 69% in the recordings with a Primus correction) it follows the pause by about 21.6 s.
     The CO2 track has no gap at the same moment in 90% of them, and the AWP data in the pause are lost, not
     re-stamped: after each pause AWP still lines up with CO2 at the lag it had before ([[observation:primus-awp-pauses]]).
   - These cycles end the long segments: the BIS segments that pile up at 7,500–8,500 s and the Primus AWP segments

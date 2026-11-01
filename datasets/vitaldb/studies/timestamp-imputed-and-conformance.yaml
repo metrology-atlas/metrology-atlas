@@ -16,21 +16,21 @@ method: |
   - Checked gaps from op end to recording end, whole-second and whole-minute structure, event order, extreme values and placeholder dates.
 results: |
   - [[value:opend-imputed|number]] op ends (8.4%) fall 598–604 s before the end of the recording; most often 601 s (346 cases) or 602 s (129 cases). They are excluded as `imputed`.
-  - Anaesthesia ends derived from those op ends are stored with floating-point noise (e.g. 599.999999 s) and sit an exact multiple of 5 minutes after op end: 300 s (9 cases), 600 s (35), 900 s (9), 1,200 s (9) and others.
+  - 130 anaesthesia ends are stored with floating-point noise (e.g. 599.999999 s), most an exact multiple of 5 minutes after op end: 600 s (40 cases), 300 s (20), 900 s (20), 1,200 s (14) and 1,500 s (7). Only 14 of them have an imputed op end, so they are not derived from it.
   - Two dates default to 1900: [[case:4476]] (anaesthesia end) and [[case:1563]] (admission and discharge), near −3.69 × 10⁹ s.
-  - Op end comes after anaesthesia end in 52 cases and equals it in 108.
+  - Op end comes after anaesthesia end in 52 cases and equals it in 108 (leaving out [[case:4476]]'s 1900 date).
   - Anaesthesia end is +720 min from recording end in [[case:3980]] (12-hour error?) and +1,441 min in [[case:4959]] (date error?).
-  - No case has op start before anaesthesia start, op end before op start, or anaesthesia end before anaesthesia start.
+  - No case has op start before anaesthesia start, op end before op start, or anaesthesia end before anaesthesia start, apart from [[case:4476]]'s 1900 date.
   - Op end equals recording end minus 10 minutes (598–604 s) in [[value:opend-imputed|number]] of 6,388 cases (8.4%). By department:
     thoracic 16.6% (184 of 1,111), general 6.9% (341 of 4,930), gynaecology 3.5%, urology 3.4%. By anaesthesia:
     sedation 41.7% (30 of 72), spinal 30.0% (82 of 273), general 7.0%. By operation type it ranges from 15.2%
     (minor resection) to 2.3% (breast). Emergency 9.8%, elective 8.2%. ([[observation:imputed-op-ends]])
 discussion: |
-  - Anaesthesia end was most likely charted as an interval after op end and inherited the imputed op end.
+  - The noisy anaesthesia ends were most likely charted as an interval after op end, in whole 5-minute steps.
   - Excluded values return a status rather than a distribution; flagged values are fitted and returned with the flag.
   - The 1900 dates are the "missing time stored as zero" bug from §5.5 of the review.
 limitations: |
-  - The derived anaesthesia ends were missed in an earlier fit, because their noise (about 10⁻⁶ s) slipped under the test threshold.
+  - The noisy anaesthesia ends were missed in an earlier fit, because their noise (about 10⁻⁶ s) slipped under the test threshold.
 open_questions:
   - title: "Was op end imputed deliberately?"
     kind: next step

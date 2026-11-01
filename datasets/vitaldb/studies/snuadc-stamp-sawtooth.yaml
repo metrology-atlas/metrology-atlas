@@ -54,7 +54,7 @@ results: |
     −776) and −667.5 ms in frequent-correction mode (78), against −803 and −690 ms on the benchmark.
   - **Where both clocks have whole teeth** (377 recordings) the result matches the benchmark: within-recording SD
     18 ms, drift left 8.7 ms/h (median absolute slope). Against the step-mode constant, a typical window is off by
-    35 ms (median; p90 135 ms).
+    25 ms (median; p90 82 ms), against 35 ms (p90 135 ms) over all 1,530 step-mode recordings.
   - **Recordings with no SNUADC correction at all** (1,099) were the weak spot. The first model read them as
     frequent-correction mode and gave the SNUADC no drift, but their EEG–ECG offset drifted by a median of
     −176 ms/h, the step-mode drift: these are step-mode recordings that end before the first reset.

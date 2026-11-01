@@ -1,13 +1,13 @@
 id: bis-step
 name: BIS correction size
 quantity: Size of each BIS correction (forward).
-value: 0.17
+value: 0.20
 unit: s
-display: "0.17 s median"
+spread: {text: "median of the recordings' median corrections"}
 status: measured
 study: device-correction-schedules
 about: [bis-vs-pc]
 date: 2026-10-19
 notes: >-
-  The whole release; it is whatever drift built up over the 8,192 s since the previous correction. The pilot
+  The whole release (signal_survey/continuity/summary.json, step_s_median 0.203); it is whatever drift built up over the 8,192 s since the previous correction. The pilot
   ([[study:correction-periods]]) gave 0.155 s median (0.083 to 0.289 s) in 266 corrections.

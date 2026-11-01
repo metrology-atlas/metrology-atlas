@@ -3,7 +3,7 @@ name: Primus correction interval
 quantity: Time between the Primus's small corrections.
 value: 7230
 unit: s
-display: "about 7,230 s (2.0 h; p90 twice that)"
+display: "about 7,230 s (2.0 h; p90 7,277 s, p95 twice that)"
 status: measured
 study: device-correction-schedules
 about: [primus-vs-pc]

@@ -4,7 +4,7 @@ quantity: SD between patients of their typical arterial to end-tidal CO₂ gradi
 value: 4.1
 unit: mmHg
 spread:
-  text: within one patient the gradient varies by about 1.5 mmHg
+  text: within one patient the gradient varies with an SD of a median 1.7 mmHg (1,186 patients with two or more gases)
 status: measured
 study: blood-gas-at-the-draw
 about:

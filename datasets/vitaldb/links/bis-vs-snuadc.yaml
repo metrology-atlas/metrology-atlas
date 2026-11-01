@@ -1,10 +1,11 @@
 id: bis-vs-snuadc
 name: BIS against SNUADC
 summary: >-
-  Measured directly from bursts seen in both the ECG and the EEG, independent of the recorder: −72 ppm (median of
-  191 benchmark cases), and a constant offset of about −0.8 s left after both stamp models. Per case the slope
-  matches the difference of the two drifts against the PC ([[study:shared-bursts]]); the release medians of those
-  drifts (+25 and −63 ppm) differ by 88 ppm, being medians over different sets of recordings.
+  Measured directly from bursts seen in both the ECG and the EEG, independent of the recorder: [[value:bis-snuadc-rate]]
+  (median of 1,805 recordings), and a constant offset of about −0.8 s left after both stamp models. Per recording the
+  slope matches the difference of the two drifts against the PC to a median −2.1 ppm ([[study:shared-bursts]]), and
+  the release medians of those drifts (+25 and −63 ppm) differ by 88 ppm, close to the −88 ppm measured where both
+  clocks have whole teeth.
 clock: bis-clock
 against: snuadc-sample
 rate: bis-snuadc-rate

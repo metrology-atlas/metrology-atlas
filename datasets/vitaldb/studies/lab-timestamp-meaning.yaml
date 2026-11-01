@@ -41,7 +41,7 @@ results: |
 
   | Panel | Sample groups | Matched to an access | Lag from the access start to the timestamp | Above chance |
   |---|---|---|---|---|
-  | Blood gas | 5,888 | 4,742 (81%) | p10 3.2 / median [[value:lab-bg-lag|number]] / p90 12.2 min; modes at 2–6 and 8–12 min | 76% |
+  | Blood gas | 5,888 | 4,742 (81%) | p10 3.0 / median [[value:lab-bg-lag|number]] / p90 12.0 min; modes at 2–6 and 8–12 min | 76% |
   | Central lab | 1,837 | 618 (34%) | excess at 8–18 min, median about 14 min | 23% (weak) |
 discussion: |
   Central-lab timestamps mark the specimen reaching or being registered at the lab: the 10 minutes after a blood

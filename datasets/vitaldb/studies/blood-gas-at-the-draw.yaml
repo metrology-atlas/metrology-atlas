@@ -22,9 +22,9 @@ variables:
 - snuadc-art
 data: 'Blood gases matched to exactly one arterial-line access in the 15 minutes before their lab stamp
 
-  (`lab_draw:single` in [[study:arterial-line-accesses]]): 4,281 gases in 1,349 cases, each with Primus end-tidal
+  (`lab_draw:single` in [[study:arterial-line-accesses]]): 4,281 gases in 1,349 cases, 4,272 of them with Primus end-tidal
 
-  CO₂ and Solar8000 SpO₂ in the recording. Gases with several candidate accesses (459) are left out.
+  CO₂ and Solar8000 SpO₂ at the draw. Gases with several candidate accesses (459) are left out.
 
   '
 background: 'End-tidal and arterial CO₂, and SpO₂ and SaO₂, are related measurands: each pair differs by physiology (the
@@ -33,7 +33,7 @@ background: 'End-tidal and arterial CO₂, and SpO₂ and SaO₂, are related me
   timestamp comes 3–12 minutes after it ([[observation:lab-time-is-specimen]]). The SpO₂–SaO₂ comparison follows [[reference:eytan2019revisiting]].'
 method: "1. Take the start of the matched arterial-line access as the draw. The monitor value is the median of its readings\n\
   \   over ±60 s of that moment.\n2. Draw 400 Monte Carlo samples per gas of:\n    - the draw time, uniform over the access\
-  \ (median 42 s long), plus the monitor's stamping delay (a numeric\n      describes a window that ended 1–9 s before its\
+  \ (median 54 s long), plus the monitor's stamping delay (a numeric\n      describes a window that ended 1–9 s before its\
   \ stamp; [[observation:numerics-not-front-stamped]]);\n    - each monitor reading's true value, uniform over ±0.5 of the\
   \ whole number written; an SpO₂ of 100 is\n      censored, so its true value is anywhere from 99.5 to 100;\n    - the\
   \ lab value, from the pinned vitaldb-resolution library (v0.6.0), with SaO₂ capped at 100.\n3. Summarise each gradient\
@@ -92,7 +92,7 @@ results: '**Two gases.** In [[case:136]] end-tidal CO₂ falls sharply about 2½
 
   their own gradient: the patients'' typical gradients spread with an SD of about [[value:paco2-etco2-between-patient-sd]], while one patient''s
 
-  gradient varies by about 1.5 mmHg. Pooled, reading at the stamp instead of the draw barely changes the
+  gradient varies with an SD of a median 1.7 mmHg. Pooled, reading at the stamp instead of the draw barely changes the
 
   distribution, though it moves an individual gas''s gradient by 3 mmHg or more in 11.5% of gases.
 

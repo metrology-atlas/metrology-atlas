@@ -14,7 +14,8 @@ method: |
   variance; a posterior of 0.9 assigns a group. Groups compared with the Solar8000 port, then with the full PC key
   (the ports of the four core devices), department, surgery, rhythm, case order and the HR records themselves.
 results: |
-  - **Groups at [[value:hr-delay-early]] (SD 0.51, 36%) and [[value:hr-delay-late]] (SD 0.65, 64%):** 1,775 cases early, 3,652 late, 795 uncertain.
+  - **Groups at [[value:hr-delay-early]] (SD 0.51, mixture weight 0.36) and [[value:hr-delay-late]] (SD 0.65, 0.64):** 1,775 cases early, 3,652 late (33% and 67% of
+    those classified), 795 uncertain.
   - **Not a different window:** both groups fit the same rule best, a mean of the last 8 R–R intervals
     ([[study:hr-derivation]]); the 2.28 s gap is close to one 2 s poll of the recorder.
     The arterial pressure numerics show no such split, so it is specific to HR.

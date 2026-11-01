@@ -6,7 +6,7 @@ unit: mmHg
 spread:
   q1: 5
   q3: 10
-  n: 4281
+  n: 4272
   text: 5th–95th percentile 1–16 mmHg
 status: measured
 study: blood-gas-at-the-draw
