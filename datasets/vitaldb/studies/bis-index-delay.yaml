@@ -22,7 +22,7 @@ results: |
   - **15 s setting:** 1,578 of 3,297 good fits (48%) have a fast part of 13–17 s: about 16 s of EEG ending 3 s before
     the stamp. 1,304 (40%) are longer, 32–61 s (median 50 s; less certain). Five PCs never show the 15 s window.
   - **Most of the response is slow:** the fast part holds 16% of the kernel weight; half the weight is older than
-    30 s, 90% older than 97 s.
+    31 s and a tenth older than 97 s (medians over recordings).
 discussion: |
   Treat the index as an average of the EEG over roughly 15–40 s ending about 3 s before its stamp, with slow weight
   beyond. It suits slow questions (depth of anaesthesia over minutes); anything faster needs features computed from

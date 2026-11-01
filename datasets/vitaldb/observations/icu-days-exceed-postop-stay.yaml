@@ -1,7 +1,7 @@
 id: icu-days-exceed-postop-stay
 name: Some ICU stays are longer than the postoperative stay
 summary: >-
-  In 37 cases the ICU day count reaches or exceeds the days from surgery to discharge, though the release describes it
+  In 36 cases (37 with [[case:1563]], whose dates are placeholders) the ICU day count reaches or exceeds the days from surgery to discharge, though the release describes it
   as the postoperative ICU stay. Most are emergencies with long stays before surgery, so the count probably includes
   ICU days before the operation.
 status: likely

@@ -11,7 +11,8 @@ question: |
   matter which time is taken as induction?
 why: |
   Post-induction hypotension is a common outcome, usually counted from the charted anaesthesia start. Anaesthesia
-  start entered on a 5-minute mark is rounded up ([[study:emr-rounding]]), about 2½ minutes late; but before that
+  start entered on a 5-minute mark may be rounded up, about 2½ minutes late ([[study:emr-rounding]]; the value model
+  prefers the nearest mark, [[study:value-model-anestart]]); but before that
   is the question of what the charted time stands for. The devices mark induction themselves: the BIS falls below
   60 as the patient loses consciousness, and the propofol pump starts.
 variables: [emr-events, bis-index, pump-rates, solar8000-nibp, solar8000-art-numerics]

@@ -1,7 +1,7 @@
 id: snuadc-gap-stamp-shift
 name: Stamp shift across a recording gap
 quantity: Where the SNUADC stamps sit after a 10–18 s recording gap, against the pacing train.
-display: "127–149 ms early (4 gaps, 2 cases; modulo one pacing period)"
+display: "124–136 ms early (2 gaps in 2 cases; modulo one pacing period)"
 status: measured
 study: paced-ecg
 about: [snuadc-ecg-ii]

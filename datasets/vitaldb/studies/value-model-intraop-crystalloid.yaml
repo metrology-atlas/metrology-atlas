@@ -6,7 +6,8 @@ background: |
 data: |
   - 5,980 values; 408 missing (short cases, median 1.7 h against 3.1 h); no zeros; maximum 23,800 mL.
   - Only 6 values are off the 10 mL grid, so the resolution is 10 mL.
-  - The fit uses 5,974 values on the 10 mL grid.
+  - The fit uses 5,863 values on the 10 mL grid with a usable anaesthesia duration (model version 2; the first
+    model, whose BICs are given below, used 5,974).
 method: |
   - Log-spline latent with K = 6.
   - Constant 100 and 50 mL propensities were compared with volume-dependent ones.

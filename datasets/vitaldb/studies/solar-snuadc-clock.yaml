@@ -3,7 +3,8 @@ name: The SNUADC clock through the Solar8000 numerics, whole release
 summary: >-
   On the SNUADC's own sample count, the delay from the waveform to the PC-stamped Solar8000 heart rate and mean
   arterial pressure ramps at the SNUADC's drift against the PC, measured without its stamps or resets. In recordings
-  with whole reset intervals it agrees with them (−63 ppm; median difference +1.5 ppm, 581 recordings). It is too
+  with whole reset intervals it agrees with them (−61 ppm against −66 ppm from their resets; median difference
+  per recording +1.5 ppm, 581 recordings). It is too
   noisy per recording, and in recordings under about 4 h its rate is biased toward zero, so it cannot yet speak for
   recordings without resets.
 date: 2026-10-19
@@ -32,7 +33,7 @@ method: |
   were grouped by SNUADC correction mode, and step-mode recordings by whether they have a whole reset interval.
 results: |
   - **Where it can be checked, it closes:** in step-mode recordings with whole reset intervals the median is
-    −63 ppm, and against those recordings' own reset intervals the median difference is +1.5 ppm (p25–p75 −24 to
+    −61.1 ppm (580 recordings; −66.4 ppm from the same recordings' resets), and against those recordings' own reset intervals the median difference is +1.5 ppm (p25–p75 −24 to
     +36; 581 recordings; median |z| 1.11).
   - **Per recording it is noisy:** a median standard error of 40 ppm from mean arterial pressure and 83 ppm from
     heart rate.
@@ -72,9 +73,9 @@ figures:
     source: vitaldb-bench tools/clock_route_figs.py
     caption: >-
       The SNUADC's drift against the recorder PC through the Solar8000 numerics, median by recording length (bins with
-      at least 15 recordings). In recordings with whole reset intervals (blue) it reaches the resets' −63 ppm; in every
+      at least 15 recordings). In recordings with whole reset intervals (blue) it approaches the resets' step-mode rate (−63 ppm, the dashed line); in every
       group the estimate rises toward zero as recordings get shorter, an artefact of the estimator rather than of the
       clocks.
     alt: >-
       Three lines of median rate against recording length from 1.5 to 8 hours. All rise toward 0 ppm for short
-      recordings; the blue line for recordings with reset intervals settles near −63 ppm beyond 5 hours.
+      recordings; the blue line for recordings with reset intervals settles near the −63 ppm reference line beyond 5 hours.

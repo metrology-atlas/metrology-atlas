@@ -16,7 +16,7 @@ method: |
 results: |
   - Operation duration is charted about 2.5 min short.
   - Anaesthesia duration is charted about 4.4 min long and emergence about 6.3 min long.
-  - Induction to incision is nearly unbiased (−0.5 min).
+  - Induction to incision is nearly unbiased (+0.5 min, charted slightly long).
   - The median posterior SD of an interval is 1.8–2.8 min, and the 90th percentile is 2.4–4.9 min. For a 15-min emergence, that is a large share of the value.
   - Among positive intervals that are whole multiples of 5 minutes, the share on multiples of 15 is 32.5–33.3%
     (33.3% expected) and on multiples of 30 is 16.6–19.0% (16.7% expected) for anaesthesia duration, operation

@@ -17,17 +17,17 @@ method: |
 results: |
   | Track | Delay from window end, p10 / p50 / p90 (s) | Between-case SD (s) | ICC |
   |---|---|---|---|
-  | HR | 1.7 / 3.7 / 5.0 | 1.31 | 0.71 |
-  | ART systolic | 0.3 / 1.0 / 1.9 | 0.79 | 0.61 |
-  | ART mean | 1.0 / [[value:art-mbp-delay|number]] / 2.5 | 0.78 | 0.61 |
-  | ART diastolic | 0.3 / 1.2 / 2.0 | 0.87 | 0.68 |
-  | CVP | 3.1 / [[value:cvp-delay|number]] / 4.7 | 0.60 | 0.41 |
+  | HR | 1.6 / 3.75 / 4.95 | 1.31 | 0.71 |
+  | ART systolic | 0.2 / 1.05 / 1.85 | 0.79 | 0.61 |
+  | ART mean | 0.9 / [[value:art-mbp-delay|number]] / 2.45 | 0.78 | 0.61 |
+  | ART diastolic | 0.3 / 1.1 / 1.95 | 0.87 | 0.68 |
+  | CVP | 3.05 / [[value:cvp-delay|number]] / 4.6 | 0.60 | 0.41 |
   | Primus ETCO2 | 0.75 / [[value:etco2-delay|number]] / 3.4 | 0.94 | 0.58 |
   | Primus PIP | 3.65 / [[value:pip-delay|number]] / 6.5 | 0.96 | 0.55 |
-  | Primus RR | 1.6 / [[value:rr-delay|number]] / 7.6 | 1.98 | 0.67 |
+  | Primus RR | 1.55 / [[value:rr-delay|number]] / 7.45 | 1.98 | 0.67 |
 
   - **No drift within cases** (median 0 s/h).
-  - **Shared offsets within a device family:** the three arterial pressure delays correlate at ρ 0.86–0.92; across
+  - **Shared offsets within a device family:** the three arterial pressure delays correlate at ρ 0.86–0.91; across
     families hardly at all.
   - **HR is the only track whose delay follows the Solar8000 port** (η² 0.35): two groups
     ([[study:hr-delay-groups]]).

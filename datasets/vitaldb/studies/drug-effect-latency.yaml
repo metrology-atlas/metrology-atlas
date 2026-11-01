@@ -10,7 +10,7 @@ methods: [shared-events]
 techniques: [null-controls]
 devices: [orchestra, fms, invos, bis, snuadc]
 variables: [pump-rates, fms-infusion, invos-rso2, bis-index]
-data: 1,529 cases (1,500 with Orchestra pumps, plus every FMS and Invos case). Every event type was also measured at random times with the same exclusions.
+data: 1,529 cases (1,500 with Orchestra pumps, plus every FMS and Invos case). Every event type but propofol to BIS was also measured at random times with the same exclusions.
 background: |
   Physiology is a soft link: a drug's onset has a known range, not a known value, so it bounds a clock offset
   rather than measuring it. A response that comes before its cause would expose a clock error.

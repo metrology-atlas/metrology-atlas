@@ -9,7 +9,8 @@ data: |
   - 42% of cases have no urine output, probably because no catheter was placed. Cases without it are much shorter (median 1.8 h), so the latent distribution is conditional on catheterisation.
   - 15 values (0.4%) are not multiples of 5 mL. They are flagged `off_grid` and the resolution is overridden to 5 mL.
   - The 23 exact zeros were set aside in the original fit; since v0.6.0 they have their own rule (see Results).
-  - The fit uses the 3,669 positive values on the 5 mL grid.
+  - The fit uses 3,630 positive values on the 5 mL grid with a usable anaesthesia duration (model version 2; the
+    first model used 3,669).
 method: |
   - First screen: each value was placed in one of five nested groups by the coarsest anchor it sits on (100, 50, 10, 5 or 1 mL), and the shares were compared with a flat, no-rounding expectation.
   - Step 1, binned exploration: 100 mL bins centred on the 100 mL anchors, a flat latent within each bin, and propensities by back-substitution as in the manuscript's closed form.

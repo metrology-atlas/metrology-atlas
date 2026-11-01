@@ -34,14 +34,14 @@ results: |
   | Tier | Share of injected time | Error after correction (RMS) | Time over 10 ms | Share of real time |
   |---|---|---|---|---|
   | A | 60% | 0.2 ms | 0.1% | 17.0% |
-  | B | 17% | 1.6 ms | 3.7% | 12.2% |
-  | C | 19% | 5.3 ms | 14% | 25.0% |
-  | U (not corrected) | 3% | 9.0 ms | 34% | 22.8% |
-  | N (no sawtooth) | 0.5% (wrongly) | — | — | 23.0% |
+  | B | 17% | 1.6 ms | 3.7% | 16.6% |
+  | C | 19% | 5.3 ms | 14% | 26.8% |
+  | U (not corrected) | 3% | 9.0 ms | 34% | 24.5% |
+  | N (no sawtooth) | 0.5% (wrongly) | — | — | 15.0% |
 
   Uncorrected, the injected sawtooth has an RMS of 9.5 ms.
 discussion: |
-  Tiers A and B cover 29% of the real time analysed, 52% with the stretches where no sawtooth is running. The
+  Tiers A and B cover 34% of the real time analysed (378 h in 266 recordings; ppg_sawtooth_labels.csv), 49% with the stretches where no sawtooth is running. The
   benchmark is optimistic: its physiology came from quiet recordings. Labels carry each tooth's tier, so a user can
   choose how much time to trust.
 

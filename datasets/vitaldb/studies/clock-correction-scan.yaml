@@ -45,8 +45,9 @@ results: |
     normal steps in 60–96% of cases, against about 4% at ordinary joins. (Later explained: the records are written
     out of order; see [[study:reset-cluster-order]].)
   - **Small positive SNUADC gaps are real data loss**, not corrections.
-  - **Two other SNUADC behaviours.** 120 cases correct in small steps (−0.002 to +0.017 s every 15–50 min) and
-    never by 0.49 s; their stamps follow the PC. 1,066 cases of 2.5 h or longer have no correction at all.
+  - **Two other SNUADC behaviours.** 120 cases correct in small steps (−0.002 to +0.017 s; a median of 1.1 an hour per recording, p10–p90 0.5–3.8)
+    and never by 0.49 s; their stamps follow the PC. 1,066 cases of 2.5 h or longer have no 0.49 s correction: 988 have
+    none at all and 78 a single small step.
 discussion: |
   A correction can be recognised by its pattern (SNUADC's 0.484–0.492 s step, BIS's cut at 8,192 s), by every track
   of the device jumping together, and by an implied rate that fits the case. Other jumps on these devices are

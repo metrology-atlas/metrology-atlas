@@ -14,7 +14,7 @@ method: |
   - Ran the full dataset through the package (`tools/validate.py`) and compared each model's log-likelihood with the stored one.
   - Built quantile tables for posteriors from fitted models and compared knot counts, storage types and knot placement.
 results: |
-  - Clinical statuses: 217,111 ok, 61,129 zero or not recorded, 45,533 missing, 178,864 not applicable, 1,987 imputed, 20 invalid, 8 top-coded. All lab results are ok, with 19 off-grid flags.
+  - Clinical statuses: 217,132 ok, 61,106 zero or not recorded, 45,533 missing, 178,864 not applicable, 1,987 imputed, 20 invalid, 10 top-coded. Lab results: 927,816 ok, 543 top-coded (lactate 317, aPTT 226) and 89 bottom-coded (ESR), with 19 off-grid flags (validation_report.json, vitaldb-resolution 0.6.0).
   - The clinical pass takes 7 min and the lab pass 10 min on one core.
   - The cache holds the whole dataset in about 214 MB. One iteration draws every value in about 20 ms for the cases and about 75 ms including all lab results.
   - At any number of knots, int16 has the same worst-case error as float32 and float64. The default is 1,024 knots in int16, with worst mean error 4.7 × 10⁻⁴ SD.

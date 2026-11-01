@@ -2,7 +2,7 @@ id: art-240hz-timing
 name: Arterial pressure against the monitor's 240 Hz cycle
 summary: >-
   The arterial pressure's steps follow a 240 Hz output cycle that runs 23–55 ppm off the SNUADC clock. If its timing
-  followed that cycle it would slide against the ECG by 4.17 ms each turn, or drift by up to 290 ms an hour. Neither
+  followed that cycle it would slide against the ECG by 4.17 ms each turn, or drift by up to 200 ms an hour. Neither
   happens: arterial pressure keeps time with the ECG to within about 1 ms.
 date: 2026-10-28
 status: current
@@ -16,7 +16,7 @@ background: |
   The arterial pressure's step sizes follow a cycle at 239.986–239.994 Hz on the SNUADC sample count
   ([[study:waveform-deltas]]). If the pressure were acquired on that clock and placed on the 500 Hz grid without timing
   correction, its content would either slide against the ECG by one 240 Hz period (4.17 ms) every time the cycle turns
-  over (a sawtooth, every 75–181 s in these recordings), or drift steadily by 23–55 ppm (70–290 ms over 80 minutes).
+  over (a sawtooth, every 75–181 s in these recordings), or drift steadily by 23–55 ppm (up to 300 ms over the 90 minutes analysed).
 method: |
   R peaks on ECG II (5–25 Hz band) and the steepest arterial upstroke 80–450 ms later, to a fraction of a sample. Each
   beat's delay minus its 3-minute running median. The cycle's slow phase from the arterial pressure's own step-size

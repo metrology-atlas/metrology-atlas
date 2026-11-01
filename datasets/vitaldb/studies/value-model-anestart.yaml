@@ -29,7 +29,7 @@ discussion: |
   - A start recorded off the 5-minute grid is right to the minute.
   - A rounded start is uncertain by ±2.5 or ±5 min, centred on the recorded time.
   - A 07:40 or 07:30 start written for a first case may be off by 10 min or more; the recording start then carries most of the information.
-  - Because both starts use the nearest mark, induction to incision is nearly unbiased (−0.5 min).
+  - Because both starts use the nearest mark, induction to incision is nearly unbiased (+0.5 min).
   - The API needs the case's recording start and admission date to place the value on the clock, plus emergency status.
 limitations: |
   - The capture windows of the two nominal first-case values are not identifiable.

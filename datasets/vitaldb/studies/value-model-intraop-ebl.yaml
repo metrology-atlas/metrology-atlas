@@ -7,7 +7,8 @@ data: |
   - 3,987 non-missing values (2,401 missing, 38%) and 11 zeros. The maximum is 30,100 mL, and 214 values are above 1,000 mL.
   - 17 positive values are not multiples of 5 (e.g. 2, 12, 472 mL). Only 26 (0.7%) are odd multiples of 5, so the resolution is overridden to 10 mL.
   - Cases with a recorded blood loss are longer (median 3.6 h, against 2.0 h when missing). Blood loss and urine output are both missing in 1,659 cases.
-  - The fit uses 3,933 positive values on the 10 mL grid.
+  - The fit uses 3,882 positive values on the 10 mL grid with a usable anaesthesia duration (model version 2; the
+    first model used 3,933).
 method: |
   - Heaping was screened by magnitude: the share of values whose coarsest anchor is 10, 50, 100, 500 or 1,000 mL, in seven recorded ranges.
   - All candidate models use a log-spline latent with K = 6.

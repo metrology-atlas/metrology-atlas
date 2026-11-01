@@ -14,7 +14,7 @@ results: |
   | Event | Events | Result |
   |---|---|---|
   | Probe off (flat PLETH) | 139 | SpO2 blanks 0.6 s after pulse loss (IQR −0.4 to 1.9); first value 5.5 s after return |
-  | Low perfusion | 189 | SpO2 mostly freezes rather than blanking (about 55–70% of 5–20 s episodes) |
+  | Low perfusion | 189 | SpO2 freezes more often than it blanks: it holds its last value in 51–56% of 5–20 s episodes and blanks in 13–18% (whole release: 49–53% and 17–20%) |
   | Electrocautery | 3,132 | No effect: 2% reach the PLETH; SpO2 moves in 7% vs 5% at random |
   | PLETH-only artefacts (motion) | 296 | SpO2 moves ≥ 2% after 34%; dip starts +4 s, deepest +8 s, recovers by ~25 s |
   | NIBP cuff inflation | 991 | Not usable: only 4 occluded the oximeter arm |

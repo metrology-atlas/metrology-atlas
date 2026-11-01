@@ -3,7 +3,7 @@ name: Message sizes and the steps between records
 summary: >-
   Every record in every waveform: SNUADC writes messages of 100 samples (0.2 s), Primus 30 (0.48 s), BIS 16
   (0.125 s), CardioQ no fixed size. Backward steps outnumber gaps by about a hundred to one and come from a few
-  recordings with duplicated or interleaved records. Primus gaps are whole lost messages; most SNUADC and BIS gaps
+  recordings with duplicated or interleaved records. Primus AWP gaps are whole lost messages (CO2 gaps mostly are not); most SNUADC and BIS gaps
   are not.
 date: 2026-10-19
 status: draft
@@ -40,7 +40,8 @@ results: |
     −1 message) and [[observation:interleaved-records]] (two streams alternating in one track: steps in pairs
     that sum to one message).
   - **Primus gaps are whole messages.** Folded modulo 0.48 s, 11,000 of 14,989 AWP gaps sit at zero: lost
-    messages, with the stamps intact. CO2 has the same peak at zero plus a second near 0.43 of a message.
+    messages, with the stamps intact. CO2 gaps are mostly not whole messages: only 147 of 3,879 sit at zero, and the largest peak is near 0.43
+    of a message.
   - **SNUADC and BIS gaps mostly are not.** Their remainders are spread almost evenly, with small peaks at 0 and
     1 (whole messages) and, in BIS, a comb at multiples of 1/8 of a message (2 samples). Most of these gaps are
     clock corrections or a loss combined with one ([[observation:small-snuadc-gaps]] shows that SNUADC's

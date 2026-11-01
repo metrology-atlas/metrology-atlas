@@ -12,7 +12,7 @@ devices: [pacemaker, snuadc, vital-recorder]
 variables: [snuadc-ecg-ii]
 data: |
   All 6,388 cases were screened for runs of beats at one constant interval. Seven pass, paced at about 1,204, 1,000
-  and 860 ms (50, 60 and 70 bpm); only two of them list a pacemaker in the pre-operative ECG field. About 40 more
+  and 860 ms (50, 60 and 70 bpm); only one of them ([[case:4631]]) lists a pacemaker in the pre-operative ECG field. About 40 more
   cases have long regular runs at 370–920 ms, but their interval wanders by about 1 ms between stretches: regular
   sinus rhythm, not pacing.
 background: |
@@ -31,7 +31,8 @@ results: |
     stamps step by −480.6 to −481.0 ms, and the train on stamp time by −498.1 to −498.8 ms. So the true correction
     is about [[value:snuadc-step-correction-size]], close to a 0.5 s threshold, and the stamps show only 0.48 s of it because about 9 samples are
     never taken. Every record still holds 100 samples, so nothing in the file shows the loss.
-  - **Recording gaps of 10–18 s shift the stamps by 127–149 ms** against the pacing train (four gaps, two cases).
+  - **Recording gaps of 16–18 s shift the stamps by 124–136 ms** against the pacing train (two gaps in two cases, one
+    seen on both leads).
   - **No other breaks.** Apart from corrections and gaps, no phase step of 6 ms or more went without an intervening
     beat or a poorly matched beat. No hidden concatenation was found in the paced stretches.
 discussion: |
