@@ -1,10 +1,11 @@
 id: hr-delay-late
 name: Solar8000 HR delay, late group
 quantity: Delay from the end of the HR window to its stamp, in the late group of cases.
-value: 4.20
+value: 4.17
 unit: s
-spread: {n: 3652, sd: 0.65, text: "67% of classified cases (mixture weight 0.64)"}
+spread: {n: 3771, sd: 0.42, text: "63% of classified cases (mixture weight 0.61); labels of 1 Nov 2026 (8-interval HR rule)"}
 status: measured
 study: hr-delay-groups
 about: [solar8000-hr]
 headline: true
+date: 2026-11-01
