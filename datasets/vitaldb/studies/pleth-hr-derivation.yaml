@@ -15,7 +15,7 @@ devices:
 variables:
 - solar8000-pleth-hr
 - snuadc-pleth
-data: 'Every recording with SNUADC/PLETH and Solar8000/PLETH_HR: 6,151 of 6,388 (236 have no plethysmogram with the pulse
+data: 'Every recording with SNUADC/PLETH and Solar8000/PLETH_HR: 6,151 of 6,388 (237 have no plethysmogram with the pulse
   rate). Up to 3,000 PLETH_HR values per recording over its first 4 hours of plethysmogram.'
 background: 'Two earlier results disagreed about PLETH_HR''s window: the numeric derivation pilot found a median of about
   12 beats ([[study:numeric-derivation-pilot]]), and the comparison with heart rate found a ridge at a constant ratio of

@@ -32,8 +32,8 @@ results: |
     of at least 0.9; a hidden Solar8000 or Primus port in more than 99.7%; a hidden SNUADC port in 83% (99% of the
     3,673 at 0.9 or more). Below 0.9 the posteriors are only roughly calibrated.
   - **Assigned:** 517 of the 633 incomplete recordings get a key with a posterior of at least 0.9, among them
-    468 of the 519 without a BIS; 33 more between 0.5 and 0.9. 51 match no complete key, most of them missing the
-    Solar8000's port, and 32 stay below 0.5.
+    468 of the 519 without a BIS; 34 more between 0.5 and 0.9. 51 match no complete key, most of them missing the
+    Solar8000's port, and 31 stay below 0.5.
   - **The oximeter frame clock** (18 October; [[code:vitaldb-bench/tools/frame_an.py]] on up to 30 complete
     recordings per key and the 116 unassigned): 1,169 of 1,350 recordings had a usable ECG and PLETH stretch, and
     the raw PPG peak locked to a frame clock, with both halves agreeing within 3 ppm, in 656. Within a key the

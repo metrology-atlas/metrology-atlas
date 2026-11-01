@@ -12,7 +12,7 @@ background: |
   - Lab times are machine timestamps at 1 s resolution, with no rounding to model. The seconds component is spread evenly (about 1.7% per second).
   - The working hypothesis was that they mark when the result was returned.
 data: |
-  - `lab_data.csv`: 131,942 unique timestamps.
+  - `lab_data.csv`: 131,956 unique case-timestamp pairs.
   - Intra-operative central-lab timestamps (to 30 min after anaesthesia end) with a blood gas in the preceding hour: CBC 1,665, coagulation 1,539, chemistry 1,613.
 method: |
   - Compared timestamps of panels run on different analysers in the same case.

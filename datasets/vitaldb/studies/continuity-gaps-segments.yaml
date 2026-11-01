@@ -63,7 +63,7 @@ results: |
   [[figure:continuity-gap-vs-since]]
 
   **Before and after synchronisation.** Measured again at every record junction, on the stamps and on each device's
-  fitted stamp clock (6,322–6,342 recordings per signal; up to 28 per signal with broken record streams left out,
+  fitted stamp clock (6,322–6,342 recordings per signal, 5,547 for the BIS EEG; up to 28 per signal with broken record streams left out,
   [[observation:duplicated-records]], [[observation:interleaved-records]], [[observation:snuadc-overlapping-records]]):
 
   | Signal | Gaps ≥ 10 ms, as recorded → synchronised | Overlaps ≥ 10 ms, as recorded → synchronised |
