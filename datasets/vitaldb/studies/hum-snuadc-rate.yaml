@@ -13,7 +13,7 @@ variables: [snuadc-ecg-ii, snuadc-art, bis-eeg]
 data: |
   The whole release. Hum lines from [[study:mains-grid-pc-rate]] (2,455 recordings with SNUADC hum, first 60 min);
   SNUADC and BIS rates from their stamp corrections ([[study:correction-periods]]); BIS-against-ECG burst drift over
-  each whole recording (median 2.2 h) from the burst validation ([[study:shared-bursts]]). [[value:snuadc-uncorrected-share|number]] of 6,350 recordings
+  each whole recording (median 2.2 h) from the burst validation ([[study:shared-bursts]]). [[value:snuadc-uncorrected-share|number]] of the 6,350 recordings with SNUADC events
   with SNUADC have no stamp correction; [[value:snuadc-uncorrected-hum|number]] of them have hum.
 background: |
   Without stamp corrections the stamp model cannot measure the SNUADC's rate, so it uses the typical rate of the
@@ -39,9 +39,9 @@ results: |
   | The typical rate of the recording's SNUADC mode | 19 ppm (17–21) | 46 ms/h | |
   | **The hum rate** | **[[value:snuadc-uncorrected-drift-hum|.0]]** | **[[value:snuadc-uncorrected-drift-hum-hourly]]** | **13%** |
 
-  - The hum rate follows the burst drift (rank correlation +0.54). Mode "none" recordings run a median 27 ppm off the
+  - The hum rate follows the burst drift (rank correlation +0.53). Mode "none" recordings run a median 27 ppm off the
     assumed rate; the hum sees this. After the hum rate the two modes are alike (13.8 and 12.6 ppm).
-  - **Reference noise:** where both rates come from corrections, the burst drift has a robust SD of 2.7 ppm, so the
+  - **Reference noise:** where both rates come from corrections, the burst drift has a robust SD of 2.7 ppm (about its median; 3.0 ppm about zero), so the
     [[value:snuadc-uncorrected-drift-hum|.0]] is the hum rate's own error.
   - **Not crystal warm-up:** the hum line per 30-min block over whole recordings (47 recordings of 4 h or more) is
     flat; the first hour minus the whole recording is 0.0 ppm (median; IQR −6.5 to +7.9).
@@ -65,7 +65,7 @@ discussion: |
   with two or more corrections instead removes most of the offset but leaves a larger spread (18 ppm), from fewer
   recordings per setup.
 limitations: |
-  The check needs a BIS with its own corrections: 224 recordings, two thirds in step mode, mostly on port COM4. The hum
+  The check needs a BIS with its own corrections: 224 recordings, three quarters in step mode (165), mostly on port COM4. The hum
   is measured over the first 60 min of a recording and applied to all of it. It gives a rate, not an offset. The
   drift is stated for recordings without corrections; with corrections there is none to speak of.
 open_questions:

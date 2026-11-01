@@ -12,7 +12,7 @@ clocks: [hospital-records]
 devices: [clinical-records, snuadc]
 variables: [lab-blood-gas, lab-central, snuadc-art]
 data: |
-  - `lab_data.csv`: 131,942 case-timestamp pairs.
+  - `lab_data.csv`: 131,956 case-timestamp pairs (928,448 rows).
   - 1,440 cases with arterial pressure, for the check against the draw.
   - For the panel comparisons: intra-operative central-lab panels (up to 30 min after anaesthesia end) with a blood
     gas in the hour before: CBC 1,665, coagulation 1,539, chemistry 1,613.

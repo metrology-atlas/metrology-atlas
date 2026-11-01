@@ -82,7 +82,7 @@ results: |
     Over all recordings the gain is small (within-recording SD 23.9 → 23.4 ms; median absolute slope 42.6 →
     40.3 ms/h), because few recordings are affected.
   - Over all 2,707 recordings with model2: a median error of 42 ms against the mode's constant and 18 ms against
-    the recording's own constant (p90 151 and 79 ms); within-recording SD 24 ms (first model: 46, 22, 165, 106 and
+    the recording's own constant (p90 151 and 79 ms); within-recording SD 24 ms (first model: 46, 22, 166, 106 and
     34 ms).
   - **The adopted model (model3), over all 2,710 recordings with at least 5 good windows:** EEG minus ECG −804 ms
     in step mode (1,526 recordings; interquartile range −833 to −776), −660 ms in frequent-correction mode (78),

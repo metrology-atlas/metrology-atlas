@@ -1,6 +1,6 @@
 id: primus-co2
 name: Capnogram (Primus)
-summary: Sidestream CO2 from the Primus at 62.5 Hz; the sampling line adds at least 1 s.
+summary: Sidestream CO2 from the Primus at 62.5 Hz; the sampling line delays it by a median 3.6 s ([[study:co2-sampling-line]]).
 type: waveform
 source_name: Primus/CO2
 device: primus
