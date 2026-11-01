@@ -1,0 +1,77 @@
+id: primus-awp-anchoring
+name: How the Primus AWP is stamped, and which breath the lag locks onto
+summary: >-
+  The Primus airway-pressure stamps are an anchor plus a sample count; the anchor holds across the regular pauses
+  and is reset, with an error of up to about ±2 s, at irregular gaps. Separately, about a quarter to a third of the
+  stretches in the release-wide breath matching are measured a whole breath off, which inflated the apparent
+  per-recording offset.
+date: 2026-11-01
+status: draft
+methods: [stamp-reading, shared-events]
+techniques: [windowed-cross-correlation, null-controls]
+clocks: [primus-clock, snuadc-sample]
+devices: [primus, snuadc]
+variables: [primus-awp, primus-co2]
+data: |
+  The record times of Primus/AWP and Primus/CO2 in all 6,388 recordings (6,360 with AWP), and every Primus track's
+  first record. The per-window AWP-to-reference lags of [[study:ventilator-breath-matching]]'s release-wide run
+  (tools/primus_sync_accuracy.py, 19 October; CVP arm in 1,069 recordings, ART arm alone in 948), and the
+  ventilator's set and measured breath rates (Primus/SET_RR_IPPV, Primus/RR_CO2) in the 2,022 recordings with a lag.
+background: |
+  Breath matching gave the Primus a per-recording offset against the SNUADC with a wide spread (a median of about
+  1.8 s, 5th–95th percentile −0.7 to +5.8 s) that no recording property explained. Two things could produce it: how
+  the recorder stamps the Primus waveform, or the lag measurement itself. Ventilation is regular, so the lag between
+  a breath in the airway pressure and its effect on CVP or ART is only defined to within a breath unless something
+  else picks the breath; the release-wide run finds each window's lag within half a breath of a coarse envelope
+  estimate and starts each window from the previous one, without the breath-identity check of the pilot.
+method: |
+  - **Record times.** For AWP and CO2: the share of consecutive records exactly one record (30 samples, 0.48 s) apart,
+    and each gap (stamp step over 5 s) in record lengths.
+  - **Stretches.** Per recording (CVP arm, else ART), a line of lag against time in each stretch between AWP pauses:
+    its offset at the stretch start, slope and residual; the step at each pause.
+  - **Breath periods.** Each stretch's breath period T from the set rate (else the measured rate); offsets and steps
+    in breath periods; offsets stratified by set rate (strata by rate, not by offset / T, which would bias the
+    comparison; a regression within bands of offset / T was tried and dropped for that reason).
+  - **Two references.** In recordings with both arms, ART minus CVP per stretch, in breath periods.
+  - **Gap kind.** Each pause step matched to its AWP gap: a whole number of records (the 0.48 s grid carries on) or
+    not (a new anchor).
+results: |
+  - **The AWP stamps are an anchor plus a sample count.** In 6,312 of 6,360 recordings every record is exactly
+    0.48 s after the one before; none is stamped on arrival. AWP and CO2 are anchored separately: their gaps coincide
+    in only 778 recordings.
+  - **The anchor holds across the regular pauses and resets at irregular gaps.** Of 13,988 AWP gaps, 74% are a
+    whole number of records. Pause steps at those (2,785, gaps of about 20–23 s): median +0.01 s (IQR −0.13 to
+    +0.15). At gaps that are not (724, gaps of 5–38 s): median −0.33 s (IQR −1.33 to +0.78), 86% over 0.25 s.
+  - **About a quarter to a third of stretches are measured a whole breath off.** Stratified by set rate, offsets
+    have a main mode at 0.5–1.0 s at every rate and a second mode one breath period above it (18/min: 3.5–4.5 s;
+    16/min: 4.0–5.0; 14/min: 4.5–5.5; 12/min: 5.0–6.5; 10/min: weak, 6.0–7.5), with a small third. In 1,127
+    stretches of 459 recordings with both references, ART minus CVP is within a quarter breath in 63% (median
+    +0.26 s) and about one whole breath in 34%, its side modes moving with the set rate; within a stretch the two
+    agree to 0.09 s (SD). Pause steps are rarely whole breaths (under 2% of either gap kind).
+discussion: |
+  The wide per-recording offset is mostly the measurement's: a stretch that starts on the wrong breath stays on it,
+  and its windows agree with each other, so leave-one-out within a stretch cannot see it. The breath-matching
+  uncertainty quoted for the Primus (about 55 ms) therefore holds only for stretches on the right breath, and the
+  spread behind the shift known in advance is inflated by the slipped ones. What is left of the offset is the
+  anchor: set when the AWP stream starts or restarts after an irregular gap, kept across the regular pauses. Its
+  true size and spread can only be stated once each stretch's breath is fixed.
+limitations: |
+  Draft. The breath periods come from the ventilator's settings, sampled every fourth record. The two-reference test
+  needs both arms and covers 459 recordings. Physiology between the airway pressure and CVP or ART is not separated
+  from the stamp offset here.
+open_questions:
+  - title: "Which breath is right"
+    kind: next step
+    summary: >-
+      Fix the breath of each stretch: the branch nearest the release-wide main mode, the arm nearer it where two
+      disagree, and an unambiguous anchor (the start of mechanical ventilation) to test both; then rerun the
+      breath matching saving each window's score over the whole lag range, and redo the Primus numbers.
+  - title: "What sets the anchor"
+    kind: next step
+    summary: >-
+      Compare each new AWP anchor, and the recording's first, with the Primus numerics stamped on arrival around it
+      (every ~7 s), to see whether the anchor error is the arrival latency of the first block.
+code:
+  - vitaldb-bench/tools/primus_awp_anchor.py
+  - vitaldb-bench/tools/primus_sync_accuracy.py
+  - vitaldb-bench/examples/ppv_by_breath.py

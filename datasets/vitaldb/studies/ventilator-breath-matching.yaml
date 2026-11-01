@@ -58,6 +58,13 @@ discussion: |
   slope.
 limitations: A 20-case pilot. The offset includes the physiological airway-to-CVP delay.
 open_questions:
+  - title: "Stretches measured a breath off in the release-wide run"
+    kind: conflict
+    summary: >-
+      The release-wide run (tools/primus_sync_accuracy.py) finds each window's lag within half a breath of a coarse
+      estimate, without this study's breath-identity check. About a quarter to a third of its stretches sit a whole
+      breath off ([[study:primus-awp-anchoring]]), so its per-stretch accuracy holds only for stretches on the right
+      breath, and the between-recording spread is inflated. The Primus numbers built on it are under revision.
   - title: "What sets the steps at the AWP pauses"
     kind: phenomenon
     summary: >-
