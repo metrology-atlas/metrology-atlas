@@ -115,6 +115,24 @@ results: |
     timing forms of primus-awp and primus-co2 carry these, the breath error as its own component.
 
     [[figure:primus-awp-correction]]
+  - **Most of the AWP lead is real against the recorder's clock (causality bound, 2 November).** The Primus
+    numerics are stamped by the PC on arrival, so a PIP value cannot carry a stamp before its breath happened. The
+    release-wide fit of the PIP rule ([[study:numerics-derivation-release]]; the peak of the last breath in 924 of
+    the 1,064 recordings that also have a CVP lag) gives per recording the delay d from the end of a breath's
+    inspiration on the AWP stamps to the PIP stamp: d = (the device's true delay, never negative) minus the AWP bias,
+    so the AWP cannot be early by more than d. d is a median 1.40 s (p5–p95 0.35–3.40 s), against the AWP lag
+    behind CVP of 1.43 s (0.43–3.54 s) in the same recordings. Their difference, d minus the CVP lag, is the
+    device's true delay less the CVP reference's own delay and the airway-to-CVP physiology: a median −0.15 s
+    (IQR −0.55 to +0.35 s; d is shorter in 59% of recordings). So most of the lead, about 1–1.4 s typically, is
+    the AWP stamps sitting early on the recorder's own timeline, and a few tenths of a second is the reference and
+    physiology. Across recordings d rises with the CVP lag (Theil slope 0.47, 95% 0.40–0.53; Spearman 0.37): part
+    of the spread between recordings is in the AWP stamps, the rest in the reference, the fits or the breath
+    rule. The PIP fit maps the AWP stamps to recorder time with a drift from each stretch's start, which the CVP
+    lag does not, so the two differ by a few tenths of a second (work/primus_anchor_check/numerics_summary.json).
+  - **Two attempts to bound the lead from single PIP records did not work (tests, six recordings).** Choosing the
+    delay at which the share of matched PIP records rises fails because peak pressure barely changes between
+    neighbouring breaths, and using records that match exactly one recent breath gives delays that do not hang
+    together (work/primus_anchor_check/test/).
 discussion: |
   The wide per-recording offset was mostly the measurement's: a stretch that starts on the wrong breath stays on it,
   and its windows agree with each other, so leave-one-out within a stretch cannot see it. Pauses in ventilation are
@@ -141,10 +159,12 @@ open_questions:
       carrying with the main mode, using both references where both exist, and other non-periodic events (changes of
       the set rate, the start of ventilation inside a recording). Each would be checked by the same leave-one-out.
   - title: "What sets the anchor"
-    kind: next step
+    kind: phenomenon
     summary: >-
-      Compare each new AWP anchor, and the recording's first, with the Primus numerics stamped on arrival around it
-      (every ~7 s), to see whether the anchor error is the arrival latency of the first block.
+      The AWP stamps sit early on the recorder's timeline by about 1–1.4 s typically (bounded by the PC-stamped PIP),
+      and the anchor is reset at irregular gaps with an error of up to about ±2 s. What the recorder anchors to, so
+      that the stamps come out early rather than late, is not known: Vital Recorder's handling of the Primus stream
+      is not documented in the release.
 figures:
   - id: primus-awp-breath-ambiguity
     file: primus-awp-breath-ambiguity.png
@@ -192,6 +212,7 @@ code:
   - vitaldb-bench/tools/primus_breath_rule.py
   - vitaldb-bench/tools/primus_numbers.py
   - vitaldb-bench/tools/primus_awp_anchor_figs.py
+  - vitaldb-bench/tools/primus_anchor_check.py
   - vitaldb-bench/examples/ppv_by_breath.py
 typed_ok:
   - {parameter: primus-awp-between-rsd, text: "0.7", why: "the breathing band's edge (0.7 Hz) and lags and correlations of 0.7 in the four-recording test, not the spread between recordings"}
