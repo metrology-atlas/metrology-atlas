@@ -13,8 +13,8 @@ timing:
   kind: per_recording
   uses_future: true
   support_s:
-  - 6
-  - 10
+  - 4.9
+  - 8.3
   stamp_position: close
   removes_bias_s:
     median: 3.75
@@ -39,7 +39,7 @@ timing:
   - hr-late
   domain: recorder-pc
   status: measured
-  evidence: numeric_delay labels, 6,222 recordings; window about 8 s (6-10 s), whole release 29 Oct
+  evidence: numeric_delay labels, 6,222 recordings, whole release 29 Oct; support the last 8 R-R intervals, p10-p90 4.9-8.3 s over recordings (hr-derivation)
   studies:
   - numerics-derivation-release
   - hr-delay-groups
@@ -47,8 +47,8 @@ timing:
   name: as stamped, early group
   kind: as_stored
   support_s:
-  - 6
-  - 10
+  - 4.9
+  - 8.3
   stamp_position: close
   bias_s:
     median: 1.75
@@ -74,8 +74,8 @@ timing:
   name: as stamped, late group
   kind: as_stored
   support_s:
-  - 6
-  - 10
+  - 4.9
+  - 8.3
   stamp_position: close
   bias_s:
     median: 4.35
@@ -100,10 +100,11 @@ timing:
 chain:
 - node: Heart rate algorithm
   kind: window
-  effect: The Solar8000 averages heart rate over a window of about 6–8 s of ECG.
+  effect: 'The Solar8000 computes heart rate as 60 over the mean of the last [[value:hr-window|number]] R–R intervals,
+    leaving out those far from their median ([[study:hr-derivation]]), so [[value:hr-window-span]] of ECG at the median rate.'
   span_s:
-  - 6.0
-  - 8.0
+  - 4.9
+  - 8.3
   status: measured
 - node: Polled by the recorder
   kind: transport
@@ -124,7 +125,8 @@ chain:
 window:
   name: Heart rate window
   parameter: hr-window
-  description: 60 / median R–R over about 6 s, truncated to a whole beat per minute.
+  description: 60 over the mean of the last 8 R–R intervals within about 10–25% of their median, truncated to a whole
+    beat per minute.
 delays:
 - name: Early group
   parameter: hr-delay-early
@@ -132,7 +134,8 @@ delays:
 - name: Late group
   parameter: hr-delay-late
   description: One 2 s poll later, in about two thirds of cases. The group belongs to the recording PC.
-description: The Solar8000 computes heart rate from its own ECG as 60 / median R–R over about 6 s, truncated, and
+description: The Solar8000 computes heart rate from its own ECG as 60 over the mean of the last 8 R–R intervals, leaving
+  out those far from their median, truncated ([[study:hr-derivation]]), and
   the recorder polls it every 2 s. The value is stamped on arrival, one or two polls after its window ends depending
   on the recording PC ([[observation:hr-two-delay-groups]]). Per-case delay labels fix the offset to a few hundred
   ms.

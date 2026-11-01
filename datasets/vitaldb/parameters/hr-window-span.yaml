@@ -1,0 +1,15 @@
+id: hr-window-span
+name: Solar8000 HR window in seconds
+quantity: Span of ECG the Solar8000 heart rate's 8 R–R intervals cover, at each recording's median R–R interval.
+value: 6.6
+unit: s
+spread:
+  p10: 4.9
+  p90: 8.3
+  n: 633
+  text: over recordings; longer at slow rates
+status: measured
+study: hr-derivation
+about:
+- solar8000-hr
+date: 2026-11-01

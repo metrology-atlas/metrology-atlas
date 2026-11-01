@@ -1,0 +1,16 @@
+id: hr-derivation-exact
+name: Solar8000 HR reproduced exactly
+quantity: Share of a recording's HR values the best rule (mean of the last 8 R–R intervals within 15% of their median,
+  truncated) reproduces exactly at its fitted delay; median over recordings.
+value: 82.6
+unit: '%'
+spread:
+  p10: 55.2
+  p90: 91.0
+  n: 633
+  text: 76.3% pooled over values
+status: measured
+study: hr-derivation
+about:
+- solar8000-hr
+date: 2026-11-01

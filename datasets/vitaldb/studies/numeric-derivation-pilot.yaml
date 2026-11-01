@@ -32,7 +32,7 @@ results: |
 
   | Numeric | Best fit (cases) | Delay from window end |
   |---|---|---|
-  | HR | median R–R over ~6 s, truncated (14/24) | 3.6 s |
+  | HR | median R–R over ~6 s, truncated (14/24; superseded by [[study:hr-derivation]]) | 3.6 s |
   | ART systolic | median over 3 s, or EWMA ½ | 2.1 s |
   | ART mean | EWMA ¼ per beat (16/24) | 2.3 s |
   | ART diastolic | EWMA ½ (20/24) | 1.9 s |

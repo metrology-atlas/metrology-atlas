@@ -1,0 +1,16 @@
+id: hr-outlier-band
+name: Solar8000 HR outlier band
+quantity: Largest distance from the window's median R–R interval, as a share of it, at which an interval still enters the
+  Solar8000 heart rate's mean (best fit).
+value: 15
+unit: '%'
+spread:
+  min: 10
+  max: 25
+  n: 633
+  text: bands of 10–25% tie within 0.3 points of values reproduced exactly; 50% is clearly worse
+status: measured
+study: hr-derivation
+about:
+- solar8000-hr
+date: 2026-11-01

@@ -1,0 +1,75 @@
+id: hr-derivation
+name: How the Solar8000 computes its heart rate
+summary: 'Solar8000 HR recomputed from the ECG''s R peaks in 633 recordings: 60 over a mean of the last
+  [[value:hr-window|number]] R–R intervals that leaves out intervals far from their median, truncated. It beats a median of
+  the same intervals in 599 recordings and the neighbouring windows of 7 and 9 intervals in most. The window is
+  [[value:hr-window-span]] of ECG at the median rate, so HR''s support is a count of beats, not a span of seconds.'
+date: 2026-11-01
+status: current
+methods:
+- delays-and-windows
+devices:
+- solar8000
+- snuadc
+variables:
+- solar8000-hr
+- snuadc-ecg-ii
+data: Every tenth recording (case number ending in 3), the sample of the numeric derivation pilot; 633 of 639 with an ECG
+  and HR (4 without ECG and HR, 2 with too few beats or HR values). Up to 8,000 HR values per recording.
+background: 'The numeric derivation pilot ([[study:numeric-derivation-pilot]]) and its release-wide run
+  ([[study:numerics-derivation-release]]) took HR to be 60 over the median R–R interval of the last 6–8 s. A rerun of the
+  pilot with more candidates put an outlier-rejecting mean of the R–R intervals first (406 of 633 recordings), but its
+  windows skipped 7 and 9 beats, its winners split between 8 and 10, and it tried one outlier band only (25%, the band
+  PLETH_HR uses; [[study:pleth-hr-derivation]]). This study settles the window and the band.'
+method: '1. R peaks of SNUADC/ECG_II (V5 where II is missing) on the stamp-model line, R–R intervals of 0.25–2.5 s, as the
+  pilot.
+
+  2. Candidates, 60 over: the mean of the last N intervals within b of their median (b = 10, 15, 20, 25, 30 or 50%);
+  their median; their plain mean; their mean without the longest and shortest; N = 4–16.
+
+  3. Each value stamped at t was computed at t − d − φ, φ uniform over the gap since the previous record, and truncated to
+  the whole beat per minute (rounding as a check, for two candidates). Each candidate''s delay d is fitted (−3 to 15 s,
+  then refined to 0.05 s) and it is scored by the share of up to 8,000 values it reproduces exactly at that delay.'
+results: '- **A mean of [[value:hr-window|number]] intervals that leaves out outliers.** Pooled over recordings, the mean of
+  the last 8 intervals within [[value:hr-outlier-band]] of their median reproduces 76.3% of HR values exactly, the best of 117 candidates. A
+  recording''s median is [[value:hr-derivation-exact]] (p10–p90 55–91%).
+
+  - **The window is 8, not 7 or 9.** Per recording, 8 intervals beats 7 by a median 2.1 points (better in 600 of 633) and 9 by
+  1.1 points (better in 526). With the band at 25%, 428 recordings pick 8, 122 pick 9 and no other N more than 22.
+
+  - **Not a median.** The median of the same 8 intervals reproduces a median 5.8 points fewer values (worse in 599 of 633),
+  and the plain mean of 8 2.3 points fewer (worse in 505).
+
+  - **The band is weakly determined.** Bands of 10–25% of the median tie within 0.3 points pooled (76.0–76.3%), and the
+  recordings'' best bands spread over all six; 50% is clearly worse (74.2%). The atlas states it as about 10–25%
+  ([[value:hr-outlier-band]] best).
+
+  - **Truncated:** truncation reproduces about 35 points more values than rounding.
+
+  - **Delays:** from the window''s last beat to the stamp, a median 1.75 s (p10–p90 1.25–2.28 s) in the early delay group
+  (175 recordings) and 4.20 s (3.59–4.81 s) in the late group (369), 2.45 s apart; the groups found with the older rule
+  ([[study:hr-delay-groups]]) are the same. The window''s centre sits 5.0 and 7.6 s before the stamp.'
+discussion: 'Rejecting outliers explains a puzzle of the heart rate against pulse rate comparison ([[study:hr-vs-pulse-rate]]):
+  a missed pulse puts PLETH_HR on a line below the diagonal, but a missed or extra R peak leaves HR almost unchanged, because
+  the doubled or halved interval falls outside the band and is dropped. A median would do the same, which is why the
+  earlier fits found a median; the exact reproduction separates the two.
+
+  For timing, HR describes the last 8 beats: [[value:hr-window-span]] at the median rate (p10–p90 4.9–8.3 s over recordings),
+  longer at slow rates. Its support is therefore a count of beats; a form or label that gives it a fixed span in seconds
+  is right only at one rate. The per-case delay labels were fitted with the older rule (60 over the median R–R of the last
+  6 s); their delays agree with this fit in both groups, but their support does not.'
+limitations: '- R peaks are found by our own detector, not the monitor''s: where they differ no candidate can match, which
+  is most of the 24% not reproduced.
+
+  - One recording in ten. The rule is the same in both delay groups and every port seen, so the whole release is not
+  expected to differ, but it is not tested here.
+
+  - Candidates are means, medians and banded means of R–R intervals; a monitor rule outside this family (a weighted mean, a
+  band in absolute ms) could fit as well.'
+open_questions:
+- title: The outlier band
+  kind: next step
+  summary: Bands of 10–25% of the median fit equally well. A recording with frequent ectopic beats, whose intervals fall
+    between 10% and 25% from the median, would separate them.
+code:
+- vitaldb-bench/tools/hr_derivation.py
