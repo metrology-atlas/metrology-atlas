@@ -11,19 +11,24 @@ devices: [snuadc, vital-recorder]
 variables: [snuadc-ecg-ii]
 data: |
   Six short-to-medium files (1.4–2.6 h), chosen at random; consistent with the frequent-correction rows and the
-  paced recordings in the rest of the atlas. Then a census of the record stamps of all 6,388 files (17 October;
+  paced recordings in the rest of the atlas. The script for the six files was not saved; the census repeats the
+  measurement on every file and is the evidence for the results below. Then a census of the record stamps of all 6,388 files (17 October;
   [[code:vitaldb-bench/tools/snuadc_stamp_census.py]]): 12,583 stretches of at least 10 minutes between
   corrections, 19,706 recording hours, in the 6,321 files with SNUADC whose records do not overlap throughout.
 method: |
   For each record, the stamp minus the time given by the sample count, e = (stamp − start) × 500 − samples so far,
   was fitted for slope within each segment between corrections.
 results: |
+  - Census commands: `python tools/snuadc_stamp_census.py scan --root $R --out $W/results/clock/census/stamps.jsonl`
+    then `summary --scan $W/results/clock/census/stamps.jsonl --out $W/results/clock/census`, which writes
+    `stamp_census_summary.json` (summary rerun 2 November 2026 on the 17 October scan; earlier fields unchanged).
   - **[[value:snuadc-stamp-arithmetic]] in every segment of the six files**, the same in step and frequent-correction mode.
   - **Frequent-correction mode is not drifting.** Its "about −1 ppm" of stamps against the count is this
     arithmetic; the real drift in that mode is under about 1 ppm.
-  - **The census holds it, with exceptions:** the median slope is −0.9535 ppm, and 89.5% of the recording hours
-    lie within 0.05 ppm of [[value:snuadc-stamp-arithmetic|number]]. But 747 files (12%) sit elsewhere, from about −0.90 to −0.55 ppm (median
-    −0.85), with no trend through the release.
+  - **The census holds it, with exceptions:** the median slope is −0.9535 ppm, and 88.5% of the recording hours
+    (89.5% of the stretches) lie within 0.05 ppm of [[value:snuadc-stamp-arithmetic|number]]. But 747 files (12%) sit elsewhere, all above it:
+    median −0.85 ppm, 5th to 95th percentile −0.90 to −0.72, the highest −0.26. They are spread through the
+    release: 10–14% of the files in every tenth by case id (Spearman −0.02).
   - **Stamp-based loaders lose about 1.6 samples per hour** (32,020 in all): one about every 37 minutes,
     close to the 35 minutes [[value:snuadc-stamp-arithmetic]] predicts.
 
@@ -51,7 +56,7 @@ open_questions:
   - title: "Why 12% of files run at a different slope"
     kind: phenomenon
     summary: >-
-      747 files sit between −0.90 and −0.55 ppm instead of [[value:snuadc-stamp-arithmetic|number]], with no trend through the release. A different
+      747 files sit above it (5th to 95th percentile −0.90 to −0.72 ppm) instead of [[value:snuadc-stamp-arithmetic|number]], with no trend through the release. A different
       recorder build or a different stamp increment are the obvious candidates; comparing these files' header
       version, device list and correction mode with the rest would test it.
   - title: "A fixed-point stamp behind [[value:snuadc-stamp-arithmetic]]"
@@ -59,6 +64,8 @@ open_questions:
     summary: >-
       A 0.2 s increment held at a resolution of 2⁻²⁰ s fits, but is unproven; the recorder's source or one
       controlled recording would settle it.
+code:
+  - vitaldb-bench/tools/snuadc_stamp_census.py
 references: []
 figures:
   - id: slopes

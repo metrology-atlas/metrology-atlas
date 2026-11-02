@@ -2,8 +2,8 @@ id: snuadc-stamp-arithmetic
 name: SNUADC stamps run −0.95 ppm against the sample count
 summary: >-
   Between corrections each 0.2 s record stamp increment is about 0.19 µs short: stamps run −0.95 ppm from the
-  sample count in 88% of files (both SNUADC modes). It is arithmetic, not clock drift. The other 12% sit between
-  −0.90 and −0.55 ppm.
+  sample count in 88% of files (both SNUADC modes). It is arithmetic, not clock drift. The other 12% sit above it,
+  mostly between −0.90 and −0.72 ppm.
 status: established
 devices: [snuadc, vital-recorder]
 studies: [stamp-arithmetic, paced-ecg, vitaldb-loader]
