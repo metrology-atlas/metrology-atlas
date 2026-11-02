@@ -43,8 +43,8 @@ results: |
     PLETH and ART in the window where one was due. A few isolated shared steps of 0.2–1.9 ms remain unexplained.
 discussion: |
   The stall rule explains the signal lost at each reset ([[study:reset-cluster-order]]): the acquisition pauses
-  about 20 ms and the time is never sampled. The channel skew fits the 0.31–0.39 ms ART–PLETH phase difference at
-  240 Hz ([[study:monitor-lines]]). The wrap result means either the per-sample processing time is close to 2 ms, or
+  about 20 ms and the time is never sampled. The channel skew fits the ART–PLETH phase difference at 240 Hz (a median
+  0.37 ms, 0.29–0.46 ms in 69 recordings; [[study:monitor-lines]]). The wrap result means either the per-sample processing time is close to 2 ms, or
   the deployed firmware differs from the public one.
 limitations: Read, not tested on the device. The deployed firmware version is unknown; the channel-to-track mapping is unknown.
 open_questions:
@@ -58,7 +58,7 @@ open_questions:
     kind: next step
     summary: >-
       The channels are read in turn, so each SNUADC track sits a fixed fraction of a millisecond after the one read
-      before it (ART leads PLETH by 0.31–0.39 ms, [[study:monitor-lines]]). No timing form carries this yet. It is
+      before it (ART leads PLETH by a median 0.37 ms, [[study:monitor-lines]]). No timing form carries this yet. It is
       below the 2 ms sample spacing, whose rectangular component (0.58 ms per track) already dominates any pair
       within SNUADC, so it is left open. It would matter for sub-millisecond work within SNUADC, such as transit
       times between arterial pressure and the plethysmogram. Measuring it would take the hum phase across all

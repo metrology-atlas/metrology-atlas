@@ -9,4 +9,4 @@ variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
 studies: [monitor-lines, snuadc-firmware]
 consequence: |
   A fixed sub-millisecond skew between SNUADC channels: a floor on same-clock alignment such as ECG to arterial
-  pressure. A monitor line seen in both ART and PLETH puts ART about 0.3–0.4 ms ahead.
+  pressure. A monitor line seen in both ART and PLETH puts ART 0.37 ms ahead (median; 0.29–0.46 ms, 69 recordings).

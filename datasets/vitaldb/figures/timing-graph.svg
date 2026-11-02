@@ -45,8 +45,8 @@ Status: measured
 Drift: 18–52 ppm by setup
 Correction size: 32.4 ms
 Status: measured</title></a>
-<a class="hit" href="../links/monitor-output-vs-snuadc.html" target="_top" data-tip='["12. Monitor output clock against SNUADC", "Drift: \u221225.4 to \u221228.7 ppm (6 cases)", "Status: estimated"]'><path class="line" d="M591,630 L733,500" fill="none" stroke="#b26b00" stroke-width="2.6" stroke-dasharray="8,5"/><path d="M591,630 L733,500" fill="none" stroke="transparent" stroke-width="14"/><circle cx="619" cy="604" r="11" fill="#b26b00"/><text x="619" y="608" text-anchor="middle" class="n">12</text><title>12. Monitor output clock against SNUADC
-Drift: −25.4 to −28.7 ppm (6 cases)
+<a class="hit" href="../links/monitor-output-vs-snuadc.html" target="_top" data-tip='["12. Monitor output clock against SNUADC", "Drift: \u221256 to \u221223 ppm (5th\u201395th percentile, 229 recordings; median \u221238)", "Status: estimated"]'><path class="line" d="M591,630 L733,500" fill="none" stroke="#b26b00" stroke-width="2.6" stroke-dasharray="8,5"/><path d="M591,630 L733,500" fill="none" stroke="transparent" stroke-width="14"/><circle cx="619" cy="604" r="11" fill="#b26b00"/><text x="619" y="608" text-anchor="middle" class="n">12</text><title>12. Monitor output clock against SNUADC
+Drift: −56 to −23 ppm (5th–95th percentile, 229 recordings; median −38)
 Status: estimated</title></a>
 <a class="hit" href="../links/pacemaker-vs-snuadc.html" target="_top" data-tip='["13. Pacemaker against SNUADC", "Status: measured"]'><path class="line" d="M875,630 L733,500" fill="none" stroke="#1b7f4b" stroke-width="2.6"/><path d="M875,630 L733,500" fill="none" stroke="transparent" stroke-width="14"/><circle cx="847" cy="604" r="11" fill="#1b7f4b"/><text x="847" y="608" text-anchor="middle" class="n">13</text><title>13. Pacemaker against SNUADC
 Status: measured</title></a>

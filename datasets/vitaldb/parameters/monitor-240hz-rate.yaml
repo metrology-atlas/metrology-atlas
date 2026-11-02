@@ -1,7 +1,7 @@
 id: monitor-240hz-rate
 name: Monitor 240 Hz line against SNUADC
 quantity: Frequency of the 240 Hz line in ART and PLETH relative to the SNUADC sample clock.
-display: "−25.4 to −28.7 ppm (6 cases)"
+display: "−56 to −23 ppm (5th–95th percentile, 229 recordings; median −38)"
 status: measured
 study: monitor-lines
 about: [monitor-output-clock]

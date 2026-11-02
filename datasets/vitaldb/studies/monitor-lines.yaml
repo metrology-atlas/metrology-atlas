@@ -1,38 +1,67 @@
 id: monitor-lines
 name: Monitor clocks in the waveforms' spectral lines
 summary: >-
-  Differences of the raw converter counts show lines from the monitor's analogue outputs: 240 Hz in arterial pressure
-  and plethysmogram, and a 30 Hz family in the plethysmogram alone. Each measures a monitor clock against SNUADC.
-date: 2026-10-17
-status: open
+  Differences of the raw converter counts carry lines from the monitor's analogue outputs: a 240 Hz line in arterial
+  pressure and plethysmogram (an output clock running 23–56 ppm slow against the SNUADC, the same in both), and a
+  30 Hz family in the plethysmogram on the oximeter's frame clock, whose 120 Hz member also reaches ECG and arterial
+  pressure. Arterial pressure's 240 Hz pattern comes 0.37 ms before the plethysmogram's. First seen in six files;
+  rebuilt on 273 recordings with public code.
+date: 2026-11-02
+status: current
 methods: [signal-borne-clocks]
 clocks: [monitor-output-clock, oximeter-frame-clock, snuadc-sample]
 devices: [solar8000, snuadc]
 variables: [snuadc-art, snuadc-pleth, snuadc-ecg-ii]
-data: 6 short-to-medium files (1.4–2.6 h), chosen at random; work of the R-peak timing session, consolidated here.
+data: |
+  The 273 recordings of the sawtooth benchmark ([[study:ppg-sawtooth-slips]]; 300 random cases of
+  `$W/pat/cases_pat300.json`): the longest continuous stretch of ECG lead II and PLETH (20–90 min), with arterial
+  pressure where it is continuous over the same stretch (145). The first version (17 October) used six files chosen at
+  random that were not recorded and could not be reproduced.
 method: |
-  Integer counts were recovered from each track and the spectrum of their sample-to-sample changes searched for
-  lines. The 240 Hz line was demodulated in 10 s windows on the global sample index; its frequency came from a
-  zero-padded FFT with parabolic peak interpolation. The phase difference of ART and PLETH at that line gave their
-  skew.
+  Commands (vitaldb-bench; tool SHA-256 29de106aae2e…): `python tools/monitor_lines.py scan --root $R --scan
+  $W/sawtooth_char/scan --out $W/monitor_lines/lines_partK.jsonl --part K --of 4` (K = 0–3), concatenated, then `agg
+  --lines $W/monitor_lines/lines.jsonl --recordings $W/sawtooth_char/bench8/recordings.csv --out $W/monitor_lines`
+  (summary.json).
+
+  - **Line signal:** the absolute sample-to-sample change of the raw counts over its 25-sample running mean (the
+    pattern of step sizes an output stage on its own clock imprints).
+  - **Lines:** demodulated at 240 Hz in 10 s windows and at 30, 60, 90, 120 and 150 Hz in 60 s windows, on the global
+    sample index. A line is present when its median window amplitude is more than 3 times that at a control frequency
+    1.1% lower; its rate against the SNUADC sample clock is the slope of the unwrapped window phase.
+  - **Skew:** the mean phase difference of the arterial pressure's and the plethysmogram's 240 Hz windows, as time.
+  - **Comparisons:** each line's rate against the oximeter frame clock (from raw PLETH maxima locking to the 33.3 ms
+    frame; a frame period longer by e ppm gives lines e ppm lower), and the recordings' sawtooth from
+    [[study:ppg-sawtooth-slips]].
 results: |
-  - **240 Hz in PLETH and ART** (weakly in ECG in 3 cases): −25.4 to −28.7 ppm against the SNUADC.
-  - **A 30 Hz family (30, 60, 90, 150 Hz) in PLETH only:** −30 to −73 ppm in frequency, that is +30 to +73 ppm in
-    period, matching the oximeter frame clock from fiducial locking ([[study:ppg-frame-clock]]).
-  - **ART leads PLETH by 0.31–0.39 ms** at 240 Hz in every case, consistent with the converter reading its channels
-    one after another.
-  - **Line frequencies group files by device:** two of the six share every line and are probably the same monitor
-    and converter.
-  - **No frame-slip sawtooth was seen** in the ART→PLETH lag of these six files, which conflicts with
-    [[study:ppg-sawtooth]]; a few slips per short file barely show in a jump histogram, and many stretches have a
-    paused sawtooth. To settle by running these files through [[software:physiosync]].
+  - **240 Hz in plethysmogram and arterial pressure:** present in 229 of 273 plethysmograms and 85 of 145 arterial
+    traces, in ECG once. Its rate against the SNUADC: median −38 ppm (5th–95th percentile −56 to −23) in the
+    plethysmogram, −37 in arterial pressure; within a recording the two agree (median difference 0.2 ppm,
+    interquartile range 0.0–1.0): one output clock. The first version's −25.4 to −28.7 ppm (six files) lies at the
+    slow end of this range.
+  - **The 30 Hz family:** 30 Hz in 154 plethysmograms, 60 Hz in 76, 90 Hz in 28, 120 Hz in 51; 150 Hz in none.
+    Against the frame clock (171 recordings with both) the family's rate is close but not identical: within 3 ppm in
+    50, median difference 6 ppm (interquartile range 1–15), correlation −0.59.
+  - **120 Hz is a frame line and leaks into other channels:** it is also present in 50 arterial traces and 18 ECGs;
+    its rate agrees with the frame clock (within 3 ppm in 51 of 118) far more often than with the 240 Hz line (15 of
+    107).
+  - **Arterial pressure's pattern comes first:** in 68 of 69 recordings with both 240 Hz lines, by a median 0.37 ms
+    (5th–95th percentile 0.29–0.46; coherence median 0.89), consistent with the converter reading its channels in
+    turn.
+  - **The sawtooth is there:** 59 of those 69 recordings have one-frame slips in the plethysmogram (36 with an upward
+    sawtooth, 3 downward). The first version's "no sawtooth in the six files" does not hold.
 discussion: |
-  A third, independent clock (the monitor's output stage) measured from the waveforms alone, and a blind way to
-  group recordings by device.
+  Two monitor clocks show in the waveforms themselves: an output clock at 240 Hz shared by the arterial and
+  plethysmogram outputs, and the oximeter's frame clock, whose 120 Hz line reaches the other channels too. The
+  frame-family rate and the frame clock from fiducial locking agree only roughly, so the two methods do not yet
+  measure the same thing to a few ppm. The 0.37 ms by which arterial pressure leads is a fixed channel skew in the
+  converter ([[observation:snuadc-channel-skew]]).
 open_questions:
-  - title: "Monitor clock lines in six files only"
+  - title: "Frame family against the frame clock"
     kind: next step
     summary: >-
-      The monitor clock lines were seen in six files; running these files through physiosync, and then a larger set,
-      would settle whether they are general.
-limitations: Six files.
+      The 30 Hz family and the frame clock from fiducial locking agree within 3 ppm in under a third of recordings.
+      Whether one estimate is biased (weak lines, a wrong lock) is to be checked on recordings where both are strong.
+limitations: The benchmark (273 recordings), not the whole release; lines below 3 times the control are not rated.
+code:
+  - vitaldb-bench/tools/monitor_lines.py
+  - vitaldb-bench/tools/sawtooth_char.py
