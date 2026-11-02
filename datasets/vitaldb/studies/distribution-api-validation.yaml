@@ -15,37 +15,25 @@ method: |
   - Built quantile tables for posteriors from fitted models and compared knot counts, storage types and knot placement against the exact posteriors: `python tools/precision_study.py clinical_data.csv lab_data.csv OUT` (tail-mean end knots, the cache's rule) and the same with `--end-knots support --no-cache` (end knots at the support ends), which write `OUT/precision.json` and `OUT/precision_support.json`.
 results: |
   - Clinical statuses: 217,132 ok, 61,106 zero or not recorded, 45,533 missing, 178,864 not applicable, 1,987 imputed, 20 invalid, 10 top-coded. Lab results: 927,816 ok, 543 top-coded (lactate 317, aPTT 226) and 89 bottom-coded (ESR), with 19 off-grid flags (validation_report.json, vitaldb-resolution 0.6.0).
-  - The clinical pass takes 7 min and the lab pass 10 min on one core.
-  - The cache holds the whole dataset in about 214 MB. One iteration draws every value in about 20 ms for the cases and about 75 ms including all lab results.
+  - The clinical pass takes 4.2 min and the lab pass 5.0 min on one core (WSL2 on the author's PC; 2 November).
+  - The cache holds the whole dataset in 214 MB (1,024 knots, int16). One iteration draws every value in about 7 ms
+    for the cases and about 18 ms including all lab results on the same machine.
   - At any number of knots, int16 has the same worst-case error as float32 and float64. The default is 1,024 knots in int16, with worst mean error 4.7 × 10⁻⁴ SD.
-  - Knot placement mattered more than either. End knots at the support ends inflated the SD by up to 80 % at 256 knots; interior knots with tail-mean-preserving end knots cut the worst SD error to 1.1 % and 0.42 %.
+  - Knot placement mattered more than either. End knots at the support ends inflated the SD by up to 46 % at 256
+    knots (13 % at 1,024); interior knots with tail-mean-preserving end knots cut the worst SD error to 1.1 % and
+    0.42 %.
   - Since vitaldb-resolution v0.6.0 (18 October; model version 2): each result's density within a rounding
     interval comes from the fitted latent at call time (uniform only where no latent is fitted), and every result
     names its density, model id, version and fit hash. The latent and uniform means differ by a few per cent of
     the interval near the median and by 0.2–0.45 of its width at small values and at the edges. Models are
     versioned (v1 archived and still loadable, `models.lock` per release), every stored log-likelihood now matches
     the recomputed one, and the registry records each anchor's basis.
+  - **Reproduced (2 November).** Rerun on 2 November with vitaldb-resolution 0.6.0 (commit 93bbf7f, WSL2): `python tools/validate.py clinical_data.csv lab_data.csv --full` (validation_report.json) and `python tools/precision_study.py clinical_data.csv lab_data.csv OUT`, then the same with `--end-knots support --knots 256,1024 --no-cache` (precision.json, precision_support.json; outputs in `$W/distribution_api_validation`). Every status count, flag and log-likelihood is identical to the released report; the precision figures match the earlier run, except that the SD inflation with end knots at the support ends is 46% at 256 knots, not the 80% first written, and the timings, which depend on the machine, are now those of this run. The precision run's arrays measure 214 MB at the default; the resident memory added on loading (also recorded) is not a reliable measure across options and is not quoted.
 discussion: |
   - The default's worst mean error is about 20 times smaller than the Monte Carlo standard error after 10,000 iterations.
   - Building the package surfaced new rules: two out-of-range anaesthesia ends, 93 clock-offset mismatches, child native resolution, and a revised red-cell rule.
 limitations: |
   - Where a posterior has a gap between two rounding windows, draws can land inside it. This is the large point-wise quantile error (0.8 SD at the 99th percentile at 1,024 knots); it barely moves the mean, SD or W1.
-open_questions:
-  - title: "Reproduction check (2 November 2026)"
-    kind: next step
-    summary: >-
-      Rerunning the listed tools against the numbers above.
-      Reproduced from the saved outputs: every clinical and lab status count, the 19 off-grid flags, the 93
-      clock-offset mismatches (opend 92, opstart 1), the latent and uniform gaps and the log-likelihoods
-      (`validation_report.json`, 0.6.0); the worst mean error at 1,024 int16 knots (4.69 × 10⁻⁴ SD), the worst SD
-      errors 1.1 % (256) and 0.42 % (1,024), and int16 matching float32 and float64 (`tools/precision_results.json`).
-      Not in any saved output: the 214 MB (the how-to's RAM figure; the saved run records 186.7 MB of arrays, not
-      resident memory), the 20 and 75 ms draws (the saved run has 14.1 and 66.3 ms), the 0.8 SD 99th percentile
-      (the saved run reports it per group, 1.43 for timestamps and 0.36 for value models, not pooled), the 80 %
-      inflation with end knots at the support ends (no saved run of that placement), and the 7 and 10 min passes
-      (printed, not saved). The saved precision run predates 0.6.0: collecting the posteriors now gives 66,203
-      tables, not 66,180. Both tools now record these quantities, with the package version, commit and machine,
-      and are being rerun on 0.6.0.
 tags:
 - from the resolution work
 code:
