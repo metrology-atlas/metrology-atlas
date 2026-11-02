@@ -11,8 +11,8 @@ background: |
 data: |
   - 6,388 cases × 79 clinical variables (504,652 variable-case cells) and all 928,448 lab results.
 method: |
-  - Ran the full dataset through the package (`tools/validate.py`) and compared each model's log-likelihood with the stored one.
-  - Built quantile tables for posteriors from fitted models and compared knot counts, storage types and knot placement.
+  - Ran the full dataset through the package and compared each model's log-likelihood with the stored one: `python tools/validate.py clinical_data.csv lab_data.csv --full` in vitaldb-resolution, which writes `validation_report.json` (statuses, flags, densities, latent and uniform gaps, and the wall time of each pass).
+  - Built quantile tables for posteriors from fitted models and compared knot counts, storage types and knot placement against the exact posteriors: `python tools/precision_study.py clinical_data.csv lab_data.csv OUT` (tail-mean end knots, the cache's rule) and the same with `--end-knots support --no-cache` (end knots at the support ends), which write `OUT/precision.json` and `OUT/precision_support.json`.
 results: |
   - Clinical statuses: 217,132 ok, 61,106 zero or not recorded, 45,533 missing, 178,864 not applicable, 1,987 imputed, 20 invalid, 10 top-coded. Lab results: 927,816 ok, 543 top-coded (lactate 317, aPTT 226) and 89 bottom-coded (ESR), with 19 off-grid flags (validation_report.json, vitaldb-resolution 0.6.0).
   - The clinical pass takes 7 min and the lab pass 10 min on one core.
@@ -30,5 +30,24 @@ discussion: |
   - Building the package surfaced new rules: two out-of-range anaesthesia ends, 93 clock-offset mismatches, child native resolution, and a revised red-cell rule.
 limitations: |
   - Where a posterior has a gap between two rounding windows, draws can land inside it. This is the large point-wise quantile error (0.8 SD at the 99th percentile at 1,024 knots); it barely moves the mean, SD or W1.
+open_questions:
+  - title: "Reproduction check (2 November 2026)"
+    kind: next step
+    summary: >-
+      Rerunning the listed tools against the numbers above.
+      Reproduced from the saved outputs: every clinical and lab status count, the 19 off-grid flags, the 93
+      clock-offset mismatches (opend 92, opstart 1), the latent and uniform gaps and the log-likelihoods
+      (`validation_report.json`, 0.6.0); the worst mean error at 1,024 int16 knots (4.69 × 10⁻⁴ SD), the worst SD
+      errors 1.1 % (256) and 0.42 % (1,024), and int16 matching float32 and float64 (`tools/precision_results.json`).
+      Not in any saved output: the 214 MB (the how-to's RAM figure; the saved run records 186.7 MB of arrays, not
+      resident memory), the 20 and 75 ms draws (the saved run has 14.1 and 66.3 ms), the 0.8 SD 99th percentile
+      (the saved run reports it per group, 1.43 for timestamps and 0.36 for value models, not pooled), the 80 %
+      inflation with end knots at the support ends (no saved run of that placement), and the 7 and 10 min passes
+      (printed, not saved). The saved precision run predates 0.6.0: collecting the posteriors now gives 66,203
+      tables, not 66,180. Both tools now record these quantities, with the package version, commit and machine,
+      and are being rerun on 0.6.0.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/validate.py
+  - vitaldb-resolution/tools/precision_study.py
