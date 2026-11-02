@@ -5,10 +5,11 @@ summary: >-
   [[study:ppg-sawtooth-period]] and [[study:ppg-sawtooth-pauses]] next). A new detector tests every point of a
   series of three fiducials per pulse for a sharp, persistent step of exactly one frame, confirms it against
   arterial pressure, uses the grid of the other slips and the current fit's slips as priors, and places each slip
-  between two fiducials. On held-out injected ground truth it finds 88% of slips (the current fit 92%) with one
-  false slip in 42 recordings (the current fit 8) and places them twice as closely. It also finds slips that lose a
-  frame instead of gaining one. In development.
-date: 2026-11-02
+  between two fiducials. Built on a benchmark of 273 recordings and run on all 5,714 with ECG lead II and PLETH. On
+  held-out injected ground truth in 219 recordings it finds 88% of slips (the current fit 89%) with 3 false slips
+  (the current fit 38) and places them two and a half times as closely. It also finds slips that lose a frame
+  instead of gaining one. A blinded manual labelling of real events is under way. In development.
+date: 2026-11-03
 status: draft
 methods: [signal-borne-clocks]
 techniques: [beat-matching, phase-step-detection, null-controls]
@@ -16,10 +17,12 @@ clocks: [oximeter-frame-clock, snuadc-sample]
 devices: [solar8000, snuadc]
 variables: [snuadc-pleth, snuadc-ecg-ii, snuadc-art]
 data: |
-  The 300 random cases of the PAT benchmark (`$W/pat/cases_pat300.json`); the longest continuous stretch of ECG
-  lead II and PLETH (20–90 min) in 273 of them, 373 hours (the earlier benchmark's rule gave 266; this one requires
-  at least 600 matched beats). Arterial pressure where present. 22 recordings in which the current fit
-  ([[software:physiosync]]) finds no slip carry an injected sawtooth.
+  - **Full release:** every VitalDB case (`$W/sawtooth_char/cases_all.json`, 6,388) with a continuous stretch of ECG
+    lead II and PLETH of at least 20 minutes and 600 matched beats: 5,714 recordings, the longest such stretch in
+    each, up to 90 minutes (7,789 hours). Arterial pressure where present. The 497 recordings in which the current
+    fit ([[software:physiosync]]) finds no slip are the hosts for the injected sawtooths.
+  - **Benchmark,** on which the detector was built: the 300 random cases of the PAT benchmark
+    (`$W/pat/cases_pat300.json`), 273 recordings, 373 hours (the earlier benchmark's rule gave 266); 22 hosts.
 background: |
   The current fit ([[study:ppg-sawtooth]]) finds slips from a 15-beat running median and gives every tooth its own
   rate, so each slip is placed to a beat or a few and each tooth's period is free. If the period is constant, or
@@ -27,13 +30,16 @@ background: |
   one frame (33 ms) against a beat-to-beat noise of 2–5 ms. This study builds the detector and placement the rest
   of the series relies on, and checks them against a known sawtooth.
 method: |
-  Commands (vitaldb-bench): `python tools/sawtooth_char.py scan --root $R --cases $W/pat/cases_pat300.json --out
-  $W/sawtooth_char/scan`, then `slips --scan $W/sawtooth_char/scan --inj-seeds 6 --out
-  $W/sawtooth_char/bench8/slips_partK.jsonl --part K --of 4` (K = 0–3), concatenated into `bench8/slips.jsonl`, then
-  `agg --slips $W/sawtooth_char/bench8/slips.jsonl --out $W/sawtooth_char/bench8 --ports $W/setups/ports.jsonl
-  --assigned $W/setups/assign/assigned.csv --rates $W/correction_census/census_rates.csv` (summary.json,
-  recordings.csv) and `plot` for figures. Run of 2 November (tool SHA-256 46110308f725… (bench8 was made with an earlier state of it whose slips stage is the same)); earlier development runs
-  (bench1–bench7) are not cited.
+  Commands (vitaldb-bench tools/sawtooth_char.py; the scan, slips and mech stages as in SHA-256 46110308f725…,
+  aggregated with 8f5734d273f5…, whose `mech-agg` reads the parts of a run directly):
+
+  - **Full release** (WSL, 8 parts, K = 0–7): `scan --root $R --cases $W/sawtooth_char/cases_all.json --out
+    $W/sawtooth_char/scan_full --part K --of 8`; `slips --scan $W/sawtooth_char/scan_full --inj-seeds 6 --out
+    $W/sawtooth_char/full/slips_partK.jsonl --part K --of 8`, concatenated into `full/slips.jsonl`; `agg --slips
+    $W/sawtooth_char/full/slips.jsonl --out $W/sawtooth_char/full --ports $W/setups/ports.jsonl --assigned
+    $W/setups/assign/assigned.csv --rates $W/correction_census/census_rates.csv` (summary.json, recordings.csv).
+  - **Benchmark:** the same on `$W/pat/cases_pat300.json` into `$W/sawtooth_char/scan` and `$W/sawtooth_char/bench8`
+    (4 parts). Earlier development runs (bench1–bench7) are not cited.
 
   - **Fiducials.** R peaks (5–25 Hz, sub-sample); per pulse the foot, steepest upstroke, peak and half-height on the
     downslope of the 0.5–10 Hz PLETH; the arterial upstroke per beat; the frame clock from the raw PLETH maximum.
@@ -49,47 +55,72 @@ method: |
   - **Placement.** The fiducials of three beats either side of a slip, in time order, are each before or after it
     (a robust likelihood that allows 5% outliers); the posterior over the split gives the most likely gap between
     two fiducials and a 95% bracket.
-  - **Injected ground truth.** On the recordings where the current fit finds no slip and the detector finds no
-    one-frame step either way (14 of 22): one sawtooth written into the PLETH waveform (15–55 ppm, random phase,
+  - **Injected ground truth.** On the host recordings in which the detector also finds no one-frame step either way
+    (219 of 497; 14 of 22 in the benchmark): one sawtooth written into the PLETH waveform (15–55 ppm, random phase,
     33 ms of content held at each slip) and the fiducials found again; the same slips as a shift of the fiducial
-    times; and six more fiducial-shift sawtooths per recording, seeds 0–2 used while setting thresholds and 3–5
-    held out. The current fit is run on each for comparison.
+    times; and six more fiducial-shift sawtooths per recording, seeds 0–2 used while setting thresholds (on the
+    benchmark) and 3–5 held out. The current fit is run on each for comparison.
+  - **Manual labels** (in progress): `label-sample --scan $W/sawtooth_char/scan_full --slips
+    $W/sawtooth_char/full/slips.jsonl --out $W/sawtooth_char/labels` draws 172 events, stratified by which detector
+    found them (both, each alone, predicted by the grid but not found, downward steps, mid-tooth and slip-free
+    controls; seed 20261102), shown blinded on a private labelling page as ECG→PPG, ART→PPG and ECG→ART per beat.
+    The labeller answers for each delay separately (step up, down, none, can't tell, artefact), with the step's
+    size, position (a point or an interval) and other features; `label-eval` turns the answers into verdicts through
+    ECG→PPG = ECG→ART + ART→PPG and weights each stratum by its size in the run.
 results: |
-  - **Held-out injected ground truth** (42 sawtooths on 14 recordings, 210 slips):
+  - **Held-out injected ground truth:**
 
-    | | New detector | Current fit |
-    |---|---|---|
-    | Found | 88% | 92% |
-    | Found, 30 beats or more from either end | 90% | 95% |
-    | False slips | 1 | 8 |
-    | Placement error, median | 0.11 s | 0.25 s |
-    | Placement error, 95th percentile | 1.9 s | 2.5 s |
-    | 95% bracket holds the slip | 93% | — |
+    | | Full release: new detector | Current fit | Benchmark: new detector | Current fit |
+    |---|---|---|---|---|
+    | Sawtooths (slips; recordings) | 657 (2,950; 219) | | 42 (210; 14) | |
+    | Found | 87.9% | 89.1% | 88% | 92% |
+    | Found, 30 beats or more from either end | 92.1% | 93.3% | 90% | 95% |
+    | False slips | 3 | 38 | 1 | 8 |
+    | Placement error, median | 0.11 s | 0.28 s | 0.11 s | 0.25 s |
+    | Placement error, 95th percentile | 0.91 s | 2.0 s | 1.9 s | 2.5 s |
+    | 95% bracket holds the slip | 92.4% | — | 93% | — |
 
-    The tuning seeds give the same (88%, 2 false). The current fit's slips are in ECG time and are moved to PPG time
-    by the typical delay before comparing.
-  - **The waveform injection** (80 slips) gives 83% found, none false, median error 0.13 s, and brackets that hold
-    the slip 85% of the time against 96% for the same slips as a fiducial shift: holding 33 ms of content at the slip
-    distorts the fiducials beside it and the brackets are then too narrow. A real slip shows no held segment
-    ([[study:ppg-sawtooth]]), so the shifted case is probably the closer.
-  - **A slip is one step,** as far as can be told: a test of two steps against one around each slip prefers two at
-    59% of real slips but also at 44% of the injected single steps, so it cannot tell them apart, and the split it
-    finds has no preferred share of the frame (`$W/sawtooth_char/mech3/mech_summary.json`).
-  - **"Sawtooth-free" recordings are not all free:** 8 of the 22 recordings in which the current fit finds no slip
-    have one-frame steps, upward or downward, without any injection.
-  - **Real recordings:** 898 upward slips in 234 of 273 recordings (the current fit: 1,248) and 128 downward
-    one-frame steps, most of them in nine recordings whose sawtooth runs the other way
-    ([[study:ppg-sawtooth-period]]). Upward and downward steps are the same size (median 32.1 and 31.6 ms).
+    The tuning seeds give the same on the full release (87.9%, 4 false; the current fit 88.8%, 44). The current
+    fit's slips are in ECG time and are moved to PPG time by the typical delay before comparing.
+  - **The waveform injection** (1,029 slips; benchmark 80) gives 81% found, 5 false, median error 0.15 s, and
+    brackets that hold the slip 90% of the time against 93% for the same slips as a fiducial shift (81%, 1 false,
+    0.12 s); on the benchmark 85% against 96%. Holding 33 ms of content at the slip distorts the fiducials beside it
+    and the brackets are then a little too narrow. A real slip shows no held segment ([[study:ppg-sawtooth]]), so the
+    shifted case is probably the closer.
+  - **Real recordings:** 17,373 upward slips in 4,836 of 5,714 recordings (the current fit finds 25,558) and 2,883
+    downward one-frame steps; 2,427 of the upward slips (14%) are off the recording's grid. By the rule of
+    [[study:ppg-sawtooth-period]], 2,701 recordings have an upward sawtooth, 203 a downward one, and 2,810 too few
+    steps to say. Upward and downward steps are the same size (median 32.0 and 31.8 ms; a frame is 33.3 ms).
+    Benchmark: 898 upward slips in 234 of 273 (the current fit 1,248), 128 downward.
+  - **The two detectors disagree on real data far more than on injected slips.** The current fit finds 47% more
+    slips than the new detector on real recordings, against 1% more on injected ones; 8,668 of its slips have no
+    upward or downward step from the new detector within 60 s. Which are real is what the manual labels are for.
+  - **"Sawtooth-free" recordings are not all free:** 278 of the 497 recordings in which the current fit finds no slip
+    (56%) have one-frame steps, upward or downward, without any injection (benchmark: 8 of 22).
+  - **One step or two?** A test of two steps against one around each slip prefers two at 59% of real slips and at
+    45% of injected single steps, on the full release as on the benchmark (59% and 44%), and the split it finds has no
+    preferred share of the frame (`$W/sawtooth_char/full_mech/agg/mech_summary.json`). The test is too ready to see
+    two steps to say a slip is made of two; the consistent excess on real slips is not explained.
 discussion: |
-  The detector is nearly as sensitive as the current fit, an eighth as often wrong, and places slips about twice as
-  closely. Placing a slip to a tenth of a second matters: a slip misplaced by s seconds leaves a whole-frame error
-  for s seconds. The current fit's extra finds are mostly slips near the ends of a stretch, where persistence
-  cannot be tested.
+  On the full release the detector is about as sensitive as the current fit (a point lower), an order of magnitude
+  less often wrong on injected data, and places slips two and a half times as closely; the benchmark's figures hold
+  up on fifteen times as many injected sawtooths. Placing a slip to a tenth of a second matters: a slip misplaced by s seconds
+  leaves a whole-frame error for s seconds. On real recordings the current fit reports half as many slips again,
+  which its recall on injected slips does not explain; either it finds real slips the new detector misses in
+  disturbed data, or it reports steps that are not slips. The blinded labels will divide the two.
 limitations: |
-  Development version: thresholds were set while looking at these 273 recordings, so the injected test is the
-  honest measure, and 14 hosts are few. The injection holds 33 ms of content at each slip; a real slip shows no
-  held segment ([[study:ppg-sawtooth]]), so the real waveform near a slip may differ from the injected one.
+  Development version: thresholds were set while looking at the 273 benchmark recordings (which are part of the full
+  release), so the injected test is the honest measure of the detector, and the hosts are recordings without slips,
+  which may not be typical. The injection holds 33 ms of content at each slip; a real slip shows no held segment
+  ([[study:ppg-sawtooth]]), so the real waveform near a slip may differ from the injected one. Precision on real
+  data is not known until the labels are in.
 open_questions:
+  - title: "Which detector's extra slips are real?"
+    kind: next step
+    summary: >-
+      8,668 of the current fit's slips have no step either way from the new detector within 60 s, and the new detector has slips of its
+      own. A blinded, stratified labelling of 172 events (in progress) will estimate each detector's precision and
+      recall on real data.
   - title: "The last few percent"
     kind: next step
     summary: >-

@@ -2,13 +2,13 @@ id: ppg-sawtooth-period
 name: The PPG sawtooth's period, its phase jumps, and the reversed sawtooth
 summary: >-
   Second of the sawtooth series ([[study:ppg-sawtooth-slips]] finds the slips). Within a recording the slips fall on
-  a grid of one tooth length, piecewise: the grid holds for long runs and then jumps. Without a break in the
-  signal, the jumps move the phase by a whole number of quarter teeth (23 of 31, against 7 by chance), which
-  suggests the slips are made in units of a quarter frame, 1/120 s; the quarter-frame step itself has not been
-  seen. Within a run the grid is not exact: slips scatter by about 2 s around it, mostly anchored to it. One
-  setup runs the sawtooth backwards. Cuff inflations do not explain the jumps. Benchmark of 273 recordings; in
-  development.
-date: 2026-11-02
+  a grid of one tooth length, piecewise: the grid holds for long runs and then jumps. On all 5,714 recordings the
+  jumps move the phase by a whole number of quarter teeth far more often than by chance (375 of 548 without a break
+  in the signal, against 132; 79 of 146 across one, against 35), and sharp steps of a fraction of a frame in the
+  PPG chain lock to quarter frames too: the slips appear to be made in units of a quarter frame, 1/120 s. Within a
+  run the grid is not exact: slips scatter by about 2 s around it, mostly anchored to it. Two setups run the
+  sawtooth backwards. Cuff inflations do not explain the jumps. In development.
+date: 2026-11-03
 status: draft
 methods: [signal-borne-clocks]
 techniques: [phase-step-detection, null-controls]
@@ -16,9 +16,11 @@ clocks: [oximeter-frame-clock, snuadc-sample]
 devices: [solar8000, snuadc]
 variables: [snuadc-pleth, snuadc-ecg-ii, snuadc-art]
 data: |
-  The slips found in [[study:ppg-sawtooth-slips]]'s benchmark (273 recordings, 373 hours; upward and downward
-  one-frame steps), the recording setup (PC key) of each from [[study:setup-identification]], the SNUADC correction
-  mode from the correction census (step mode where its rate is below −20 ppm), and the frame clock rate.
+  The slips found in [[study:ppg-sawtooth-slips]] (upward and downward one-frame steps): on the full release, 5,714
+  recordings and 7,789 hours; on the benchmark on which the methods were built, 273 recordings and 373 hours. The
+  recording setup (PC key) of each from [[study:setup-identification]], the SNUADC correction mode from the
+  correction census (step mode where its rate is below −20 ppm), the frame clock rate, and the Solar8000 NIBP
+  readings.
 background: |
   The current fit ([[study:ppg-sawtooth]]) gives every tooth its own length. If the sawtooth comes from two clocks
   running at a slightly different rate (the PPG content against the 30 Hz output frames), the slips should fall
@@ -26,13 +28,14 @@ background: |
   placing each slip alone. How the grid behaves, where it breaks and what the breaks look like also says how the
   monitor makes the slips.
 method: |
-  Same tool and run as [[study:ppg-sawtooth-slips]] (vitaldb-bench tools/sawtooth_char.py, SHA-256 46110308f725… (bench8 was made with an earlier state of it whose slips stage is the same);
-  `slips` then `agg` into `$W/sawtooth_char/bench8`: summary.json and recordings.csv), then the mechanism tests on
-  that run: `mech --scan $W/sawtooth_char/scan --slips $W/sawtooth_char/bench8/slips.jsonl --recordings
-  $W/sawtooth_char/bench8/recordings.csv --root $R --out $W/sawtooth_char/mech3/mech_partK.jsonl --part K --of 3`
-  (K = 0, 1, 2), concatenated, and `mech-agg --mech $W/sawtooth_char/mech3/mech.jsonl --recordings
-  $W/sawtooth_char/bench8/recordings.csv --clocks $W/clock_network/r4/clocks.csv --out $W/sawtooth_char/mech3`
-  (mech_summary.json, clocks_by_recording.csv).
+  Same tool and runs as [[study:ppg-sawtooth-slips]] (vitaldb-bench tools/sawtooth_char.py; `slips` then `agg` into
+  `$W/sawtooth_char/full`, summary.json and recordings.csv), then the mechanism tests on that run (WSL, 8 parts,
+  K = 0–7): `mech --scan $W/sawtooth_char/scan_full --slips $W/sawtooth_char/full/slips.jsonl --recordings
+  $W/sawtooth_char/full/recordings.csv --root $R --out $W/sawtooth_char/full_mech/mech_partK.jsonl --part K --of 8`
+  and `mech-agg --mech $W/sawtooth_char/full_mech/mech_part*.jsonl --recordings $W/sawtooth_char/full/recordings.csv
+  --clocks $W/clock_network/r4/clocks.csv --out $W/sawtooth_char/full_mech/agg` (mech_summary.json,
+  clocks_by_recording.csv; tool SHA-256 8f5734d273f5…, which reads the parts and keeps one copy of a recording run
+  twice). The benchmark's run is `$W/sawtooth_char/bench8` and `$W/sawtooth_char/mech3` (3 parts).
 
   - **Tooth length.** The length that best explains the gaps between consecutive slips (each gap a whole number of
     teeth within 3%; a fraction of the true tooth, which fits every gap too, is penalised for the slips it implies
@@ -61,75 +64,85 @@ method: |
     rate, and the SNUADC against the PC (clock network, run r4) in each mode; and the spread across setups of the
     frame clock, the sawtooth rate and their sum and difference.
 results: |
-  - **On injected ground truth** the tooth length is recovered to a median of 0.05 s on teeth of 10–37 minutes
-    (held-out fiducial-shift sawtooths; 95th percentile 1.4 s; the feasible range holds the truth in 21 of 28).
-  - **Grids are piecewise.** 125 of 898 upward slips (14%) are off grid. 41 phase jumps in 28 recordings, 10 of
-    them across an interruption of the signal.
-  - **Phase jumps come in quarter teeth.** Of the 31 jumps without an interruption, 23 shift the phase by a whole
-    number of quarter teeth (0.25, 0.5 or 0.75, within ±0.03), against 7.4 expected (p = 5 × 10⁻⁹); none lies on an
-    odd eighth (7.4 expected). Across the 10 interruptions the shifts are not locked (4, against 2.4). A shift of a
-    quarter tooth is a step of a quarter frame in the delay: 8.3 ms, or 1/120 s.
+  Full release first; the benchmark's figures in brackets.
+
+  - **On injected ground truth** the tooth length is recovered to a median of 0.05 s (held-out fiducial-shift
+    sawtooths; 95th percentile 0.69 s; the feasible range holds the truth in 343 of 464) [0.05 s; 1.4 s; 21 of 28].
+  - **Grids are piecewise.** 2,427 of 17,373 upward slips (14%) are off grid [125 of 898]. 694 phase jumps in 477
+    recordings, 146 of them across an interruption of the signal [41 in 28; 10].
+  - **Phase jumps come in quarter teeth.** Of the 548 jumps without an interruption, 375 shift the phase by a whole
+    number of quarter teeth (0.25, 0.5 or 0.75, within ±0.03), against 131.5 expected (p = 10⁻¹⁰⁶); 35 lie on an
+    odd eighth against 131.5 [23 of 31 against 7.4; none on an odd eighth]. Across the 146 interruptions the shifts
+    are locked as well, less tightly: 79 against 35.0 (p = 5 × 10⁻¹⁵). The benchmark, with 10 such jumps, could not
+    show this (4 against 2.4). A shift of a quarter tooth is a step of a quarter frame in the delay: 8.3 ms, or
+    1/120 s.
   - **Jumps follow disturbances.** In the recordings looked at ([[case:4572]], [[case:3117]]), the grid holds through
     long stretches and moves after a large excursion of the delay.
-  - **The quarter-frame step is not seen on its own.** 665 sharp sub-frame steps fall off smoothly in size from the
-    smallest; among the 68 the arterial line places in the PPG chain, 20 lie on a quarter frame against 16.1 by
-    chance (p = 0.17). 13 of the 41 jumps have a sub-frame step between their runs, 7 of the jump's size. Either the
-    step is hidden in the excursion, or the phase moves without a step in the delay.
-  - **Cuff inflations do not explain them.** 12 of 38 jumps' largest steps lie in a cuff inflation against 8.9
-    expected, and 27 jumps have a reading between their runs against 28.0 expected; sub-frame steps (142 against
-    132) and slips (195 against 177) are hardly more frequent there (238 recordings with NIBP).
-  - **Within a run the grid is not exact.** In 66 runs of 4 or more slips (374 slips), no constant tooth passes
-    through every 95% bracket. The slips scatter about the best grid by a median of 2.0 s (interquartile range
-    1.2–3.9 s), ten times the brackets' own spread (0.20 s). Consecutive tooth-length deviations correlate at
-    −0.35 (95% interval −0.51 to −0.13; 207 pairs): mostly a fixed grid with jitter, with some wander.
-  - **One setup runs backwards.** 9 recordings have a downward sawtooth (145 upward, 119 too few slips to say). Five
-    of the eight with a measurable rate are on one setup (PC key COM12 · COM4 · COM5 · COM7), in both SNUADC modes,
-    at −43.6 to −45.4 ppm except one at −86; the setup has 7 recordings in the benchmark and none with an upward sawtooth.
-    The clearest are [[case:2537]], [[case:4488]] and [[case:6049]] (teeth of 735–740 s), with the frame clock at
-    +60 ppm against the SNUADC; upward setups at +45 ppm have frame clocks near +72 ppm. The current fit labels every
-    one N or U. One more at −45 ppm is on another setup ([[case:6142]]).
-  - **Rate and setup.** The reversed setup has the same rate in both SNUADC modes (−45.2 ppm), as do 4 of 12 other
-    setups seen in both (within 1 ppm); others differ by up to 26 ppm, so a PC key does not always mean one
-    oximeter (one port hosts two PPG sources; [[study:ppg-sawtooth]]). No combination of frame clock and sawtooth
-    rate is common to all setups (standard deviation 24–40 ppm across 32).
+  - **Sub-frame steps lock to quarter frames.** 14,009 sharp sub-frame steps (1.8 an hour) fall off smoothly in size
+    from the smallest; 3,957 lie on a quarter frame against 3,317.9 by chance (p = 8 × 10⁻³⁶), and among the 1,660
+    the arterial line places in the PPG chain, 496 against 393.2 (p = 4 × 10⁻⁹) [68 in the PPG chain, 20 against
+    16.1, p = 0.17]. Steps before the PPG chain barely do (269 of 1,027 against 243.2, p = 0.03). 248 of the 694 jumps
+    have a sub-frame step between their runs, 95 of the jump's size [13 of 41; 7]. The quarter-frame step is seen in
+    the delay, but at most jumps it is not seen on its own.
+  - **Cuff inflations do not explain them.** 130 of 645 jumps' largest steps lie in a cuff inflation against 143.6
+    expected, and 444 jumps have a reading between their runs against 494.8 expected [12 of 38 against 8.9; 27
+    against 28.0]. Sub-frame steps (2,862 against 2,673.5) and slips (3,588 against 3,324.5) are 7–8% more frequent
+    there (5,072 recordings with NIBP) [142 against 132; 195 against 177].
+  - **Within a run the grid is not exact.** In 1,188 runs of 4 or more slips (6,822 slips), one constant tooth passes
+    through every 95% bracket in 24 [none of 66]. The slips scatter about the best grid by a median of 1.9 s
+    (interquartile range 1.1–3.3 s), ten times the brackets' own spread (0.20 s). Consecutive tooth-length deviations
+    correlate at −0.24 (95% interval −0.30 to −0.19; 3,953 pairs) [−0.35; 207 pairs]: a fixed grid with jitter and
+    a slow wander.
+  - **Two setups run backwards.** 203 recordings have a downward sawtooth (2,701 upward, 2,810 too few slips to say)
+    [9; 145; 119]. 133 are on setup COM12 · COM4 · COM5 · COM7, whose 168 recordings have no upward sawtooth (35 too
+    few slips), and 40 on COM15 · COM13 · COM14 · COM22 (46 recordings), both at a median of −45.2 and −45.5 ppm; 19
+    more are on COM3 · COM4 · COM5 · COM7, which also has 126 upward. The reversed setup's frame clock runs at
+    +59 ppm against the SNUADC; upward setups at +45 ppm have frame clocks near +72 ppm. The clearest are
+    [[case:2537]], [[case:4488]] and [[case:6049]] (teeth of 735–740 s). The current fit labels these N or U.
+  - **Rate and setup.** The reversed setup has the same rate in both SNUADC modes (−45.1 and −45.4 ppm). Of 37 named
+    setups seen in both modes, 26 have rates within 1 ppm of each other; the differences over 5 ppm are all on
+    setups with three recordings or fewer in one mode, and the rest are 1.3–4.6 ppm. The 26 ppm difference the
+    benchmark showed on COM4 · COM12 · COM11 · COM14 is 0.9 ppm on 323 recordings. One port still hosts two PPG sources ([[study:ppg-sawtooth]]). No combination of
+    frame clock and sawtooth rate is common to all setups (standard deviation 24–39 ppm across 75).
 
   [[figure:quarter-jump]]
 
   [[figure:reversed]]
 discussion: |
-  A grid that holds for an hour and moves only in quarter frames fits a slip mechanism that counts in 1/120 s
-  units, four to a frame; the PLETH's spectral lines at 30, 60, 90 and 120 Hz ([[study:ppg-frame-clock]]) point the
-  same way. After a break in the signal the phase starts afresh. Within a run, the 2 s scatter is real (ten times
-  the placement error) but small: for correction it means each slip should be placed where it is seen, with the grid
-  used to find it, not to place it. The negative correlation of consecutive teeth says the slips are pulled back
-  toward the grid, as a threshold on an accumulated phase would do; the shortfall from −0.5 allows a slow wander of
-  the rate on top. A reversed sawtooth on one setup in both SNUADC modes is a property of that setup's oximeter
-  chain, not of the recorder: there the PPG content runs faster than the frames. For correction, a phase jump of a
-  quarter tooth gives the current fit a tooth of odd length, and so a wrong rate and an error of up to 8 ms over
-  that tooth; and the reversed sawtooth is not corrected at all.
+  A grid that holds for an hour and moves in quarter frames, and sub-frame steps in the PPG chain that lock to the
+  same quarters, fit a slip mechanism that counts in 1/120 s units, four to a frame; the PLETH's spectral lines at 30,
+  60, 90 and 120 Hz ([[study:ppg-frame-clock]]) point the same way. After a break in the signal the phase moves by
+  quarters too, more loosely, so a break does not reset the mechanism to an arbitrary phase. Within a run, the 2 s
+  scatter is real (ten times the placement error) but small: for correction it means each slip should be placed
+  where it is seen, with the grid used to find it, not to place it. The negative correlation of consecutive teeth
+  says the slips are pulled back toward the grid, as a threshold on an accumulated phase would do; the shortfall
+  from −0.5 allows a slow wander of the rate on top. A reversed sawtooth on whole setups, in both SNUADC modes, is a
+  property of those setups' oximeter chains, not of the recorder: there the PPG content runs faster than the frames.
+  For correction, a phase jump of a quarter tooth gives the current fit a tooth of odd length, and so a wrong rate and
+  an error of up to 8 ms over that tooth; and the reversed sawtooth is not corrected at all.
 limitations: |
-  Development version, thresholds set while looking at these recordings. The numbers are
-  few (41 jumps, 9 reversed recordings); the full release will test both. The quarter-frame step at a jump has not been isolated in the delay.
+  Development version: methods and thresholds were set while looking at the 273 benchmark recordings, which are part
+  of the full release. The quantisation tests count shifts within ±0.03 of a quarter; a jump's shift is measured
+  from two grids each fitted to a few slips, so the lock is blurred, not sharpened, by placement error. The
+  quarter-frame step at most jumps has not been isolated in the delay.
 open_questions:
-  - title: "Where is the quarter-frame step?"
+  - title: "Where is the quarter-frame step at a jump?"
     kind: phenomenon
     summary: >-
-      The phase moves by quarter teeth, but a quarter-frame step in the delay is not seen apart from the
-      excursions it follows. Whether the phase can move without a step, or the step is always masked, is open.
-  - title: "Jitter or wander within a run?"
-    kind: next step
-    summary: >-
-      Separate the slips' 2 s scatter into jitter about a fixed grid and a slowly changing rate (fits of a
-      quadratic grid per run, and the scatter against run length) on the full release.
-  - title: "Why one setup runs backwards"
+      Sub-frame steps in the PPG chain lock to quarter frames, but only 95 of 694 phase jumps have a step of the
+      jump's size between their runs. Whether the phase can move without a step, or the step is masked by the
+      excursion it follows, is open.
+  - title: "Why two setups run backwards"
     kind: phenomenon
     summary: >-
-      Setup COM12 · COM4 · COM5 · COM7 loses a frame every 12 minutes in every recording with a sawtooth. The full
-      release will show whether every recording of that setup does, and whether its rate stays at −45 ppm.
-  - title: "Scale up"
-    kind: next step
+      Setups COM12 · COM4 · COM5 · COM7 and COM15 · COM13 · COM14 · COM22 lose a frame about every 12 minutes in
+      nearly every recording with a sawtooth, and one more setup has both directions. Which oximeter sits on those
+      ports, and why its content runs faster than its frames, is not known.
+  - title: "Why cuff inflations come with slightly more steps"
+    kind: phenomenon
     summary: >-
-      Run on every recording with ECG lead II and PLETH (WSL, 8 parts) once the detector's recall is settled.
+      Slips and sub-frame steps are 7–8% more frequent within 45 s of a new NIBP reading. Whether the cuff disturbs
+      the pulse enough to trigger the slip mechanism, or the detector sees more candidates in disturbed beats, is open.
 figures:
   - id: quarter-jump
     file: ppg-sawtooth-quarter-jump.png

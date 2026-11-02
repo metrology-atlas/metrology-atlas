@@ -1,14 +1,15 @@
 id: ppg-sawtooth-pauses
 name: Where the PPG sawtooth stops
 summary: >-
-  Third of the sawtooth series ([[study:ppg-sawtooth-slips]], [[study:ppg-sawtooth-period]]), rebuilt on 2 November.
-  With the new slip detector and the slip grid, stretches of 1.5 teeth or more without a slip are fewer than first
-  reported: 68 stretches, 26.5 hours, in 43 of 273 recordings. Most of those inside a recording are two teeth long
-  with the slips on either side on one grid, and where the grid predicts the missing slip, two times in three a
-  step of most of a frame is there, missed because a ramp or a disturbance coincided with it. Some stretches look
-  flat; the frame clock keeps its rate and phase through them; and the 27 recordings without any slip show no
-  hidden sawtooth, though half drift slowly. In development.
-date: 2026-11-02
+  Third of the sawtooth series ([[study:ppg-sawtooth-slips]], [[study:ppg-sawtooth-period]]), rebuilt on 2 November
+  and run on the full release on 3 November. With the new slip detector and the slip grid, stretches of 1.5 teeth or
+  more without a slip are fewer than first reported: 1,072 stretches, 469 hours, in 796 of 5,714 recordings. Most
+  of those inside a recording are two teeth long, and where the slips on either side lie on one grid, the step the
+  grid predicts is usually there, missed because a ramp or a disturbance coincided with it. Where the phase moves
+  across a stretch, it moves by quarter teeth. Some stretches look flat; the frame clock keeps its rate and phase
+  through them; and the 586 recordings without any one-frame step show no hidden sawtooth, though many drift
+  slowly. In development.
+date: 2026-11-03
 status: draft
 methods: [signal-borne-clocks]
 techniques: [phase-step-detection, null-controls]
@@ -16,8 +17,9 @@ clocks: [oximeter-frame-clock]
 devices: [solar8000, snuadc]
 variables: [snuadc-pleth, snuadc-art]
 data: |
-  The benchmark of [[study:ppg-sawtooth-slips]]: the longest continuous stretch of ECG lead II and PLETH (20–90 min)
-  in 273 of the 300 random cases of `$W/pat/cases_pat300.json` (373 hours), with the slips found there.
+  The recordings and slips of [[study:ppg-sawtooth-slips]]: on the full release, the longest continuous stretch of
+  ECG lead II and PLETH (20–90 min) in 5,714 recordings (7,789 hours); the benchmark on which the methods were built
+  is 273 of them (373 hours).
 background: |
   The first version of this study (11 October) reported 98 stretches (67 hours) where slips were due but none came,
   and 32 whole recordings (47 hours) without a slip; there the delay was flat (median slope −0.15 of the sawtooth's
@@ -28,13 +30,14 @@ background: |
   makes possible: when slips resume, do they continue the old grid (the sawtooth went on unseen) or start a new
   phase?
 method: |
-  Commands (vitaldb-bench tools/sawtooth_char.py; tool SHA-256 46110308f725… (bench8 was made with an earlier state of it whose slips stage is the same)): the slips run of
-  [[study:ppg-sawtooth-slips]] into `$W/sawtooth_char/bench8` (`slips --inj-seeds 6`, 4 parts, then `agg`), then
-  `mech --scan $W/sawtooth_char/scan --slips $W/sawtooth_char/bench8/slips.jsonl --recordings
-  $W/sawtooth_char/bench8/recordings.csv --root $R --out $W/sawtooth_char/mech3/mech_partK.jsonl --part K --of 3`,
-  concatenated, and `mech-agg --mech $W/sawtooth_char/mech3/mech.jsonl --recordings
-  $W/sawtooth_char/bench8/recordings.csv --clocks $W/clock_network/r4/clocks.csv --out $W/sawtooth_char/mech3`
-  (mech_summary.json: `pauses` and `whole_without_slips`).
+  Commands (vitaldb-bench tools/sawtooth_char.py): the slips run of [[study:ppg-sawtooth-slips]] into
+  `$W/sawtooth_char/full` (`slips --inj-seeds 6`, 8 parts, then `agg`), then `mech --scan $W/sawtooth_char/scan_full
+  --slips $W/sawtooth_char/full/slips.jsonl --recordings $W/sawtooth_char/full/recordings.csv --root $R --out
+  $W/sawtooth_char/full_mech/mech_partK.jsonl --part K --of 8` (K = 0–7) and `mech-agg --mech
+  $W/sawtooth_char/full_mech/mech_part*.jsonl --recordings $W/sawtooth_char/full/recordings.csv --clocks
+  $W/clock_network/r4/clocks.csv --out $W/sawtooth_char/full_mech/agg` (mech_summary.json: `pauses` and
+  `whole_without_slips`; tool SHA-256 8f5734d273f5…). The benchmark's run is `$W/sawtooth_char/bench8` and
+  `$W/sawtooth_char/mech3`.
 
   - **Stretches without a slip:** in each recording with an upward sawtooth (3 or more slips), every stretch of
     1.5 teeth or more between two slips (middle), before the first or after the last (start, end).
@@ -53,47 +56,56 @@ method: |
   - **Recordings without any one-frame step:** the slope over the whole stretch, the sawtooth evidence at the setup's
     rate, and the frame clock.
 results: |
-  - **Fewer stretches:** 68 of 1.5 teeth or more without a slip, 26.5 hours in 43 recordings (49 middle, 6 at the
-    start, 13 at the end).
-  - **Most middle stretches look like one missed slip.** They are two teeth long (median 2.0, interquartile range
-    2.0–2.07); in 29 of 49 the slips on either side lie on one grid, so the phase carried straight through; and the
-    delay falls by a median 1.00 frame across them, as over an ordinary tooth (0.90). The detector finds about 88%
-    of injected slips, which leaves enough missed slips to account for these.
-  - **The missing slips are mostly there.** At the 33 places the grid predicts a slip inside such stretches, the
-    best step has a median size of 0.73 frame and persists at 0.67 frame, a median 1.5 s from the prediction; 19 lie
-    between 0.4 and 1.4 frames and 5 are larger, against 36 of 442 controls half way through ordinary teeth (8%,
-    median size 0.13, persistence −0.09). Only 3 pass the detector's tests for a slip the grid supports: the rest
-    fail on the step's size or persistence (22, often a disturbance within the window), a coinciding ramp (17), or
-    both.
-    About a third show no step at all. Where the phase has moved (33 places in stretches with a new phase), the
-    evenly spaced positions look like the controls (median 0.19 frame).
-  - **Some look flat.** In 33 of the 68 stretches the delay's slope is under 0.3 of the creep (14 of them middle
-    stretches on one grid, 7 with a new phase after); 13 creep at more than 0.7. A slope near zero is not proof of a
-    flat delay: in the longest flat-looking stretch between two slips ([[case:1363]]) the delay creeps as usual for
-    8 minutes and then rises back by about a frame over 1–2 minutes instead of in one step, so 33 is an upper bound. A sawtooth explains more than half
-    the variance in 21 (median evidence 0.26, mirrored control −0.09).
-  - **The frame clock runs through them.** Found in 48 of 67 stretches; the recording's own frame comb holds there
-    as well as over the whole recording (resultant median 0.44 against 0.42), so the frames keep their rate and phase.
-  - **New phases after a stretch** (20 middle stretches) are not locked to quarter teeth (8 within ±0.03 against 4.8
-    by chance, p = 0.08), unlike the phase jumps between slips ([[study:ppg-sawtooth-period]]).
-  - **Whole recordings without any one-frame step:** 27 (33.8 hours). None shows a sawtooth (evidence median −0.20,
-    mirrored control −0.15; none above 0.5), and the frame clock is found in 25; but 13 drift by more than 5 ppm
-    (slope median −0.1, 5th–95th percentile −13 to +9 ppm).
+  Full release first; the benchmark's figures in brackets.
+
+  - **Fewer stretches than first reported:** 1,072 of 1.5 teeth or more without a slip, 469 hours in 796 recordings
+    (710 middle, 173 at the start, 189 at the end) [68; 26.5 hours; 43 recordings].
+  - **Most middle stretches are two teeth long** (median 2.0, interquartile range 1.97–2.01) [2.0–2.07]. In 404 of
+    710 the slips on either side lie on one grid, so the phase carried straight through [29 of 49]; and the delay
+    falls by a median 0.92 frame across a stretch, as over an ordinary tooth (0.89) [1.00 against 0.90]. The detector
+    finds about 88% of injected slips, which leaves enough missed slips to account for many of these.
+  - **The missing slips are mostly there.** At the 418 places the grid predicts a slip inside such stretches, the
+    best step has a median size of 0.70 frame and persists at 0.70 frame, a median 2.4 s from the prediction; 240
+    lie between 0.4 and 1.4 frames, against 596 of 8,330 controls half way through ordinary teeth (7%, median size
+    0.13, persistence −0.10) [33 places, 0.73 frame, 19 between 0.4 and 1.4; 36 of 442 controls]. 45 pass the
+    detector's tests for a slip the grid supports [3]; the rest fail on the step's size or persistence, often a
+    disturbance within the window (264), a coinciding ramp (226), or both. About a quarter (115) show no step of
+    0.4 frame or more. Where the phase has moved (423 places in stretches with a new phase), the evenly spaced
+    positions look like the controls (median 0.18 frame).
+  - **New phases come in quarter teeth.** Of the 306 middle stretches after which the phase has moved, 181 shift it
+    by a whole number of quarter teeth against 73.4 by chance (p = 4 × 10⁻³⁹); 32 lie on an odd eighth against 73.4.
+    The benchmark (8 of 20 against 4.8, p = 0.08) could not show this. A stretch with a new phase behaves like the
+    phase jumps between slips ([[study:ppg-sawtooth-period]]).
+  - **Some look flat.** In 459 of the 1,072 stretches the delay's slope is under 0.3 of the creep (162 of them
+    middle stretches on one grid, 121 with a new phase after); 181 creep at more than 0.7 [33 of 68; 13]. A slope near
+    zero is not proof of a flat delay: in the longest flat-looking stretch between two slips in the benchmark
+    ([[case:1363]]) the delay creeps as usual for 8 minutes and then rises back by about a frame over 1–2 minutes
+    instead of in one step, so 459 is an upper bound. A sawtooth explains more than half the variance in 251 (median
+    evidence 0.15, mirrored control −0.05) [21; 0.26, −0.09].
+  - **The frame clock runs through them.** Found in 848 of 1,063 stretches with frames; the recording's own frame comb
+    holds there as well as over the whole recording (resultant median 0.48 against 0.44), so the frames keep their
+    rate and phase [48 of 67; 0.44 against 0.42].
+  - **Whole recordings without any one-frame step:** 586 (745 hours) [27; 33.8 hours]. They show no sawtooth (evidence
+    median −0.06, mirrored control −0.07; 7 above 0.5) [−0.20, −0.15; none], and the frame clock is found in 537; but
+    259 drift by more than 5 ppm (slope median −0.2 ppm, 5th–95th percentile −14.6 to +10.6) [13 of 27].
 
   [[figure:pauses]]
 discussion: |
   The first version's flat pauses were partly missed slips: a better detector and the grid explain most stretches
   inside a recording as one slip not seen, and the predicted slip is mostly found where the grid says, missed
-  because something else happened at the same time. Of the stretches that look flat, some are not: the delay can
-  return by a frame slowly instead of in one step. Where the delay is flat, only the content's drift against the
-  frames stops; the frames themselves run on unchanged. For correction, a stretch of exactly two
-  teeth on one grid should be corrected as two teeth with a slip between them, not labelled N; and a recording
+  because something else happened at the same time. Where the phase moves across a stretch instead, it moves by the
+  same quarter teeth as at a phase jump, so a stretch with a new phase is a phase jump whose excursion happened to
+  hide a slip. Of the stretches that look flat, some are not: the delay can return by a frame slowly instead of in
+  one step. Where the delay is flat, only the content's drift against the frames stops; the frames themselves run on
+  unchanged. For correction, a stretch of exactly two teeth on one grid should be corrected as two teeth with a slip
+  between them, not labelled N; a stretch with a new phase should be split at a quarter-tooth shift; and a recording
   without slips is not necessarily free of drift.
 limitations: |
-  Development version (thresholds set on these recordings). The test of whether a middle stretch is a missed slip
-  rests on the grid and the fall of the delay, not on finding the slip; stretches at the ends cannot be tested that
-  way. The first version's slip-prediction result (tiers A and B, 26% to 29%) concerns the current fit and is not
-  repeated here.
+  Development version (methods and thresholds set on the 273 benchmark recordings, which are part of the full
+  release). The test of whether a middle stretch is a missed slip rests on the grid and the fall of the delay, not on
+  finding the slip; stretches at the ends cannot be tested that way. The first version's slip-prediction result
+  (tiers A and B, 26% to 29%) concerns the current fit and is not repeated here. The manual labels of
+  [[study:ppg-sawtooth-slips]] include 25 grid-predicted slips, which will check the predicted steps by eye.
 open_questions:
   - title: "Slips that come slowly"
     kind: phenomenon
@@ -101,16 +113,17 @@ open_questions:
       In some stretches the delay returns by about a frame over a minute or two instead of in one step. Whether
       that is a slip spread out by the monitor, or physiology that happens to cancel the creep, is not known; a fit
       of creep plus a ramp of one frame, with the ramp's length free, across all stretches would show how common it is.
-  - title: "A third of the predicted slips show no step"
+  - title: "A quarter of the predicted slips show no step"
     kind: phenomenon
     summary: >-
-      Where the grid carries on across a two-tooth stretch but no step is found at the predicted slip, the phase
-      moved on without a visible slip. Whether the step is hidden by physiology there or absent is open.
+      Where the grid carries on across a two-tooth stretch but no step of 0.4 frame or more is found at the predicted
+      slip (115 of 418), the phase moved on without a visible slip. Whether the step is hidden by physiology there or
+      absent is open.
   - title: "What stops the content's drift"
     kind: phenomenon
     summary: >-
-      In the flat stretches the frames run on and the content stops drifting against them. Some recordings without
-      slips drift slowly instead, by 5 ppm or more. What sets either is not known.
+      In the flat stretches the frames run on and the content stops drifting against them. 259 of 586 recordings
+      without slips drift slowly instead, by 5 ppm or more. What sets either is not known.
 figures:
   - id: pauses
     file: ppg-sawtooth-pauses.png
