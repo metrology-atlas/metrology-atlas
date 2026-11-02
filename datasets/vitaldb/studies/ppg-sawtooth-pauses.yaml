@@ -1,52 +1,131 @@
 id: ppg-sawtooth-pauses
 name: Where the PPG sawtooth stops
 summary: >-
-  In some stretches no slip comes although several were due. The PPG delay there is flat, not hidden: the monitor
-  keeps framing, and only the content's drift against the frames has stopped.
-date: 2026-10-11
-status: current
+  Third of the sawtooth series ([[study:ppg-sawtooth-slips]], [[study:ppg-sawtooth-period]]), rebuilt on 2 November.
+  With the new slip detector and the slip grid, stretches of 1.5 teeth or more without a slip are fewer than first
+  reported: 68 stretches, 26.5 hours, in 43 of 273 recordings. Most of those inside a recording are two teeth long
+  with the slips on either side on one grid, and where the grid predicts the missing slip, two times in three a
+  step of most of a frame is there, missed because a ramp or a disturbance coincided with it. Some stretches look
+  flat; the frame clock keeps its rate and phase through them; and the 27 recordings without any slip show no
+  hidden sawtooth, though half drift slowly. In development.
+date: 2026-11-02
+status: draft
 methods: [signal-borne-clocks]
 techniques: [phase-step-detection, null-controls]
 clocks: [oximeter-frame-clock]
 devices: [solar8000, snuadc]
 variables: [snuadc-pleth, snuadc-art]
-data: 98 stretches (67 hours) where slips were due but none was seen; 32 whole recordings (47 hours) without a slip.
+data: |
+  The benchmark of [[study:ppg-sawtooth-slips]]: the longest continuous stretch of ECG lead II and PLETH (20–90 min)
+  in 273 of the 300 random cases of `$W/pat/cases_pat300.json` (373 hours), with the slips found there.
+background: |
+  The first version of this study (11 October) reported 98 stretches (67 hours) where slips were due but none came,
+  and 32 whole recordings (47 hours) without a slip; there the delay was flat (median slope −0.15 of the sawtooth's
+  rate), the frame clock ran on (82 of 98 stretches, within 1 ppm), and predicting slips one tooth beyond the first
+  and last raised tiers A and B from 26% to 29% of the time. Its script and outputs were not kept, so it could not
+  be reproduced, and the current fit ([[software:physiosync]]) relies on it: stretches that pass its pause test are
+  labelled N (offset only). This version rebuilds it with public code and asks one more question that the slip grid
+  makes possible: when slips resume, do they continue the old grid (the sawtooth went on unseen) or start a new
+  phase?
 method: |
-  In each stretch the case's own sawtooth (one frame, at the recording's rate, best of 50 phases) was fitted against
-  a mirrored sawtooth as the control. Slip prediction looked one tooth beyond the first and last accepted slips and
-  accepted a slip there only if a step showed.
+  Commands (vitaldb-bench tools/sawtooth_char.py; tool SHA-256 46110308f725… (bench8 was made with an earlier state of it whose slips stage is the same)): the slips run of
+  [[study:ppg-sawtooth-slips]] into `$W/sawtooth_char/bench8` (`slips --inj-seeds 6`, 4 parts, then `agg`), then
+  `mech --scan $W/sawtooth_char/scan --slips $W/sawtooth_char/bench8/slips.jsonl --recordings
+  $W/sawtooth_char/bench8/recordings.csv --root $R --out $W/sawtooth_char/mech3/mech_partK.jsonl --part K --of 3`,
+  concatenated, and `mech-agg --mech $W/sawtooth_char/mech3/mech.jsonl --recordings
+  $W/sawtooth_char/bench8/recordings.csv --clocks $W/clock_network/r4/clocks.csv --out $W/sawtooth_char/mech3`
+  (mech_summary.json: `pauses` and `whole_without_slips`).
+
+  - **Stretches without a slip:** in each recording with an upward sawtooth (3 or more slips), every stretch of
+    1.5 teeth or more between two slips (middle), before the first or after the last (start, end).
+  - **Flat or creeping:** the slope of the ECG→PPG delay (beat median of foot, upstroke and peak; 30 s left out at
+    each end) as a share of the sawtooth's creep: 1 creeping as usual, 0 flat.
+  - **A sawtooth unseen?** physiosync's sawtooth_evidence at the recording's rate (the share of variance a one-frame
+    sawtooth explains, best of 50 phases) against the same with the sawtooth mirrored, which no slip produces.
+  - **The frame clock** in the stretch (raw PLETH maxima): its rate against the whole recording's, and whether the
+    recording's own frame comb (rate and phase) still holds there.
+  - **Does the phase carry on?** For a middle stretch, whether the slips on either side lie on one run of the slip
+    grid ([[study:ppg-sawtooth-period]]), or the phase has moved (the shift, in teeth); and how far the delay falls
+    from just after the first slip to just before the second, in frames, against ordinary teeth.
+  - **The missing slip.** Inside each middle stretch, the slips the grid predicts (evenly spaced between the two
+    slips): the best one-frame step within 10 s, its free size, its persistence and the tests it fails. The control
+    is the same search half way through ordinary teeth, where no slip should be.
+  - **Recordings without any one-frame step:** the slope over the whole stretch, the sawtooth evidence at the setup's
+    rate, and the frame clock.
 results: |
-  - **The delay is flat:** median slope −0.15 times the sawtooth rate; only 13 stretches creep without slipping.
-  - **The frame clock keeps running** through them: found in 82 of 98 stretches, at the rate of the corrected part of
-    the same case to within 1 ppm.
-  - **Whole recordings without slips are robust,** but at least one shows a slow drift of about 7 ppm and a 20 ms
-    step instead: possibly a much slower sawtooth.
-  - **Slip prediction** moved tiers A + B from 26% to 29% of time, with unchanged error.
+  - **Fewer stretches:** 68 of 1.5 teeth or more without a slip, 26.5 hours in 43 recordings (49 middle, 6 at the
+    start, 13 at the end).
+  - **Most middle stretches look like one missed slip.** They are two teeth long (median 2.0, interquartile range
+    2.0–2.07); in 29 of 49 the slips on either side lie on one grid, so the phase carried straight through; and the
+    delay falls by a median 1.00 frame across them, as over an ordinary tooth (0.90). The detector finds about 88%
+    of injected slips, which leaves enough missed slips to account for these.
+  - **The missing slips are mostly there.** At the 33 places the grid predicts a slip inside such stretches, the
+    best step has a median size of 0.73 frame and persists at 0.67 frame, a median 1.5 s from the prediction; 19 lie
+    between 0.4 and 1.4 frames and 5 are larger, against 36 of 442 controls half way through ordinary teeth (8%,
+    median size 0.13, persistence −0.09). Only 3 pass the detector's tests for a slip the grid supports: the rest
+    fail on the step's size or persistence (22, often a disturbance within the window), a coinciding ramp (17), or
+    both.
+    About a third show no step at all. Where the phase has moved (33 places in stretches with a new phase), the
+    evenly spaced positions look like the controls (median 0.19 frame).
+  - **Some look flat.** In 33 of the 68 stretches the delay's slope is under 0.3 of the creep (14 of them middle
+    stretches on one grid, 7 with a new phase after); 13 creep at more than 0.7. A slope near zero is not proof of a
+    flat delay: in the longest flat-looking stretch between two slips ([[case:1363]]) the delay creeps as usual for
+    8 minutes and then rises back by about a frame over 1–2 minutes instead of in one step, so 33 is an upper bound. A sawtooth explains more than half
+    the variance in 21 (median evidence 0.26, mirrored control −0.09).
+  - **The frame clock runs through them.** Found in 48 of 67 stretches; the recording's own frame comb holds there
+    as well as over the whole recording (resultant median 0.44 against 0.42), so the frames keep their rate and phase.
+  - **New phases after a stretch** (20 middle stretches) are not locked to quarter teeth (8 within ±0.03 against 4.8
+    by chance, p = 0.08), unlike the phase jumps between slips ([[study:ppg-sawtooth-period]]).
+  - **Whole recordings without any one-frame step:** 27 (33.8 hours). None shows a sawtooth (evidence median −0.20,
+    mirrored control −0.15; none above 0.5), and the frame clock is found in 25; but 13 drift by more than 5 ppm
+    (slope median −0.1, 5th–95th percentile −13 to +9 ppm).
+
+  [[figure:pauses]]
 discussion: |
-  Stretches that pass the test are labelled N (offset only, no sawtooth). Recordings whose own tooth rate differs
-  from their setup's by more than 20% use their own rate, and none of their teeth is labelled N.
-limitations: What replaces the sawtooth at the start and end of some recordings is not simply flat (fast ABP→PPG ramps of several ms per minute). Open.
+  The first version's flat pauses were partly missed slips: a better detector and the grid explain most stretches
+  inside a recording as one slip not seen, and the predicted slip is mostly found where the grid says, missed
+  because something else happened at the same time. Of the stretches that look flat, some are not: the delay can
+  return by a frame slowly instead of in one step. Where the delay is flat, only the content's drift against the
+  frames stops; the frames themselves run on unchanged. For correction, a stretch of exactly two
+  teeth on one grid should be corrected as two teeth with a slip between them, not labelled N; and a recording
+  without slips is not necessarily free of drift.
+limitations: |
+  Development version (thresholds set on these recordings). The test of whether a middle stretch is a missed slip
+  rests on the grid and the fall of the delay, not on finding the slip; stretches at the ends cannot be tested that
+  way. The first version's slip-prediction result (tiers A and B, 26% to 29%) concerns the current fit and is not
+  repeated here.
 open_questions:
-  - title: "Reproduction check (2 November 2026)"
-    kind: next step
-    summary: >-
-      No saved script gives these numbers. The study (11 October) predates the vitaldb-bench repository, and no
-      output of it was kept. The method is in physiosync (sawtooth_evidence: a one-frame sawtooth at the best of
-      50 phases against a mirrored control), and vitaldb-bench has a pipeline that applies it to pauses
-      (tools/beats_export.py, then tools/art_export.py, then tools/pause_char.py), but its inputs (the beat files
-      and the per-case priors) were not kept and it covers only the pause counts, durations and slopes, not the
-      frame clock through the pauses (82 of 98) or the effect of slip prediction (26% to 29% of time in tiers A
-      and B), which describes the physiosync of that date. The figure is ad hoc. To be rebuilt as one tool on
-      the current physiosync, or the unreproduced results withdrawn.
-  - title: "What replaces the sawtooth"
+  - title: "Slips that come slowly"
     kind: phenomenon
     summary: >-
-      At the start and end of some recordings the PPG lag is not flat but ramps by several ms per minute against
-      arterial pressure. Its cause is not known.
+      In some stretches the delay returns by about a frame over a minute or two instead of in one step. Whether
+      that is a slip spread out by the monitor, or physiology that happens to cancel the creep, is not known; a fit
+      of creep plus a ramp of one frame, with the ramp's length free, across all stretches would show how common it is.
+  - title: "A third of the predicted slips show no step"
+    kind: phenomenon
+    summary: >-
+      Where the grid carries on across a two-tooth stretch but no step is found at the predicted slip, the phase
+      moved on without a visible slip. Whether the step is hidden by physiology there or absent is open.
+  - title: "What stops the content's drift"
+    kind: phenomenon
+    summary: >-
+      In the flat stretches the frames run on and the content stops drifting against them. Some recordings without
+      slips drift slowly instead, by 5 ppm or more. What sets either is not known.
 figures:
-  - id: sawtooth-pauses
-    file: sawtooth-pauses.png
+  - id: pauses
+    file: ppg-sawtooth-pauses.png
     theme: example traces
-    source: ad hoc (no script in vitaldb-bench yet; to be regenerated by one)
-    caption: Three anonymous recordings where the PPG sawtooth pauses, against the sawtooth expected had it continued.
-    alt: Three stacked traces of arterial-pressure-to-PPG lag with shaded pause spans and dashed expected sawtooth lines.
+    source: vitaldb-bench tools/sawtooth_char.py
+    records: [2140, 1363]
+    caption: >-
+      (a) A two-tooth stretch without a detected slip in [[case:2140]] (grey), its slips on one grid: at the slip the
+      grid predicts (dotted) there is a one-frame step 1.5 s away, preceded by a burst of disturbed beats that kept
+      the detector from accepting it (zoom). (b) The longest stretch between two slips whose slope is near zero, in
+      [[case:1363]]: the delay creeps as the sawtooth would (dashed, zoom) for 8 minutes and then rises back slowly.
+    alt: >-
+      Two delay traces with dashed lines at slips and a grey shaded stretch in each; the top zoom shows a scatter of
+      beats stepping up about 30 ms with a burst of outliers before it; the bottom zoom shows the delay falling along a
+      dashed line and then rising back over two minutes.
+code:
+  - vitaldb-bench/tools/sawtooth_char.py
+  - physiosync/physiosync/ecg_ppg.py

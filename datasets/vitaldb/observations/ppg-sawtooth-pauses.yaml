@@ -1,8 +1,9 @@
 id: ppg-sawtooth-pauses
 name: The PPG sawtooth sometimes stops
 summary: >-
-  In some stretches, and some whole recordings, no frame slip comes although several were due. The delay there is
-  flat and the frame clock keeps running; what stops the content's drift is not known.
+  In some stretches, and some whole recordings, no frame slip comes although one or more were due. Many such
+  stretches inside a recording are a single missed slip (two teeth long, on one slip grid); in the rest the delay
+  is flat and the frame clock keeps its rate and phase; what stops the content's drift is not known.
 status: open
 clocks: [oximeter-frame-clock]
 variables: [snuadc-pleth]

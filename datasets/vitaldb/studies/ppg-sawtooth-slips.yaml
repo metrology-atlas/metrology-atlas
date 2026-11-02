@@ -1,0 +1,105 @@
+id: ppg-sawtooth-slips
+name: Finding and placing each PPG frame slip
+summary: >-
+  First of a series characterising the ECG–PPG sawtooth in detail (with [[study:ppg-sawtooth]] as the overview,
+  [[study:ppg-sawtooth-period]] and [[study:ppg-sawtooth-pauses]] next). A new detector tests every point of a
+  series of three fiducials per pulse for a sharp, persistent step of exactly one frame, confirms it against
+  arterial pressure, uses the grid of the other slips and the current fit's slips as priors, and places each slip
+  between two fiducials. On held-out injected ground truth it finds 88% of slips (the current fit 92%) with one
+  false slip in 42 recordings (the current fit 8) and places them twice as closely. It also finds slips that lose a
+  frame instead of gaining one. In development.
+date: 2026-11-02
+status: draft
+methods: [signal-borne-clocks]
+techniques: [beat-matching, phase-step-detection, null-controls]
+clocks: [oximeter-frame-clock, snuadc-sample]
+devices: [solar8000, snuadc]
+variables: [snuadc-pleth, snuadc-ecg-ii, snuadc-art]
+data: |
+  The 300 random cases of the PAT benchmark (`$W/pat/cases_pat300.json`); the longest continuous stretch of ECG
+  lead II and PLETH (20–90 min) in 273 of them, 373 hours (the earlier benchmark's rule gave 266; this one requires
+  at least 600 matched beats). Arterial pressure where present. 22 recordings in which the current fit
+  ([[software:physiosync]]) finds no slip carry an injected sawtooth.
+background: |
+  The current fit ([[study:ppg-sawtooth]]) finds slips from a 15-beat running median and gives every tooth its own
+  rate, so each slip is placed to a beat or a few and each tooth's period is free. If the period is constant, or
+  changes slowly, most of that freedom is unnecessary, and the slips could be placed far more closely: a slip is
+  one frame (33 ms) against a beat-to-beat noise of 2–5 ms. This study builds the detector and placement the rest
+  of the series relies on, and checks them against a known sawtooth.
+method: |
+  Commands (vitaldb-bench): `python tools/sawtooth_char.py scan --root $R --cases $W/pat/cases_pat300.json --out
+  $W/sawtooth_char/scan`, then `slips --scan $W/sawtooth_char/scan --inj-seeds 6 --out
+  $W/sawtooth_char/bench8/slips_partK.jsonl --part K --of 4` (K = 0–3), concatenated into `bench8/slips.jsonl`, then
+  `agg --slips $W/sawtooth_char/bench8/slips.jsonl --out $W/sawtooth_char/bench8 --ports $W/setups/ports.jsonl
+  --assigned $W/setups/assign/assigned.csv --rates $W/correction_census/census_rates.csv` (summary.json,
+  recordings.csv) and `plot` for figures. Run of 2 November (tool SHA-256 46110308f725… (bench8 was made with an earlier state of it whose slips stage is the same)); earlier development runs
+  (bench1–bench7) are not cited.
+
+  - **Fiducials.** R peaks (5–25 Hz, sub-sample); per pulse the foot, steepest upstroke, peak and half-height on the
+    downslope of the 0.5–10 Hz PLETH; the arterial upstroke per beat; the frame clock from the raw PLETH maximum.
+  - **Detection** on the time-ordered series of every foot, upstroke and peak (each moved onto the upstroke's level),
+    so a slip inside a pulse is a clean step between two points. At every point: the log likelihood ratio of a
+    sharp one-frame step against none (15 beats each side, one straight line through both), the free step size, and
+    a sharp step against the same change spread over 7 beats. A slip found on its own must also persist (the level
+    15–40 or 15–75 beats on differs by about a frame), lie in a quiet stretch, and, where the arterial line is clean,
+    step ART→PPG but not ECG→ART. The same search for downward steps finds slips the other way.
+  - **Priors.** Each run of the recording's slip grid ([[study:ppg-sawtooth-period]]) predicts slips over its own
+    stretch, and the current fit's slips (moved from ECG to PPG time) are candidates too; a step there is accepted
+    on looser tests (ratio > 8, not clearly a ramp, about a frame, holding, or too near an end to test that).
+  - **Placement.** The fiducials of three beats either side of a slip, in time order, are each before or after it
+    (a robust likelihood that allows 5% outliers); the posterior over the split gives the most likely gap between
+    two fiducials and a 95% bracket.
+  - **Injected ground truth.** On the recordings where the current fit finds no slip and the detector finds no
+    one-frame step either way (14 of 22): one sawtooth written into the PLETH waveform (15–55 ppm, random phase,
+    33 ms of content held at each slip) and the fiducials found again; the same slips as a shift of the fiducial
+    times; and six more fiducial-shift sawtooths per recording, seeds 0–2 used while setting thresholds and 3–5
+    held out. The current fit is run on each for comparison.
+results: |
+  - **Held-out injected ground truth** (42 sawtooths on 14 recordings, 210 slips):
+
+    | | New detector | Current fit |
+    |---|---|---|
+    | Found | 88% | 92% |
+    | Found, 30 beats or more from either end | 90% | 95% |
+    | False slips | 1 | 8 |
+    | Placement error, median | 0.11 s | 0.25 s |
+    | Placement error, 95th percentile | 1.9 s | 2.5 s |
+    | 95% bracket holds the slip | 93% | — |
+
+    The tuning seeds give the same (88%, 2 false). The current fit's slips are in ECG time and are moved to PPG time
+    by the typical delay before comparing.
+  - **The waveform injection** (80 slips) gives 83% found, none false, median error 0.13 s, and brackets that hold
+    the slip 85% of the time against 96% for the same slips as a fiducial shift: holding 33 ms of content at the slip
+    distorts the fiducials beside it and the brackets are then too narrow. A real slip shows no held segment
+    ([[study:ppg-sawtooth]]), so the shifted case is probably the closer.
+  - **A slip is one step,** as far as can be told: a test of two steps against one around each slip prefers two at
+    59% of real slips but also at 44% of the injected single steps, so it cannot tell them apart, and the split it
+    finds has no preferred share of the frame (`$W/sawtooth_char/mech3/mech_summary.json`).
+  - **"Sawtooth-free" recordings are not all free:** 8 of the 22 recordings in which the current fit finds no slip
+    have one-frame steps, upward or downward, without any injection.
+  - **Real recordings:** 898 upward slips in 234 of 273 recordings (the current fit: 1,248) and 128 downward
+    one-frame steps, most of them in nine recordings whose sawtooth runs the other way
+    ([[study:ppg-sawtooth-period]]). Upward and downward steps are the same size (median 32.1 and 31.6 ms).
+discussion: |
+  The detector is nearly as sensitive as the current fit, an eighth as often wrong, and places slips about twice as
+  closely. Placing a slip to a tenth of a second matters: a slip misplaced by s seconds leaves a whole-frame error
+  for s seconds. The current fit's extra finds are mostly slips near the ends of a stretch, where persistence
+  cannot be tested.
+limitations: |
+  Development version: thresholds were set while looking at these 273 recordings, so the injected test is the
+  honest measure, and 14 hosts are few. The injection holds 33 ms of content at each slip; a real slip shows no
+  held segment ([[study:ppg-sawtooth]]), so the real waveform near a slip may differ from the injected one.
+open_questions:
+  - title: "The last few percent"
+    kind: next step
+    summary: >-
+      The slips the current fit finds and this detector does not are mostly near the ends of the stretch or
+      coincide with a physiological ramp; a fit of a fixed one-frame step with the ramp as a nuisance term may
+      recover them.
+  - title: "Does a real slip distort the pulse beside it?"
+    kind: next step
+    summary: >-
+      The brackets are calibrated if not and too narrow if so. The share of fiducials only partly shifted at real
+      slips (recorded per slip) against the two injections would tell.
+code:
+  - vitaldb-bench/tools/sawtooth_char.py
