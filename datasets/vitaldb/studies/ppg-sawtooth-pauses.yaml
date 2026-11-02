@@ -27,6 +27,17 @@ discussion: |
   from their setup's by more than 20% use their own rate, and none of their teeth is labelled N.
 limitations: What replaces the sawtooth at the start and end of some recordings is not simply flat (fast ABP→PPG ramps of several ms per minute). Open.
 open_questions:
+  - title: "Reproduction check (2 November 2026)"
+    kind: next step
+    summary: >-
+      No saved script gives these numbers. The study (11 October) predates the vitaldb-bench repository, and no
+      output of it was kept. The method is in physiosync (sawtooth_evidence: a one-frame sawtooth at the best of
+      50 phases against a mirrored control), and vitaldb-bench has a pipeline that applies it to pauses
+      (tools/beats_export.py, then tools/art_export.py, then tools/pause_char.py), but its inputs (the beat files
+      and the per-case priors) were not kept and it covers only the pause counts, durations and slopes, not the
+      frame clock through the pauses (82 of 98) or the effect of slip prediction (26% to 29% of time in tiers A
+      and B), which describes the physiosync of that date. The figure is ad hoc. To be rebuilt as one tool on
+      the current physiosync, or the unreproduced results withdrawn.
   - title: "What replaces the sawtooth"
     kind: phenomenon
     summary: >-
