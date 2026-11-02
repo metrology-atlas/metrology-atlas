@@ -12,7 +12,7 @@ goes, the rules that apply everywhere, and the steps for the common cases.
 | An analysis script, the clock model, corrected times, builds, labels | [[software:vitaldb-bench]] | MIT |
 | Timing corrections that are not specific to VitalDB | [[software:physiosync]] | MIT |
 | Pressure-line access detection | [[software:lineaccess]] | MIT |
-| How the .vital files are read, with the corrections applied (reset order, sample placement, scale factors) | [[software:timenet]] (its VitalDB reader) | see the repository |
+| How the .vital files are read, with the corrections applied (reset order, sample placement, scale factors) | [[software:vitaldb-reader]] | see the repository |
 
 All of these repositories are public. To report a problem or suggest a change, open an issue on the repository
 concerned, naming the page or file; for an atlas page, that is [[software:metrology-atlas]]. Questions and

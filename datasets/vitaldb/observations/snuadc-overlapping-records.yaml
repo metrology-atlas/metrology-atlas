@@ -13,7 +13,7 @@ handling: |
   The record-level signal survey (19 October) explains the worst of them: records written twice
   ([[observation:duplicated-records]], 8 recordings) and two interleaved streams
   ([[observation:interleaved-records]], 12 recordings), which also affect Primus and BIS. Drop the duplicates; treat
-  interleaved tracks as unusable. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py|reset-order rule]]
+  interleaved tracks as unusable. The [[code:vitaldb-reader/src/vitaldb_reader/resets.py|reset-order rule]]
   still needs a guard that skips such tracks before the next full build. None is in the current builds or clock
   fits.
 code:

@@ -13,8 +13,8 @@ consequence: |
   mmHg). The raw codes are an ordinary arterial waveform (medians 572, 565 and 592, against 578 for ART over the
   release). None of the three cases has a SNUADC/PLETH track.
 handling: |
-  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/scales.py|TimeNet import]]
-  converts these three tracks with the ART factors (code × 0.987457 − 495.626 mmHg) by default
+  [[code:vitaldb-reader/src/vitaldb_reader/scales.py|vitaldb-reader]] gives these three tracks the ART factors (code × 0.987457 − 495.626 mmHg), and the
+  TimeNet builds convert them with these by default
   (VITALDB_SCALE_FIX=on) and keeps the stored factors in the metadata. With other readers, convert them by hand.
   Across the release, the Solar8000 ART numerics are 2.35–2.38 × the waveform read with the stored factors, as
   expected for arterial pressure stored with the PLETH factors. Found by the signal survey (every conversion

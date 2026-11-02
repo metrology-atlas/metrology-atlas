@@ -30,13 +30,13 @@ consequence: |
   950 recordings AWP reads about 3% high at typical pressures, and in 26 it reads about a quarter of the true value. Anything computed from these waveforms
   (end-tidal values, capnogram shape, pressures) inherits the error; the Primus numerics are not affected.
 handling: |
-  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/scales.py|TimeNet import]]
-  stores the corrected factors by default (VITALDB_SCALE_FIX=on): CO2 0.075, AWP 0.1 / −20; the stored counts are
+  [[code:vitaldb-reader/src/vitaldb_reader/scales.py|vitaldb-reader]] gives the corrected factors, and the
+  TimeNet builds store them by default (VITALDB_SCALE_FIX=on): CO2 0.075, AWP 0.1 / −20; the stored counts are
   unchanged and the file's factors are kept in the Signal's metadata (scale_stored, scale_correction). The Primus
   device page lists the corrected factors per configuration. Other readers (the vitaldb package, the raw file) still
   use the stored factors.
 code:
-  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/scales.py
+  - vitaldb-reader/src/vitaldb_reader/scales.py
   - vitaldb-bench/tools/numeric_vs_wave.py
 figures:
   - id: primus-waveform-gains

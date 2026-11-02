@@ -28,6 +28,6 @@ results: |
   - **The other residuals are fiducials, not time-base faults:** detector switching between two points in the QRS,
     or where annotators placed beats. Two constant shifts and three late-starting recordings remain unexplained.
 discussion: |
-  Times taken from different track subsets share an axis only in absolute file time. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] reads whole
+  Times taken from different track subsets share an axis only in absolute file time. [[code:vitaldb-reader/src/vitaldb_reader/vital_file.py|vitaldb-reader]] reads whole
   files, so nothing in the builds moves. Beat-train alignment recovers offsets to about 1 ms, and serves as an
   integrity check and as a second cross-device method; the time-zero convention belongs in a reporting checklist.

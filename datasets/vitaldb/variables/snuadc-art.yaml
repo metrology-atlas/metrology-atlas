@@ -162,7 +162,7 @@ chain:
 - node: Stored sample time
   kind: stamping
   effect: Sample j of a record sits at its stamp + j/500 s. Stamps run −0.95 ppm against the sample count (stamp
-    arithmetic), and the five records after each reset are written out of order; the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] puts them back
+    arithmetic), and the five records after each reset are written out of order; [[code:vitaldb-reader/src/vitaldb_reader/resets.py|vitaldb-reader]] puts them back
     in sampling order.
   span_s:
   - 0.002

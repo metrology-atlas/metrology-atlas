@@ -11,5 +11,5 @@ consequence: |
   Aligning a numeric with the waveform it came from means shifting it back by its delay and spreading it over its
   window. Left at its stamp, it is safe for real-time models but late for physiology.
 handling: |
-  The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] labels each numeric track with its typical delay and window (numeric_lag), and per-case labels
+  The [[code:vitaldb-reader/src/vitaldb_reader/timing_model.py|vitaldb-reader]] gives each numeric track its typical delay and window (numeric_lag), which the TimeNet builds carry as labels, and per-case labels
   carry each case's own delay. Stored times are never moved.

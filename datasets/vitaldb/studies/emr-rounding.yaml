@@ -35,8 +35,8 @@ results: |
   [[figure:emr-rounding]]
 discussion: |
   Read a 5-minute EMR time t as the interval (t − 300 s, t]: the event is estimated at t − 150 s (SD 87 s), and the
-  entry is known no earlier than t plus the documentation lag. Minute entries keep ±60 s. The clinical_time labels in
-  the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] carry these intervals. The extra ~50 s cannot be separated from rounding with these data.
+  entry is known no earlier than t plus the documentation lag. Minute entries keep ±60 s. The timing model in
+  [[code:vitaldb-reader/src/vitaldb_reader/timing_model.py|vitaldb-reader]] gives these intervals, and the clinical_time labels of the TimeNet builds carry them. The extra ~50 s cannot be separated from rounding with these data.
 
   The dataset's creator confirms that these times were entered by hand in the EMR, usually at 5-minute resolution
   ([[reference:lee2026correspondence]]). That fits the 5-minute group; the direction of rounding comes from the data,

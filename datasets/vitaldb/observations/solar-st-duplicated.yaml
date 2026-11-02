@@ -4,4 +4,4 @@ summary: Every Solar8000 ST_II record is duplicated at the same stamp (0–20 ms
 status: established
 devices: [solar8000]
 studies: [numeric-derivation-pilot]
-handling: The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] drops a record that repeats the previous value within 50 ms, and counts the drops.
+handling: The [[code:vitaldb-reader/src/vitaldb_reader/resolution.py|vitaldb-reader]] finds a record that repeats the previous value within 50 ms; the TimeNet builds drop it and count the drops.

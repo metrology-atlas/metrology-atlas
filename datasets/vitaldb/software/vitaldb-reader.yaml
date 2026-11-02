@@ -1,0 +1,56 @@
+id: vitaldb-reader
+name: vitaldb-reader
+summary: >-
+  Reads VitalDB .vital files at native resolution, with this atlas's corrections as separate, versioned steps:
+  reset records in sampling order, corrected scale factors, samples placed by count, and the timing model.
+repo: https://github.com/metrology-atlas/vitaldb-reader
+branch: main
+visibility: public
+local: ../../../vitaldb-reader
+licence: MIT
+language: Python 3.11+ (numpy)
+description: |
+  The reader keeps every track at the resolution and in the dtype the file stores it, in file order, with record
+  times in absolute file time, and resamples nothing. Each correction the atlas found is its own module with a
+  version, so an analysis can say exactly which it applied:
+
+  - **Reset records in sampling order** (`resets`, `RULE_VERSION`): [[observation:reset-records-out-of-order]],
+    [[study:reset-cluster-order]].
+  - **Corrected scale factors** (`scales`, `SCALE_RULES_VERSION`) for the Primus waveforms and the mislabelled
+    arterial tracks: [[observation:primus-waveform-gains]], [[observation:art-with-pleth-factors]].
+  - **Samples placed by count** (`timing`), so none are lost to the stamp arithmetic:
+    [[observation:snuadc-stamp-arithmetic]], [[observation:loaders-lose-samples]].
+  - **The timing model** (`timing_model`, `MODEL_VERSION`): each monitor numeric's delay and window, and the
+    resolution of the clinical times: [[observation:numerics-not-front-stamped]], [[study:emr-rounding]],
+    [[study:hr-derivation]].
+
+  It was first written as a VitalDB connector for TimeNet ([[software:timenet]]); the reader became its own package
+  so that the scripts behind this atlas ([[software:vitaldb-bench]]) can be run from public code. The `.vital` format
+  is VitalDB's, documented in vitalutils; the reader is an independent implementation.
+install: |
+  ```bash
+  pip install "vitaldb-reader @ git+https://github.com/metrology-atlas/vitaldb-reader@0.1.0"
+  ```
+parts:
+  - group: Reading
+    path: src/vitaldb_reader/vital_file.py
+    summary: Reads the .vital container (devices, tracks, records, exact record times) in file order.
+  - group: Corrections
+    path: src/vitaldb_reader/resets.py
+    summary: Finds the reset clusters in an SNUADC track and puts their records back in sampling order.
+  - group: Corrections
+    path: src/vitaldb_reader/scales.py
+    summary: Corrected gain and offset where the stored scale factors are wrong.
+  - group: Corrections
+    path: src/vitaldb_reader/timing_model.py
+    summary: Delay and window of each monitor numeric; resolution of the clinical times.
+  - group: Timing and values
+    path: src/vitaldb_reader/timing.py
+    summary: Runs and segments of each waveform track; samples placed by count; nominal rates.
+  - group: Timing and values
+    path: src/vitaldb_reader/resolution.py
+    summary: Value resolution of each track, converter limits and near-duplicate records.
+  - group: Tests
+    path: tests/test_resets.py
+    summary: Tests of the reordering rule, including the variant clusters.
+related: [vitaldb-bench, timenet]

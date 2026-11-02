@@ -33,7 +33,7 @@ results: |
 discussion: |
   The likely cause is fixed-point arithmetic: a 0.2 s increment held at a resolution of 2⁻²⁰ s. That is unproven.
   The vitaldb package places blocks by rounding their stamps up to a sample, so it overwrites one sample about every
-  35 minutes; placing samples by count, as the [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] does, avoids it. Rates read from stamps carry the
+  35 minutes; placing samples by count, as [[code:vitaldb-reader/src/vitaldb_reader/timing.py|vitaldb-reader]] does, avoids it. Rates read from stamps carry the
   [[value:snuadc-stamp-arithmetic|.2]], which is negligible beside their spread.
 limitations: |
   What sets the slope in the 12% of files that differ is not known (a different recorder build, or a different

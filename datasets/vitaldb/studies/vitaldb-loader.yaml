@@ -30,7 +30,7 @@ results: |
     ([[study:reset-cluster-order]]).
 discussion: |
   Clock rates measured on the package's array index read about +0.95 ppm high. Analyses that use the stamps directly
-  are unaffected. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] reads whole files, keeps every sample, places them by count and puts the reset
+  are unaffected. [[code:vitaldb-reader/src/vitaldb_reader/vital_file.py|vitaldb-reader]] reads whole files, keeps every sample, places them by count and puts the reset
   records in sampling order.
 code:
   - vitaldb-python/vitaldb/utils.py

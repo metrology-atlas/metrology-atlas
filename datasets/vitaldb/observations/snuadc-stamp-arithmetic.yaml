@@ -10,6 +10,6 @@ studies: [stamp-arithmetic, paced-ecg, vitaldb-loader]
 consequence: |
   Rates read from stamps include −0.95 ppm; the frequent-correction mode's "about −1 ppm" is this, not drift.
   Placing samples by rounded stamps, as the vitaldb package does, overwrites one sample about every 35 minutes.
-handling: The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] places samples by count, so no sample is lost. The census of all files (17 October) confirmed it.
+handling: The [[code:vitaldb-reader/src/vitaldb_reader/timing.py|vitaldb-reader]] places samples by count, so no sample is lost. The census of all files (17 October) confirmed it.
 code:
-  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py
+  - vitaldb-reader/src/vitaldb_reader/timing.py

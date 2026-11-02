@@ -53,8 +53,7 @@ results: |
 discussion: |
   Sampling pauses for about 20 ms just before the recorder starts the new grid, and the time is never sampled; a
   filler sample follows. With the filler counted, the true pause is about 19.7 ms, consistent with the 17.7 ms lost
-  on the sample count. The [[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/connector.py|TimeNet import]] now puts the records in sampling order
-  ([[code:timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py|resets.py]]), and the clock fits use the same order. The zero sample is
+  on the sample count. [[code:vitaldb-reader/src/vitaldb_reader/resets.py|vitaldb-reader]] now puts the records in sampling order, and the clock fits use the same order. The zero sample is
   still stored, and the loss is added at the end of the record rather than at its true point inside it.
 limitations: |
   The gap is located only where the signal is steep (about one reset in four). The public firmware may not be the
@@ -94,8 +93,8 @@ open_questions:
       that change still include them, so they need re-exporting from the new summary, and the summary change needs
       committing in vitaldb-bench.
 code:
-  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/resets.py
-  - timenet/packages/timenet-connectors/src/timenet_connectors/datasets/vitaldb/vitaldb/tests/test_resets.py
+  - vitaldb-reader/src/vitaldb_reader/resets.py
+  - vitaldb-reader/tests/test_resets.py
   - vitaldb-bench/tools/clock_model_fit.py
   - vitaldb-bench/tools/adhoc/reset_gapscan.py
   - vitaldb-bench/tools/adhoc/reset_glitch.py
