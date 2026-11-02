@@ -14,6 +14,7 @@ data: |
   - All charted times and dates in `clinical_data.csv`. The machine-readable rules are in `exclusion_rules.json`.
 method: |
   - Checked gaps from op end to recording end, whole-second and whole-minute structure, event order, extreme values and placeholder dates.
+  - Command (vitaldb-resolution): `python tools/screens.py timestamp-imputed-and-conformance --root $R --out $W/screens`, which writes `$W/screens/timestamp-imputed-and-conformance.json` with every number below.
 results: |
   - [[value:opend-imputed|number]] op ends (8.4%) fall 598–604 s before the end of the recording; most often 601 s (346 cases) or 602 s (129 cases). They are excluded as `imputed`.
   - 130 anaesthesia ends are stored with floating-point noise (e.g. 599.999999 s), most an exact multiple of 5 minutes after op end: 600 s (40 cases), 300 s (20), 900 s (20), 1,200 s (14) and 1,500 s (7). Only 14 of them have an imputed op end, so they are not derived from it.
@@ -47,3 +48,5 @@ open_questions:
       recording, the operation's end not being marked) is not known, and the VitalDB team could say.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

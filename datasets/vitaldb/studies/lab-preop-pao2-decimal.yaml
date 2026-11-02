@@ -13,6 +13,7 @@ data: |
   - 538 pre-operative PaO2 values.
 method: |
   - Screened the share of values ending in .0 against the 10% expected at a single 0.1 mmHg resolution.
+  - Command (vitaldb-resolution): `python tools/screens.py lab-preop-pao2-decimal --root $R --out $W/screens`, which writes `$W/screens/lab-preop-pao2-decimal.json` with every number below.
 results: |
   - 41% end in .0 against 10% expected, so about a third were recorded as whole numbers.
 discussion: |
@@ -26,3 +27,5 @@ open_questions:
       number records is not known.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

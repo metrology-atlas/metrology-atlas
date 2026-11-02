@@ -16,6 +16,7 @@ method: |
   - Split results by source before screening: stamped with pH and blood gases means the theatre blood-gas analyser; stamped with Hb, WBC and platelets means the central CBC analyser.
   - Checked the last-digit distribution and heaping at 5 and 10 within each source.
   - Compared resolutions of the other analytes both sources report (glucose, Na, K, iCa, lactate).
+  - Command (vitaldb-resolution): `python tools/screens.py lab-haematocrit-two-analysers --root $R --out $W/screens`, which writes `$W/screens/lab-haematocrit-two-analysers.json` with every number below.
 results: |
   - CBC analyser (43,939 results): 0.1 % resolution, every decimal digit at 10%, so no rounding.
   - Blood-gas analyser (14,550 results): always whole percent; the last digit is flat (9.4–10.6% each) and counts vary smoothly, so no heaping at 5 or 10.
@@ -29,3 +30,5 @@ limitations: |
   - Nine stand-alone haematocrits (no other analyte at the same time; values 0.0–27) have unknown source. They are probably body-fluid samples and return the two-analyser mixture with flag `stand_alone_probable_body_fluid`.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

@@ -15,6 +15,11 @@ method: |
   - Clinical values: share of values on each anchor family against the flat expectation, plus an MWI-style index with a binomial threshold.
   - Lab analytes: finest resolution (the finest number of decimal places held by at least 1% of values) and the coarser share. Because results are stored without trailing zeros, about 10% of values should look one step coarser at a single resolution.
   - Whole-number analytes: preference at multiples of 10 and 5, per analyser, with expected counts from a local quadratic fit to the neighbouring values (skipping other multiples of 5). Ratio = observed ÷ expected; z is the Poisson z-score.
+  - Command (vitaldb-resolution): `python tools/screens.py heaping-screen-all-variables --root $R --out $W/screens`, which writes `$W/screens/heaping-screen-all-variables.json` with the numbers below. Two statements are not
+    reproduced by it: that no whole-number analyte prefers multiples of 5 or 10 once the distribution's shape is
+    allowed for (the script finds SaO2 at odd multiples of 5 with a ratio of 2.03, z 15.5, and sodium at multiples of
+    10 with 1.07, z 5.5; PT % and fibrinogen are covered in [[study:lab-computed-value-grids]]), and that a smooth
+    peaked distribution gives deviations of the same size (no simulation was kept). Both are open.
 results: |
   - Heaped clinical values: urine output (91% end in 0), blood loss (85% multiples of 50), crystalloid (98% multiples of 50), colloid, height (21% whole centimetres, 10% expected) and weight.
   - Age is not heaped: 19.1% end in 0 or 5 (20% expected), and last digits are flat.
@@ -22,7 +27,7 @@ results: |
   - Lab analytes with decimals sit near the 10% coarser share. Exceptions: haematocrit (32.4%, two analysers), total bilirubin (6.5%), lactate (12.5%) and bicarbonate (7.9%).
   - No whole-number analyte shows a preference for multiples of 5 or 10 once the shape of the distribution is allowed for.
   - Sodium and SaO2 only look heaped, because 140, 135 and 95 sit at a peak or on a steep slope. Simulating a smooth peaked distribution gives deviations of the same size at the mode.
-  - Total bilirubin's low range (0.2–1.0 mg/dL, 23,802 results) shows no heaping: from 0.5 mg/dL up each count is
+  - Total bilirubin's low range (0.2–1.0 mg/dL, 23,802 results) shows no heaping: from 0.6 mg/dL up each count is
     within 5% of the mean of its neighbours, and below that the counts follow the rise of the distribution (0.3 and
     0.4 sit 8% and 16% above their neighbours' mean, 0.2 below it), not a preference for any value. Its lower coarser share comes from the shape of the
     distribution.
@@ -49,3 +54,5 @@ open_questions:
       can confirm it.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

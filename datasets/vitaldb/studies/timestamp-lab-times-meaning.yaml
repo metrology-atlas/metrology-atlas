@@ -19,6 +19,11 @@ method: |
   - Checked for a consistent order of draw between panels.
   - Measured the lag from a point-of-care blood gas to the next central-lab panels.
   - Checked the time of day of ward CBCs, and the minute of the hour for heaping.
+  - Command (vitaldb-resolution): `python tools/screens.py timestamp-lab-times-meaning --root $R --out $W/screens`, which writes `$W/screens/timestamp-lab-times-meaning.json`. The study's own script was not kept. Under the definitions in that
+    script, the panel counts are reproduced or close (131,956 case-timestamp pairs; 1,664, 1,535 and 1,653
+    intra-operative central-lab panels with a blood gas in the preceding hour), but not the 75% of CBC–chemistry pairs
+    within 60 s (63.6% of pairs up to 10 min apart) or the median lag of about 10 min after a blood gas (17–19 min).
+    The current reading is [[study:lab-timestamp-meaning]].
 results: |
   - Each panel has one timestamp for all its analytes. Panels drawn together are stamped within seconds of each other (75% of CBC–chemistry pairs within 60 s), centred on zero and in no fixed order.
   - There is no consistent order of draw: each panel is equally likely to be first.
@@ -40,3 +45,5 @@ open_questions:
       the VitalDB team.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

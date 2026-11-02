@@ -15,9 +15,10 @@ data: |
 method: |
   - Checked that −adm is a whole number of minutes from midnight to recording start.
   - Checked where reconstructed recording starts fall in the day, and whether charted events land on 5-minute clock marks.
+  - Command (vitaldb-resolution): `python tools/screens.py timestamp-clock-reconstruction --root $R --out $W/screens`, which writes `$W/screens/timestamp-clock-reconstruction.json` with every number below.
 results: |
   - −adm is a whole number of minutes in 6,386 of 6,388 cases. The exceptions, [[case:1342]] and [[case:5723]], are flagged `clock_uncertain`.
-  - Reconstructed recording starts cluster at 07:00–07:59 (1,634 cases) and run through the working day: 07:40 to 18:53 (5th–95th percentile), median 11:33.
+  - Reconstructed recording starts cluster at 07:00–07:59 (1,634 cases) and run through the working day: 07:39 to 18:53 (5th–95th percentile), median 11:33.
   - Op start falls on a 5-minute clock mark in 92% of cases, op end in 91% and anaesthesia end in 95%; anaesthesia start in only 52%.
 discussion: |
   - The reconstruction holds, so the charted event times can be modelled on clock minutes as in the digit-preferencing manuscript.
@@ -29,3 +30,5 @@ limitations: |
   - 93 charted times (92 op ends, 1 op start) do not share the sub-minute offset of the other charted times in their case, and are flagged `clock_offset_mismatch`.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

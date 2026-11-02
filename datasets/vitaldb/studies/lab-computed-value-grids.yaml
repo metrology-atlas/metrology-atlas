@@ -10,14 +10,15 @@ background: |
   - PT % and INR are calculated from PT seconds, measured to 0.1 s.
   - Fibrinogen is computed from a clotting time in the same way.
 data: |
-  - Central-lab PT % (21,143 results screened) and fibrinogen (18,921), from `lab_data.csv`; pre-operative PT % from `clinical_data.csv`.
+  - Central-lab PT % (21,146 whole-number results screened) and fibrinogen (18,924), from `lab_data.csv`; pre-operative PT % from `clinical_data.csv`.
 method: |
   - Whole-number heaping screen at multiples of 10 and 5, with expected counts from a local quadratic fit to neighbouring values.
   - Inspection of which integers occur at all, and how often, against the local average.
+  - Command (vitaldb-resolution): `python tools/screens.py lab-computed-value-grids --root $R --out $W/screens`, which writes `$W/screens/lab-computed-value-grids.json` with every number below.
 results: |
-  - PT % shows a ×10 ratio of 1.09 (z 4.0); fibrinogen a ×5 ratio of 1.27 (z 11.3).
+  - PT % shows a ×10 ratio of 1.09 (z 4.0); fibrinogen a ×5 ratio of 1.26 (z 10.9).
   - Each 0.1 s step moves PT % by roughly 1–2 points, so some integers can never occur (98 and 102 almost never appear) and their neighbours carry the extra counts.
-  - For fibrinogen, 44 integers between 150 and 450 mg/dL occur at less than 30% of the local average.
+  - For fibrinogen, 47 integers between 150 and 450 mg/dL occur at less than 30% of the local average (the mean count of the ten integers within 5).
   - Pre-operative PT % shows the same artefact.
 discussion: |
   - This is not heaping, and fitting a rounding model would mistake it for one.
@@ -28,3 +29,5 @@ limitations: |
   - The fibrinogen interval has to be estimated from the data, because the clotting time is not recorded.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

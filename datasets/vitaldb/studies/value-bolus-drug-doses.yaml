@@ -16,6 +16,7 @@ method: |
   - For each drug, found the unit the values sit on and the most common totals.
   - Checked rocuronium against case duration and weight, and propofol against weight.
   - Checked zeros against anaesthesia type.
+  - Command (vitaldb-resolution): `python tools/screens.py value-bolus-drug-doses --root $R --out $W/screens`, which writes `$W/screens/value-bolus-drug-doses.json` with every number below.
 results: |
   - Ephedrine sits on 5 mg (99.4%): a count of 5 mg boluses.
   - Calcium chloride sits on 300 mg (90%) or 150 mg (97%): a count of ampoules, sometimes half.
@@ -34,3 +35,5 @@ limitations: |
   - Zeros cannot be told apart from drugs given by another route, such as a propofol infusion on the pump tracks.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py

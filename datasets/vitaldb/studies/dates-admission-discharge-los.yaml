@@ -11,13 +11,14 @@ data: |
   - Admission and discharge dates for 6,388 cases. [[case:1563]] (1900 dates) is excluded.
 method: |
   - Checked that discharge minus admission is a whole number of days, and looked at admission lead time and discharge day.
+  - Command (vitaldb-resolution): `python tools/screens.py dates-admission-discharge-los --root $R --out $W/screens`, which writes `$W/screens/dates-admission-discharge-los.json` with every number below.
 results: |
   - Discharge minus admission is a whole number of days in every case.
   - Most patients were admitted 1 day (41%) or 2 days (38%) before surgery; 172 (2.7%) were admitted on the day of surgery.
   - Median length of stay is 7 days (IQR 4–11). Twenty-six patients went home on the day of surgery.
   - Discharges peak on postoperative day 1 (832) and again on day 7 (669, against 459 on day 6 and 377 on day 8).
   - 17 stays are longer than 115 days (maximum 248 days); 12 patients were discharged more than 115 days after
-    surgery (maximum 223 days). All are plausible and kept.
+    surgery (maximum 224 days). All are plausible and kept.
 discussion: |
   - The day-7 peak probably reflects a weekly discharge routine. It is a real pattern in the dates, not rounding.
   - No latent fit is needed. Given a recorded difference of n days, the true length of stay lies anywhere from n − 1 to n + 1 days, a triangular distribution peaked at n.
@@ -25,3 +26,5 @@ limitations: |
   - The time of day of admission is unknown within the date.
 tags:
 - from the resolution work
+code:
+  - vitaldb-resolution/tools/screens.py
