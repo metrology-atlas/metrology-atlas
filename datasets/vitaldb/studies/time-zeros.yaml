@@ -4,7 +4,7 @@ summary: >-
   A VitalDB time "from the start" depends on which tracks were loaded: loading a subset moves the zero to that
   subset's first record, seconds or hours later. The arrhythmia database's annotations count from the full file's
   zero.
-date: 2026-10-16
+date: 2026-11-03
 status: current
 methods: [stamp-reading, source-review]
 techniques: [beat-matching]
@@ -15,19 +15,30 @@ data: |
   The VitalDB Arrhythmia Database (PhysioNet 1.0.0; 482 cases, about 20 minutes of annotated ECG each, R peaks on a
   1/360 s grid) against R peaks detected in SNUADC ECG II; work of the R-peak timing session, consolidated here.
 method: |
-  Beat-train alignment (impulse trains in 10 ms bins, FFT cross-correlation over ±120 s, beats matched within
-  150 ms, a linear trend for drift) gave each case's offset between annotations and detected beats.
+  Commands (vitaldb-bench): `python tools/time_zeros.py run --root $R --ann $ARR --out $W/time_zeros/run2.jsonl` (ARR,
+  the Arrhythmia Database folder; resumable, run in four calls) and `python tools/time_zeros.py agg --cases
+  $W/time_zeros/run2.jsonl --out $W/time_zeros` (summary.json). Beat-train alignment: impulse trains in 10 ms bins,
+  FFT cross-correlation over ±120 s, each annotation matched to the nearest detected R peak within 150 ms, and a
+  straight line through the matched differences for the offset and drift. Detected R peaks (SNUADC ECG II) are
+  placed by the ECG track's stamps and counted from its first sample; the offset is compared with that track's start
+  delay after the file's first record of any track.
 results: |
-  - **A constant offset per case:** median −1.55 s (5–95% −4.5 to −0.4 s). In 472 of 482 cases it equals minus the
-    ECG track's start delay after the file's first record, to within 1.5 ± 1.2 ms.
+  - **A constant offset per case:** median −1.55 s (5–95% −4.5 to −0.4 s). In 470 of 482 cases it equals minus the
+    ECG track's start delay after the file's first record to within 10 ms (absolute difference 1.5 ± 1.0 ms), and in
+    474 to within 35 ms.
   - **So the annotations count from the full-file zero.** The file's zero is its first record of any track (the
-    EVENT track in every file checked); loading only some tracks, in the vitaldb package or in our reader, moves it.
-  - **After removing it,** the median case matches 98.9% of annotations within 150 ms, with 0.2 ppm drift.
-  - **The annotations follow the stamps, not the sample count:** three cases with a stamp jump before the annotated
-    window keep the rule to within 1–33 ms.
-  - **The other residuals are fiducials, not time-base faults:** detector switching between two points in the QRS,
-    or where annotators placed beats. Two constant shifts and three late-starting recordings remain unexplained.
+    EVENT track in all 482 files); loading only some tracks, in the vitaldb package or in our reader, moves it.
+  - **After removing it,** the median case matches 99.2% of annotations within 150 ms (5th percentile 93.4%), with a
+    median drift of −0.2 ppm (5–95% −1.8 to +2.0).
+  - **The annotations follow the stamps, not the sample count:** of the 59 cases with a stamp jump in the ECG within
+    the annotated window, 56 keep the rule to within 10 ms when the detected beats are placed by their stamps; the
+    other three are among the unexplained below.
+  - **Unexplained:** three recordings whose ECG starts 198 s to 2.4 h after the file's zero ([[case:3170]],
+    [[case:6309]], [[case:12]]), where no offset within ±120 s fits; one case the alignment fails ([[case:5741]],
+    8% matched); and constant shifts of 25–254 ms in eight cases (largest [[case:1165]], −254 ms).
 discussion: |
   Times taken from different track subsets share an axis only in absolute file time. [[code:vitaldb-reader/src/vitaldb_reader/vital_file.py|vitaldb-reader]] reads whole
   files, so nothing in the builds moves. Beat-train alignment recovers offsets to about 1 ms, and serves as an
   integrity check and as a second cross-device method; the time-zero convention belongs in a reporting checklist.
+code:
+  - vitaldb-bench/tools/time_zeros.py
