@@ -20,6 +20,12 @@ method: |
   - Tested a rounding propensity that depends on emergency status, a first for the engine.
   - Compared by BIC: no emergency effect, emergency on whole cm, plus the half-cm mode, plus round-up, and both.
   - A 1 cm resolution override was fitted and then dropped (see discussion).
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): The model is still v1, fitted by the original analysis
+  (closed-form likelihood, Nelder-Mead), whose fitter is not kept in the repository; only the check below reproduces
+  it. `VITALDB_DATA=$R python -m pytest tests/test_fit_consistency.py -k height` checks that the stored fit
+  statistics equal the library's own evaluation
+  ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -40,3 +46,6 @@ discussion: |
 limitations: |
   - Measurement variability comes from the literature, not from this dataset, and is marked provisional.
   - Children are not modelled.
+code:
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

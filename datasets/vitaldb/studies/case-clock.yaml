@@ -22,6 +22,10 @@ method: |
   The admission date is a local midnight expressed relative to the case start, so −adm modulo one day gives the case
   start's time of day; the seconds of the EMR times refine it. The case clock is accepted to the minute where three
   or more EMR times agree.
+
+  Command (vitaldb-bench): `python -m vitaldb_bench.case_clock $R/clinical_data.csv --out $W/case_clock/summary.json`
+  gives the counts above (6,385 clocks; 5,774 with all four EMR times agreeing, 611 with three; cases 1342 and 1387
+  with adm off the minute, 5723 with the EMR times disagreeing).
 results: |
   - **Time of day to the minute** in cases where at least three EMR times agree ([[code:vitaldb-bench/vitaldb_bench/case_clock.py|vitaldb_bench.case_clock]]).
   - **The case clock is KST;** subtracting 9 h returns to UTC.

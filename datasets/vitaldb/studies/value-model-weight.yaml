@@ -14,6 +14,12 @@ method: |
   - Latent: log-t regression on sex and age (quadratic). The Student-t was compared with a log-normal.
   - Each device resolution is a mode, and its share may depend on department.
   - Tested: department effect on the scale share, a half-kilogram mode, and an emergency effect on whole kilograms.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): its parameters are those of the original Nelder-Mead
+  fit, not kept in the repository; v2 re-evaluated the fit statistics with `python tools/reevaluate_fit.py
+  $R/clinical_data.csv weight --write`. `VITALDB_DATA=$R python -m pytest tests/test_fit_consistency.py -k weight`
+  checks that the stored fit statistics equal the library's own evaluation
+  ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -31,3 +37,7 @@ discussion: |
 limitations: |
   - Clothing is not included in the measurement variability.
   - Measurement variability comes from the literature, not from this dataset.
+code:
+  - vitaldb-resolution/tools/reevaluate_fit.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

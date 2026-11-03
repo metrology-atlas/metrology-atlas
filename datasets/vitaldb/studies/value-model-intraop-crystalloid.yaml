@@ -12,6 +12,11 @@ method: |
   - Log-spline latent with K = 6.
   - Constant 100 and 50 mL propensities were compared with volume-dependent ones.
   - 500 and 1,000 mL bag-size modes were added and tested.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): The model (v2) was fitted with `python
+  tools/fit_volume.py $R/clinical_data.csv intraop_crystalloid --duration --write`. `VITALDB_DATA=$R python -m pytest
+  tests/test_fit_consistency.py -k intraop_crystalloid` checks that the stored fit statistics equal the library's own
+  evaluation ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -25,3 +30,7 @@ results: |
 discussion: |
   - Crystalloid volume is very strongly tied to case duration (Spearman 0.82).
   - Conditioning the latent on duration narrows the posteriors considerably; model version 2 does so (see results).
+code:
+  - vitaldb-resolution/tools/fit_volume.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

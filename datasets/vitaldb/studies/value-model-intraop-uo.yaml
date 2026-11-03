@@ -18,6 +18,11 @@ method: |
   - Step 3, log-spline latent: log f as a cubic B-spline in log volume, with K chosen by BIC. Tested a steeper decay shape, volume-dependent 50 mL rounding and a 25 mL mode.
   - Step 4, robustness: 100 simulated datasets refitted from a generic start, a profiled hard-threshold capture window, a 1 mL-base sensitivity fit and a more flexible latent (K = 8).
   - The final model is the threshold form: rounding to 50 mL only for true values within 20 mL of the anchor, at a rate that rises with volume.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): The model (v2) was fitted with `python
+  tools/fit_volume.py $R/clinical_data.csv intraop_uo --duration --department --write`. `VITALDB_DATA=$R python -m
+  pytest tests/test_fit_consistency.py -k intraop_uo` checks that the stored fit statistics equal the library's own
+  evaluation ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -59,3 +64,7 @@ open_questions:
       even at the same volumes. The model now lets the rounding propensities depend on department (it improves
       BIC by 87), but why they differ is not known: a urometer with fine graduations in some theatres and a
       drainage bag in others would explain it. The urology split rests on 41 records.
+code:
+  - vitaldb-resolution/tools/fit_volume.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

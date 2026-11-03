@@ -9,6 +9,11 @@ method: |
   - No rounding model. BMI is a derived variable (`kind: derived`, evaluated by `derived_samples`).
   - For each case, height and weight are drawn from their own posteriors (sex, age, emergency status, department), optionally with measurement variability, and BMI is computed per draw.
   - The recorded BMI is kept only as a consistency check.
+
+  Commands: BMI has no fit of its own; it is derived from the height and weight models, whose studies give their
+  commands. The whole-release widths and the figure: `python tools/bmi_spread_figure.py --vr <vitaldb-resolution
+  checkout> --release $R --out bmi-spread.png` (vitaldb-bench), which prints the aggregates. The three single-record
+  examples in the results were calls of the library's API; no script for them was kept.
 results: |
   - With measured inputs, BMI is known to about ±0.02 from the recording alone; measurement variability widens that to about ±0.4.
   - A possibly written-in 160.0 cm height can come from the nearest-10 cm mode, so BMI spreads from 22.5 to 24.8 (95%).
@@ -31,3 +36,6 @@ figures:
       within each, the width grows with BMI because it scales with weight over height squared.
     alt: Left, a stacked histogram of interval widths on a log scale with three separate humps. Right, a scatter of
       width against recorded BMI showing three horizontal bands that rise slowly with BMI.
+code:
+  - vitaldb-resolution/vitaldb_resolution/engine.py
+  - vitaldb-bench/tools/bmi_spread_figure.py

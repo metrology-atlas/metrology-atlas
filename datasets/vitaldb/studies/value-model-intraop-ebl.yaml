@@ -16,6 +16,11 @@ method: |
   - A preferred-value set {10, 20, 30, 50} below 75 mL was added and tested.
   - A separate nominal 50 mL component below a threshold T was tested on top (best T = 200 mL).
   - The model was refitted without the 30,100 mL value to check its influence.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): The model (v2) was fitted with `python
+  tools/fit_volume.py $R/clinical_data.csv intraop_ebl --duration --write`. `VITALDB_DATA=$R python -m pytest
+  tests/test_fit_consistency.py -k intraop_ebl` checks that the stored fit statistics equal the library's own
+  evaluation ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -37,3 +42,7 @@ limitations: |
   - Some misfit remains, mostly too few 70–80 mL and too many 90 mL predictions.
   - Capture windows are much wider than for urine output, because anchor neighbours are nearly empty.
   - The 30,100 mL value is kept and flagged.
+code:
+  - vitaldb-resolution/tools/fit_volume.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

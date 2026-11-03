@@ -13,6 +13,13 @@ method: |
   - First cases (recording starting 06:30–09:00) also get a clock-time density for the true start, plus two nominal values (07:40 and 07:30).
   - Nearest, floor and ceiling anchors were compared by BIC.
   - Propensities were allowed to depend on first-case status, evening or night, and emergency status.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): its parameters are those fitted on 13 October by a
+  fitter not kept in the repository; v2 re-evaluated only the fit statistics. `python tools/fit_timestamps.py
+  $R/clinical_data.csv anestart` refits it with the library likelihood for comparison (add `--write` to replace the
+  model). `VITALDB_DATA=$R python -m pytest tests/test_fit_consistency.py -k anestart` checks that the stored fit
+  statistics equal the library's own evaluation
+  ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -54,3 +61,7 @@ open_questions:
       Resolution cannot be checked by era: case IDs are random (the release says so, and they are uncorrelated
       with anything dated), and dates are removed. The models assume rounding habits were constant over the
       years the data cover. Department makes no difference; emergency cases are rounded a little more often.
+code:
+  - vitaldb-resolution/tools/fit_timestamps.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

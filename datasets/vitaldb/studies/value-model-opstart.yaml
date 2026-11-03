@@ -9,6 +9,11 @@ method: |
   - The same approach as the anaesthesia times: the true op start is placed a log-spline offset after the recording start (K = 10).
   - First cases get a clock-time prior, as for anaesthesia start.
   - Nearest, floor and ceiling anchors were compared. 30- and 60-minute modes and effects of time of day and emergency status were tested.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): The model (v2) was refitted with the library likelihood:
+  `python tools/fit_timestamps.py $R/clinical_data.csv opstart --write`. `VITALDB_DATA=$R python -m pytest
+  tests/test_fit_consistency.py -k opstart` checks that the stored fit statistics equal the library's own evaluation
+  ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -22,3 +27,7 @@ results: |
     model gains 33.2 in log-likelihood and the posteriors move by less than 0.03 minutes.
 discussion: |
   - Before v0.6.0 the package's log-likelihood differed from the stored one by −10.6. The cause was the fitter integrating the first-case clock prior on its own 0.1-min grid; model version 2 is fitted with the library's likelihood.
+code:
+  - vitaldb-resolution/tools/fit_timestamps.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py

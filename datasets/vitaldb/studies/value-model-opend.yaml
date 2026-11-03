@@ -11,6 +11,13 @@ method: |
   - The true op end is modelled relative to the recording end with a log-spline offset (K = 12, chosen by BIC).
   - Nearest, floor and ceiling anchors were compared, along with 10- and 30-minute modes.
   - Posteriors were compared across K, because the latent is narrow relative to the grid.
+
+  Commands (vitaldb-resolution, with $R the VitalDB folder): its parameters are those fitted on 13 October by a
+  fitter not kept in the repository; v2 re-evaluated only the fit statistics. `python tools/fit_timestamps.py
+  $R/clinical_data.csv opend` refits it with the library likelihood for comparison (add `--write` to replace the
+  model). `VITALDB_DATA=$R python -m pytest tests/test_fit_consistency.py -k opend` checks that the stored fit
+  statistics equal the library's own evaluation
+  ([[code:vitaldb-resolution/vitaldb_resolution/fitcheck.py|fitcheck]]).
 results: |
   [[figure:observed-vs-model]]
 
@@ -34,3 +41,7 @@ open_questions:
       Mapped on 18 October: thoracic surgery and cases under sedation or spinal anaesthesia have far more
       imputed op ends than the rest ([[observation:imputed-op-ends]]). The model already excludes them; analyses
       that use op end should check whether their subgroup is one of these.
+code:
+  - vitaldb-resolution/tools/fit_timestamps.py
+  - vitaldb-resolution/tests/test_fit_consistency.py
+  - vitaldb-resolution/vitaldb_resolution/engine.py
