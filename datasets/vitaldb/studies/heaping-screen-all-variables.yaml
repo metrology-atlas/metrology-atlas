@@ -22,7 +22,10 @@ method: |
     ratio on the other four residues (values shifted by 1–4, a placebo showing what the fit alone gives); the ratio
     with the quadratic fitted to log counts, which follows a steep exponential flank; and splits by analyser and by
     clock time (08:00–18:00 against the rest). The earlier claim that a simulated smooth peaked distribution gives
-    deviations of the same size had no kept simulation and is replaced by the placebo residues.
+    deviations of the same size had no kept simulation and is replaced by the placebo residues. The screen's ratios
+    below 1 (ALT, AST and ammonia) are checked by `python tools/screens.py lab-heaping-sparse-tail --root $R --out
+    $W/screens`: how many multiples have a fit below the floor of 0.5 expected results, and the ratio over the dense
+    multiples only (neighbours averaging at least 20 results), with the same placebo residues.
 results: |
   - Heaped clinical values: urine output (91% end in 0), blood loss (85% multiples of 50), crystalloid (98% multiples of 50), colloid, height (21% whole centimetres, 10% expected) and weight.
   - Age is not heaped: 19.1% end in 0 or 5 (20% expected), and last digits are flat.
@@ -30,6 +33,12 @@ results: |
   - Lab analytes with decimals sit near the 10% coarser share. Exceptions: haematocrit (32.4%, two analysers), total bilirubin (6.5%), lactate (12.5%) and bicarbonate (7.9%).
   - No whole-number analyte shows a clear preference for multiples of 5 or 10 once the shape of the distribution is
     allowed for; SaO2 and sodium, flagged by the quadratic fit, are checked separately.
+  - **ALT, AST and ammonia do not avoid multiples of 10.** Their screen ratios below 1 (ALT 0.86, AST 0.79,
+    z −9 and −14) come from the long, sparse upper tail: at each of 1,177 (ALT) and 2,055 (AST) multiples the fit
+    falls below zero and is floored at 0.5 expected results, against 31 and 43 results actually there, so the
+    floor alone adds about 590 and 1,030 to the expected count. Over the multiples with enough results around
+    them (16 and 15, neighbours averaging at least 20 results) the ratios are 0.99 (ALT) and 1.03 (AST),
+    within the 0.96–1.02 the same fit gives on the other residues. Ammonia (0.59) has no dense multiples at all.
   - **SaO2 is not heaped at 95.** Its counts rise steeply towards the 100% ceiling (93: 189, 94: 279, 95: 393,
     96: 638, 97: 868), and a quadratic over that flank overshoots: on the other residues the same fit gives ratios
     from 0.43 to 1.58. Fitted to log counts the ratio is 1.03 (z 0.7), with 393 results at 95 against 381 expected.
