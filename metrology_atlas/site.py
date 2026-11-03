@@ -712,6 +712,10 @@ class Site:
         for t in timing_forms(s):
             d = doms.get(t["domain"], {})
             dn = self.a("clock", d["clock"], d["name"]) if d.get("clock") else d.get("name", t["domain"])
+            if t.get("mode"):
+                clk = self.ds.get("clock", d.get("clock") or "") or {}
+                mname = next((m.get("name") for m in clk.get("modes") or [] if m.get("id") == t["mode"]), t["mode"])
+                dn += f"; {mname[:1].lower() + mname[1:]} only"
             studies = ", ".join(self.a("study", x) for x in t["studies"])
             u = (("≤ " if t["upper_bound"] else "") + _rng([t["u_c"], t["u_c"]])
                  + (f" (likely {_rng([t['likely_u'], t['likely_u']])})" if t["likely_u"] else "")

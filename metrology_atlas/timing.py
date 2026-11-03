@@ -57,7 +57,7 @@ def _component(c: dict) -> dict:
 def _common(t: dict) -> dict:
     return {"id": t["id"], "name": t["name"], "default": bool(t.get("default")), "status": t["status"],
             "evidence": t["evidence"], "domain": t["domain"], "studies": list(t.get("studies") or []),
-            "corrects": list(t.get("corrects") or []), "correction": t.get("correction")}
+            "corrects": list(t.get("corrects") or []), "correction": t.get("correction"), "mode": t.get("mode")}
 
 
 def resolve(t: dict) -> dict:

@@ -21,8 +21,8 @@ derived_from:
   note: 'Either as-stored form: they are the same stamps, read from the file.'
 - variable: snuadc-ecg-ii
   relation: computed-from
-  form: snu-raw
-  note: The waveform HR is timed against.
+  form: snu-raw-step
+  note: The waveform HR is timed against. Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.
 - variable: solar8000-art-numerics
   relation: computed-from
   tracks:
@@ -33,9 +33,9 @@ derived_from:
   form: solar-win
 - variable: snuadc-art
   relation: computed-from
-  form: snu-raw
+  form: snu-raw-step
   note: The waveform the arterial numerics are timed against; CVP is timed against the SNUADC CVP track, which is not yet
-    an atlas variable.
+    an atlas variable. Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.
 - variable: primus-numerics
   relation: computed-from
   tracks:

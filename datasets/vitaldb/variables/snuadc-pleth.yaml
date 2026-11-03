@@ -46,7 +46,8 @@ timing:
   correction: one global hardware delay, known in advance
   corrects:
   - pleth
-  - pleth-raw
+  - pleth-raw-step
+  - pleth-raw-frequent
   domain: reference
   status: measured
   evidence: one global hardware delay (pat-offset-census), 0.385 s (0.365-0.405 s with the adopted PAT's 250-290 ms range)
@@ -85,8 +86,8 @@ timing:
   domain: reference
   status: measured
   evidence: one global hardware delay (pat-offset-census), 0.385 s; 30 Hz frames
-- id: pleth-raw
-  name: raw stamps
+- id: pleth-raw-step
+  name: raw stamps, step mode
   kind: as_stored
   support_s:
   - 0
@@ -95,24 +96,22 @@ timing:
   grid_s: 0.033
   bias_s:
     name: stamp sawtooth plus oximeter hardware delay
-    median: 0.625
-    p5: 0.395
-    p95: 0.855
+    median: 0.645
+    p5: 0.415
+    p95: 0.935
     scope: structured
     status: measured
-    evidence: the SNUADC sawtooth on the raw stamps (median 0.24 s, p5-p95 0.01-0.47 s, as snu-raw) plus the oximeter's
-      0.385 s
   uncertainty:
     components:
     - name: sawtooth position
       type: A
       distribution: rectangular
-      u_s: 0.1386
+      u_s: 0.143
       scope: structured
-      length_s: 7488
+      length_s: {parameter: snuadc-step-period}
       correlation: rectangular
       shared_with: SNUADC clock
-      evidence: 'length: the step-mode correction period, 2.08 h'
+      evidence: 'the tooth height, 0.50 s, as a rectangular width; length: the step-mode correction period'
     - name: oximeter hardware delay
       type: B
       distribution: rectangular
@@ -124,8 +123,56 @@ timing:
       u_s: 0.0095
       scope: independent
   domain: snuadc-raw
+  mode: step
   status: measured
-  evidence: SNUADC raw stamps (sawtooth up to 480 ms) plus the oximeter hardware delay (pat-offset-census)
+  evidence: 'the SNUADC raw stamps in step mode (snuadc-ecg-ii form snu-raw-step: median 0.26 s, p5-p95 0.03-0.55 s) plus the oximeter hardware delay, 0.385 s (pat-offset-census)'
+  studies:
+  - snuadc-stamp-sawtooth
+  - pat-offset-census
+- id: pleth-raw-frequent
+  name: raw stamps, frequent-correction mode
+  kind: as_stored
+  support_s:
+  - 0
+  - 0
+  stamp_position: instant
+  grid_s: 0.033
+  bias_s:
+    name: stamps between corrections plus oximeter hardware delay
+    median: 0.392
+    p5: 0.388
+    p95: 0.398
+    scope: structured
+    status: measured
+  uncertainty:
+    components:
+    - name: position between corrections
+      type: A
+      distribution: rectangular
+      u_s: 0.0014
+      scope: structured
+      length_s: 3300
+      correlation: rectangular
+      shared_with: SNUADC clock
+      evidence: 'the tooth height, 5 ms, as a rectangular width; length: one forward step about every 55 minutes
+        (median 1.1 per hour, [[parameter:snuadc-frequent-steps]])'
+    - name: oximeter hardware delay
+      type: B
+      distribution: rectangular
+      u_s: 0.0115
+      scope: release
+    - name: 30 Hz frames
+      type: B
+      distribution: rectangular
+      u_s: 0.0095
+      scope: independent
+  domain: snuadc-raw
+  mode: frequent
+  status: measured
+  evidence: 'the SNUADC raw stamps in frequent-correction mode (snuadc-ecg-ii form snu-raw-frequent: median 0.007 s, p5-p95 0.003-0.013 s) plus the oximeter hardware delay, 0.385 s (pat-offset-census)'
+  studies:
+  - snuadc-stamp-sawtooth
+  - pat-offset-census
 tags:
 - stub
 chain:

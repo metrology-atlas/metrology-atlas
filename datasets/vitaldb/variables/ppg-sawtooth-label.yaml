@@ -17,16 +17,16 @@ description: Each label runs from one slip to the next, or to the start or end o
 derived_from:
 - variable: snuadc-ecg-ii
   relation: computed-from
-  form: snu-raw
-  note: 'R peaks, interpolated: the ECG fiducial.'
+  form: snu-raw-step
+  note: 'R peaks, interpolated: the ECG fiducial. Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.'
 - variable: snuadc-pleth
   relation: computed-from
-  form: pleth-raw
-  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial.'
+  form: pleth-raw-step
+  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial. Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.'
 - variable: snuadc-art
   relation: computed-from
-  form: snu-raw
-  note: Arterial upstrokes, where available, confirm slips (the reference).
+  form: snu-raw-step
+  note: Arterial upstrokes, where available, confirm slips (the reference). Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.
 algorithm: physiosync's tooth-by-tooth fit of the beat-to-beat ECG-to-PPG delay (slips detected, inserted or predicted from
   the recording's rate, with its setup's rate as a prior); the sync error left in each tooth is summarised by drawing from
   the tooth's error model.

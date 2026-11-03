@@ -358,11 +358,17 @@ NEW_TIMING = ("kind", "support_s", "stamp_position", "bias_s", "removes_bias_s",
 def _check_timing(ds: Dataset, signal: dict, rel: str, problems: list[str]) -> None:
     """Timing forms: domains, corrections and defaults; and the reframe's rules (framework spec 28 Oct, D3/D5/D9/D10)
     for forms written in the current fields. Legacy forms are counted and warned about until stage 3 migrates them."""
-    domains = {d.get("id") for d in ds.meta.get("domains") or []}
+    domains = {d.get("id"): d for d in ds.meta.get("domains") or []}
     forms = [t for t in signal.get("timing") or [] if isinstance(t, dict)]
     for t in forms:
         if t.get("domain") not in domains:
             problems.append(f"{rel}: timing '{t.get('id')}': domain '{t.get('domain')}' is not in dataset.yaml domains")
+        elif t.get("mode") is not None:
+            clock = ds.get("clock", domains[t["domain"]].get("clock") or "")
+            modes = {m.get("id") for m in (clock or {}).get("modes") or []}
+            if t["mode"] not in modes:
+                problems.append(f"{rel}: timing '{t.get('id')}': mode '{t['mode']}' is not a mode of the clock of "
+                                f"domain '{t['domain']}'")
     ids = {t.get("id") for t in forms}
     for t in forms:
         for c in t.get("corrects") or []:

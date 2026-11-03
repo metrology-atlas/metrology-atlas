@@ -105,8 +105,10 @@ results: |
     recording (637 with ECG II), each record's stamp minus the model's time for it, with a stamp just after a
     correction taken as on time: step-mode recordings (257) sit a median 0.26 s late (p5–p95 0.03–0.55 s; tooth
     height a median 0.50 s, p90 0.70 s where the port's rate fits the recording less well), small-correction-mode
-    recordings (380) within 13 ms. These give the raw-stamp form of the SNUADC waveforms, whose 0.24 s (0.01–0.47 s)
-    describes step mode; pooled over both modes the lateness is 0.08 s (0.003–0.49 s).
+    recordings (380) within 13 ms. The SNUADC waveforms therefore have one raw-stamp form per mode
+    (snu-raw-step and snu-raw-frequent; for PLETH, pleth-raw-step and pleth-raw-frequent, with the oximeter's delay
+    added), replacing a single form whose 0.24 s (0.01–0.47 s) described step mode only. Pooled over both modes the
+    lateness is 0.08 s (0.003–0.49 s), a figure for no recording in particular.
 
   [[figure:burst-validation-full]]
 

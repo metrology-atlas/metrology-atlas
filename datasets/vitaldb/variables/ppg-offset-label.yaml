@@ -17,12 +17,12 @@ description: The offset is the setup's median PAT level minus the adopted R-to-f
 derived_from:
 - variable: snuadc-ecg-ii
   relation: computed-from
-  form: snu-raw
-  note: 'R peaks, interpolated: the ECG fiducial.'
+  form: snu-raw-step
+  note: 'R peaks, interpolated: the ECG fiducial. Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.'
 - variable: snuadc-pleth
   relation: computed-from
-  form: pleth-raw
-  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial.'
+  form: pleth-raw-step
+  note: 'Pulse feet (intersecting tangent of the 0.5-10 Hz band-passed waveform): the PPG fiducial. Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.'
 algorithm: 'physiosync.setup_offsets: per recording setup, the median raw PAT level of its recordings (sawtooth removed)
   minus the adopted PAT.'
 code:

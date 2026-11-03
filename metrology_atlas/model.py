@@ -218,6 +218,9 @@ TIMING = (
     Field("correction", "str", help="What the correction is, in a few words."),
     Field("corrects", "strs", help="Ids of this signal's other forms that this one improves on (drawn as arrows)."),
     Field("domain", "str", required=True, help="Clock domain (dataset.yaml `domains`) whose drift remains."),
+    Field("mode", "str", help="For a form that holds only in one mode of the domain's clock: that mode's id (the "
+                              "clock's `modes`). A signal then gives one form per mode; leave out when the form holds "
+                              "in every mode."),
     Field("status", "enum", required=True, choices=STATUS),
     Field("evidence", "str", required=True, help="Where the numbers come from, in a line."),
     Field("studies", "refs", ref="study"),
