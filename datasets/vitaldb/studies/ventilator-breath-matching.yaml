@@ -12,7 +12,12 @@ techniques: [windowed-cross-correlation, null-controls]
 clocks: [primus-clock, snuadc-sample]
 devices: [primus, snuadc]
 variables: [primus-awp, primus-co2, snuadc-art]
-data: 20 of the longest benchmark cases with CVP, airway pressure and ECG; a 0/60/115/170 ppm sweep on 150 cases.
+data: |
+  - Pilot: 20 of the longest benchmark cases with CVP, airway pressure and ECG; a 0/60/115/170 ppm sweep on 150
+    cases.
+  - Whole release (19 October): every recording with Primus airway pressure and SNUADC CVP or arterial pressure
+    (3,473 of 6,388 after skipping 2,897 without AWP or a reference and 18 with fewer than 200 mechanical breaths);
+    1,067 recordings give CVP lags, 1,384 arterial ones.
 background: |
   The Primus shares no artefact with SNUADC, but ventilation reaches the circulation: each breath moves central
   venous and arterial pressure. Ventilation is very regular, so a plain cross-correlation matches one breath away
@@ -22,6 +27,22 @@ method: |
   10-minute windows gave the lag. Breath identity was then confirmed by breath matching: the size of each breath's
   CVP response against the peak airway pressure of breath i + k, which varies enough from breath to breath to pick
   the right k. Injected errors of one or two breaths tested it.
+
+  Commands (vitaldb-bench; $R the release, $W the work folder). Release-wide lags and their held-out errors, in
+  eight parts p = 0–7 (cases equal to p modulo 8): `python tools/primus_sync_accuracy.py scan --root $R --cases
+  $(seq -s, $((p ? p : 8)) 8 6388) --modes $W/results/sync_full/snuadc_mode_label.json --ports
+  $W/results/sync_full/snuadc_mode.json --step-rates $W/results/pat/snuadc_step_rates.json --out
+  $W/primus_sync_accuracy/part_$p.jsonl`, then `python tools/primus_sync_accuracy.py agg
+  $W/primus_sync_accuracy/part_*.jsonl --out $W/primus_sync_accuracy/agg` (reproduced 3 November from the saved
+  parts). With each stretch on its right breath (the breath rule of [[study:primus-awp-anchoring]]): `python
+  tools/primus_numbers.py --work $W --out $W/primus_numbers` (reproduced 3 November). One slope per recording with an
+  offset at every pause: tools/primus_pause_aware.py. Drift and steps at the pauses: `python
+  tools/primus_drift_probe.py CASES OUT.jsonl`. The breath-matching figure: `python tools/vent_sync_pilot.py --root
+  $R --cases 4644,4817,3148,750,2443,1403,3706,5780,2838,1936,3146,3549,2172,629 --units
+  $W/results/sync_full/units.csv --step-rates $W/results/pat/snuadc_step_rates.json --out
+  $W/vent_breath_matching/vent14.jsonl` (about 1.5 minutes), then `python tools/vent_match_figure.py --scan
+  $W/vent_breath_matching/vent14.jsonl --cases <the same> --out $W/vent_breath_matching` (redrawn 3 November;
+  it matches the first, ad hoc drawing, with 653 of 1,212 windows confirmed by breath matching).
 results: |
   - **The Primus clock drifts uncorrected between its stamp gaps:** the AWP→CVP lag ramps within each stretch at a
     median +92 ppm (IQR 34–153), and 72% of lag steps fall at Primus stamp jumps.
@@ -41,13 +62,24 @@ results: |
     built up in the stretch before (correlation 0.0): the pauses move the stamps but do not reset the drift.
   - **Error over the whole release, held out (19 October;
     [[code:vitaldb-bench/tools/primus_sync_accuracy.py]]).** Each 10-minute window predicted from all the others
-    (a slope and an offset in each stretch between AWP pauses): a median error of 55 ms (p90 187 ms, p95 284 ms)
-    in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording and a new offset at every AWP pause
+    (a slope and an offset in each stretch between AWP pauses; every CVP window, whatever breath its stretch sits
+    on): a median absolute error of 55 ms (p90 187 ms, p95 284 ms) in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording and a new offset at every AWP pause
     ([[code:vitaldb-bench/tools/primus_pause_aware.py]]). The arterial mean pressure as a second reference is
     noisier (83 ms; p90 343 ms, 1,384 recordings),
     sometimes a breath out; where both exist (462) their drifts differ by a median 49 ppm. An injected shift of
     0.25 s and drift of 100 ppm (196 recordings) come back as 0.252 s and 99.6 ppm (medians, one slope per
     recording).
+  - **The same errors with each stretch on its right breath (2 November;
+    [[code:vitaldb-bench/tools/primus_numbers.py]]).** A whole-breath shift of a stretch moves every window in it
+    together, so the held-out errors above already describe a stretch on its right breath; this window set leaves
+    out the windows within 5 minutes of a pause and those the breath rule does not cover (37,881 windows, 1,067
+    recordings). The median absolute error is 53 ms (robust SD 79 ms; 95% −262 to +272 ms), the figure the Primus
+    timing forms use. On top of it, [[value:primus-breath-error-share]] of windows sit in a stretch still a whole
+    breath off after the rule ([[study:primus-awp-anchoring]]), which the forms carry as its own component. The 55
+    and 53 ms are the same fit on two window sets, not two methods.
+  - **Counts.** The 1,061 recordings of [[example:ppv-by-breath]] have CVP lags on the stamp model; 1,060 of them
+    give a whole-recording slope. The release-wide run of tools/primus_sync_accuracy.py, with its own selection, has
+    1,067 recordings with held-out CVP windows.
 
   [[figure:sync-demo-breath]]
 discussion: |
@@ -87,6 +119,10 @@ open_questions:
 code:
   - vitaldb-bench/tools/vent_sync_pilot.py
   - vitaldb-bench/tools/primus_drift_probe.py
+  - vitaldb-bench/tools/primus_sync_accuracy.py
+  - vitaldb-bench/tools/primus_numbers.py
+  - vitaldb-bench/tools/primus_pause_aware.py
+  - vitaldb-bench/tools/vent_match_figure.py
   - vitaldb-bench/examples/ppv_by_breath.py
 figures:
   - id: sync-demo-breath
@@ -111,7 +147,7 @@ figures:
   - id: vent-breath-matching
     file: vent-breath-matching.png
     theme: example traces
-    source: ad hoc (no script in vitaldb-bench yet; to be regenerated by one)
+    source: vitaldb-bench tools/vent_match_figure.py
     records: [4644, 4817, 3148, 750, 2443, 1403, 3706, 5780, 2838, 1936, 3146, 3549, 2172, 629]
     caption: Lag of the Primus ventilator against SNUADC, from CVP after breath matching, in 14 cases. The lag ramps by about 50–200 ppm and steps at Primus stamp jumps (red dashed lines). [[case:1936]] and [[case:3549]] show offset plateaus near 8 s; in [[case:3549]] and [[case:2172]] red crosses mark values before the fix.
     alt: Fourteen small scatter plots of lag in ms against hours, with filled and open dots and red dashed vertical lines.
