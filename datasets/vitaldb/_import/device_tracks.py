@@ -27,11 +27,15 @@ DEVICE = {"SNUADC": "snuadc", "Primus": "primus", "BIS": "bis", "CardioQ": "card
           "Orchestra": "orchestra", "EV1000": "ev1000", "Vigileo": "vigileo", "Vigilance": "vigilance",
           "Invos": "invos", "FMS": "fms"}
 
-SNU = "every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]])"
+SNU = ("every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]]); "
+       "the public firmware reads a 10-bit converter ([[study:snuadc-firmware]]); the stored gain is the channel's gain "
+       "times one step of 0.0098746 V per code ([[study:track-value-resolution]])")
+SNU_OTHER = ("the SNUADC converter (see ECG; [[study:snuadc-firmware]]); the stored gain is the channel's gain times "
+             "0.0098746 V per code ([[study:track-value-resolution]])")
 CONVERTER = {
     "SNUADC/ECG_II": ("10 bits", SNU), "SNUADC/ECG_V5": ("10 bits", SNU),
-    "SNUADC/ART": ("10 bits", "the SNUADC converter (see ECG)"), "SNUADC/CVP": ("10 bits", "the SNUADC converter (see ECG)"),
-    "SNUADC/FEM": ("10 bits", "the SNUADC converter (see ECG)"), "SNUADC/PLETH": ("10 bits", "the SNUADC converter (see ECG)"),
+    "SNUADC/ART": ("10 bits", SNU_OTHER), "SNUADC/CVP": ("10 bits", SNU_OTHER),
+    "SNUADC/FEM": ("10 bits", SNU_OTHER), "SNUADC/PLETH": ("10 bits", SNU_OTHER),
     "Primus/CO2": ("probably 12 bits", "rare values up to code 4046 in CO2 and AWP, inside 0–4095"),
     "Primus/AWP": ("probably 12 bits", "rare values up to code 4046 in CO2 and AWP, inside 0–4095"),
     "BIS/EEG1_WAV": ("16 bits", "all 65,536 steps of 0.05 µV between −1476.70 and +1800.05 used, none outside"),

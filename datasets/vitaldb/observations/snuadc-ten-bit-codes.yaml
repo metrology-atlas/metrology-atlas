@@ -6,7 +6,7 @@ summary: >-
 status: open
 devices: [snuadc]
 variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
-studies: [track-value-resolution]
+studies: [track-value-resolution, snuadc-firmware]
 references: [vitaldb-docs-devices, vitaldb-docs-config]
 consequence: |
   The resolution is the 10-bit step: 0.00987 mV for ECG, 0.987 mmHg for ART, CVP and FEM, 0.395 units for PLETH.

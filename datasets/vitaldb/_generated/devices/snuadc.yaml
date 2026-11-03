@@ -13,7 +13,8 @@ tracks:
   span: codes 0–983 (848 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: the SNUADC converter (see ECG)
+  evidence: the SNUADC converter (see ECG; [[study:snuadc-firmware]]); the stored gain is the channel's gain times 0.0098746
+    V per code ([[study:track-value-resolution]])
 - track: ART
   kind: waveform
   unit: mmHg
@@ -26,7 +27,8 @@ tracks:
   span: codes 0–983 (848 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: the SNUADC converter (see ECG)
+  evidence: the SNUADC converter (see ECG; [[study:snuadc-firmware]]); the stored gain is the channel's gain times 0.0098746
+    V per code ([[study:track-value-resolution]])
   corrected_gain: 0.987457
   corrected_offset: -495.626
   correction: PLETH factors ([[observation:art-with-pleth-factors|evidence]])
@@ -42,7 +44,8 @@ tracks:
   span: codes 0–944 (874 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: the SNUADC converter (see ECG)
+  evidence: the SNUADC converter (see ECG; [[study:snuadc-firmware]]); the stored gain is the channel's gain times 0.0098746
+    V per code ([[study:track-value-resolution]])
 - track: ECG_II
   kind: waveform
   unit: mV
@@ -55,7 +58,9 @@ tracks:
   span: codes 0–1023 (1,024 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]])
+  evidence: every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]]); the
+    public firmware reads a 10-bit converter ([[study:snuadc-firmware]]); the stored gain is the channel's gain times one
+    step of 0.0098746 V per code ([[study:track-value-resolution]])
 - track: ECG_II
   kind: waveform
   unit: mV
@@ -68,7 +73,9 @@ tracks:
   span: codes 0–1023 (1,024 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]])
+  evidence: every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]]); the
+    public firmware reads a 10-bit converter ([[study:snuadc-firmware]]); the stored gain is the channel's gain times one
+    step of 0.0098746 V per code ([[study:track-value-resolution]])
 - track: ECG_V5
   kind: waveform
   unit: mV
@@ -81,7 +88,9 @@ tracks:
   span: codes 0–1023 (1,024 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]])
+  evidence: every code of 0–1023 used by ECG, none above; documented as 12-bit ([[observation:snuadc-ten-bit-codes]]); the
+    public firmware reads a 10-bit converter ([[study:snuadc-firmware]]); the stored gain is the channel's gain times one
+    step of 0.0098746 V per code ([[study:track-value-resolution]])
 - track: FEM
   kind: waveform
   unit: mmHg
@@ -94,7 +103,8 @@ tracks:
   span: codes 0–925 (842 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: the SNUADC converter (see ECG)
+  evidence: the SNUADC converter (see ECG; [[study:snuadc-firmware]]); the stored gain is the channel's gain times 0.0098746
+    V per code ([[study:track-value-resolution]])
 - track: PLETH
   kind: waveform
   format: uint16
@@ -106,4 +116,5 @@ tracks:
   span: codes 0–1023 (852 used)
   bits_to_store: 10
   converter: 10 bits
-  evidence: the SNUADC converter (see ECG)
+  evidence: the SNUADC converter (see ECG; [[study:snuadc-firmware]]); the stored gain is the channel's gain times 0.0098746
+    V per code ([[study:track-value-resolution]])

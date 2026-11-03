@@ -32,6 +32,10 @@ method: |
 
   [[figure:validation]]
 
+  How late the raw stamps sit: `python tools/snu_raw_offset.py scan --root $R --units $W/results/sync_full/units.csv
+  --step-rates $W/results/pat/snuadc_step_rates.json --every 10 --out $W/snu_raw_offset/part.jsonl` (resumable;
+  about 5 minutes), then `python tools/snu_raw_offset.py agg $W/snu_raw_offset/part.jsonl --out $W/snu_raw_offset`.
+
   The error-by-level figure compares, on the same whole-release windows, the recorded stamps and the adopted model:
   `python tools/stamp_error_levels.py --stamps $W/burst_validation_stamps --model $W/burst_validation_m3 --modes
   $W/results/sync_full/snuadc_mode_label.json --out $W/stamp_error_levels` (summary.json and the figure).
@@ -97,6 +101,12 @@ results: |
     and 17 ms against the recording's own constant (p90 79 ms); within-recording SD 23 ms. These are the values in
     [[parameter:eeg-ecg-offset]] and [[parameter:stamp-model-error]]. (The first bullet above is the first model,
     before the recordings with no correction were given a rate.)
+  - **How late the raw stamps sit (3 November; [[code:vitaldb-bench/tools/snu_raw_offset.py]]).** On every tenth
+    recording (637 with ECG II), each record's stamp minus the model's time for it, with a stamp just after a
+    correction taken as on time: step-mode recordings (257) sit a median 0.26 s late (p5–p95 0.03–0.55 s; tooth
+    height a median 0.50 s, p90 0.70 s where the port's rate fits the recording less well), small-correction-mode
+    recordings (380) within 13 ms. These give the raw-stamp form of the SNUADC waveforms, whose 0.24 s (0.01–0.47 s)
+    describes step mode; pooled over both modes the lateness is 0.08 s (0.003–0.49 s).
 
   [[figure:burst-validation-full]]
 
@@ -140,6 +150,7 @@ code:
   - vitaldb-bench/tools/burst_validation_agg.py
   - vitaldb-bench/tools/stamp_error_levels.py
   - vitaldb-bench/tools/burst_figures.py
+  - vitaldb-bench/tools/snu_raw_offset.py
 figures:
   - id: sync-demo-stamp-model
     file: sync-demo-1216.png
