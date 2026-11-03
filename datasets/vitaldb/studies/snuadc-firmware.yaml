@@ -3,7 +3,8 @@ name: The SNUADC firmware
 summary: >-
   The public SNUADC firmware explains the board's timing: it sends no time stamps, samples on its 16 MHz crystal,
   loses time rather than bunching samples after a stall, reads its channels one after another, and truncates its
-  values. A predicted fault at the microsecond counter's wrap was not found in the data.
+  values. A predicted fault at the microsecond counter's wrap is not settled: six long files suggested one, and 30
+  more did not confirm it.
 date: 2026-10-13
 status: current
 techniques: [prediction-test]
@@ -13,7 +14,9 @@ devices: [snuadc, vital-recorder]
 variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
 data: |
   Source: github.com/vitaldb/snuadc, firmware/SNUADC/SNUADC.ino (an Arduino sketch for an ATmega32U4). The wrap
-  prediction was tested on 6 files with the 240 Hz monitor line (17 October).
+  prediction was tested on the 6 longest files with the 240 Hz monitor line in ART and PLETH (17 October; rerun 2
+  November), then on all 36 of the 56 such files measured whose continuous stretch spans at least one wrap (74.6 h,
+  50 wraps due; 3 November). The candidates come from the monitor-line scan, which covered 273 recordings.
 background: |
   Several measured behaviours (the stamp sawtooth, the signal lost at resets, a sub-millisecond skew between
   channels) needed a mechanism. The board's firmware is public.
@@ -21,7 +24,12 @@ method: |
   The sampling, transmission and calibration code was read for what it predicts about timing and values, and each
   prediction was checked against the measurements in the atlas. One prediction (extra samples at each wrap of the
   microsecond counter, every 2³² µs = 4,295 s of uptime) was tested directly: a fine step search on the sample-count
-  timeline of the 240 Hz monitor line (standard error 0.04–0.1 ms) for steps 4,295 s apart.
+  timeline of the 240 Hz monitor line (standard error 0.05–0.16 ms) for steps shared by ART and PLETH and 4,295 s
+  apart, against the same count at 427 other spacings from 2,000 to 6,500 s
+  ([[code:vitaldb-bench/tools/wrap_test.py]]): `python tools/wrap_test.py select --lines
+  $W/monitor_lines/lines.jsonl --root $R --out $W/wrap_test/files.json`, then `python tools/wrap_test.py run --files
+  $W/wrap_test/files.json --root $R --out $W/wrap_test` (the six) and the same with `--out $W/wrap_test_wide
+  --min-wraps 1` (all 36; the summary repeats the control without the first six).
 results: |
   - **No time stamps in the stream.** Each sample is 4 × 3 bytes (two 10-bit channels per 3 bytes) over USB serial.
     The board sends no time, so the recorder stamps by sample count: the reason the SNUADC sawtooth and the stamp
@@ -39,14 +47,23 @@ results: |
     count 917 is the monitor's +4 V output (about 400 mmHg); the ECG clips at 0 and 1023.
   - **Event inputs.** Two event jacks are sent as flag bits with each sample: a possible same-clock marker, if any
     case used them.
-  - **The predicted wrap fault is not seen:** no steps 4,295 s apart, and half the files have no step shared by
-    PLETH and ART in the window where one was due. A few isolated shared steps of 0.2–1.9 ms remain unexplained.
+  - **The wrap fault is not settled.** In the six longest files, 6 pairs of shared ART and PLETH steps lie 4,295 s
+    apart (4 files; steps −0.7 to −1.9 ms; [[case:4241]] a chain of three), against 0.32 pairs at a typical other
+    spacing (at most 2). The 30 further files do not repeat it: 5 pairs against 2.3 at other spacings, a count
+    reached at 14% of them. Over all 36, 11 pairs against 2.6 (1.2% of spacings reach 11). Only 5 of the 11 files
+    spanning two wraps show a pair, and the files carry 116 shared steps (median 1.1 ms; 76% negative), 2.3 per wrap
+    due, so most shared steps are not at a wrap. A fault at every wrap is ruled out; one at some wraps, or a chance
+    excess in the first six, is not. The earlier statement (17 October) that no pairs were seen came from a coarser
+    step search and is withdrawn.
 discussion: |
   The stall rule explains the signal lost at each reset ([[study:reset-cluster-order]]): the acquisition pauses
   about 20 ms and the time is never sampled. The channel skew fits the ART–PLETH phase difference at 240 Hz (a median
-  0.37 ms, 0.29–0.46 ms in 69 recordings; [[study:monitor-lines]]). The wrap result means either the per-sample processing time is close to 2 ms, or
-  the deployed firmware differs from the public one.
+  0.37 ms, 0.29–0.46 ms in 69 recordings; [[study:monitor-lines]]). If the wrap fault is real it is intermittent, which
+  the public code would have to explain; the deployed firmware may also differ from the public one. A firmer test needs
+  more files: the monitor-line scan over the whole release, then the same step search.
 limitations: Read, not tested on the device. The deployed firmware version is unknown; the channel-to-track mapping is unknown.
+code:
+  - vitaldb-bench/tools/wrap_test.py
 open_questions:
   - title: "Which firmware ran"
     kind: phenomenon
