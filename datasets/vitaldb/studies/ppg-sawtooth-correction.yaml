@@ -139,6 +139,14 @@ results: |
     leaving more than 15 ms after correction is 5.9% of confirmed slips (43 of 730), near the 4.3% half way between
     steps (30 of 692), but 15% of off-grid slips (16 of 109), 14% of one-frame steps the shape cannot judge (6 of
     43) and 52% of slips the other way (12 of 23).
+  - **An arterial gate is not supported** (reasoned null, `$W/slip_rebuild/dev/slip_rebuild_dev_v27.py`, not adopted).
+    Split by the arterial verdict, the corrections that leave more than 15 ms in the check are concentrated where a
+    clean arterial line does not show a PPG slip: slips the other way without arterial confirmation (11 of 14; with
+    it, 1 of 9) and off-grid slips where the line says "neither" (6 of 9). A version that stops correcting these (38
+    steps in the 324 development recordings) was scored on the evidence not used to set it: the held-out labels are
+    unchanged, 3 injected slips are lost (616 to 613 found), and 4 corrections the reviewer judged right are dropped
+    (two in [[case:3303]], whose arterial upstroke moves with every slip) while both corrections judged wrong are
+    still made. The check's 15-ms measure probably sees physiology at those steps. The corrections stand.
   - **Whole release** (v26, `$W/slip_rebuild/full3`): 5,714 recordings fitted, none failed; 3,642 with a sawtooth
     (275 reversed), 453 of them with their creep reported; 18,283 slips. By time, tier A 41.4%, B 4.2%, C 0.4%, U
     12.2%, I 29.5%, N 12.3%; by each recording's worst tooth, A 1,379, B 419, C 46, U 1,345, I 1,742, N 783. Injected
@@ -175,6 +183,12 @@ open_questions:
       In the correction check, half the corrected slips against the sawtooth's direction (12 of 23) and 15% of the
       off-grid ones leave a step of more than 15 ms, against 4–6% for confirmed slips and for places without a slip.
       Some are probably not slips, or not whole ones. Requiring the arterial line for them is the obvious test.
+  - title: "Flag steps the arterial line does not confirm"
+    kind: next step
+    summary: >-
+      Rather than drop them, the teeth beside a slip the other way without arterial confirmation, or an off-grid or
+      unjudged step where a clean line says "neither" or "circulation", could be marked tier U, so a user can leave
+      those intervals out. Deferred until after v2.
   - title: "Mixed directions in tier I"
     kind: next step
     summary: >-
