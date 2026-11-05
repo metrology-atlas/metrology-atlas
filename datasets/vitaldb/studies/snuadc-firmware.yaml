@@ -14,7 +14,8 @@ clocks: [snuadc-sample, monitor-output-clock]
 devices: [snuadc, vital-recorder]
 variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
 data: |
-  Source: github.com/vitaldb/snuadc, firmware/SNUADC/SNUADC.ino (an Arduino sketch for an ATmega32U4). The wrap
+  Source: github.com/vitaldb/snuadc, firmware/SNUADC/SNUADC.ino (an Arduino sketch for an ATmega32U4), and the board
+  design in the same repository (artwork/snuadc.net, the KiCad netlist, and artwork/snuadc-bom.csv; read 5 November). The wrap
   prediction was tested on the 6 longest files with the 240 Hz monitor line in ART and PLETH (17 October; rerun 2
   November), then on all 36 of the 56 such files measured whose continuous stretch spans at least one wrap (74.6 h,
   50 wraps due; 3 November). Whole release (4 November): the monitor-line scan of all 5,714 recordings of the
@@ -54,6 +55,14 @@ results: |
     −4 V and +4 V to counts 102.4 and 921.6; the result is truncated (not rounded) and clamped to 0–1023.
     Truncation biases values down by half a count (about 0.5 mmHg for arterial pressure). The arterial ceiling near
     count 917 is the monitor's +4 V output (about 400 mmHg); the ECG clips at 0 and 1023.
+  - **No filtering in the signal band.** Each input passes a 300 kΩ / 75 kΩ divider to the reference and an LM2902
+    stage with a gain of 1.25, so the converter sees 0.25 × input + 1.24 V (a TLV431 reference). The only capacitors
+    in the path are 20 pF across the 75 kΩ feedback resistor (a pole near 106 kHz) and 10 Ω with 100 nF at the
+    converter pin (near 159 kHz); the firmware takes one reading per channel per sample and averages only while
+    calibrating. The board is flat to about 100 kHz: any band limit, notch or change of filtering in a SNUADC track
+    is the monitor's.
+  - **No anti-aliasing filter.** Sampling at 500 Hz with no filter below about 100 kHz, anything the monitor puts out
+    above 250 Hz folds into the record, including the steps of the monitor's own output updates.
   - **Event inputs.** Two event jacks are sent as flag bits with each sample: a possible same-clock marker, if any
     case used them.
   - **The wrap fault is real, at some wraps.** Over the whole release (828 recordings, 1,138 wraps due), 260 pairs of
@@ -81,7 +90,13 @@ discussion: |
   frequent-correction mode itself perhaps being the mark of a different board. For the timing it adds a step of
   about 1 ms to all SNUADC channels together at roughly one wrap in four: below the stamp model's error, and shared
   by every SNUADC channel, so the delays between them are untouched.
-limitations: Read, not tested on the device. The deployed firmware version is unknown; the channel-to-track mapping is unknown.
+
+  The analogue path matters for any reading of filtering from the waveforms: the board adds none in the band, so the
+  response measured in a SNUADC track is that of the monitor's output stage, and a change within a recording is a
+  monitor setting or the monitor's own processing, not the converter. Without an anti-aliasing filter, the monitor's
+  output update rate is sampled as it is; the 240 Hz line in arterial pressure and the plethysmogram
+  ([[study:monitor-lines]]) is consistent with this.
+limitations: Read, not tested on the device. The deployed firmware and board versions are unknown (the netlist is dated March 2016); the channel-to-track mapping is unknown. Component tolerances are not stated, so the corner frequencies are nominal.
 code:
   - vitaldb-bench/tools/wrap_test.py
   - vitaldb-bench/tools/wrap_checks.py
@@ -92,6 +107,14 @@ open_questions:
       The deployed version, and which converter channel feeds which track, are not known. The dataset's creator
       pointed to the public repository ([[reference:lee2026correspondence]]); whether it is the version that ran
       during the collection has been asked.
+  - title: "Missing output codes and the stored scale"
+    kind: next step
+    summary: >-
+      With the nominal parts, ±4 V reaches the converter as raw counts of about 96 and 896 (800 apart), which the
+      calibration stretches to 819.2 apart: about one output count in 42 should never occur, a pattern the value
+      histograms can test. The nominal scale (9.77 mV of input per count, count 0 at −5.0 V) does not match the scale
+      stored for the ECG exactly (0.009875 mV per count from −4.956 mV), which leaves the monitor's output scale to
+      be measured.
   - title: "Channel skew as a timing component"
     kind: next step
     summary: >-

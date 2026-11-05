@@ -88,7 +88,7 @@
   group: Data and recording
   citation: 'VitalDB. SNUADC: firmware and hardware of the VitalDB analogue-to-digital converter. GitHub.'
   url: https://github.com/vitaldb/snuadc
-  note: Firmware firmware/SNUADC/SNUADC.ino, read October 2026.
+  note: Firmware firmware/SNUADC/SNUADC.ino, read October 2026; board netlist and parts list (artwork/), read November 2026.
 - id: rfc5905
   group: Timing and synchronisation
   citation: 'Mills D, Martin J, Burbank J, Kasch W. Network Time Protocol Version 4: Protocol and Algorithms Specification.
