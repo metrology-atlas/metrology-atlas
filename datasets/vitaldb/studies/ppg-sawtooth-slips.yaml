@@ -27,8 +27,10 @@ background: |
   The current fit ([[study:ppg-sawtooth]]) finds slips from a 15-beat running median and gives every tooth its own
   rate, so each slip is placed to a beat or a few and each tooth's period is free. If the period is constant, or
   changes slowly, most of that freedom is unnecessary, and the slips could be placed far more closely: a slip is
-  one frame (33 ms) against a beat-to-beat noise of 2–5 ms. This study builds the detector and placement the rest
-  of the series relies on, and checks them against a known sawtooth.
+  one frame (33 ms) against a beat-to-beat noise of 2–5 ms (panel a of the figure below). This study builds the
+  detector and placement the rest of the series relies on, and checks them against a known sawtooth.
+
+  [[figure:ppg-slip-detector]]
 method: |
   Commands (vitaldb-bench tools/sawtooth_char.py; the scan, slips and mech stages as in SHA-256 46110308f725…,
   aggregated with 8f5734d273f5…, whose `mech-agg` reads the parts of a run directly):
@@ -42,19 +44,19 @@ method: |
     (4 parts). Earlier development runs (bench1–bench7) are not cited.
 
   - **Fiducials.** R peaks (5–25 Hz, sub-sample); per pulse the foot, steepest upstroke, peak and half-height on the
-    downslope of the 0.5–10 Hz PLETH; the arterial upstroke per beat; the frame clock from the raw PLETH maximum.
+    downslope of the 0.5–10 Hz PLETH (the first three in panel b); the arterial upstroke per beat; the frame clock from the raw PLETH maximum.
   - **Detection** on the time-ordered series of every foot, upstroke and peak (each moved onto the upstroke's level),
-    so a slip inside a pulse is a clean step between two points. At every point: the log likelihood ratio of a
+    so a slip inside a pulse is a clean step between two points (panel c). At every point: the log likelihood ratio of a
     sharp one-frame step against none (15 beats each side, one straight line through both), the free step size, and
-    a sharp step against the same change spread over 7 beats. A slip found on its own must also persist (the level
+    a sharp step against the same change spread over 7 beats (panel d). A slip found on its own must also persist (the level
     15–40 or 15–75 beats on differs by about a frame), lie in a quiet stretch, and, where the arterial line is clean,
-    step ART→PPG but not ECG→ART. The same search for downward steps finds slips the other way.
+    step ART→PPG but not ECG→ART (panel e). The same search for downward steps finds slips the other way.
   - **Priors.** Each run of the recording's slip grid ([[study:ppg-sawtooth-period]]) predicts slips over its own
     stretch, and the current fit's slips (moved from ECG to PPG time) are candidates too; a step there is accepted
     on looser tests (ratio > 8, not clearly a ramp, about a frame, holding, or too near an end to test that).
   - **Placement.** The fiducials of three beats either side of a slip, in time order, are each before or after it
     (a robust likelihood that allows 5% outliers); the posterior over the split gives the most likely gap between
-    two fiducials and a 95% bracket.
+    two fiducials and a 95% bracket (panel f).
   - **Injected ground truth.** On the host recordings in which the detector also finds no one-frame step either way
     (219 of 497; 14 of 22 in the benchmark): one sawtooth written into the PLETH waveform (15–55 ppm, random phase,
     33 ms of content held at each slip) and the fiducials found again; the same slips as a shift of the fiducial
@@ -134,3 +136,23 @@ open_questions:
       slips (recorded per slip) against the two injections would tell.
 code:
   - vitaldb-bench/tools/sawtooth_char.py
+  - vitaldb-bench/tools/slip_concept_figure.py
+figures:
+  - id: ppg-slip-detector
+    file: ppg-slip-detector.png
+    theme: schematics
+    source: vitaldb-bench tools/slip_concept_figure.py
+    caption: >-
+      How the detector finds and places a slip, drawn on synthetic data (illustrative; no recording). (a) The ECG→PPG
+      delay creeps between slips and jumps by one 33 ms frame at each. (b) Three fiducials per pulse: foot, steepest
+      upstroke and peak. (c) All of them in time order, moved onto one level: a slip falling inside a beat leaves its
+      foot before the step and its upstroke and peak after. (d) The step test: a sharp one-frame step against no step
+      (one straight line) and against the same change spread over 7 beats, as physiology would make it. (e) The
+      arterial check: ECG→PPG and ART→PPG step by a frame while ECG→ART does not, so the step is in the oximeter.
+      (f) Placement: each fiducial near the slip is before or after it, an outlier tolerated; the posterior over the
+      slip's position and its 95% bracket.
+    alt: >-
+      Six panels. A sawtooth delay trace with four one-frame jumps over an hour; a pulse with foot, upstroke and peak
+      marked; fiducial delays stepping up by 33 ms inside one beat; a step fitted against a line and a ramp; three
+      delay traces where two step and the ECG-to-arterial one stays flat; and before and after points with a peaked
+      posterior and a bracket.

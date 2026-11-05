@@ -1,0 +1,13 @@
+id: ppg-uncorrected-art-spread
+name: Finger minus arterial PAT spread, uncorrected
+quantity: Spread of finger minus arterial pulse arrival time without a sawtooth correction (robust SD of 30 s window medians), median over recordings with a sawtooth.
+value: 13.95
+unit: ms
+spread: {q1: 12.35, q3: 16.84, p90: 21.95, n: 1867, text: "of 2,976 recordings compared"}
+status: measured
+study: ppg-sawtooth-correction
+about: [ppg-sawtooth]
+date: 2026-11-05
+notes: >-
+  vitaldb-bench tools/correction_vs_art.py agg, $W/correction_vs_art/agg_v5/summary.json, by_group sawtooth, policy
+  none.

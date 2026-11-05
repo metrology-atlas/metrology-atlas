@@ -9,5 +9,5 @@ clocks: [hospital-records]
 devices: [clinical-records]
 variables: [emr-events]
 studies: [emr-rounding, value-model-anestart, value-model-aneend]
-consequence: Taking a 5-minute entry at face value puts the event about 2.5 minutes late on average.
+consequence: Taking a 5-minute anaesthesia-end entry at face value puts the event about 2.5 minutes late on average; for anaesthesia start the evidence is split (above).
 handling: The clinical_time labels give each time its interval and the earliest moment it could be known.

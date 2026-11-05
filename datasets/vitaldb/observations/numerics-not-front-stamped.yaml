@@ -2,7 +2,8 @@ id: numerics-not-front-stamped
 name: Monitor numerics describe the past, never the future
 summary: >-
   Every monitor numeric describes a window of 3–30 s or more that ended 1–9 s before its stamp. None is stamped
-  before its data exist, so the stamps already respect the availability rule.
+  before its data exist (every numeric's median delay is positive across the release; per-case fits that come out
+  negative are flagged weak), so the stamps already respect the availability rule.
 status: established
 devices: [solar8000, primus, bis]
 variables: [solar8000-hr, solar8000-art-numerics, primus-numerics, bis-index, solar8000-spo2, solar8000-pleth-hr]

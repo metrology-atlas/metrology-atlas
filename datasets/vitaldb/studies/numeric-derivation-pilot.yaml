@@ -2,8 +2,9 @@ id: numeric-derivation-pilot
 name: How the monitors compute their numbers
 summary: >-
   Recomputing each monitor numeric from its own waveform finds a short, simple algorithm for every one (a median, an
-  exponential average or a time mean over 3–30 s) and a delay of 2–9 s behind the newest data it uses. No value is
-  stamped before its data exist.
+  exponential average or a time mean over 3–30 s) and a delay of 2–9 s behind the newest data it uses. The pilot's
+  Primus fits are superseded; across the release every numeric's median delay is positive
+  ([[study:numeric-delay-variability]]).
 date: 2026-10-12
 status: current
 methods: [delays-and-windows]
@@ -18,8 +19,8 @@ background: |
 method: |
   **Timing model.** A value stamped at t is computed at u = t − d − φ from the data in a window ending at u: d is the
   processing and transmission delay, and φ is where within the device's update phase the computation fell (uniform
-  over one poll for values the monitor recomputes on its own schedule; over one 0.48 s record for Primus values of
-  the last completed breath). Values are uniform over their reporting bin (rounded or truncated). Every delay is
+  over one poll for values the monitor recomputes on its own schedule; for Primus values, over one Primus record
+  interval, about 7 s, which counts the hold until the next record twice: see below). Values are uniform over their reporting bin (rounded or truncated). Every delay is
   measured from the window's end, the anchor; the window's middle is a derived description only.
 
   **Fit.** Each numeric was fitted against beat-by-beat or breath-by-breath values from its waveform. Candidates: a
@@ -39,12 +40,18 @@ results: |
   | CVP | waveform mean over 4–5 s (16/21) | 5.0 s |
   | PLETH_HR | median of ~12 beats (134/231) | 3.4 s |
   | Primus RR | 60 / mean breath interval over 30 s (17/24) | 8.5 s |
-  | Primus ETCO2, PEEP | the latest breath | 1.8–1.9 s |
-  | Primus PIP | the latest breath | 5.2 s |
+  | Primus ETCO2, PEEP | the latest breath | superseded |
+  | Primus PIP | the latest breath | superseded |
+
+  The Primus rows are not valid: the pilot's phase over a whole record interval counted the hold twice, and its
+  fitted delays for ETCO2 and PEEP came out negative (medians −1.7 and −1.65 s;
+  `results/pat/numeric_derivation_pilot_summary.json`), that is stamped before the data. The refit across the release
+  replaces them ([[study:numeric-delay-variability]]).
 
   - **No slow updates:** the held-value model lost in every case for HR, ART, CVP and PLETH_HR.
   - **HR is truncated, not rounded** (24/24); RR clearly rounds.
-  - **No front-stamping:** no numeric is stamped before the data it describes.
+  - **No front-stamping** among the Solar8000 numerics here: every fitted delay is positive. For the Primus numerics
+    the pilot cannot say (above); the release-wide refit gives every median delay positive ([[study:numeric-delay-variability]]).
 discussion: |
   Mean against median, or beats against seconds, often differ by only 0.01–0.05 log-likelihood per record, so the
   algorithm family is less certain than the delay. Pressure numerics sit about 4 mmHg below the analogue waveform

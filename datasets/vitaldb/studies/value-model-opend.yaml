@@ -5,7 +5,8 @@ background: |
 data: |
   - 5,850 op ends, after excluding the 537 imputed from the recording (598–604 s before it ends; status `imputed`).
   - 92 op ends do not share the sub-minute offset of the other charted times in their case and are flagged `clock_offset_mismatch`.
-  - 52 op ends come after anaesthesia end and 108 equal it. Leaving out the imputed op ends (7 and 1 of them), the
+  - 52 op ends come after anaesthesia end and 108 equal it (anaesthesia ends with placeholder dates left out; 53
+    with them; `screens.py timestamp-imputed-and-conformance`). Leaving out the imputed op ends (7 and 1 of them), the
     library flags 45 (`order_violation`) and 107 (`same_time`).
 method: |
   - The true op end is modelled relative to the recording end with a log-spline offset (K = 12, chosen by BIC).
