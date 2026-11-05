@@ -124,6 +124,14 @@ results: |
     two-slip recordings). Its local checks (the step at each slip, the slope inside each tooth, the review of single
     teeth) could not see drift built up over a recording. The options were compared on the same recordings; the
     ranking is the same on odd- and even-numbered recordings.
+
+    A constant creep rate per recording is the physically plausible model (the rate is fixed per setup and stable
+    within a recording, [[study:ppg-sawtooth]]), so it was tested too, with the rate taken from the slips themselves
+    so that creep and steps balance from the first slip to the last (frame × net steps ÷ their time apart; `const` in
+    the tool, `$W/correction_vs_art/agg_v6`). With the same other choices it is worse than closing each tooth on its
+    own slips: median 10.62 ms against 9.46 in sawtooth recordings, 90th centile 22.96 against 22.03, 11.0% against
+    7.3% made worse. Neither rate is fitted to the PAT values, so physiology inside a tooth does not set it; a tooth's
+    own spacing absorbs the effect of a missed, false or misplaced slip on that tooth, where one rate spreads it.
   - **Held-out labels:** 25 of 31 real slips found, 0 of 28 slip-free events called a slip (all 172: 51 of 63 and 1
     of 59). The current physiosync fit, at the same events: 20 of 31 and 4 of 28.
   - **The correction review** (174 corrections): 151 judged right, 3 wrong, 20 can't tell: 98% of those decided

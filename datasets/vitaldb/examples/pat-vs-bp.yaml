@@ -26,15 +26,19 @@ data: |
 steps: |
   1. R peaks in ECG II; per beat, systolic pressure (the arterial peak after its upstroke), mean pressure (foot to
      foot) and heart rate (the RR interval ending at the beat).
-  2. PAT, R peak to the steepest PLETH upstroke, under five timings:
+  2. PAT, R peak to the steepest PLETH upstroke, under six timings:
      **naive**, each R peak paired with the first upstroke 0.1 s or more after it;
      **own beat**, the upstroke within 0.25 s of the recording's typical delay;
      **+ sawtooth removed**, step 1 of [[example:pulse-arrival-time]];
      **+ global delay**, step 2, a constant, so every correlation must equal the previous one (a built-in check);
-     and **arterial PAT**, R peak to the arterial upstroke, with neither problem, as the reference.
+     **own beat + rebuilt correction**, the final correction of [[study:ppg-sawtooth-correction]] (physiosync 0.3.2,
+     from the whole-release fit, applied where that fit covers the beat: 90% or more of the window in 2,283
+     recordings); and **arterial PAT**, R peak to the arterial upstroke, with neither problem, as the reference.
   3. Pearson r per recording between PAT and SBP, MAP and heart rate, and between PAT and SBP with heart rate held
      constant (partial r): beat to beat, and over 30 s windows (window medians).
-  4. As Ruffolo et al. appendix B: the mean of the beat-paired, hour-long r and the share of recordings with r below
+  4. How closely each finger PAT follows the arterial PAT: the spread (robust SD) of 30 s medians of finger minus
+     arterial PAT, on the beats every timing has.
+  5. As Ruffolo et al. appendix B: the mean of the beat-paired, hour-long r and the share of recordings with r below
      0.
 results: |
   **The appendix B result, reproduced.**
@@ -61,11 +65,16 @@ results: |
   | Own beat | −0.45 | −0.32 | −0.36 |
   | + sawtooth removed | −0.47 | −0.34 | −0.38 |
   | + global delay | −0.47 | −0.34 | −0.38 |
+  | Own beat + rebuilt correction | −0.49 | −0.35 | −0.39 |
   | Arterial PAT (reference) | −0.48 | −0.34 | −0.39 |
 
-  Almost all of the gain comes from the pairing; removing the sawtooth adds a little over windows (−0.45 to −0.47)
-  and nothing beat to beat, where its 33 ms slips are small next to beat-to-beat noise. The global delay changes
-  nothing, as it must. The slope is −0.41 ms of PAT per mmHg of SBP (median over recordings), against −0.34 for
+  Almost all of the gain comes from the pairing; removing the sawtooth adds a little over windows (−0.45 to −0.47
+  with the earlier correction, −0.49 with the rebuilt one) and nothing beat to beat, where its 33 ms slips are small
+  next to beat-to-beat noise. In the 1,654 recordings with a sawtooth that the rebuilt fit covers, the 30 s PAT–SBP
+  correlation is −0.46 paired only, −0.50 with the earlier correction, −0.52 with the rebuilt one and −0.50 for the
+  arterial PAT. The rebuilt correction also brings the finger PAT closest to the arterial PAT: the spread of finger
+  minus arterial PAT is 14.1 ms paired only, 12.7 with the earlier correction and 11.6 with the rebuilt one (2,579
+  recordings; with a sawtooth 14.1, 12.3 and 10.7). The global delay changes nothing, as it must. The slope is −0.41 ms of PAT per mmHg of SBP (median over recordings), against −0.34 for
   the arterial PAT.
 
   [[figure:pat-vs-bp]]
@@ -124,5 +133,5 @@ figures:
     source: vitaldb-bench examples/pat_vs_bp.py
     caption: >-
       Correlation of PAT with SBP, with heart rate, and with SBP for heart rate held constant, per recording (median
-      and interquartile range), under five timings: beat to beat (A) and over 30 s windows (B).
+      and interquartile range), under six timings: beat to beat (A) and over 30 s windows (B).
     alt: Two dot-and-whisker panels; naive pairing (grey) sits near zero for SBP and strongly negative for heart rate, the corrected timings and the arterial reference sit together further down for SBP.
