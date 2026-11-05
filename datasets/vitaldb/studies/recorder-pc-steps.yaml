@@ -1,8 +1,10 @@
 id: recorder-pc-steps
 name: Recorder PC clock steps and recording pauses
 summary: >-
-  A step of the recorder PC clock would move every device's stamps at once. Searching all 6,388 files for such
-  simultaneous jumps found none of 0.5 s or more; what moves everything together is recording pauses.
+  A step of the recorder PC clock would move every record the PC stamps on arrival (the Solar8000 and Primus
+  numerics) for good, against the waveforms the devices stamp from their own sample counts. None of 0.5 s or more
+  shows in any of the 6,388 files: simultaneous delays of the numerics, up to 23 s, are recorder stalls, after which
+  the numerics sit where they were, and what moves everything together is recording pauses.
 date: 2026-10-17
 status: current
 methods: [stamp-reading]
@@ -14,13 +16,20 @@ data: |
 background: |
   The link from the recorder PC to UTC is the only one in the timing graph that cannot be measured from the
   signals, because the release shifts every date. But a step of the PC clock (a time synchronisation, a manual
-  change) would leave a trace: every record stamped after it moves by the same amount, whatever its device.
-  Numeric tracks such as the Solar8000 and Primus numerics have no device clock of their own, so they show such a
-  step most directly.
+  change) would leave a trace. Numeric tracks such as the Solar8000 and Primus numerics have no device clock of their
+  own: the recorder stamps them on arrival, so every one after the step moves by its size. Waveforms are stamped from
+  each device's own sample count and re-anchored to the PC only now and then, so they do not move with it at once,
+  and the numerics then sit later against them for good. A recorder stall delays or loses the numerics for a while
+  too, but afterwards they are stamped on the right time again.
 method: |
   For every file, the intervals between consecutive Solar8000 HR and Primus ETCO2 records were scanned for jumps
   that appear in both at the same time, and the SNUADC and BIS waveform stamps were checked for a jump at the same
-  moment. A PC step shows in all of them; a device's own correction shows in one.
+  moment. A jump in every track is a recording pause; one in the numerics alone is a PC step or a recorder stall,
+  told apart by the numerics' lag behind the waveforms before and after it
+  ([[code:vitaldb-bench/tools/pc_step_check.py]] `--events CASE:SECONDS ...`, output `$W/pc_step_check/check.json`):
+  the lag of the Solar8000 mean arterial pressure behind the mean of the arterial waveform, and of the Solar8000
+  heart rate behind the rate from the ECG's R peaks, in 20 minutes each side, from the best correlation of their
+  10 s changes. A PC step changes the lag by its own size; a stall leaves it.
 results: |
   - **No PC step of 0.5 s or more** in any file.
   - **No backward steps.** No numeric track stamped by the PC (Solar8000, Primus, Orchestra, EV1000, Vigileo,
@@ -32,6 +41,15 @@ results: |
   - **Small simultaneous delays are not PC steps.** 25 delays of 0.5–0.9 s in 17 files hit both numerics with no
     waveform jump, and are followed by an ordinary next SNUADC reset (−0.481 s) and ordinary BIS corrections. The
     PC clock did not move; these are recorder stalls or shifts in polling.
+  - **Nor are the large ones.** Four delays of 1 s or more hit both numerics by the same amount (within 0.5 s) with
+    no SNUADC jump (`$W/results/clock/pc_steps_*.jsonl`): 23 s in [[case:184]], 15 s in [[case:3805]], 14 s in
+    [[case:4552]] and 6.6 s in [[case:5213]]. In the three with an arterial line, the mean arterial pressure numeric
+    lags the arterial waveform by the same amount before and after, to within 1.5 s (+0.5, −1.5 and +1.5 s;
+    correlations 0.37–0.87), where a PC step would have moved it by the whole delay: they are recorder stalls.
+    [[case:4552]] has no arterial line, and its heart rate correlates too weakly to decide (lag change −2 s, r 0.20
+    and 0.27); but its Primus waveform records arrive bunched just after the gap, about 0.03 s apart against 0.48 s,
+    as buffered data catching up after a stall would. The Primus waveforms lose the same stretch in all four and the
+    BIS waveform jumps at or soon after three of them; only the SNUADC carries straight through.
 discussion: |
   The PC–UTC link stays an assumption, but now a bounded one: whatever the time synchronisation does, it never
   steps the clock by half a second or more. Steps smaller than that, and the gradual slewing Windows normally uses,
@@ -54,3 +72,4 @@ open_questions:
       any surviving logs have been asked of the dataset's creator.
 code:
   - vitaldb-bench/tools/pc_clock_steps.py
+  - vitaldb-bench/tools/pc_step_check.py
