@@ -1,16 +1,16 @@
 id: ppg-timing-label
 name: PPG timing quality
-summary: 'Intervals of one recording''s plethysmogram timing quality: sawtooth corrected (A, B), no sawtooth (N), or not
-  corrected (U).'
+summary: 'Intervals of one recording''s plethysmogram timing quality: sawtooth corrected (A, B, C), no slip (N), or not
+  corrected (U unresolved; I isolated slips, or a tooth from two slips).'
 group: Derived labels/PPG timing labels
 origin: derived
-version: 0.0.1
+version: 0.0.2
 type: event
 source: ppg_timing_labels.csv (label family ppg_timing)
 source_name: ppg_timing
 measurand: How well the plethysmogram's times are known in each stretch of a recording, as a tier.
-description: Adjacent teeth of the same tier are merged. Tiers below the minimum applied (B) are reported as U. Labelled
-  so far in 266 recordings, over the first 90 minutes of each analysed stretch.
+description: Adjacent teeth of the same tier are merged. Labelled so far in 265 recordings, over the first 90 minutes of each analysed stretch; one more of the 266 has too
+  few matched beats for the whole-release slip fit and is not labelled.
 derived_from:
 - variable: snuadc-ecg-ii
   relation: computed-from
@@ -24,8 +24,8 @@ derived_from:
   relation: computed-from
   form: snu-raw-step
   note: Arterial upstrokes, where available, confirm slips (the reference). Raw stamps in either SNUADC mode; the step-mode form, with the larger error, is named.
-algorithm: The quality intervals of physiosync's ECG-to-PPG fit (fit.quality_intervals), with corrections applied from tier
-  B.
+algorithm: The quality intervals of physiosync's rebuilt ECG-to-PPG correction (fit_ecg_ppg_delay, method rebuilt, from
+  the whole-release slip fit), with the correction applied in tiers A, B and C.
 code:
 - physiosync/physiosync/ecg_ppg.py
 - physiosync/physiosync/labels.py
@@ -34,26 +34,27 @@ propagation:
   method: study
   studies:
   - ppg-sawtooth
+  - ppg-sawtooth-correction
 timing:
 - id: ptl-start
   name: 'as stored: the interval''s interval, from its start'
   kind: as_stored
   support_s:
-  - 7.9
-  - 5399.2
+  - 60.3
+  - 5399.0
   stamp_position: open
   bias_s: &id001
-    median: -1565.2
-    p5: -5398.6
-    p95: -188.2
+    median: -2624.3
+    p5: -5398.4
+    p95: -306.5
     scope: recording
     status: measured
-    evidence: label lengths, 605 labels; label CSVs of the release run (physiosync labels 0.0.1, 266 recordings), measured
-      31 Oct 2026
+    evidence: label lengths, 445 labels; label CSVs of the v2 run (physiosync 0.3.3, rebuilt correction; 265 recordings), tools/label_stats.py, measured
+      5 Nov 2026
   look_ahead:
     lead_s:
-    - 7.9
-    - 5399.2
+    - 60.3
+    - 5399.0
     basis: real
     note: 'Used at its start, the interval carries its whole interval, and more: it is fitted over the recording. Both ends
       are stored, so its availability time is recoverable.'
@@ -73,19 +74,19 @@ timing:
   kind: per_recording
   uses_future: true
   support_s:
-  - 7.9
-  - 5399.2
+  - 60.3
+  - 5399.0
   stamp_position: close
   removes_bias_s: *id001
   bias_s:
     name: held to the end of the recording
-    median: 12986.6
-    p5: 907.4
-    p95: 23982.3
+    median: 12897.3
+    p5: 604.1
+    p95: 26214.5
     scope: recording
     status: measured
-    evidence: from each label's end to the end of its recording (the last numeric delay label), 605 labels; label CSVs of
-      the release run (physiosync labels 0.0.1, 266 recordings), measured 31 Oct 2026
+    evidence: from each label's end to the end of its recording (the last numeric delay label), 445 labels;
+      label CSVs of the v2 run (physiosync 0.3.3, rebuilt correction; 265 recordings), tools/label_stats.py, measured 5 Nov 2026
   uncertainty:
     upper_bound: false
     components: *id002
@@ -101,5 +102,6 @@ value:
   status: measured
   studies:
   - ppg-sawtooth
-  note: 'A 127, B 141, U 290 and N 47 intervals. The error after correction by tier, on injected test data: A 0.2 ms, B
-    1.6 ms, C 5.3 ms RMS ([[study:ppg-sawtooth]]).'
+  note: 'A 202, B 47, C 8, U 77, I 78 and N 33 intervals; 257 corrected. End to end against the arterial line, the
+    correction narrows the spread of finger minus arterial pulse arrival time in sawtooth recordings from a median of
+    13.95 to 9.46 ms ([[study:ppg-sawtooth-correction]]).'

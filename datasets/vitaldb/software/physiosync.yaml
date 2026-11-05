@@ -17,11 +17,11 @@ description: |
 role: |
   It holds the general methods that several VitalDB studies rely on: the stamp-clock fit
   ([[study:snuadc-stamp-sawtooth]]), the frame-clock search ([[study:ppg-frame-clock]]), the ECG-PPG sawtooth
-  removal ([[study:ppg-sawtooth]]) and fiducial resolution ([[observation:fiducial-quantisation]]).
+  removal ([[study:ppg-sawtooth]], [[study:ppg-sawtooth-correction]]) and fiducial resolution ([[observation:fiducial-quantisation]]).
   [[software:vitaldb-bench]] scripts call it on VitalDB cases.
 install: |
   ```bash
-  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.2"
+  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.3"
   ```
 
   Version 0.3 adds the rebuilt slip finder and `fit_ecg_ppg_delay(method="rebuilt")`
@@ -29,6 +29,9 @@ install: |
   (checked on 324 recordings, [[code:vitaldb-bench/tools/port_delay_regress.py]]). 0.3.2 rebuilds the correction after
   an end-to-end check against the arterial line ([[code:vitaldb-bench/tools/correction_vs_art.py]]): each tooth closes
   exactly, uncertain slips are ramps, and unresolved teeth and recordings whose creep is not corrected are left alone.
+  0.3.3 applies a stored whole-release slip fit to other beats of the same recording (`slip_result=`) and gives
+  rebuilt fits measurement records and labels per tooth; the atlas's PPG timing labels and its pulse arrival time
+  example use it ([[variable:ppg-timing-label]], [[example:pulse-arrival-time]]).
 parts:
   - path: physiosync/stamps.py
     summary: Record stamps that follow a sample clock between corrections; fits the rate and offsets and removes the stamp sawtooth.

@@ -1,8 +1,10 @@
 id: ppg-sawtooth
 name: The PPG sawtooth and its correction
 summary: >-
-  The ECG→PPG delay creeps at 18–52 ppm and jumps up by one 33.3 ms frame at each slip, every 11–31 minutes. A
-  tooth-by-tooth model removes it; where the correction is confident it is essentially exact on injected test data.
+  The ECG→PPG delay creeps at 18–52 ppm and jumps up by one 33.3 ms frame at each slip, every 11–31 minutes. First of
+  the sawtooth series. Its first correction, a tooth-by-tooth fit (physiosync's detect method), was essentially exact
+  where confident on injected test data; it has been replaced as the atlas default by the rebuilt correction of
+  [[study:ppg-sawtooth-correction]], which brings finger PAT closer to arterial PAT, and is kept here as history.
 date: 2026-10-10
 status: current
 methods: [signal-borne-clocks]
@@ -15,6 +17,12 @@ background: |
   SNUADC samples ECG and PPG together, so its own drift cannot move one against the other. Any drift between them
   comes from inside the monitor.
 method: |
+  *The first correction (10 Oct 2026; history).* The atlas now corrects with the rebuilt slip finder of
+  [[study:ppg-sawtooth-correction]] (physiosync 0.3.3, `fit_ecg_ppg_delay(method="rebuilt")`): one-frame slips only,
+  confirmed by the pulse shape and the arterial line, each tooth closing exactly one frame between its slips; tiers A,
+  B and C corrected, U and I (isolated slips, no sawtooth) not. What follows describes the first correction,
+  `method="detect"`, which physiosync keeps as its default for other data.
+
   The PPG delay is modelled as D(t) = offset + frame × (slips so far) − creep. The fit detects resets in the
   beat-matched pulse arrival time and keeps a slip only if it is one frame and falls between two beats
   (physiological changes build over several beats); puts back missed slips only where a gap holds whole teeth and
@@ -44,6 +52,9 @@ results: |
     port hosts two PPG sources: step-mode cases at 51 ppm and frequent-mode cases at 27 ppm.
   - **Invisible in the waveform:** no repeated or held 33 ms segment at a slip (3.5% against 5% by chance).
 
+  The first correction's tiers on injected test data (history; the rebuilt correction's are in
+  [[study:ppg-sawtooth-correction]]):
+
   | Tier | Share of injected time | Error after correction (RMS) | Time over 10 ms | Share of real time |
   |---|---|---|---|---|
   | A | 60% | 0.2 ms | 0.1% | 17.0% |
@@ -54,9 +65,14 @@ results: |
 
   Uncorrected, the injected sawtooth has an RMS of 9.5 ms.
 discussion: |
-  Tiers A and B cover 34% of the real time analysed (378 h in 266 recordings; ppg_sawtooth_labels.csv), 49% with the stretches where no sawtooth is running. The
-  benchmark is optimistic: its physiology came from quiet recordings. Labels carry each tooth's tier, so a user can
-  choose how much time to trust.
+  Under the first correction, tiers A and B covered 34% of the real time analysed (378 h in 266 recordings; the
+  10 Oct ppg_sawtooth_labels.csv), 49% with the stretches where no sawtooth is running, and its benchmark was
+  optimistic: its physiology came from quiet recordings. Tested end to end against the arterial line in 2,976
+  recordings, it narrowed the spread of finger minus arterial PAT in sawtooth recordings from a median of 14.0 to
+  11.2 ms; the rebuilt correction narrows it to 9.5 ms, though it leaves more recordings worse than uncorrected
+  (7.3% against 2.9%; [[study:ppg-sawtooth-correction]]). The PPG timing labels now carry the rebuilt correction: in
+  265 of the 266 recordings, 861 of 1,199 teeth are corrected (A 749, B 98, C 14), and each label carries its tier,
+  so a user can choose how much time to trust ([[variable:ppg-sawtooth-label]], [[variable:ppg-timing-label]]).
 
   The last step of the fit, shifting each recording's median to the adopted pulse arrival time, also removes real
   differences between patients. [[study:pat-offset-census]] later showed that one global delay ([[value:pleth-chain-delay]],
@@ -64,6 +80,7 @@ discussion: |
   differences ([[example:pulse-arrival-time]]).
 code:
   - physiosync/physiosync/ecg_ppg.py
+  - physiosync/physiosync/slips.py
   - physiosync/physiosync/labels.py
   - vitaldb-bench/tools/tier_bench.py
   - vitaldb-bench/tools/ppg_fix_check.py
