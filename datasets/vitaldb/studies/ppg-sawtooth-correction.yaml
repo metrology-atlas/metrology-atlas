@@ -4,13 +4,14 @@ summary: >-
   Fourth of the sawtooth series ([[study:ppg-sawtooth-slips]] finds the slips, [[study:ppg-sawtooth-period]] their
   grid, [[study:ppg-sawtooth-pauses]] where it stops). The slip finder is rebuilt around one rule: correct a step only
   when the evidence that it is a frame slip is strong, because a wrong correction puts a false step into real
-  physiology. It judges each candidate on the shape of the pulse and, where there is one, on the arterial line; it
-  corrects only one-frame steps, never smaller ones, and reports drift without correcting it. Checked against three
-  independent sets of judgements (172 blinded manual labels, a review of 174 corrections, and sawtooths injected into
-  real recordings), it made no false call among the held-out slip-free events and 98% of the corrections reviewed
-  were judged right. On the whole release (5,714 recordings) 3,642 run a sawtooth, 275 of them reversed, with 18,283 slips; 453 rest on a
-  tooth from two slips and report their creep instead of correcting it. Ported to physiosync as
-  `fit_ecg_ppg_delay(method="rebuilt")` (0.3.1). In development.
+  physiology. It judges each candidate on the shape of the pulse and, where there is one, on the arterial line, and
+  corrects only one-frame steps. Checked against 172 blinded manual labels, a review of 174 corrections and sawtooths
+  injected into real recordings, it called no held-out slip-free event a slip and 98% of the corrections reviewed were
+  judged right. Its correction was then tested end to end against the arterial line in 2,976 recordings, which showed
+  the first version made a third of them worse; rebuilt so each tooth closes exactly, it brings finger PAT closer to
+  arterial PAT than the earlier method (median spread 9.5 against 11.2 ms in sawtooth recordings, 14.0 uncorrected),
+  though it leaves more recordings worse than uncorrected (7.3% against 2.9%). physiosync 0.3.2,
+  `fit_ecg_ppg_delay(method="rebuilt")`. In development.
 date: 2026-11-05
 status: draft
 methods: [signal-borne-clocks, shared-events]
@@ -81,18 +82,48 @@ method: |
     change of 20 /min or more vetoes.
   - **Slips that cannot be timed.** Where a predicted slip has slip-like evidence but cannot be placed, one slip in a
     5–95% interval with a probability (tempered 0.05 for the probability and 0.02 for the times, set on the
-    injections). Not corrected.
+    injections). Corrected as a ramp across the interval, weighted by the probability.
   - **What counts as a sawtooth.** Two confirmed slips. Where no sawtooth is fitted but confirmed slips exist, a
     search from them at the recording's own tooth (the spacing of two same-way slips; else frame ÷ drift when the
     recording creeps at 3 ppm or more; else the setup's median). A sawtooth found that way corrects its creep only
-    when three or more slips are confirmed; on two, the steps are corrected and the tooth and creep reported.
+    when three or more slips are confirmed; on two, the tooth is reported and nothing is corrected.
   - **Drift.** Where no sawtooth is fitted, the delay's slope with a free step at each slip, reported (with its
     spread in slip-free recordings, 6.5 ppm), not corrected.
   - **Tiers,** per tooth: A, both edges confirmed slips; B, an edge a one-frame step the shape cannot judge; C, an
-    edge placed only within an interval (not corrected); U, unresolved (a weak predicted slip inside, a step the
-    other way at an edge, or longer than 1.5 teeth); I, steps only (isolated slips, or a tooth from two slips); N,
-    no slip.
+    edge placed only within an interval; U, unresolved (a weak predicted slip inside, a step the other way at an edge,
+    or longer than 1.5 teeth); I, slips reported but not corrected (isolated slips, or a tooth from two slips); N, no
+    slip.
+  - **The correction** (physiosync 0.3.2 `delay_at`, tools/slip_tiers.py v6), chosen by the arterial check below:
+    where a sawtooth's creep is corrected, each slip steps the delay a frame (a slip placed only within an interval by
+    its probability, as a ramp across the interval), each stretch between two slips the sawtooth's way creeps back by
+    exactly a frame over its own length, and the partial teeth at the ends at frame ÷ the fitted tooth; tier U teeth
+    are held at the median, not corrected; tier I recordings are not corrected at all.
+  - **End to end against the arterial line** ([[code:vitaldb-bench/tools/correction_vs_art.py]] `scan --scan
+    $W/sawtooth_char/scan_full --fit $W/slip_rebuild/full3/fit.jsonl --out $W/correction_vs_art/v5_part_K.jsonl --part K
+    --of 2`, then `agg`): finger PAT minus arterial PAT, per beat (the R peak cancels), has no sawtooth of its own. Its
+    spread (robust SD of 30 s window medians) under each correction, on every recording of the scan with an arterial
+    upstroke on at least half its beats.
 results: |
+  - **End to end against the arterial line** (2,976 recordings; `$W/correction_vs_art/agg_v5`). Spread of finger minus
+    arterial PAT, median (IQR; 90th centile), and the share of recordings left more than 2 ms worse than uncorrected:
+
+    | Recordings with a sawtooth (1,867) | Spread, ms | Worse than uncorrected |
+    |---|---|---|
+    | Uncorrected | 13.95 (12.35–16.84; 21.95) | — |
+    | Earlier method ([[software:physiosync]] `detect`) | 11.17 (6.88–15.25; 21.99) | 2.9% |
+    | Rebuilt, first version (0.3.1) | 10.86 (5.91–22.02; 50.9) | 28.9% |
+    | Rebuilt, final (0.3.2) | 9.46 (5.70–14.67; 22.03) | 7.3% |
+
+    Over all 2,976 the final correction leaves a median 11.72 ms (earlier method 11.95, uncorrected 14.01) and improves
+    42.0% of recordings by more than 2 ms (earlier 40.3%). In the 866 recordings with slips but no corrected sawtooth
+    (602 without a sawtooth, 264 with a tooth from two slips) it changes nothing, by design; the earlier method, which
+    corrects some of them, improves their median by about 1–2 ms. The first version's errors had three causes, each
+    found with this check: one creep rate for the whole recording (a tooth a few percent off adds up over the teeth),
+    creep carried through unresolved stretches without slips, and steps corrected without their creep in tier I (which
+    turns a sawtooth that stays within a frame into a ramp: worse than uncorrected in 45% of tier I and 69% of
+    two-slip recordings). Its local checks (the step at each slip, the slope inside each tooth, the review of single
+    teeth) could not see drift built up over a recording. The options were compared on the same recordings; the
+    ranking is the same on odd- and even-numbered recordings.
   - **Held-out labels:** 25 of 31 real slips found, 0 of 28 slip-free events called a slip (all 172: 51 of 63 and 1
     of 59). The current physiosync fit, at the same events: 20 of 31 and 4 of 28.
   - **The correction review** (174 corrections): 151 judged right, 3 wrong, 20 can't tell: 98% of those decided
@@ -129,16 +160,15 @@ results: |
     in 9 of 22 injected whole-release recordings (a missed slip between them doubles it; a slip of another process
     shortens it), and its creep correction could then leave more error than none. From v26 such teeth report their
     creep; wrong teeth with creep corrected fall from 9 to 1 (`$W/slip_rebuild/tooth_check_v26_anchored`). Asking
-    the same shape test at the midpoint did not help: it judged the missed slip "no slip" again.
-  - **The correction check** (265 of the 266 recordings of [[study:ppg-sawtooth]]'s check, rebuilt model;
-    `$W/ppg_correction_check/rebuilt3`): 924 corrected steps measure a median 31.5 ms before correction and −0.7
-    after (median size 2.2 ms; half way between steps, where there is no slip, 1.8). The slope inside the teeth falls
-    from −33.6 to +3.8 ppm (154 recordings whose creep is corrected); 13 recordings have a two-slip tooth and 98 no
-    sawtooth; 88 slips placed only within an interval are left uncorrected. The sawtooth's rate still does not follow
-    the SNUADC drift (r = 0.13; the earlier r = −0.22 is not reproduced). By how each step was found, the share
-    leaving more than 15 ms after correction is 5.9% of confirmed slips (43 of 730), near the 4.3% half way between
-    steps (30 of 692), but 15% of off-grid slips (16 of 109), 14% of one-frame steps the shape cannot judge (6 of
-    43) and 52% of slips the other way (12 of 23).
+    the same shape test at the midpoint did not help: it judged the missed slip "no slip" again. Since 0.3.2 such
+    recordings are not corrected at all (the arterial check above).
+  - **The correction check** (265 of the 266 recordings of [[study:ppg-sawtooth]]'s check, final correction;
+    `$W/ppg_correction_check/rebuilt6`): the 663 whole-frame steps corrected measure a median 31.9 ms before correction
+    and −0.5 after (median size 2.0 ms; half way between steps, where there is no slip, 1.7). The slope inside the
+    teeth falls from −28.6 to +1.2 ppm (154 recordings whose creep is corrected). The share of corrected steps leaving
+    more than 15 ms is 3.2% for confirmed slips (18 of 556), 11% off the grid (6 of 56), and 3.2% half way between
+    steps (17 of 524). The sawtooth's rate does not follow the SNUADC drift (|r| under 0.2 in every version; an
+    earlier r = −0.22 is not reproduced).
   - **An arterial gate is not supported** (reasoned null, `$W/slip_rebuild/dev/slip_rebuild_dev_v27.py`, not adopted).
     Split by the arterial verdict, the corrections that leave more than 15 ms in the check are concentrated where a
     clean arterial line does not show a PPG slip: slips the other way without arterial confirmation (11 of 14; with
@@ -162,8 +192,14 @@ discussion: |
   two-slip tooth is the clearest case of the rule: two slips fix the steps but not the creep between them.
 
   Tier I changes the reading of "no sawtooth": most such recordings run the same sawtooth slowly, at a quarter to a
-  half of the setup's usual rate, so a recording of 90 minutes holds one or two slips. Their steps are corrected;
-  their creep, up to a frame over the recording, is reported.
+  half of the setup's usual rate, so a recording of 90 minutes holds one or two slips. Correcting their steps without
+  their creep made them worse, so they are reported, not corrected; their error stays within about a frame.
+
+  The arterial check is the one test that sees the correction whole. It changed the correction more than any other:
+  closing each tooth on its own slips, as the earlier method did, matters more than finding each slip precisely. The
+  final correction is better than the earlier method for a typical recording and as good in its worst tenth, but it
+  leaves more recordings worse than uncorrected (7.3% against 2.9%), and the arterial line is itself evidence inside
+  both fits, so the check is not wholly independent.
 limitations: |
   Development version. The development set contains the labelled events and the shape rule was fitted on half of
   them, so the held-out half and the injections are the honest measures. The injected sawtooths are written into
@@ -209,9 +245,10 @@ figures:
     theme: example traces
     source: vitaldb-bench tools/ppg_sawtooth_figures.py
     records: [2156, 6241, 1094]
-    caption: The rebuilt correction on the cases of [[study:ppg-sawtooth]]'s check ([[case:2156]], [[case:6241]], [[case:1094]], panels a–c; grey the corrected slips, orange dashed slips placed only within an interval and not corrected). In [[case:6241]] the uncorrected slip near 14 minutes leaves the minutes before it a frame low. Across 265 recordings the 924 corrected steps shrink from 31.5 ms to −0.7 ms (median) and the slope inside the teeth from −34 to +4 ppm (154 recordings whose creep is corrected); the sawtooth rate groups by setup, not by SNUADC drift (panels d–i).
+    caption: The final rebuilt correction on the cases of [[study:ppg-sawtooth]]'s check ([[case:2156]], [[case:6241]], [[case:1094]], panels a–c; grey the corrected slips, orange dashed slips placed only within an interval, corrected as ramps). Across 265 recordings the 663 whole-frame steps corrected shrink from 31.9 ms to −0.5 ms (median) and the slope inside the teeth from −29 to +1 ppm (154 recordings whose creep is corrected); the sawtooth rate groups by setup, not by SNUADC drift (panels d–i).
     alt: Three long PAT traces of measured and corrected values beside six aggregate histograms and scatter plots.
 code:
+  - vitaldb-bench/tools/correction_vs_art.py
   - vitaldb-bench/tools/ppg_fix_check.py
   - vitaldb-bench/tools/ppg_sawtooth_figures.py
   - vitaldb-bench/tools/slip_rebuild.py
