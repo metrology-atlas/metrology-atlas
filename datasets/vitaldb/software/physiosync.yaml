@@ -19,6 +19,14 @@ role: |
   ([[study:snuadc-stamp-sawtooth]]), the frame-clock search ([[study:ppg-frame-clock]]), the ECG-PPG sawtooth
   removal ([[study:ppg-sawtooth]]) and fiducial resolution ([[observation:fiducial-quantisation]]).
   [[software:vitaldb-bench]] scripts call it on VitalDB cases.
+install: |
+  ```bash
+  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.0"
+  ```
+
+  Version 0.3.0 adds the rebuilt slip finder and `fit_ecg_ppg_delay(method="rebuilt")`; the earlier method stays the
+  default and gives the same results as 0.2.0 (checked on 324 recordings,
+  [[code:vitaldb-bench/tools/port_delay_regress.py]]).
 parts:
   - path: physiosync/stamps.py
     summary: Record stamps that follow a sample clock between corrections; fits the rate and offsets and removes the stamp sawtooth.
@@ -27,7 +35,9 @@ parts:
   - path: physiosync/quantisation.py
     summary: Effective temporal resolution of fiducial points, on whole-sample grids or partly locked to a period.
   - path: physiosync/ecg_ppg.py
-    summary: The ECG-to-PPG delay; fits and removes the frame-slip sawtooth, with confidence tiers.
+    summary: The ECG-to-PPG delay; fits and removes the frame-slip sawtooth, with confidence tiers (two methods, detect and rebuilt).
+  - path: physiosync/slips.py
+    summary: The rebuilt slip finder; beat quality and pulse shapes, slips with their evidence, tooth tiers and the delay model.
   - path: physiosync/labels.py
     summary: One label per sawtooth tooth, with its correction, resolution and confidence.
   - path: physiosync/chains.py
