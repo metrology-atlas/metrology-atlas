@@ -38,7 +38,9 @@ results: |
     a sign-flipped control.
   - **Regular:** slips recur every frame ÷ rate, stable to about 0.2 ppm; a few recordings creep by about 1 ppm over
     90 minutes.
-  - **Fixed per setup, 18–52 ppm,** unrelated to the SNUADC drift (r = −0.22) or the frame clock (r = 0.13). One
+  - **Fixed per setup, 18–52 ppm,** unrelated to the SNUADC drift (r = 0.09 on the cases with three or more kept slips, 0.13 with the
+    rebuilt correction of [[study:ppg-sawtooth-correction]]; a first, unsaved estimate of −0.22 is not reproduced) or the
+    frame clock (r = 0.13). One
     port hosts two PPG sources: step-mode cases at 51 ppm and frequent-mode cases at 27 ppm.
   - **Invisible in the waveform:** no repeated or held 33 ms segment at a slip (3.5% against 5% by chance).
 

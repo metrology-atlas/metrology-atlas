@@ -50,6 +50,15 @@ method: |
   --out DIR`; the tiers with [[code:vitaldb-bench/tools/slip_tiers.py]] `--fit FIT.jsonl --scan
   $W/sawtooth_char/scan_full --out DIR`. Whole release: `bash scripts/run_slip_rebuild_full.sh` (WSL; into
   `$W/slip_rebuild/full3`). Slow injections: `inject-slow` then `fit` and `eval-slow` on `$W/slip_rebuild/slow_inj`.
+  The correction check: [[code:vitaldb-bench/tools/ppg_fix_check.py]] `--method rebuilt --scan
+  $W/sawtooth_char/scan_full --quality $W/slip_rebuild/quality --rates $W/sawtooth_stats/recordings.csv --modes
+  $W/results/sync_full/snuadc_mode_label.json --rule $W/label_quality_final/summary.json --cases
+  $W/ppg_correction_check/cases266.json --out $W/ppg_correction_check/check_rebuilt3.jsonl --adopted-pat 0.27`, then
+  [[code:vitaldb-bench/tools/ppg_sawtooth_figures.py]] `check --scan $W/ppg_correction_check/check_rebuilt3.jsonl --units
+  $W/results/sync_full/units.csv --modes $W/results/sync_full/snuadc_mode_label.json --examples 2156 6241 1094 --out
+  $W/ppg_correction_check/rebuilt3`. Tier I: [[code:vitaldb-bench/tools/tier_i_check.py]] `--fit
+  $W/slip_rebuild/full3/fit.jsonl --teeth $W/slip_rebuild/full3/tiers/teeth.csv --rates
+  $W/sawtooth_stats/recordings.csv --creep $W/sawtooth_char/scan_full --out $W/slip_rebuild/full3/tier_i`.
   The review: [[code:vitaldb-bench/tools/correction_labels.py]] `sample`, `eval`, `check` and `rescore`. Teeth against
   injected ones: [[code:vitaldb-bench/tools/tooth_check.py]].
 
@@ -105,19 +114,31 @@ results: |
   - **Slow injections** (120 hosts, 106 slips): 69 found, 9 false; of 15 hosts with two injected slips, 9 fitted as
     a sawtooth with the right tooth. The drift reported against the injected rate: median error −0.5 ppm (10–90%
     −13 to +7).
-  - **Isolated slips are mostly a slow sawtooth.** On the v22 whole-release run, 1,859 recordings had slips but no
-    sawtooth (tier I; 2,897 slips, 1,140 recordings with one). The arterial line confirms 89% of their slips where
-    there is one (1,246 of 1,396). Gaps between their same-way slips fall within 5% of a whole number of the
-    setup's teeth twice as often as at half teeth (213 against 103 of 723). Their delay creeps the sawtooth's way at
-    a median 6.5 ppm (IQR 0.3–13.4) against 22.3 in sawtooth recordings and 0.4 in recordings without a slip: teeth
-    of about 85 minutes, one or two slips in 90 minutes. On the final whole-release run,
-    1,289 recordings have slips but no sawtooth; their reported drift has quartiles −1.4, 4.5 and 10.9 ppm, and 299
-    lie more than two spreads from zero.
+  - **Tier I creeps: a slow sawtooth.** On the final whole-release run tier I holds two groups
+    (`$W/slip_rebuild/full3/tier_i`). 1,289 recordings have slips but no sawtooth (1,515 slips; 1,120 recordings with
+    one); the arterial line confirms 87% of their slips where there is one (572 of 657); 1,017 have only upward
+    slips, 157 only downward, 115 both. 453 are sawteeth whose tooth rests on two slips (1,000 slips; arterial line
+    61 slip, 19 neither); their fitted tooth has a median 33.6 minutes (IQR 22.9–47.7), 1.5 times the setup's (IQR
+    1.0–2.3). Measured as the delay's slope with a free step at each slip (upward recordings), both creep the
+    sawtooth's way: a median 4.9 ppm (IQR −1.0 to 11.4) without a sawtooth and 9.5 (3.1–15.0) with a two-slip tooth,
+    against 21.8 (12.4–37.7) in the other sawtooth recordings and 0.4 (−3.8 to 4.9) in recordings without a slip.
+    Most are the setup's sawtooth running slowly, with one or two slips in 90 minutes. (On v22, before the two-slip
+    teeth were split off, the gaps between same-way slips fell on whole teeth of the setup's tooth twice as often as
+    at half teeth, 213 against 103 of 723; too few such gaps remain to test, 11 against 7 of 84.)
   - **A tooth from two slips is often wrong.** In v25, a sawtooth found from two slips' spacing had the wrong tooth
     in 9 of 22 injected whole-release recordings (a missed slip between them doubles it; a slip of another process
     shortens it), and its creep correction could then leave more error than none. From v26 such teeth report their
     creep; wrong teeth with creep corrected fall from 9 to 1 (`$W/slip_rebuild/tooth_check_v26_anchored`). Asking
     the same shape test at the midpoint did not help: it judged the missed slip "no slip" again.
+  - **The correction check** (265 of the 266 recordings of [[study:ppg-sawtooth]]'s check, rebuilt model;
+    `$W/ppg_correction_check/rebuilt3`): 924 corrected steps measure a median 31.5 ms before correction and −0.7
+    after (median size 2.2 ms; half way between steps, where there is no slip, 1.8). The slope inside the teeth falls
+    from −33.6 to +3.8 ppm (154 recordings whose creep is corrected); 13 recordings have a two-slip tooth and 98 no
+    sawtooth; 88 slips placed only within an interval are left uncorrected. The sawtooth's rate still does not follow
+    the SNUADC drift (r = 0.13; the earlier r = −0.22 is not reproduced). By how each step was found, the share
+    leaving more than 15 ms after correction is 5.9% of confirmed slips (43 of 730), near the 4.3% half way between
+    steps (30 of 692), but 15% of off-grid slips (16 of 109), 14% of one-frame steps the shape cannot judge (6 of
+    43) and 52% of slips the other way (12 of 23).
   - **Whole release** (v26, `$W/slip_rebuild/full3`): 5,714 recordings fitted, none failed; 3,642 with a sawtooth
     (275 reversed), 453 of them with their creep reported; 18,283 slips. By time, tier A 41.4%, B 4.2%, C 0.4%, U
     12.2%, I 29.5%, N 12.3%; by each recording's worst tooth, A 1,379, B 419, C 46, U 1,345, I 1,742, N 783. Injected
@@ -132,9 +153,9 @@ discussion: |
   separate from physiology, and the drift of recordings without a sawtooth is reported rather than corrected. The
   two-slip tooth is the clearest case of the rule: two slips fix the steps but not the creep between them.
 
-  Tier I changes the reading of "no sawtooth": most such recordings run the same sawtooth slowly, at about a third of
-  the setup's usual rate, so a recording of 90 minutes holds one or two slips. Their steps are corrected; their creep,
-  up to a frame over the recording, is reported.
+  Tier I changes the reading of "no sawtooth": most such recordings run the same sawtooth slowly, at a quarter to a
+  half of the setup's usual rate, so a recording of 90 minutes holds one or two slips. Their steps are corrected;
+  their creep, up to a frame over the recording, is reported.
 limitations: |
   Development version. The development set contains the labelled events and the shape rule was fitted on half of
   them, so the held-out half and the injections are the honest measures. The injected sawtooths are written into
@@ -148,6 +169,12 @@ open_questions:
       Five of the drawn misses are steps of 10–18 ms in ECG→PPG with ECG→ART flat: inside the PPG chain but smaller
       than a frame. Whether they are partial slips, a change of the monitor's PPG filtering, or something else is
       open; they are never corrected.
+  - title: "Slips the other way, and off the grid"
+    kind: next step
+    summary: >-
+      In the correction check, half the corrected slips against the sawtooth's direction (12 of 23) and 15% of the
+      off-grid ones leave a step of more than 15 ms, against 4–6% for confirmed slips and for places without a slip.
+      Some are probably not slips, or not whole ones. Requiring the arterial line for them is the obvious test.
   - title: "Mixed directions in tier I"
     kind: next step
     summary: >-
@@ -162,7 +189,17 @@ open_questions:
     summary: >-
       The method, its three checks and the slow sawtooth are enough for a paper of their own; this page would then
       summarise it.
+figures:
+  - id: ppg-correction-check-rebuilt
+    file: ppg-correction-check-rebuilt.png
+    theme: example traces
+    source: vitaldb-bench tools/ppg_sawtooth_figures.py
+    records: [2156, 6241, 1094]
+    caption: The rebuilt correction on the cases of [[study:ppg-sawtooth]]'s check ([[case:2156]], [[case:6241]], [[case:1094]], panels a–c; grey the corrected slips, orange dashed slips placed only within an interval and not corrected). In [[case:6241]] the uncorrected slip near 14 minutes leaves the minutes before it a frame low. Across 265 recordings the 924 corrected steps shrink from 31.5 ms to −0.7 ms (median) and the slope inside the teeth from −34 to +4 ppm (154 recordings whose creep is corrected); the sawtooth rate groups by setup, not by SNUADC drift (panels d–i).
+    alt: Three long PAT traces of measured and corrected values beside six aggregate histograms and scatter plots.
 code:
+  - vitaldb-bench/tools/ppg_fix_check.py
+  - vitaldb-bench/tools/ppg_sawtooth_figures.py
   - vitaldb-bench/tools/slip_rebuild.py
   - vitaldb-bench/tools/slip_tiers.py
   - vitaldb-bench/tools/correction_labels.py
