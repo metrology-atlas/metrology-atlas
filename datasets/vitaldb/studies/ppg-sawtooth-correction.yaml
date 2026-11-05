@@ -1,0 +1,174 @@
+id: ppg-sawtooth-correction
+name: The rebuilt PPG slip finder and its correction
+summary: >-
+  Fourth of the sawtooth series ([[study:ppg-sawtooth-slips]] finds the slips, [[study:ppg-sawtooth-period]] their
+  grid, [[study:ppg-sawtooth-pauses]] where it stops). The slip finder is rebuilt around one rule: correct a step only
+  when the evidence that it is a frame slip is strong, because a wrong correction puts a false step into real
+  physiology. It judges each candidate on the shape of the pulse and, where there is one, on the arterial line; it
+  corrects only one-frame steps, never smaller ones, and reports drift without correcting it. Checked against three
+  independent sets of judgements (172 blinded manual labels, a review of 174 corrections, and sawtooths injected into
+  real recordings), it made no false call among the held-out slip-free events and 98% of the corrections reviewed
+  were judged right. On the whole release (5,714 recordings) 3,642 run a sawtooth, 275 of them reversed, with 18,283 slips; 453 rest on a
+  tooth from two slips and report their creep instead of correcting it. Ported to physiosync as
+  `fit_ecg_ppg_delay(method="rebuilt")` (0.3.1). In development.
+date: 2026-11-05
+status: draft
+methods: [signal-borne-clocks, shared-events]
+techniques: [beat-matching, phase-step-detection, sawtooth-fit, null-controls, prediction-test]
+clocks: [oximeter-frame-clock, snuadc-sample]
+devices: [solar8000, snuadc]
+variables: [snuadc-pleth, snuadc-ecg-ii, snuadc-art]
+data: |
+  - **Development set:** 324 recordings (`$W/slip_rebuild/cases.json`): the 169 holding a labelled event, 150 hosts
+    of injected sawtooths and named cases.
+  - **Whole release:** the 5,714 recordings of [[study:ppg-sawtooth-slips]] (ECG lead II, PLETH, arterial pressure
+    where present; the longest continuous stretch of each, up to 90 minutes).
+  - **Manual labels:** the 172 blinded events of [[study:ppg-sawtooth-slips]], drawn by which detector found them,
+    labelled on ECG→PPG, ART→PPG and ECG→ART per beat. The odd-numbered half fitted the pulse-shape rule; the even
+    half is held out.
+  - **Correction review:** 107 teeth drawn by tier from the development set (seed 1), each shown blinded as the
+    measured delay before and after correction; every correction in them (174) judged right, wrong or can't tell,
+    and every missed step drawn by hand (36).
+  - **Injected sawtooths:** fast (15–55 ppm, written into the PLETH waveform of recordings without slips, from
+    [[study:ppg-sawtooth-slips]]; "clean hosts" leaves out hosts that run a sawtooth of their own) and slow (4–12
+    ppm, 120 slip-free hosts, `$W/slip_rebuild/slow_inj`), where a recording holds only one or two slips.
+background: |
+  The blinded labels showed the sawtooth's slips can be found far more precisely than the current fit finds them
+  (weighted precision 0.95 for the new detector of [[study:ppg-sawtooth-slips]] against 0.72 for
+  [[software:physiosync]]'s, recall 0.88 against 0.94), and that its misses are mostly steps a single fiducial
+  series cannot judge: noisy beats, irregular rhythm, or a physiological change at the same moment. Correcting
+  smaller and less certain steps would recover some slips but would also start correcting real changes in pulse
+  arrival time. The rebuild therefore looks for more evidence at each step rather than looser thresholds, and leaves
+  a step uncorrected rather than correct physiology.
+method: |
+  Commands (vitaldb-bench [[code:vitaldb-bench/tools/slip_rebuild.py]], v26): `quality --root $R --scan
+  $W/sawtooth_char/scan_full --cases CASES --out $W/slip_rebuild/quality`, then `fit --scan $W/sawtooth_char/scan_full
+  --quality $W/slip_rebuild/quality --cases CASES --rates $W/sawtooth_stats/recordings.csv --modes
+  $W/results/sync_full/snuadc_mode_label.json --rule $W/label_quality_final/summary.json --out FIT.jsonl` and `eval
+  [--clean-hosts] --fit FIT.jsonl --key $W/sawtooth_char/labels/key.json --verdicts
+  $W/label_eval_final/label_verdicts.json --slips $W/sawtooth_char/full/slips.jsonl --scan $W/sawtooth_char/scan_full
+  --out DIR`; the tiers with [[code:vitaldb-bench/tools/slip_tiers.py]] `--fit FIT.jsonl --scan
+  $W/sawtooth_char/scan_full --out DIR`. Whole release: `bash scripts/run_slip_rebuild_full.sh` (WSL; into
+  `$W/slip_rebuild/full3`). Slow injections: `inject-slow` then `fit` and `eval-slow` on `$W/slip_rebuild/slow_inj`.
+  The review: [[code:vitaldb-bench/tools/correction_labels.py]] `sample`, `eval`, `check` and `rescore`. Teeth against
+  injected ones: [[code:vitaldb-bench/tools/tooth_check.py]].
+
+  - **Beat quality.** Each beat's QRS and R-aligned pulse against the local median beat (correlation at least 0.9
+    for both), regular R–R, no clipping; beats failing the gate leave the delay series (an ungated fit where fewer
+    than 600 points remain). R peaks refined against the local QRS template.
+  - **Steps.** The delay series of every foot, upstroke and peak; at each point a one-frame step against none, with
+    the breathing modulation fitted as a nuisance term.
+  - **The tooth.** A chain of strong steps one tooth apart (dynamic programming over tooth lengths 300–4,000 s and
+    the setup's tooth as a prior); twice the tooth only if the slips it leaves out are clearly absent.
+  - **Judging each predicted slip.** The pulse before and after: the shift that best aligns the two median pulses
+    (a slip moves the pulse by a frame, about 31 ms, and leaves the QRS still) and how well they match after it; a
+    rule fitted on the odd half of the labels (shape cannot be judged when more than half the beats are unlike the
+    median beat or 10% have irregular R–R; a match of 0.95 after the best shift). A one-frame step at a predicted
+    slip stands unless the pulse clearly did not move.
+  - **The arterial line and the heart rate.** At each judged step, ECG→PPG, ECG→ART and ART→PPG and the heart rate
+    3–30 s either side. An arterial slip (ART→PPG steps 0.6–1.4 frames with ECG→ART flat, under 0.3 frame) confirms
+    a step the shape could not judge; the circulation (ECG→ART steps 0.3 frame or more the same way as ECG→PPG, with
+    ART→PPG under 0.6 frame) vetoes a step the shape did not confirm; without arterial confirmation, a heart-rate
+    change of 20 /min or more vetoes.
+  - **Slips that cannot be timed.** Where a predicted slip has slip-like evidence but cannot be placed, one slip in a
+    5–95% interval with a probability (tempered 0.05 for the probability and 0.02 for the times, set on the
+    injections). Not corrected.
+  - **What counts as a sawtooth.** Two confirmed slips. Where no sawtooth is fitted but confirmed slips exist, a
+    search from them at the recording's own tooth (the spacing of two same-way slips; else frame ÷ drift when the
+    recording creeps at 3 ppm or more; else the setup's median). A sawtooth found that way corrects its creep only
+    when three or more slips are confirmed; on two, the steps are corrected and the tooth and creep reported.
+  - **Drift.** Where no sawtooth is fitted, the delay's slope with a free step at each slip, reported (with its
+    spread in slip-free recordings, 6.5 ppm), not corrected.
+  - **Tiers,** per tooth: A, both edges confirmed slips; B, an edge a one-frame step the shape cannot judge; C, an
+    edge placed only within an interval (not corrected); U, unresolved (a weak predicted slip inside, a step the
+    other way at an edge, or longer than 1.5 teeth); I, steps only (isolated slips, or a tooth from two slips); N,
+    no slip.
+results: |
+  - **Held-out labels:** 25 of 31 real slips found, 0 of 28 slip-free events called a slip (all 172: 51 of 63 and 1
+    of 59). The current physiosync fit, at the same events: 20 of 31 and 4 of 28.
+  - **The correction review** (174 corrections): 151 judged right, 3 wrong, 20 can't tell: 98% of those decided
+    right (A 58/1/3, B 38/0/3, C 3/1/5, U 30/1/3, I 22/0/6). Every correction judged right is kept by the final
+    version.
+  - **The steps the reviewer drew as missed** (36 in 24 teeth), checked on the arterial line: 6 are arterial slips
+    (ART→PPG one frame, ECG→ART flat; 3 now found), 2 the circulation (ECG→ART moves; not found, as intended), 5
+    neither (sub-frame steps of 10–18 ms on the PPG side with ECG→ART flat; never corrected), 23 without a clean
+    arterial line (16 frame-sized; several with heart-rate changes of 10–43 /min at the step).
+  - **Line checks cannot see a slip.** Mains (60 Hz), the 240 Hz monitor line and the 30 Hz frame complete a whole
+    number of cycles in one frame (2, 8 and 1), so a one-frame slip leaves no phase step in any of them. Dropped as a
+    check, by reasoning rather than measurement.
+  - **Both directions are on the PPG side.** At shape-confirmed slips with an arterial line, ECG→ART carries the
+    step at 1% of upward and 4% of downward slips: reversed sawteeth are a PPG phenomenon too.
+  - **Fast injections** (development set, all hosts): 616 slips found, 9 false; placement 95th centile 0.90 s
+    (physiosync's current fit 2.46 s on the whole release); tooth within 2% in 97% of fitted injected sawtooths.
+    Whole release: 1,897 of 2,252 found, 15 false (clean hosts 1,556 of 1,759, 11 false); placement 95th centile
+    0.92 s; tooth within 2% in 362 of the 375 fitted injected sawtooths whose creep is corrected.
+  - **Slow injections** (120 hosts, 106 slips): 69 found, 9 false; of 15 hosts with two injected slips, 9 fitted as
+    a sawtooth with the right tooth. The drift reported against the injected rate: median error −0.5 ppm (10–90%
+    −13 to +7).
+  - **Isolated slips are mostly a slow sawtooth.** On the v22 whole-release run, 1,859 recordings had slips but no
+    sawtooth (tier I; 2,897 slips, 1,140 recordings with one). The arterial line confirms 89% of their slips where
+    there is one (1,246 of 1,396). Gaps between their same-way slips fall within 5% of a whole number of the
+    setup's teeth twice as often as at half teeth (213 against 103 of 723). Their delay creeps the sawtooth's way at
+    a median 6.5 ppm (IQR 0.3–13.4) against 22.3 in sawtooth recordings and 0.4 in recordings without a slip: teeth
+    of about 85 minutes, one or two slips in 90 minutes. On the final whole-release run,
+    1,289 recordings have slips but no sawtooth; their reported drift has quartiles −1.4, 4.5 and 10.9 ppm, and 299
+    lie more than two spreads from zero.
+  - **A tooth from two slips is often wrong.** In v25, a sawtooth found from two slips' spacing had the wrong tooth
+    in 9 of 22 injected whole-release recordings (a missed slip between them doubles it; a slip of another process
+    shortens it), and its creep correction could then leave more error than none. From v26 such teeth report their
+    creep; wrong teeth with creep corrected fall from 9 to 1 (`$W/slip_rebuild/tooth_check_v26_anchored`). Asking
+    the same shape test at the midpoint did not help: it judged the missed slip "no slip" again.
+  - **Whole release** (v26, `$W/slip_rebuild/full3`): 5,714 recordings fitted, none failed; 3,642 with a sawtooth
+    (275 reversed), 453 of them with their creep reported; 18,283 slips. By time, tier A 41.4%, B 4.2%, C 0.4%, U
+    12.2%, I 29.5%, N 12.3%; by each recording's worst tooth, A 1,379, B 419, C 46, U 1,345, I 1,742, N 783. Injected
+    sawtooths fitted with a wrong tooth and their creep corrected fall from 21 to 13 (`$W/slip_rebuild/tooth_check_full3`);
+    the 12 not from the anchored search are broad or setup-prior fits.
+discussion: |
+  The rebuild trades a little recall for a large gain in confidence: on held-out labels it finds as many real slips
+  as before and calls no slip-free event a slip, and nearly every correction a reviewer could decide was right. The
+  evidence it adds is independent of the step itself: the pulse's shape tests the PPG chain alone, the arterial line
+  splits the delay into its circulatory and PPG parts, and the heart rate flags physiology. What it leaves undone is
+  deliberate: sub-frame steps on the PPG side are real (the arterial line is flat across them) but too small to
+  separate from physiology, and the drift of recordings without a sawtooth is reported rather than corrected. The
+  two-slip tooth is the clearest case of the rule: two slips fix the steps but not the creep between them.
+
+  Tier I changes the reading of "no sawtooth": most such recordings run the same sawtooth slowly, at about a third of
+  the setup's usual rate, so a recording of 90 minutes holds one or two slips. Their steps are corrected; their creep,
+  up to a frame over the recording, is reported.
+limitations: |
+  Development version. The development set contains the labelled events and the shape rule was fitted on half of
+  them, so the held-out half and the injections are the honest measures. The injected sawtooths are written into
+  slip-free recordings, which may be quieter than typical. The review covers 107 teeth from one fit; its "can't tell"
+  share (11%) bounds what a reviewer can see in a delay trace. Without an arterial line (about half the recordings)
+  only the pulse shape and the heart rate judge a step.
+open_questions:
+  - title: "Sub-frame steps on the PPG side"
+    kind: phenomenon
+    summary: >-
+      Five of the drawn misses are steps of 10–18 ms in ECG→PPG with ECG→ART flat: inside the PPG chain but smaller
+      than a frame. Whether they are partial slips, a change of the monitor's PPG filtering, or something else is
+      open; they are never corrected.
+  - title: "Mixed directions in tier I"
+    kind: next step
+    summary: >-
+      185 tier I recordings (v22) have isolated slips both ways: a reversed sawtooth starting or stopping, two
+      processes, or transients.
+  - title: "The remaining wrong corrections"
+    kind: next step
+    summary: >-
+      Two corrections the reviewer judged wrong are still made: one a slip the other way, one a 23 ms step.
+  - title: "A separate methods paper"
+    kind: next step
+    summary: >-
+      The method, its three checks and the slow sawtooth are enough for a paper of their own; this page would then
+      summarise it.
+code:
+  - vitaldb-bench/tools/slip_rebuild.py
+  - vitaldb-bench/tools/slip_tiers.py
+  - vitaldb-bench/tools/correction_labels.py
+  - vitaldb-bench/tools/contested_view.py
+  - vitaldb-bench/tools/tier_i_check.py
+  - vitaldb-bench/tools/tooth_check.py
+  - vitaldb-bench/tools/label_quality.py
+  - vitaldb-bench/scripts/run_slip_rebuild_full.sh
+  - physiosync/physiosync/slips.py

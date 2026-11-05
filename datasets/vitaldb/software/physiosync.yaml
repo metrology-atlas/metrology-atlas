@@ -21,12 +21,13 @@ role: |
   [[software:vitaldb-bench]] scripts call it on VitalDB cases.
 install: |
   ```bash
-  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.0"
+  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.1"
   ```
 
-  Version 0.3.0 adds the rebuilt slip finder and `fit_ecg_ppg_delay(method="rebuilt")`; the earlier method stays the
-  default and gives the same results as 0.2.0 (checked on 324 recordings,
-  [[code:vitaldb-bench/tools/port_delay_regress.py]]).
+  Version 0.3.0 added the rebuilt slip finder and `fit_ecg_ppg_delay(method="rebuilt")`
+  ([[study:ppg-sawtooth-correction]]); the earlier method stays the default and gives the same results as 0.2.0
+  (checked on 324 recordings, [[code:vitaldb-bench/tools/port_delay_regress.py]]). 0.3.1 reports, rather than
+  corrects, the creep of a sawtooth whose tooth rests on two confirmed slips.
 parts:
   - path: physiosync/stamps.py
     summary: Record stamps that follow a sample clock between corrections; fits the rate and offsets and removes the stamp sawtooth.
