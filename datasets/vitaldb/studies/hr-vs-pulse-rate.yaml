@@ -20,7 +20,8 @@ variables:
 - numeric-delay-label
 - hr-delay-group-label
 data: 'Every recording with both Solar8000 HR and PLETH_HR: 6,386 of 6,388, with 33.6 million paired values. 5,310 have
-  a good HR delay label; 1,774 recordings are in the early HR delay group and 3,651 in the late.'
+  a good HR delay label; 1,774 recordings are in the early HR delay group and 3,651 in the late (the label set itself
+  has 1,775 and 3,652; this run has one fewer in each).'
 background: 'Heart rate (from the ECG) and pulse rate (from the plethysmogram) are related measurands, not one ([[measurand:pulse-rate]]):
   they agree only while every beat makes a pulse at the finger. Each is stamped some seconds after the interval it describes
   ends: HR by its recording''s own delay, in one of two groups about one 2 s poll apart ([[study:hr-delay-groups]]), and
@@ -43,7 +44,8 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
   counted in beats would.
 
   3. **The atlas''s prediction.** The lag at which the two intervals line up, from the recording''s HR delay label and window
-  (6 s) and PLETH_HR''s delay (2.79 s) and window (taken as 10 s): with their centres together, L = d_PR − d_HR + (w_PR
+  (6 s) and PLETH_HR''s delay (2.79 s) and window (taken as 10 s; the atlas''s form at the time, since replaced
+  from [[study:pleth-hr-derivation]] by 4.5 s over 10 pulse intervals): with their centres together, L = d_PR − d_HR + (w_PR
   − w_HR)/2.
 
   4. **Agreement:** PLETH_HR minus HR, as stamped, at the atlas''s lag and at each group''s best lag: the mean difference
@@ -68,7 +70,7 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
   8.46 s before its stamp in the early group and 8.76 s in the late: about [[value:pleth-hr-window-centre]].
   The atlas''s earlier form for PLETH_HR (delay 2.79 s, window 8–12 s; replaced from [[study:pleth-hr-derivation]]) put
   it at about 7.8 s; the pilot''s direct recomputation (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]])
-  puts it at [[value:pleth-hr-window-centre]] at 70 /min. The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
+  put it at about 8.5 s at 70 /min, and the rule found since (10 intervals, 4.5 s) at 8.8 s ([[study:pleth-hr-derivation]]). The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
   at 90 /min), as a window counted in beats would, but the HR delay labels move with the rate too, so this comparison cannot
   split PLETH_HR''s delay from its window.
 
@@ -112,8 +114,8 @@ discussion: 'The comparison works in both directions. On the timing side it is a
 limitations: '- Both numerics are truncated or rounded to whole beats per minute and update every 2 s, so the lag is read
   between whole-record lags by a parabola; truncation adds a fixed share to the spread.
 
-  - PLETH_HR''s window is taken as 10 s (the atlas gives 8–12 s); a different window moves the predicted lag by half the
-  change.
+  - PLETH_HR''s window is taken as 10 s (the atlas then gave 8–12 s; it now gives 10 pulse intervals, 6.0–11.0 s);
+  a different window moves the predicted lag by half the change.
 
   - Recordings with an uncertain HR group are left out of the group comparison.'
 code:

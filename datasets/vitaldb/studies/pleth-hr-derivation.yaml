@@ -42,7 +42,10 @@ results: '- **A mean of [[value:pleth-hr-window-pulses|number]] pulse intervals 
   - **Why the first comparison was a tie.** A plain mean and a median each match the monitor wherever the window holds no
   outlying interval, and each fails differently where it does; the rule that leaves outliers out matches in both.
 
-  - **Rounded, not truncated:** rounding fits better in 98% of recordings, where heart rate is truncated ([[observation:hr-truncated]]).
+  - **Rounded, not truncated:** for the adopted rule, rounding reproduces more values than truncation in 99% of
+    recordings (98.8%), where heart rate is truncated ([[observation:hr-truncated]]). This, the 5th–95th
+    percentiles, the 0.74 s robust SD and the 6.0–11.0 s window come from the part files
+    ([[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]); the summary holds only p10–p90.
 
   - **Reported [[value:pleth-hr-delay]] after its window ends** (median over recordings; 5th–95th percentile 3.25–5.75 s; [[parameter:pleth-hr-delay]]),
   so its window, [[value:pleth-hr-window-pulses]] of the median 0.84 s, is centred 8.8 s before the stamp. The comparison with heart rate put

@@ -9,7 +9,11 @@ methods: [delays-and-windows]
 techniques: [null-controls]
 devices: [solar8000]
 variables: [solar8000-spo2, solar8000-pleth-hr, snuadc-pleth]
-data: 231 cases. Times are relative to the recorded PLETH, itself about 0.4 s behind the finger.
+data: >-
+  231 cases (the pilot, 14 October). Times are relative to the recorded PLETH, itself about 0.4 s behind the
+  finger. The same tool was later run on the whole release (6,152 cases; [[study:numerics-derivation-release]]):
+  the probe-off blank comes 0.82 s after pulse loss there (IQR −0.04 to 1.99 s) against 0.6 s here
+  (`overnight/spo2/summary.json`). The onset latency ([[parameter:spo2-onset]]) is from the pilot.
 results: |
   | Event | Events | Result |
   |---|---|---|

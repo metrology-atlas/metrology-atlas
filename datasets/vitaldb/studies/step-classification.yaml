@@ -58,8 +58,9 @@ results: |
     0.12 / 0.08 s that add up to it. About 500 recordings keep a few unexplained backward steps.
   - **The continuity test separates the classes.** At ordinary junctions join_z < 3 in 92–95% of SNUADC steps;
     with one message cut out, in 12–24%.
-    - Shared pauses and SNUADC fractional gaps lose data: shares near the cut-out control (SNUADC fractional 35–42%;
-      about 70% of them lose samples).
+    - Shared pauses and SNUADC fractional gaps lose data: shares near the cut-out control (SNUADC fractional 35–42%
+      of the joins with a score, as in the figure; about 30% have none, and counting those as breaks, as
+      `steps_agg/classes.csv` does, gives 23–29%; about 70% of them lose samples).
     - SNUADC sub-message steps (2–20 ms, the frequent-mode corrections) and its lone one-message steps run on as
       if nothing were missing (88–95%). The one-message steps tend to fall where the signal moves to the mid-scale
       no-signal level.

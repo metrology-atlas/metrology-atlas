@@ -34,7 +34,8 @@ results: |
   - **No PC step of 0.5 s or more** in any file.
   - **No backward steps.** No numeric track stamped by the PC (Solar8000, Primus, Orchestra, EV1000, Vigileo,
     Vigilance, CardioQ) ever steps backwards. The only back-steps are in BIS numerics, in 9 files, which suggests
-    the BIS monitor stamps its own numerics.
+    the BIS monitor stamps its own numerics. (Read once from every file's numeric record times; that check is not
+    saved. pc_clock_steps.py covers only the Solar8000 HR and Primus ETCO2, where no step back occurs either.)
   - **Recording pauses explain the familiar gaps.** In 1,846 files (29%) there are 2,025 moments when every device
     jumps forward together, by a median [[value:recording-pause]] (p10–p90 15.7–29.8 s). Data are missing there, and the stamps
     show it honestly.

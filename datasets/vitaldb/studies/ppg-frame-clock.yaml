@@ -35,7 +35,9 @@ results: |
     on the filtered signal. The PLETH shows weak lines at 30, 60, 90 and 120 Hz; the 90 Hz line rules out mains hum.
   - **The frame clock is found in 189 of 266 cases;** the two halves of a recording agree within 2 ppm (median). The
     frame period against the SNUADC sample clock is fixed per setup, for example +84 ppm (IQR 82–88) for one port in
-    step mode, +39 ppm for the same port in frequent-correction mode, +72 and +24 ppm for two others. It keeps its
+    step mode, +39 ppm for the same port in frequent-correction mode, +72 and +24 ppm for two others. Over 1,350
+    recordings and 42 PC keys it runs +7 to +92 ppm by setup ([[parameter:pleth-frame-clock-rate]], from the scan
+    of [[study:setup-identification]]). It keeps its
     phase through the sawtooth slips.
   - **The best frame anchor** is pyPPG's d point with a light filter (0.5–45 Hz): it finds the clock in 176 cases,
     against 135 for the raw peak. pyPPG's default filter destroys the lock.

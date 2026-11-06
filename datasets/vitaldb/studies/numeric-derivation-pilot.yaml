@@ -40,7 +40,7 @@ results: |
   | ART mean | EWMA ¼ per beat (16/24) | 2.3 s |
   | ART diastolic | EWMA ½ (20/24) | 1.9 s |
   | CVP | waveform mean over 4–5 s (16/21) | 5.0 s |
-  | PLETH_HR | median of ~12 beats (134/231) | 3.4 s |
+  | PLETH_HR | median of ~12 beats (134/231; superseded by [[study:pleth-hr-derivation]]; not in the saved summary) | 3.4 s |
   | Primus RR | 60 / mean breath interval over 30 s (17/24) | 8.5 s |
   | Primus ETCO2, PEEP | the latest breath | superseded |
   | Primus PIP | the latest breath | superseded |
