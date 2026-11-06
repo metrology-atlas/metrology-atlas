@@ -5,8 +5,8 @@ summary: >-
   arterial pressure ramps at the SNUADC's drift against the PC, measured without its stamps or resets. In recordings
   with whole reset intervals it agrees with them (−61 ppm against −66 ppm from their resets; median difference
   per recording +1.5 ppm, 581 recordings). It is too
-  noisy per recording, and in recordings under about 4 h its rate is biased toward zero, so it cannot yet speak for
-  recordings without resets.
+  noisy per recording, and in recordings under 6 h its rate is biased toward zero; from 6 h it is unbiased against
+  the resets and joins the clock network as an edge ([[study:loop-closure]]).
 date: 2026-10-19
 status: current
 methods: [shared-events, delays-and-windows]
@@ -24,7 +24,7 @@ background: |
   samples from its analogue outputs, and the recorder stamps each value on arrival with the PC clock. Within a
   recording the numeric's delay behind the waveform is fixed ([[study:numeric-delay-variability]]). Placed on the
   SNUADC's sample count, the waveform drifts against the PC at the SNUADC crystal's rate, and the delay ramps with it.
-  The 66-case pilot ([[study:numeric-clock-check]]) gave −65.3 ppm against −66.7 ppm from the stamp model.
+  A 66-case pilot ([[study:numeric-clock-check]], superseded; its pooled numbers were not saved) first showed the ramp.
 method: |
   Two timelines per recording: the sample count (one offset per stretch between gaps, the 17.7 ms lost at each reset
   added back, rate 0) and the adopted stamp model. On each, the numeric's delay was fitted per 30-minute block on a
@@ -40,7 +40,15 @@ results: |
   - **It is biased toward zero in short recordings:** in every group the median rises toward 0 as recordings get
     shorter (step mode without a whole reset interval: about +10 ppm under 2.5 h, −38 to −46 ppm over 4 h). A 30-minute
     block ramps by only about 0.11 s at −63 ppm, two steps of the delay grid, and with few blocks the robust line
-    is pulled flat by tied delays and by the first block, which often sits apart.
+    is pulled flat by tied delays and by the first block, which often sits apart. Against the resets, by recording
+    length: +21.7 ppm at 4.5–6 h (197 recordings), −1.4 ppm at 6–8 h (237) and −7.0 ppm at 8 h or more (95), so the
+    bias reaches beyond 4 h but not beyond 6 h ([[code:vitaldb-bench/tools/solar_length_check.py]]).
+  - **Its stated standard error is too small:** over the 332 recordings of 6 h or more with whole reset intervals,
+    the median |route − reset rate| is 1.14 of its standard error, against 0.67 for a normal, because the
+    Solar8000's delay occasionally steps. In the clock network it is widened by that 1.7.
+  - **Step-mode recordings without resets sit slower than the model:** at 6–8 h, where the route is unbiased against
+    the resets, it lies a median +19.6 ppm above the stamp model's rate in 134 step-mode recordings without a whole
+    reset interval (+7.5 ppm in 24 of 8 h or more).
   - **The burst check disagrees with the short-recording medians:** on the adopted stamp model, the ECG–EEG burst lag
     in recordings without a whole reset interval has a median slope of −7 ms/h (step mode, 906 recordings) and
     +10 ms/h (no correction, 521), close to zero, so the port's step-mode rate the model gives them fits on average.
@@ -48,10 +56,14 @@ results: |
   [[figure:solar-snuadc-rate]]
 discussion: |
   A third route to the SNUADC's drift, beside the resets and the shared bursts, and the only one that needs neither
-  the SNUADC's stamps nor the BIS. Where resets exist it agrees with them, which closes a loop through the Solar8000.
-  Its group medians for shorter recordings are an artefact of the estimator, not evidence that those units run slow;
-  the burst residuals support the stamp model's choice of the port's rate. The question of the long recordings
-  that show no correction ([[observation:snuadc-long-uncorrected]]) remains open.
+  the SNUADC's stamps nor the BIS. Where resets exist it agrees with them, which closes a loop through the Solar8000;
+  in recordings of 6 h or more it is now an edge of the clock network, where it closes against the resets and,
+  without the SNUADC's stamps, against the BIS ([[study:loop-closure]]). Its group medians under 6 h are an artefact
+  of the estimator; the burst residuals support the stamp model's choice of the port's rate there. At 6–8 h, where
+  the route is unbiased, step-mode recordings without resets still sit about 20 ppm slower than the model's rate,
+  which leans toward slower units for the long recordings that show no correction
+  ([[observation:snuadc-long-uncorrected]]), but it rests on 134 recordings and is not yet checked against the
+  bursts.
 limitations: |
   Per-recording rates are too noisy to correct a single recording. The delay grid (0.05 s) and the 30-minute blocks
   limit the estimator in short recordings. The Solar8000's delay occasionally steps; heart rate is truncated and
@@ -63,8 +75,16 @@ open_questions:
       Fitting the delay's slope directly in the likelihood (a delay that ramps within the recording), on a finer grid
       and without the first block, would remove the bias toward zero and let this route test recordings with no
       SNUADC reset.
+  - title: "Do step-mode units without resets run slower?"
+    kind: phenomenon
+    summary: >-
+      At 6–8 h, where the route agrees with the resets, step-mode recordings without a whole reset interval sit a
+      median +19.6 ppm above the stamp model's rate (134 recordings). If real, the stamp model gives those units a rate
+      too fast, which would bear on [[observation:snuadc-long-uncorrected]]. The burst lag in the same recordings, and a
+      finer estimator for shorter ones, would test it.
 code:
   - vitaldb-bench/tools/solar_snuadc_clock.py
+  - vitaldb-bench/tools/solar_length_check.py
   - vitaldb-bench/tools/clock_route_figs.py
 figures:
   - id: solar-snuadc-rate
@@ -79,3 +99,4 @@ figures:
     alt: >-
       Three lines of median rate against recording length from 1.5 to 8 hours. All rise toward 0 ppm for short
       recordings; the blue line for recordings with reset intervals settles near the −63 ppm reference line beyond 5 hours.
+supersedes: [numeric-clock-check]

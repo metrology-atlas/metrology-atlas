@@ -49,6 +49,16 @@ limitations: |
   Three paced corrections in two cases. The gap shift is measured modulo one pacing period. The location of the
   lost time was not resolved here; [[study:reset-cluster-order]] later placed it inside the last old-grid record.
 open_questions:
+  - title: "How much signal does each correction lose?"
+    kind: next step
+    summary: >-
+      Three routes disagree: the paced corrections give 17.3–20.3 ms (mean [[value:snuadc-reset-loss|.0]], three
+      measurements of two corrections), the ECG–EEG burst lag steps by 13.0 ± 1.7 ms at each correction, and the stamp
+      model refitted with the paced value overshoots by 3.3 ± 1.8 ms, which points to about 15 ms. The stamp model and
+      the vitaldb-bench tools keep 17.7 ms, the first reading, so that every timeline built on the sample count agrees
+      with the model. The difference is about 0.15 ppm of rate at one correction every 2 hours, below the noise of
+      every rate it feeds, and a few milliseconds of offset on the sample count over a long recording. More paced
+      recordings with corrections, or the burst lag measured per correction, would settle it.
   - title: "Long regular runs that may be paced"
     kind: phenomenon
     summary: >-

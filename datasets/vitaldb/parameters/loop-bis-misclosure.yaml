@@ -12,3 +12,4 @@ notes: >-
   Run r4 (1 November): the SNUADC reset rates scaled by the remeasured true correction, 0.500 s over the 0.4804 s
   the stamps show ([[parameter:snuadc-step-correction-size]], [[parameter:snuadc-reset-stamp-step]]). With the
   earlier 0.498 s (run r3, 19 October) the median was +1.3 ppm (IQR −3.74 to +7.8).
+  Unchanged in run r5 (6 November), which adds the Solar8000 route.

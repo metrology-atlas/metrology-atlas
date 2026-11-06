@@ -1,0 +1,15 @@
+id: loop-solar-bis-misclosure
+name: Misclosure of the BIS-SNUADC-PC loops through the Solar8000
+quantity: >-
+  Misclosure of the fundamental BIS-SNUADC-PC loops that close through the Solar8000 route instead of the SNUADC
+  stamps (BIS steps against ECG-EEG bursts and the Solar8000 route), after network adjustment.
+value: 4.11
+unit: ppm
+spread: {q1: -17.26, q3: 28.17, n: 245, text: "median |z| 0.79, 6.5% beyond 3 standard errors; the bursts and the Solar8000 route share the ECG"}
+status: measured
+study: loop-closure
+about: [bis-vs-pc, bis-vs-snuadc]
+date: 2026-11-06
+notes: >-
+  Run r5: vitaldb-bench tools/clock_edges.py --reset-loss --drop-missed --solar-min-h 6, then clock_reconcile.py;
+  $W/clock_network/r5/summary.json, loop "bis_steps + bursts + solar".

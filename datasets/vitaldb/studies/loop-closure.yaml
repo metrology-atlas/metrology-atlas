@@ -3,7 +3,8 @@ name: Closing loops in the timing graph
 summary: >-
   Where two independent routes reach the same clock, the offsets around the loop must sum to zero. Three measured
   loops close within their noise; the BIS loop closes up to a constant latency; the proposed EMR loop is not a loop
-  at all.
+  at all. Adjusted as a network over the whole release, every loop type closes on average, including two that reach
+  the SNUADC through the PC-stamped Solar8000 numerics instead of its own stamps.
 date: 2026-10-13
 status: current
 methods: [shared-events]
@@ -43,19 +44,35 @@ results: |
   | Ventilation | 72% of 57 large lag changes fall on a Primus stamp jump; the physiological arms differ by 37–46 ppm | Partly closes; physiological arms too weak |
   | EMR and recorder | Both arms are measured from the recorder's case start, so any offset cancels; the recorder EVENT track repeats the clinical table's times exactly | Degenerate: not a loop |
 
-  **Network adjustment over the whole release (19 October; rerun 1 November with the remeasured SNUADC correction, [[value:snuadc-step-correction-size]]).** Every measured link of every recording is now an edge
-  with a value and a standard error (2,077 recordings; [[code:vitaldb-bench/tools/clock_edges.py]]), and each
-  recording's clock network is adjusted by weighted least squares
+  **Network adjustment over the whole release (19 October; rerun 1 November with the remeasured SNUADC correction, [[value:snuadc-step-correction-size]]; 6 November with the Solar8000 route, run r5).** Every measured link of every recording is an edge
+  with a value and a standard error (2,109 recordings; [[code:vitaldb-bench/tools/clock_edges.py]] `--reset-loss
+  --drop-missed --solar-min-h 6`), and each recording's clock network is adjusted by weighted least squares
   ([[code:vitaldb-bench/tools/clock_reconcile.py]], on the dataset-independent [[code:physiosync/physiosync/network.py]]).
-  Its fundamental loops give the misclosures:
+
+  The Solar8000 route ([[study:solar-snuadc-clock]]) links the SNUADC's sample count to the PC through the heart rate
+  and mean arterial pressure the PC stamps on arrival, without the SNUADC's stamps or the BIS. It enters only in
+  recordings of 6 hours or more: shorter ones are biased toward zero, by +22 ppm against the resets at 4.5–6 h and
+  −1.4 ppm at 6–8 h ([[code:vitaldb-bench/tools/solar_length_check.py]], `$W/clock_network/solar_length_check.json`).
+  Its stated standard error, the slope's, misses the Solar8000's occasional delay steps, so it is multiplied by 1.7:
+  the median |route − reset rate| over its standard error in the 332 recordings of 6 hours or more with whole reset
+  intervals, over the 0.674 a normal would give. With the stated errors its variance factor was 9.8, and the
+  adjustment pushed its misfit onto the resets (5.1 to 17.2).
+
+  The fundamental loops give the misclosures:
 
   | Loop | Loops | Misclosure, median (p25–p75) | Share with abs(z) > 3 |
   |---|---|---|---|
-  | BIS–SNUADC–PC (BIS steps, ECG–EEG bursts, SNUADC resets) | 253 | +[[value:loop-bis-misclosure]] (−3.7 to +7.8) | [[value:loop-bis-z3-share]] |
+  | BIS–SNUADC–PC through the resets (BIS steps, ECG–EEG bursts, SNUADC resets) | 253 | +[[value:loop-bis-misclosure]] (−4.0 to +7.7) | [[value:loop-bis-z3-share]] |
+  | SNUADC–PC, resets against the Solar8000 route | 178 | [[value:loop-solar-reset-misclosure]] (−20.3 to +20.0) | 2.8% |
+  | BIS–SNUADC–PC through the Solar8000 route (BIS steps, ECG–EEG bursts, Solar8000) | 245 | +[[value:loop-solar-bis-misclosure]] (−17.3 to +28.2) | 6.5% |
   | Primus–PC, two routes (breath matching, PIP numerics) | 166 | −2.9 ppm (−48.9 to +46.7) | 5% |
 
-  Both close on average. The variance factors (2 to 5 by method; 1 would mean the stated standard errors are right)
-  show the standard errors are still too small, so single-recording flags are not yet trusted.
+  All four close on average. The third is the new test: the BIS loop closes through a route that uses neither the
+  SNUADC's stamps nor its resets, so the reset model is not hiding a bias in the first. Its z also tests the
+  Solar8000's 1.7 factor, which was set on the resets and not on the BIS (the second row's z cannot, for that reason);
+  its bursts and the Solar8000 route both use the ECG, so the loop is not wholly independent. The variance factors
+  (2.0 to 6.8 by method, [[parameter:loop-variance-factor]]; 1 would mean the stated standard errors are right) show the standard errors are
+  still too small, so single-recording flags are not yet trusted.
 
   [[figure:loop-network-adjustment]]
 discussion: |
@@ -76,6 +93,7 @@ open_questions:
 code:
   - vitaldb-bench/tools/loop_closure_art.py
   - vitaldb-bench/tools/clock_edges.py
+  - vitaldb-bench/tools/solar_length_check.py
   - vitaldb-bench/tools/clock_reconcile.py
   - vitaldb-bench/tools/clock_reconcile_figs.py
 figures:
@@ -84,9 +102,12 @@ figures:
     theme: population results
     source: vitaldb-bench tools/clock_reconcile_figs.py
     caption: >-
-      Closing loops in the clock network. (A, B) Misclosures around the BIS and Primus loops. (C) Misclosures over
-      their stated standard errors, against the standard normal expected if those errors were right. (D) Variance
-      factor per method; 1 would mean the stated standard errors are correct.
+      Closing loops in the clock network, run r5. (A) Misclosures of the BIS–SNUADC–PC loops through the SNUADC
+      resets; (B) the loops through the Solar8000 route: SNUADC–PC against the resets (green) and BIS–SNUADC–PC
+      without the SNUADC stamps (red); (C) the Primus–PC loops. (D) Misclosures over their standard errors, against
+      the standard normal expected if those errors were right. (E) Variance factor per method; 1 would mean the
+      stated standard errors are correct.
     alt: >-
-      Four panels: two histograms of misclosure centred near zero, one histogram of z with a dashed normal curve, and
-      a bar chart of variance factors between 2 and 5.2.
+      Five panels: three of misclosure histograms centred near zero (BIS loops through the resets; two step
+      histograms through the Solar8000 route; Primus loops), one of z histograms for the four loop types with a
+      dashed normal curve, and a bar chart of variance factors between 2.0 and 6.8.

@@ -50,6 +50,14 @@ results: |
 
   [[figure:pat-vs-bp-ruffolo]]
 
+  The whole distribution moves, not only its mean: paired with its own beat, nearly every recording's r shifts left,
+  and the rebuilt or earlier sawtooth correction changes it little more beat to beat. Beat to beat the arterial PAT
+  follows SBP less than the corrected finger PAT does (mean r −0.12 against −0.21; 69% of recordings below 0 against
+  86–88%), though over 30 s windows the two match (−0.41 and −0.43). Arterial PAT to the radial artery is mostly the
+  heart's pre-ejection period, with a short transit; that may weaken its beat-to-beat link to SBP, but this is not
+  tested here. (Drawn on the 2,659 recordings, or 2,559 over windows, where every timing including the rebuilt
+  correction has an r; the table above uses all 3,270.)
+
   **Paired naively, PAT is a heart-rate signal.** Beat to beat, naive PAT correlates with heart rate (median r
   −0.40) and hardly with SBP (−0.04); with heart rate held constant, nothing is left (−0.00). Paired with its own
   beat, PAT does not follow heart rate (0.00) and does follow SBP (−0.19; −0.18 with heart rate held constant). In
@@ -110,23 +118,29 @@ code:
   - vitaldb-bench/examples/pat_vs_bp.py
   - vitaldb-bench/examples/pulse_arrival_time.py
   - vitaldb-bench/examples/run_scan.sh
-  - vitaldb-bench/tools/deck_figures.py
 reproduce: |
   ```
   bash examples/run_scan.sh pat_vs_bp                    # 8 parallel parts, about 15 minutes
-  python examples/pat_vs_bp.py agg <work>/examples/pat_vs_bp/part_*.jsonl --out out/pat_bp
+  python examples/pat_vs_bp.py agg <work>/examples/pat_vs_bp/part_*.jsonl --out out/pat_bp   # also pat_vs_bp_ruffolo.png
   ```
 references: [ruffolo2025high]
 figures:
   - id: pat-vs-bp-ruffolo
     file: examples/pat-vs-bp-ruffolo.png
     theme: agreement and residuals
-    source: vitaldb-bench tools/deck_figures.py
+    source: vitaldb-bench examples/pat_vs_bp.py
     caption: >-
-      Pearson r between beat-paired PAT and SBP over an hour per recording, 3,270 recordings, drawn as Ruffolo et
-      al. 2025 appendix B figure 10: distribution (left) and cumulative distribution (right), naive pairing (orange)
-      against corrected (blue).
-    alt: Two step histograms, orange centred just below zero and blue shifted to about minus 0.2; two cumulative curves with blue left of orange.
+      Pearson r between PAT and SBP over an hour per recording, drawn as Ruffolo et al. 2025 appendix B figure 10:
+      the distribution (left, bins of 0.02) and the cumulative distribution (right), beat to beat (A, their measure; 2,659
+      recordings) and over 30 s window medians (B; 2,559), for naive pairing (grey, dashed), own beat, own beat with
+      the earlier sawtooth correction, own beat with the rebuilt correction, and the arterial PAT as the reference
+      (green, shaded). Every timing is drawn on the recordings where all of them have an r. Ruffolo et al. report a
+      mean of −0.16 and 84% below 0 after correction in a paediatric ICU.
+    alt: >-
+      Four panels. Beat to beat, the naive histogram sits just below zero while the paired and corrected ones sit
+      near minus 0.2 and the arterial one between; their cumulative curves cross zero at about 60%, 87% and 69%.
+      Over 30 s windows the naive histogram centres near minus 0.25 and all the others near minus 0.5, with their
+      cumulative curves together.
   - id: pat-vs-bp
     file: examples/pat-vs-bp.png
     theme: agreement and residuals

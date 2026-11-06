@@ -135,7 +135,7 @@ domains:
     drift_status: measured
     note: >-
       Numerics stamped by the recorder PC when they arrive (the Solar8000 and Primus numerics), so no device clock
-      enters their stamps ([[study:numeric-clock-check]]). Against the working reference they drift only as the
+      enters their stamps ([[study:solar-snuadc-clock]]). Against the working reference they drift only as the
       reference does without stamp corrections.
   - id: snuadc-raw
     name: SNUADC raw record stamps

@@ -1,11 +1,11 @@
 id: numeric-clock-check
 name: SNUADC against the PC-stamped heart rate
 summary: >-
-  The Solar8000 heart rate is stamped by the recorder on arrival, so the delay from the ECG to it, on the ECG's raw
-  sample count, ramps at the SNUADC clock's rate: −65.3 ppm, against −66.7 ppm from the stamp model. Two independent
-  routes agree.
+  A 66-recording pilot of the route from the SNUADC clock to the recorder PC through the PC-stamped Solar8000 heart
+  rate, superseded by the whole-release [[study:solar-snuadc-clock]]. Its pooled rates were aggregated by a step that
+  was not saved and do not reproduce from the saved per-recording output; they are kept as history, not for use.
 date: 2026-10-17
-status: current
+status: superseded
 methods: [shared-events]
 clocks: [snuadc-sample, recorder-pc]
 devices: [snuadc, solar8000]
@@ -15,24 +15,18 @@ method: |
   The delay from the ECG to the Solar8000 HR was measured in 30-minute blocks with the ECG on its raw sample count
   and, separately, on the stamp-model line.
 results: |
+  *Unsaved aggregation, not reproduced from `results/clock/numeric_clock_{a,b}.jsonl` (number audit of 1 November;
+  "without gaps" is not defined in the code). Not for use.*
+
   - **On the sample count the delay ramps at −65.3 ± 3.9 ppm;** the stamp model gives −66.7 ppm median for the same
     cases.
   - **On the corrected line the ramp is −13.0 ± 4.0 ppm:** small, not quite zero. A residual to watch.
   - **Frequent-correction cases are inconclusive** here (7 cases, 52 ± 40 ppm).
   - **Per-case precision is poor:** block delays scatter by about 0.7 s, so this works pooled, not per case.
 discussion: |
-  A second, independent measure of the SNUADC–PC rate, through a device with no clock of its own.
-open_questions:
-  - title: "A residual of −13 ppm"
-    kind: phenomenon
-    summary: >-
-      On the corrected SNUADC line the ECG-to-HR delay still ramps by −13.0 ± 4.0 ppm. It may be the Solar8000's own
-      processing, an error in the stamp model's rate, or the PC; a larger run (all step-mode cases without gaps)
-      would narrow it. The whole-release run ([[study:solar-snuadc-clock]]) cannot settle it: per recording it is too noisy, and
-      in recordings under about 4 h its rate is biased toward zero.
-  - title: "Frequent-correction mode on more cases"
-    kind: next step
-    summary: >-
-      Frequent-correction mode is inconclusive on 7 cases (52 ± 40 ppm).
+  A second, independent measure of the SNUADC–PC rate, through a device with no clock of its own. The residual on
+  the corrected line was this route's misclosure against the stamp model. The whole-release study measures that loop
+  with saved code: against the SNUADC resets the route differs by a median +1.5 ppm in 581 recordings
+  ([[study:solar-snuadc-clock]]). Its place in the clock network is taken up in [[study:loop-closure]].
 code:
   - vitaldb-bench/tools/numeric_clock_check.py
