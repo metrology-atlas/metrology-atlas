@@ -6,7 +6,7 @@ summary: >-
   per stretch between its AWP pauses (49 ms in the pilot). At scale it measures the Primus drifting a median +[[value:primus-drift-breath]] against the recorder PC between its AWP
   pauses, with steps at the pauses that do not reset it.
 date: 2026-10-12
-status: open
+status: current
 methods: [shared-events]
 techniques: [windowed-cross-correlation, null-controls]
 clocks: [primus-clock, snuadc-sample]
@@ -88,6 +88,16 @@ discussion: |
   corrections ([[study:correction-periods]]) imply only 1–11 ppm, so they do not track the drift. The measured lag
   includes the physiological airway-to-CVP delay, which is constant within a recording and does not affect the
   slope.
+
+  Other references from the arterial line do not settle which breath is right (6 November,
+  [[code:vitaldb-bench/tools/primus_ptt_arm.py]], `primus_ptt_arm/agg/summary.json`). In each of the 42,189 CVP windows
+  of 1,066 recordings, the beat-to-beat ECG-to-ART delay, the pulse pressure and the arterial mean were matched to the
+  same breath average, free to pick a neighbouring breath. The ECG-to-ART delay passes the matching's own quality rule
+  in 1.8% of windows (72 recordings) and then agrees with CVP within a quarter breath in 51% and is a whole breath off
+  in 28%; the pulse pressure in 8.4% (64% and 23%); the arterial mean in 14.8% (60% and 27%). Where the arterial mean
+  is a breath away from CVP (1,587 windows) the ECG-to-ART delay is usable in 18. The breathing modulation of the
+  arterial signals is too weak or too alike from breath to breath to pick the breath, so pauses in ventilation
+  remain the way to fix it ([[study:primus-awp-anchoring]]).
 limitations: |
   A 20-case pilot. The offset includes the physiological airway-to-CVP delay.
   Of the pilot's figures only the drift (+92 ppm, IQR 34–153), the 72% of lag steps at stamp jumps and the lag spreads are in a saved output (`results/pat/vent_sync_pilot_summary.txt`). The injected-error recovery, the per-case fits and the drift sweep (31–200 ppm, median +141) were not saved, and the two drift medians, from different steps of the pilot, are not reconciled.
@@ -125,6 +135,7 @@ code:
   - vitaldb-bench/tools/primus_numbers.py
   - vitaldb-bench/tools/primus_pause_aware.py
   - vitaldb-bench/tools/vent_match_figure.py
+  - vitaldb-bench/tools/primus_ptt_arm.py
   - vitaldb-bench/examples/ppv_by_breath.py
 figures:
   - id: sync-demo-breath

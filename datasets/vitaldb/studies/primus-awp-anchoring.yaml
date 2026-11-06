@@ -158,7 +158,9 @@ open_questions:
     summary: >-
       The rule is right for about 86% of the stretches it sets without their own pauses. Possible gains: combining
       carrying with the main mode, using both references where both exist, and other non-periodic events (changes of
-      the set rate, the start of ventilation inside a recording). Each would be checked by the same leave-one-out.
+      the set rate, the start of ventilation inside a recording). Each would be checked by the same leave-one-out. Other arterial
+      references (the ECG-to-ART delay, the pulse pressure) do not pick the breath better than the arterial mean
+      ([[study:ventilator-breath-matching]]).
   - title: "What sets the anchor"
     kind: phenomenon
     summary: >-
