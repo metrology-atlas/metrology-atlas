@@ -34,6 +34,7 @@ discussion: |
   - Building the package surfaced new rules: two out-of-range anaesthesia ends, 93 clock-offset mismatches, child native resolution, and a revised red-cell rule.
 limitations: |
   - Where a posterior has a gap between two rounding windows, draws can land inside it. This is the large point-wise quantile error (0.8 SD at the 99th percentile at 1,024 knots); it barely moves the mean, SD or W1.
+  - The 214 MB, the 7 and 10 minute passes, the pre-fix inflation of up to 80% and the 0.8 SD at the 99th percentile are not in a saved output; `tools/precision_results.json` gives the cache as 186.7 MB at 1,024 knots.
 tags:
 - from the resolution work
 code:

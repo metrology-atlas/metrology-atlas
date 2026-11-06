@@ -35,7 +35,9 @@ results: |
 discussion: |
   A 60 Hz-like source with its own wander, inside the BIS system or in nearby equipment. Not usable as a clock check;
   the BIS clock rests on the burst and heartbeat evidence ([[study:shared-bursts]]).
-limitations: Same-window tests on four recordings.
+limitations: |
+  Same-window tests on four recordings.
+  The per-recording figures (phase drift 1.4–4.8 rad, slopes −99 to +121 ppm, minute SDs 11–20 and 161–195 ppm, the hourly 140 ppm) were printed by bis_line_tests.py and mains_phase.py and not saved. The pooled minute pairs are saved (`mains_check/bis_line_minutes.npz`) and give the rank correlations again.
 open_questions:
   - title: "What is the BIS 60 Hz source?"
     kind: phenomenon

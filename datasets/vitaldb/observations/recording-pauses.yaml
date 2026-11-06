@@ -1,7 +1,7 @@
 id: recording-pauses
 name: Recording pauses of about 20 s
 summary: >-
-  In 29% of files every device jumps forward together, by a median 19.6 s: the recorder paused. Data are missing
+  In 29% of files every device jumps forward together, by a median 18.5 s: the recorder paused. Data are missing
   there, and the stamps show it honestly. The pauses run on a 5-hour timer: consecutive pauses in a recording are
   5 h apart (plus the pause) in 86% of cases, and the first comes at any time after the recording starts.
 status: established

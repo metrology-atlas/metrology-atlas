@@ -56,6 +56,7 @@ limitations: |
   - The nonparametric EM check was deferred, since K = 8 gives the same propensities. It would be run only if a reviewer asks.
   - Correction, 13 Oct: the fitting code let the 100 mL mode round small true volumes to 0, which zero-truncation then silently dropped. After the fix the posterior weights moved by 0.01 or less. `intraop_uo.model.json` holds the corrected fit.
   - Within each component the density is not flat. Until v0.6.0 the components were treated as uniform; the density within an interval is now computed on demand from the latent.
+  - The near and far counts (677 and 888) and the step 1–4 statistics are not in a saved output.
 open_questions:
   - title: "Thoracic records are much finer than gynaecology's"
     kind: phenomenon

@@ -36,6 +36,7 @@ discussion: |
 limitations: |
   - The main misfits are 90 mg (144 recorded, 267 expected) and 130 mg (64 against 29).
   - A recorded 150 mg in a light patient gets a long upper tail (95% up to 290 mg at 50 kg).
+  - The alternative fits are not in a saved output.
 open_questions:
   - title: "Is 150 mg a ceiling?"
     kind: phenomenon

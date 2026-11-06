@@ -48,6 +48,7 @@ discussion: |
 limitations: |
   Three paced corrections in two cases. The gap shift is measured modulo one pacing period. The location of the
   lost time was not resolved here; [[study:reset-cluster-order]] later placed it inside the last old-grid record.
+  The burst-lag steps in the discussion (+13.0 and −3.3 ms over 93 cases) are not in a saved aggregate; `results/clock/corr_burst.jsonl` holds the per-case rows.
 open_questions:
   - title: "How much signal does each correction lose?"
     kind: next step

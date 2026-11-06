@@ -43,6 +43,7 @@ limitations: |
   - The capture windows of the two nominal first-case values are not identifiable.
   - The charted start sits a median of about 10 minutes before monitoring begins, and device-marked induction a
     median 14 minutes after it (see the open question below): it marks the start of anaesthesia care, not induction.
+  - Only each model's final fit is saved (`*.model.json`); the BIC differences between candidate models are not.
 open_questions:
   - title: "Anaesthesia start ignores the 5-minute rule"
     kind: phenomenon

@@ -78,6 +78,8 @@ discussion: |
   differences between patients. [[study:pat-offset-census]] later showed that one global delay ([[value:pleth-chain-delay]],
   [[parameter:pleth-chain-delay]]) fits the whole release, so the atlas removes that instead and keeps those
   differences ([[example:pulse-arrival-time]]).
+limitations: |
+  The outputs of tier_bench.py and frame_an.py behind the benchmark and the correlations were not saved; the hours, the per-setup rates and the steps after correction are checked against saved files.
 code:
   - physiosync/physiosync/ecg_ppg.py
   - physiosync/physiosync/slips.py

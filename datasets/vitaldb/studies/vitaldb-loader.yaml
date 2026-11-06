@@ -32,6 +32,8 @@ discussion: |
   Clock rates measured on the package's array index read about +0.95 ppm high. Analyses that use the stamps directly
   are unaffected. [[code:vitaldb-reader/src/vitaldb_reader/vital_file.py|vitaldb-reader]] reads whole files, keeps every sample, places them by count and puts the reset
   records in sampling order.
+limitations: |
+  The device start delays across all 6,388 files come from a run whose output was not saved.
 code:
   - vitaldb-python/vitaldb/utils.py
 references: [vitaldb-python]

@@ -46,12 +46,13 @@ results: |
     at 7,500–8,500 s (2,584 of them), around its 8,192 s (2.3 h) correction timer
     ([[study:device-correction-schedules]]).
   - **BIS's short gaps are clock resynchronisations.** Sub-second BIS gaps grow in proportion to the time since the
-    previous gap: a median 30 ppm of the elapsed time (interquartile range 20–48 ppm), the BIS clock's drift
+    previous gap: a median 30 ppm of the elapsed time (interquartile range 21–49 ppm; 7,216 gaps; [[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]), the BIS clock's drift
     against the recorder (18–55 ppm by setup; [[observation:device-drift-by-setup]]). The stamps are stepped to
     catch up; no samples are lost.
   - **AWP has an arc of sub-second gaps** whose length plus the segment before it is about 0.5 s: bursts on a
     0.5 s cycle, one Primus message.
-  - **CardioQ is fragmented throughout:** about 76 gaps per hour, median coverage 80%, with no structure beyond a
+  - **CardioQ is fragmented throughout:** about 72 gaps per hour of its own span, which they leave a median 94%
+    covered (29 recordings; [[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]), with no structure beyond a
     smooth curve.
   - **SNUADC has a band of millisecond gaps right after a 0.2 s segment:** one record alone, then a small step.
   - Most segments end with the recording, not with a gap, so the censored estimate stays high; the interior and

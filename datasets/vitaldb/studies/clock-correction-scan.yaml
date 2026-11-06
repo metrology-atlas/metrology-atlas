@@ -67,6 +67,7 @@ limitations: |
   The 2 s limit and the same-jump test can miss corrections during gaps. The cases with no correction at all are
   fast units that never get half a second ahead within a segment ([[study:vital-recorder-stamping-rules]],
   [[observation:snuadc-long-uncorrected]]).
+  The join-test shares (59% and 17%; 60–96% against about 4%) come from per-boundary rows kept only on the analysis machine; the saved summary (`results/sync_full/full.json`) holds their quantiles, which agree but do not give the shares.
 code:
   - vitaldb-bench/tools/syncscan.py
   - vitaldb-bench/tools/syncanalyze.py

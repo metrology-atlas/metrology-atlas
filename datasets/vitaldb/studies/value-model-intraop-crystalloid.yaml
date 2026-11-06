@@ -30,6 +30,8 @@ results: |
 discussion: |
   - Crystalloid volume is very strongly tied to case duration (Spearman 0.82).
   - Conditioning the latent on duration narrows the posteriors considerably; model version 2 does so (see results).
+limitations: |
+  Only the final fit's BIC (47,374) is saved; the alternatives (47,384 and 47,416) are not.
 code:
   - vitaldb-resolution/tools/fit_volume.py
   - vitaldb-resolution/tests/test_fit_consistency.py

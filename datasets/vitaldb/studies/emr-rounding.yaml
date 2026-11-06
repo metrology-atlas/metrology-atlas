@@ -41,7 +41,9 @@ discussion: |
   The dataset's creator confirms that these times were entered by hand in the EMR, usually at 5-minute resolution
   ([[reference:lee2026correspondence]]). That fits the 5-minute group; the direction of rounding comes from the data,
   not from the statement.
-limitations: The two groups may come from different staff or workflows. Rounding is measured for anaesthesia start and end, and assumed for operation start and end.
+limitations: |
+  The two groups may come from different staff or workflows. Rounding is measured for anaesthesia start and end, and assumed for operation start and end.
+  emr_markers.py's outputs were not kept in the work folder, so the shifts and counts cannot be checked against them.
 open_questions:
   - title: "About 50 s more than rounding"
     kind: phenomenon

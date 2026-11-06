@@ -88,7 +88,9 @@ discussion: |
   corrections ([[study:correction-periods]]) imply only 1–11 ppm, so they do not track the drift. The measured lag
   includes the physiological airway-to-CVP delay, which is constant within a recording and does not affect the
   slope.
-limitations: A 20-case pilot. The offset includes the physiological airway-to-CVP delay.
+limitations: |
+  A 20-case pilot. The offset includes the physiological airway-to-CVP delay.
+  Of the pilot's figures only the drift (+92 ppm, IQR 34–153), the 72% of lag steps at stamp jumps and the lag spreads are in a saved output (`results/pat/vent_sync_pilot_summary.txt`). The injected-error recovery, the per-case fits and the drift sweep (31–200 ppm, median +141) were not saved, and the two drift medians, from different steps of the pilot, are not reconciled.
 open_questions:
   - title: "Stretches measured a breath off in the release-wide run"
     kind: conflict

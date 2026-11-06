@@ -34,7 +34,7 @@ method: |
     [[study:ppg-sawtooth-slips]].
 results: |
   - **240 Hz in plethysmogram and arterial pressure:** present in 229 of 273 plethysmograms and 85 of 145 arterial
-    traces, in ECG once. Its rate against the SNUADC: median −38 ppm (5th–95th percentile −56 to −23) in the
+    traces, in ECG once. Its rate against the SNUADC ([[parameter:monitor-240hz-rate]]): median −38 ppm (5th–95th percentile −56 to −23) in the
     plethysmogram, −37 in arterial pressure; within a recording the two agree (median difference 0.2 ppm,
     interquartile range 0.0–1.0): one output clock. The first version's −25.4 to −28.7 ppm (six files) lies at the
     slow end of this range.

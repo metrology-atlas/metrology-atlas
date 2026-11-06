@@ -36,8 +36,9 @@ results: |
     Vigilance, CardioQ) ever steps backwards. The only back-steps are in BIS numerics, in 9 files, which suggests
     the BIS monitor stamps its own numerics. (Read once from every file's numeric record times; that check is not
     saved. pc_clock_steps.py covers only the Solar8000 HR and Primus ETCO2, where no step back occurs either.)
-  - **Recording pauses explain the familiar gaps.** In 1,846 files (29%) there are 2,025 moments when every device
-    jumps forward together, by a median [[value:recording-pause]] (p10–p90 15.7–29.8 s). Data are missing there, and the stamps
+  - **Recording pauses explain the familiar gaps.** In 1,828 files (29%) there are 2,029 moments when every device
+    jumps forward together, by a median [[value:recording-pause]] of SNUADC stamps (p10–p90 16.4–33.0 s; the
+    Solar8000 and Primus numerics lose a median 19.3 and 20.4 s; [[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]). Data are missing there, and the stamps
     show it honestly.
   - **Small simultaneous delays are not PC steps.** 20 delays of 0.5–1.0 s in 11 files hit both numerics with no
     waveform jump ([[code:vitaldb-bench/tools/adhoc/pc_steps_summary.py]]), and are followed by an ordinary next SNUADC reset (−0.481 s) and ordinary BIS corrections. The

@@ -42,6 +42,7 @@ limitations: |
   - Some misfit remains, mostly too few 70–80 mL and too many 90 mL predictions.
   - Capture windows are much wider than for urine output, because anchor neighbours are nearly empty.
   - The 30,100 mL value is kept and flagged.
+  - The mode comparisons, the threshold and the refit without the outlier (3,549 mL) are not in a saved output.
 code:
   - vitaldb-resolution/tools/fit_volume.py
   - vitaldb-resolution/tests/test_fit_consistency.py

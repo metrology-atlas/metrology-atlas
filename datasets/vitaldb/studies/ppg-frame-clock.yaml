@@ -46,6 +46,8 @@ discussion: |
   Locked fiducials carry up to ±17 ms of frame quantisation, so PPG timing should use a fiducial that does not lock
   (the steepest upstroke on the filtered signal). The frame clock is a second clock inside the PPG chain, separate
   from the sawtooth of its content ([[study:ppg-sawtooth]]).
+limitations: |
+  frame_an.py's output for the 266 recordings was not saved. The fiducial resultants agree with the 1,169-recording frame-clock scan (`setups/frame_clock_*.jsonl`), and the even-difference shares are in `results/pat/fiducial_resolution_summary.json`.
 code:
   - physiosync/physiosync/frames.py
   - physiosync/physiosync/quantisation.py

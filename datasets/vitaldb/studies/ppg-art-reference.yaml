@@ -25,7 +25,7 @@ results: |
     [[case:5366]], [[case:5533]], [[case:6261]], where an earlier R-peak analysis had found no sawtooth against ART.
     One shows a clear sawtooth (17 slips, tier C, creep 44 ppm; at the slips ECG→ART −1.5 ms, ART→PPG +26 ms); three
     show slips with the teeth unresolved (tier U; ART→PPG +24 to +27 ms at the slips, ECG→ART flat); one has no
-    sawtooth (tier N); one is too noisy. The earlier null came from steps between consecutive 30-beat medians, which
+    sawtooth (tier N); one is too noisy to read (also tier U, ART→PPG −5.3 ms; `handover_d1/d1.jsonl`). The earlier null came from steps between consecutive 30-beat medians, which
     split a slip across two steps.
 discussion: |
   Used in [[software:physiosync]] as an optional reference, arterial pressure raises confidence and rejects physiological jumps,
@@ -33,6 +33,8 @@ discussion: |
   Arterial pressure and the PLETH reach the SNUADC as the monitor's analogue outputs. Sharing the converter aligns
   their sampling, not any processing inside the monitor; the 212 ms R-to-upstroke delay bounds an ECG-to-arterial
   output delay to small without measuring it ([[example:pulse-arrival-time]], open questions).
+limitations: |
+  art_check.py's output for the 201 cases was not saved; the six recordings added on 29 October are in `handover_d1/d1.jsonl`.
 code:
   - vitaldb-bench/tools/art_check.py
   - vitaldb-bench/tools/ppg_slips_art_check.py

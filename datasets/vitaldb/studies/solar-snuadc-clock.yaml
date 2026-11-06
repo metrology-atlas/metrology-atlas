@@ -50,8 +50,8 @@ results: |
     the resets, it lies a median +19.6 ppm above the stamp model's rate in 134 step-mode recordings without a whole
     reset interval (+7.5 ppm in 24 of 8 h or more).
   - **The burst check disagrees with the short-recording medians:** on the adopted stamp model, the ECG–EEG burst lag
-    in recordings without a whole reset interval has a median slope of −7 ms/h (step mode, 906 recordings) and
-    +10 ms/h (no correction, 521), close to zero, so the port's step-mode rate the model gives them fits on average.
+    in recordings without a whole reset interval has a median slope of −8.9 ms/h (step mode, 1,118 recordings)
+    and +5.6 ms/h (no correction, 1,099; `burst_validation_m3/per_recording.csv`, [[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]), close to zero, so the port's step-mode rate the model gives them fits on average.
 
   [[figure:solar-snuadc-rate]]
 discussion: |

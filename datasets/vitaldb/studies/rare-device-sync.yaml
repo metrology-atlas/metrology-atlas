@@ -33,8 +33,9 @@ results: |
   - **EV1000:** values sit a median 1.6 s (p25 0.9, p95 3.2 s; 579 cases) after the end of an assumed 20 s window;
     after alignment the residual SD is 0.25–2.4 s.
   - **Vigileo:** aligned in only 25 of 343 cases (|offset| 4.7 s median, p95 26 s).
-  - **Vigilance:** a running median over 600–2,185 s (median 1,050 s, about 17 minutes), available 0–175 s after
-    its window ends (median 51 s); 16 of 52 cases sit at zero delay.
+  - **Vigilance:** a running median in 41 of 52 cases (60 / mean interval in 11), over a median 1,050 s (about 17
+    minutes; p10–p90 660–1,980 s), available a median 51 s after its window ends (p10–p90 0–175 s; at least a
+    quarter at zero; `results/pat/vigilance_window_summary.json`).
 discussion: |
   The three-way arterial pressure loop confirms the CardioQ and EV1000 links against each other
   ([[study:loop-closure]]). Vigilance values describe the last 10–36 minutes; alignment finer than minutes is not

@@ -35,7 +35,9 @@ discussion: |
   Paced beats leave intermittent, sometimes sharp, beat-locked activity in the BIS EEG. Whatever its source, the sharp
   events in D and F could time the BIS against SNUADC in those recordings to a few ms: a direct check of the −0.8 s
   constant and of the synchronisation residual.
-limitations: Six recordings; windows on raw stamps only; the source of the activity (pacing or cardiac) is not settled.
+limitations: |
+  Six recordings; windows on raw stamps only; the source of the activity (pacing or cardiac) is not settled.
+  paced_bis_windows.py prints its results and they were not saved; the counts are kept in the study's draft (`study_drafts/paced-bis-eeg.md`).
 open_questions:
   - title: "Pacing artefact or cardiac trace?"
     kind: next step

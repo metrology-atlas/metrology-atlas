@@ -27,6 +27,8 @@ results: |
 discussion: |
   These events time the oximeter's processing, not a true desaturation. The SpO2 window (10–20 s) is an estimate,
   not a measurement.
+limitations: |
+  The NIBP row is not in the pilot's saved summary.
 code:
   - vitaldb-bench/tools/spo2_event_pilot.py
 figures:

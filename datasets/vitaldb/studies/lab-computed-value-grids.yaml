@@ -27,6 +27,7 @@ discussion: |
   - The checklist now checks for unreachable values before reading excesses as heaping, and screens use a local smooth expectation, not neighbour means.
 limitations: |
   - The fibrinogen interval has to be estimated from the data, because the clotting time is not recorded.
+  - From the resolution work, with no saved script; the counts (21,143 PT %, 18,921 fibrinogen) and the ratios have not been reproduced from lab_data.csv.
 tags:
 - from the resolution work
 code:

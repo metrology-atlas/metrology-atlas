@@ -28,6 +28,7 @@ discussion: |
   - No colloid container explains the kidney-surgery values.
 limitations: |
   - The 100–400 mL values in other surgery could be partial bags or 100 mL albumin vials; the data cannot tell these apart.
+  - The check that the shares do not change over time is not saved.
 open_questions:
   - title: "What the kidney-surgery colloid values record"
     kind: phenomenon
