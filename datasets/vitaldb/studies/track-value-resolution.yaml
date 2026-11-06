@@ -13,6 +13,7 @@ variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, primus-co2, primus-awp, bis
             solar8000-spo2, solar8000-art-numerics, solar8000-nibp, primus-numerics, pump-rates, ev1000-art-mbp,
             vigileo-sv, vigilance-co]
 code:
+  - vitaldb-bench/tools/waveform_survey.py
   - vitaldb-bench/tools/signal_events.py
   - vitaldb-bench/tools/signal_events_agg.py
   - vitaldb-bench/tools/record_scan.py
@@ -85,6 +86,30 @@ results: |
     TV setting (0.01 L on the Primus, 10 mL on the Solar8000).
   - Corrupt values appear in a few tracks: BIS SQI to −2.1 × 10⁸, BIS index to −1,333, Orchestra concentrations and
     volumes to 10⁶, Primus mean airway pressure 4,000. They will be listed with the leads-off and no-signal codes.
+
+  **Noise floor and hidden sample rates of the waveforms** ([[code:vitaldb-bench/tools/waveform_survey.py]] (300 random recordings, seed 20261106; `$W/waveform_survey/summary.json`)). The floor is the
+  spectrum over 80–98% of Nyquist in one-minute epochs, against the rounding floor of a uniform ±½ step error (0 dB:
+  the converter's resolution sets the floor); on synthetic data the estimate recovers known noise to 0.1 dB. A hold
+  shows as repeated values while the signal moves by a step per sample or more.
+
+  | Track | Floor above rounding, median of recordings (p25–p75) | Within a recording (IQR) | Repeats while moving |
+  |---|---|---|---|
+  | SNUADC ECG II, V5 | 2.2, 2.3 dB (1.7–2.6, 1.8–2.9) | 0.3–0.4 dB | 4.7%, 4.5% |
+  | SNUADC ART, PLETH, CVP | 1.5, 1.6, 1.5 dB (1.2–2.1, 1.2–2.0, 1.1–2.0) | 0.3–0.4 dB | 6.7%, 7.1%, 4.3% |
+  | BIS EEG1, EEG2 | 15.4, 12.8 dB (13.6–18.6, 11.3–15.1): the low-pass's stop band, not noise | 9–13 dB | 0.3%, 0.5% |
+  | Primus CO2 | 21.0 dB (20.1–22.0): hold images, not noise | 1.4 dB | 63%, in runs of 2.7 |
+  | Primus AWP | 10.1 dB (8.8–11.7) | 2.1 dB | 17%, in runs of 1.2 |
+  | CardioQ ABP, FLOW (2 recordings) | 1.3, 5.5 dB | | 5%, 22% in runs of 2.2 |
+
+  - **The SNUADC's floor is its rounding:** every channel sits within about 2 dB of the rounding floor near
+    Nyquist, steady within a recording; the 10-bit codes, not the analogue noise, limit the waveform.
+  - **Only CO2 is held:** its stored values change in a 5-sample rhythm of two updates (the autocorrelation of
+    "value changed" +0.65 at lags 5 and 10, −0.38 at 1 and 4), the 24.974 Hz grid of [[study:primus-co2-update-grid]],
+    with at least 45% repeats in every window of the 298 recordings where CO2 moved enough to test. AWP repeats without a hold ([[study:primus-awp-conversion]]); SNUADC, BIS and CardioQ
+    ABP are sampled at their stored rates. CardioQ FLOW's repeats may come from its segmented code
+    ([[observation:cardioq-flow-segmented]]).
+  - **ECG hits the converter's rails:** ECG II and V5 reach code 0 or 1023 in 6.5% and 6.4% of minutes; ART, PLETH
+    and CVP in under 0.4%.
 discussion: |
   Recorded values are as fine as the stored codes or the decimal grid, not as fine as the storage format. For
   waveforms, the step is the quantisation of the measurement (uniform within ±½ step, 1 SD = step/√12; truncated

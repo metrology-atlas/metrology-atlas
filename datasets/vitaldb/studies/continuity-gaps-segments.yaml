@@ -36,7 +36,8 @@ results: |
     ART, CVP, Primus and BIS). These are the recorder's pauses ([[observation:recording-pauses]]), common to
     every device, not losses in any one signal. Above about 30 s the curve falls smoothly to gaps of hours.
   - **A step at 0.2 s in SNUADC:** gaps of exactly one message.
-  - **SNUADC segments stop at 5 hours.** No interior segment is longer than 17,991 s (5 h minus about 9 s), and
+  - **SNUADC segments stop at 5 hours.** Interior segments run to at most 17,991 s (5 h minus about 9 s), apart from one
+    of 18,055 s in one recording (all three SNUADC channels), and
     many are exactly that long, each followed by an 18 s gap. These are the recorder's pauses, which recur every
     5 hours on a timer of their own ([[observation:recording-pauses]]); most 5-hour segments start at an earlier
     pause.

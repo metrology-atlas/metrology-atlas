@@ -16,7 +16,7 @@ devices: [snuadc, solar8000, vital-recorder]
 variables: [snuadc-ecg-ii, snuadc-art, solar8000-hr, solar8000-art-numerics]
 data: |
   All 6,388 recordings were read; 50 had no 500 Hz ECG. A rate needs at least 4 usable 30-minute blocks over
-  1.5 h: 4,552 recordings for the combined rate (heart rate 4,447; mean arterial pressure 2,969). Reset-interval
+  1.5 h: 4,552 recordings for the combined rate (heart rate 4,447; mean arterial pressure 2,968). Reset-interval
   rates for 581 of them come from the clock-network edge table; the shared-burst residuals of the adopted stamp model
   (model3) for comparison.
 background: |

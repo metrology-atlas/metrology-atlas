@@ -28,7 +28,7 @@ results: |
   - The package reproduces the stored log-likelihood within 0.14.
 discussion: |
   - Related times are rounded in opposite directions, so the anchor is fitted per variable and never assumed shared.
-  - Intervals inherit both biases: charted emergence (op end to anaesthesia end) is inflated by about 6–7 min.
+  - Intervals inherit both biases: charted emergence (op end to anaesthesia end) is inflated by about 6 min (median 6.0 min, [[study:value-model-aneend]]).
 limitations: |
   - The latent has two narrow peaks (13 and 17 min before the recording ends). With most values on a 5-minute grid, fine structure in a narrow latent is hard to separate from rounding, so these peaks should not be read as real.
 open_questions:

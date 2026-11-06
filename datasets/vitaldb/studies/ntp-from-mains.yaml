@@ -13,7 +13,7 @@ variables: [snuadc-ecg-ii]
 data: The 120 recordings labelled as frequent small corrections in the SNUADC mode labels; 11 of them have hum.
 background: |
   The hum follows the SNUADC sample count, so a PC clock adjustment leaves no mark on it. PC time shows only where the
-  stamps are pulled back to the PC. Step-mode SNUADC corrects about every 2.2 h, too sparse; recordings that correct
+  stamps are pulled back to the PC. Step-mode SNUADC corrects about every 2.1 h ([[study:correction-periods]]), too sparse; recordings that correct
   often would give a dense trace of PC minus grid, in which steps (sudden) or slews (slope changes) could show. The
   grid's own phase wanders about 10 ms per 10 minutes.
 method: Track the hum phase in 10 s blocks against the stamp corrections, in recordings that correct often.

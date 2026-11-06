@@ -26,7 +26,9 @@ method: |
     lattice (144 candidates, 20–130 Hz). A scheme passes if it reproduces the 10 lines, gives 5–10% repeats, and makes
     no line that is not seen (above 30% of its strongest).
 results: |
-  - **Repeats** are 10–13% of moving samples (median 11.6%; 7.7–10% on the steepest parts). The pattern has a family
+  - **Repeats** are 10–13% of moving samples (median 11.6%; 7.7–10% on the steepest parts). In 300 random
+    recordings, 17% of samples moving by a step per sample or more repeat, in runs of 1.2: repeats, not a hold (runs
+    never longer than 1.44 on average in any window; [[code:vitaldb-bench/tools/waveform_survey.py]] (300 random recordings, seed 20261106; `$W/waveform_survey/summary.json`)). The pattern has a family
     of 10 lines (4.228, 8.521, 12.357, 12.749, 16.585, 20.845, 24.581, 25.105, 28.941 and 29.333 Hz), all sums and
     differences of two frequencies, 20.8445 and 25.1055 Hz, with small multipliers. No single rate and its harmonics
     explains them (a search over 0.5–130 Hz fits at most 4 of the 10).
@@ -57,6 +59,7 @@ open_questions:
       Two periodicities, 20.8445 and 25.1055 Hz after folding, and none of the simple schemes. The Medibus real-time
       curve specification or a bench recording would settle it more cheaply than a wider search.
 code:
+  - vitaldb-bench/tools/waveform_survey.py
   - vitaldb-bench/tools/primus_awp_repeats.py
   - vitaldb-bench/tools/primus_awp_records.py
   - vitaldb-bench/tools/primus_awp_vs_co2.py

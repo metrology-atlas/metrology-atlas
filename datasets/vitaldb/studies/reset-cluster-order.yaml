@@ -37,8 +37,10 @@ results: |
     were already in order.
   - **One extra zero sample:** 335 of 392 resets hold one sample reading 0 in every channel at once. Lines fitted
     either side meet as if it were not there (−0.97 samples, median), so it carries no time: a filler.
-  - **The lost time is in the last old-grid record.** 81 of 97 confident plethysmogram detections (m = 6–13) fall
-    in that record, against about 2 expected by chance; with arterial pressure, 99 of 392 resets show it there.
+  - **The lost time is in the last old-grid record.** The plethysmogram shows a confident gap (m = 6–13 samples) at
+    97 of 380 resets, against 30 of 531 control boundaries, and 79 of the 97 fall in that record (2 more just before
+    it). Arterial pressure shows it more weakly: 59 of 325 resets (42 of 432 controls), 23 of them in that record;
+    CVP not at all ([[code:vitaldb-bench/tools/adhoc/reset_gssum.py]] on `$W/results/clock/reset_order_v1`).
     The gap is about 11 samples (IQR 10–12), at no fixed position, and always before the zero sample.
   - **In every file (census):** 1,785 files write their reset clusters out of order (2,569 resets, 178 of them
     with a repeated stamp), and 820 files write them already in order (988 resets). **No file does both**, which
@@ -98,6 +100,7 @@ code:
   - vitaldb-bench/tools/clock_model_fit.py
   - vitaldb-bench/tools/adhoc/reset_gapscan.py
   - vitaldb-bench/tools/adhoc/reset_glitch.py
+  - vitaldb-bench/tools/adhoc/reset_gssum.py
 figures:
   - id: reset-classes
     theme: drift and resets

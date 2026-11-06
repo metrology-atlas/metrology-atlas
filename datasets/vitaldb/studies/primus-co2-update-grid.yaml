@@ -25,14 +25,22 @@ results: |
     the steps are how the measurement sees a smooth slide.
   - About 1,000 ppm is ten times the Primus clock's drift against SNUADC (+104 ppm by breaths): a nominal update
     period of about 40.04 ms, not clock error.
+  - **Held in every recording tested.** In 300 random recordings ([[code:vitaldb-bench/tools/waveform_survey.py]] (300 random recordings, seed 20261106; `$W/waveform_survey/summary.json`)), 63% of
+    CO2 samples repeat while the signal moves (runs of 2.7 samples; at least 45% in every window of the 298 where CO2
+    moved enough to test), against 4–7% for the SNUADC waveforms, and
+    "value changed" correlates +0.65 at lags of 5 and 10 samples: two updates per five stored samples.
+  - **Consequences for its spectrum:** above 12.5 Hz the CO2 spectrum shows the hold's images, not signal or noise,
+    and its apparent floor, 21 dB above the rounding floor, is not noise. Spectral or noise work on CO2 belongs on
+    the update values, one per 40 ms.
 discussion: |
   Each stored CO2 sample shows the latest update, which describes an interval of about 40 ms that closed between 0 and
   40 ms before the sample's stamp. Because the grid slides, that age cycles over its whole range every 40 s or so and
   behaves as uniform: a mean of about 20 ms (a bias) and a standard uncertainty of 40 / √12 = 11.5 ms. The CO2 timing
   forms carry exactly this: a 40 ms support stamped at its close, 20 ms in the bias, and the hold position as a
   rectangular component ([[variable:primus-co2]]). It comes on top of the sampling line ([[study:co2-sampling-line]]).
-limitations: 30 recordings for the rate; the presence of the grid is release-wide.
+limitations: 30 recordings for the rate; the hold in 300 random recordings; the presence of the grid is release-wide.
 code:
+  - vitaldb-bench/tools/waveform_survey.py
   - vitaldb-bench/tools/art_cycle_and_co2_grid.py
   - vitaldb-bench/tools/art_cycle_and_co2_grid_plot.py
 figures:

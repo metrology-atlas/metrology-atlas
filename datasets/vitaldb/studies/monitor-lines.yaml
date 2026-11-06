@@ -44,6 +44,11 @@ results: |
   - **120 Hz is a frame line and leaks into other channels:** it is also present in 50 arterial traces and 18 ECGs;
     its rate agrees with the frame clock (within 3 ppm in 51 of 118) far more often than with the 240 Hz line (15 of
     107).
+  - **The 120 Hz in the raw signal is mains, not the frame line.** The frame line above is in the pattern of step
+    sizes. In the raw ECG, arterial pressure and CVP, the 120 Hz line sits at the same frequency as the other mains
+    harmonics of the same channel: +1.5 ppm from them (median, 61 strong lines), against +0.15 ppm for the other
+    harmonics against each other (80; no difference, p = 0.86), in 300 random recordings
+    ([[code:vitaldb-bench/tools/waveform_survey.py]] (300 random recordings, seed 20261106; `$W/waveform_survey/summary.json`)). It is the mains' second harmonic.
   - **Arterial pressure's pattern comes first:** in 68 of 69 recordings with both 240 Hz lines, by a median 0.37 ms
     (5th–95th percentile 0.29–0.46; coherence median 0.89), consistent with the converter reading its channels in
     turn.
@@ -63,5 +68,6 @@ open_questions:
       Whether one estimate is biased (weak lines, a wrong lock) is to be checked on recordings where both are strong.
 limitations: The benchmark (273 recordings), not the whole release; lines below 3 times the control are not rated.
 code:
+  - vitaldb-bench/tools/waveform_survey.py
   - vitaldb-bench/tools/monitor_lines.py
   - vitaldb-bench/tools/sawtooth_char.py

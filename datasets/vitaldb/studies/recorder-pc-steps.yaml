@@ -38,11 +38,11 @@ results: |
   - **Recording pauses explain the familiar gaps.** In 1,846 files (29%) there are 2,025 moments when every device
     jumps forward together, by a median [[value:recording-pause]] (p10–p90 15.7–29.8 s). Data are missing there, and the stamps
     show it honestly.
-  - **Small simultaneous delays are not PC steps.** 25 delays of 0.5–0.9 s in 17 files hit both numerics with no
-    waveform jump, and are followed by an ordinary next SNUADC reset (−0.481 s) and ordinary BIS corrections. The
+  - **Small simultaneous delays are not PC steps.** 20 delays of 0.5–1.0 s in 11 files hit both numerics with no
+    waveform jump ([[code:vitaldb-bench/tools/adhoc/pc_steps_summary.py]]), and are followed by an ordinary next SNUADC reset (−0.481 s) and ordinary BIS corrections. The
     PC clock did not move; these are recorder stalls or shifts in polling.
   - **Nor are the large ones.** Four delays of 1 s or more hit both numerics by the same amount (within 0.5 s) with
-    no SNUADC jump (`$W/results/clock/pc_steps_*.jsonl`): 23 s in [[case:184]], 15 s in [[case:3805]], 14 s in
+    no SNUADC jump (`$W/results/clock/pc_steps_*.jsonl`, pc_steps_summary.py): 23 s in [[case:184]], 15 s in [[case:3805]], 14 s in
     [[case:4552]] and 6.6 s in [[case:5213]]. In the three with an arterial line, the mean arterial pressure numeric
     lags the arterial waveform by the same amount before and after, to within 1.5 s (+0.5, −1.5 and +1.5 s;
     correlations 0.37–0.87), where a PC step would have moved it by the whole delay: they are recorder stalls.
@@ -73,3 +73,4 @@ open_questions:
 code:
   - vitaldb-bench/tools/pc_clock_steps.py
   - vitaldb-bench/tools/pc_step_check.py
+  - vitaldb-bench/tools/adhoc/pc_steps_summary.py

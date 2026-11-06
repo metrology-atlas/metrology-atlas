@@ -48,7 +48,8 @@ results: |
   `results/pat/numeric_derivation_pilot_summary.json`), that is stamped before the data. The refit across the release
   replaces them ([[study:numeric-delay-variability]]).
 
-  - **No slow updates:** the held-value model lost in every case for HR, ART, CVP and PLETH_HR.
+  - **No slow updates:** the held-value model lost in every case for HR and ART, and in 20 of 21 for CVP (better by
+    more than 10 BIC in one); PLETH_HR's comparison is not in the saved summary.
   - **HR is truncated, not rounded** (24/24); RR clearly rounds.
   - **No front-stamping** among the Solar8000 numerics here: every fitted delay is positive. For the Primus numerics
     the pilot cannot say (above); the release-wide refit gives every median delay positive ([[study:numeric-delay-variability]]).
