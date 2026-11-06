@@ -150,8 +150,8 @@ timing:
     between AWP pauses
   look_ahead:
     lead_s:
-    - 0.44
-    - 3.55
+    - {parameter: primus-awp-bias, use: p95, scale: -1}
+    - {parameter: primus-awp-bias, use: p5, scale: -1}
     basis: real
     note: >-
       The AWP stamps sit before the breath they record. Against the breath seen in the SNUADC CVP the lead is a median

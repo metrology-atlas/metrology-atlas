@@ -125,7 +125,7 @@ timing:
       distribution: empirical
       u_s: {parameter: bis-shift-within-rsd}
       scope: structured
-      length_s: 8192
+      length_s: {parameter: bis-period}
       correlation: rectangular
       evidence: one BIS correction cycle (8,192 s)
     - name: sample or stamp grid
@@ -176,7 +176,7 @@ timing:
       distribution: empirical
       u_s: {parameter: bis-shift-within-rsd}
       scope: structured
-      length_s: 8192
+      length_s: {parameter: bis-period}
       correlation: rectangular
       evidence: one BIS correction cycle (8,192 s)
     - name: sample or stamp grid

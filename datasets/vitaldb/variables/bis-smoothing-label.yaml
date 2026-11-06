@@ -29,9 +29,7 @@ timing:
 - id: bsl-start
   name: 'as stored: spans the recording, from its start'
   kind: as_stored
-  support_s:
-  - 1640
-  - 62494
+  support_s: {parameter: recording-duration, use: min-max}
   stamp_position: open
   bias_s:
     median: -9924
@@ -41,9 +39,7 @@ timing:
     status: measured
     evidence: 'recording durations: caseend minus casestart, 6,388 cases ([[parameter:recording-duration]])'
   look_ahead:
-    lead_s:
-    - 1640
-    - 62494
+    lead_s: {parameter: recording-duration, use: min-max}
     basis: real
     note: 'The group is fitted over the whole recording, but its interval starts at the recording''s start: used there,
       it carries the rest of the recording. Both ends are stored, so its availability time is recoverable.'
@@ -62,9 +58,7 @@ timing:
   default: true
   kind: per_recording
   uses_future: true
-  support_s:
-  - 1640
-  - 62494
+  support_s: {parameter: recording-duration, use: min-max}
   stamp_position: close
   removes_bias_s:
     median: -9924

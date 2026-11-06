@@ -116,7 +116,7 @@ timing:
     - name: sawtooth position
       type: A
       distribution: rectangular
-      u_s: 0.143
+      u_s: {parameter: snuadc-step-correction-size, rectangular: true}
       scope: structured
       length_s: {parameter: snuadc-step-period}
       correlation: rectangular

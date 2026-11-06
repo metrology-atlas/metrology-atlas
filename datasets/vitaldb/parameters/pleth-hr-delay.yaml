@@ -4,7 +4,11 @@ quantity: Delay from the end of PLETH_HR's window of 10 pulse intervals to its s
 value: 4.5
 unit: s
 spread:
-  text: median over 6,151 recordings; 5th–95th percentile 3.25–5.75 s
+  text: median over 6,151 recordings; 5th–95th percentile 3.25–5.75 s; robust SD between recordings 0.74 s
+    (vitaldb-bench tools/adhoc/audit_low_checks.py)
+  p5: 3.25
+  p95: 5.75
+  sd: 0.74
   n: 6151
 status: measured
 study: pleth-hr-derivation

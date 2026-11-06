@@ -17,8 +17,8 @@ timing:
   stamp_position: close
   bias_s:
     median: {parameter: pleth-hr-delay}
-    p5: 3.25
-    p95: 5.75
+    p5: {parameter: pleth-hr-delay, use: p5}
+    p95: {parameter: pleth-hr-delay, use: p95}
     n: 6151
     scope: recording
     status: measured
@@ -29,7 +29,7 @@ timing:
     - name: between recordings
       type: A
       distribution: empirical
-      u_s: 0.74
+      u_s: {parameter: pleth-hr-delay, use: sd}
       scope: recording
       status: measured
       evidence: robust SD (1.4826 x median absolute deviation) of the per-recording delays, 6,151 recordings

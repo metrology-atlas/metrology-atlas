@@ -38,9 +38,7 @@ timing:
   name: draw time from arterial access
   kind: per_recording
   uses_future: true
-  support_s:
-  - 28
-  - 117
+  support_s: {parameter: lab-access-length, use: p10-p90}
   stamp_position: unknown
   removes_bias_s: *id001
   uncertainty:
@@ -57,7 +55,7 @@ timing:
   - lab-central
   domain: records
   status: estimated
-  evidence: access 28-117 s (p10-p90); matched 0-15 min (gas) or 0-30 min (central) before; uses the waveform during and
+  evidence: access 28-115 s (p10-p90); matched 0-15 min (gas) or 0-30 min (central) before; uses the waveform during and
     after the draw; a wrong match is not included
 tags:
 - stub

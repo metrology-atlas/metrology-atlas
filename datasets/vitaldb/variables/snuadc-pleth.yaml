@@ -19,7 +19,7 @@ timing:
   stamp_position: instant
   grid_s: 0.033
   removes_bias_s:
-    value: 0.385
+    value: {parameter: pleth-chain-delay}
     scope: release
     status: measured
   uncertainty:
@@ -61,7 +61,7 @@ timing:
   grid_s: 0.033
   bias_s:
     name: oximeter hardware delay
-    value: 0.385
+    value: {parameter: pleth-chain-delay}
     scope: release
     status: measured
   uncertainty:
@@ -106,7 +106,7 @@ timing:
     - name: sawtooth position
       type: A
       distribution: rectangular
-      u_s: 0.143
+      u_s: {parameter: snuadc-step-correction-size, rectangular: true}
       scope: structured
       length_s: {parameter: snuadc-step-period}
       correlation: rectangular
