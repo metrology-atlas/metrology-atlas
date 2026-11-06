@@ -15,9 +15,9 @@ timing:
   support_s: {parameter: hr-window-span, use: p10-p90}
   stamp_position: close
   removes_bias_s:
-    median: {parameter: hr-label-delay}
-    p5: {parameter: hr-label-delay, use: p5}
-    p95: {parameter: hr-label-delay, use: p95}
+    median: {parameter: hr-label-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p5: {parameter: hr-label-delay, use: p5, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p95: {parameter: hr-label-delay, use: p95, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     n: 6233
     scope: recording
     status: measured
@@ -31,6 +31,13 @@ timing:
       scope: recording
       evidence: label SE p10-p90 0.09-0.55 s; the 234 group-uncertain recordings carry a two-group mixture (2.3 s apart),
         not included
+    - name: wait for the poll
+      type: B
+      distribution: rectangular
+      u_s: {parameter: solar8000-poll-gap, rectangular: true}
+      scope: independent
+      evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
+        (the delay fits' uniform phase)
   correction: per-case delay label (early or late group)
   corrects:
   - hr-early
@@ -43,16 +50,16 @@ timing:
   - numerics-derivation-release
   - hr-delay-groups
   - hr-derivation
-  checked: 2026-11-01
+  checked: 2026-11-07
 - id: hr-early
   name: as stamped, early group
   kind: as_stored
   support_s: {parameter: hr-window-span, use: p10-p90}
   stamp_position: close
   bias_s:
-    median: {parameter: hr-early-label-delay}
-    p5: {parameter: hr-early-label-delay, use: p5}
-    p95: {parameter: hr-early-label-delay, use: p95}
+    median: {parameter: hr-early-label-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p5: {parameter: hr-early-label-delay, use: p5, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p95: {parameter: hr-early-label-delay, use: p95, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     scope: shared
     shared_with: the recording PC's delay group
     status: measured
@@ -63,6 +70,13 @@ timing:
       distribution: empirical
       u_s: {parameter: hr-early-delay-rsd}
       scope: recording
+    - name: wait for the poll
+      type: B
+      distribution: rectangular
+      u_s: {parameter: solar8000-poll-gap, rectangular: true}
+      scope: independent
+      evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
+        (the delay fits' uniform phase)
   domain: recorder-pc
   status: measured
   evidence: label delays of the early group, 2,228 recordings (labels of 1 Nov); within-group spread as a robust SD
@@ -70,16 +84,16 @@ timing:
   - numerics-derivation-release
   - hr-delay-groups
   - hr-derivation
-  checked: 2026-11-01
+  checked: 2026-11-07
 - id: hr-late
   name: as stamped, late group
   kind: as_stored
   support_s: {parameter: hr-window-span, use: p10-p90}
   stamp_position: close
   bias_s:
-    median: {parameter: hr-late-label-delay}
-    p5: {parameter: hr-late-label-delay, use: p5}
-    p95: {parameter: hr-late-label-delay, use: p95}
+    median: {parameter: hr-late-label-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p5: {parameter: hr-late-label-delay, use: p5, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p95: {parameter: hr-late-label-delay, use: p95, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     scope: shared
     shared_with: the recording PC's delay group
     status: measured
@@ -90,6 +104,13 @@ timing:
       distribution: empirical
       u_s: {parameter: hr-late-delay-rsd}
       scope: recording
+    - name: wait for the poll
+      type: B
+      distribution: rectangular
+      u_s: {parameter: solar8000-poll-gap, rectangular: true}
+      scope: independent
+      evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
+        (the delay fits' uniform phase)
   domain: recorder-pc
   status: measured
   evidence: label delays of the late group, 3,771 recordings (labels of 1 Nov); within-group spread as a robust SD; one
@@ -98,7 +119,7 @@ timing:
   - numerics-derivation-release
   - hr-delay-groups
   - hr-derivation
-  checked: 2026-11-01
+  checked: 2026-11-07
 chain:
 - node: Heart rate algorithm
   kind: window
@@ -108,12 +129,13 @@ chain:
   status: measured
 - node: Polled by the recorder
   kind: transport
-  effect: The value reaches the recorder 1.25–2.4 s after its window ends in the early group of cases, or 3.7–4.8 s
-    in the late group (one extra 2 s poll cycle; p10–p90). A per-case delay label fixes the offset to a median
+  effect: The value is ready 1.25–2.4 s after its window ends in the early group of cases, or 3.7–4.8 s in the late
+    group (one extra 2 s poll cycle; p10–p90), and then waits up to one 2 s poll before the recorder stamps it
+    ([[parameter:solar8000-poll-gap]]). A per-case delay label fixes the offset to a median
     [[value:hr-label-se]] (standard error).
   bias_s:
   - {parameter: hr-early-label-delay, use: p5}
-  - {parameter: hr-late-label-delay, use: p95}
+  - {parameter: hr-late-label-delay, use: p95, plus: {parameter: solar8000-poll-gap}}
   u_s: {parameter: hr-label-se}
   status: measured
 - node: Stored stamp

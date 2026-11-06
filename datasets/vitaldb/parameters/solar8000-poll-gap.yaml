@@ -1,0 +1,12 @@
+id: solar8000-poll-gap
+name: Solar8000 numerics, time between records
+quantity: >-
+  The gap between consecutive records of a Solar8000 numeric (the recorder's poll): a value waits between none and
+  all of it before it is stamped.
+value: 2.0
+unit: s
+spread: {text: "median record interval of Solar8000/HR and ART_MBP over the release (2,000 ms in 52% and 50% of intervals, 1,999 ms in 31% and 30%); signal_survey/numeric_agg/numerics.csv"}
+status: measured
+study: numerics-derivation-release
+about: [solar8000-hr, solar8000-art-numerics, solar8000-pleth-hr]
+date: 2026-11-07

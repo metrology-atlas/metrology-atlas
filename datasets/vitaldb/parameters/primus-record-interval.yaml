@@ -1,0 +1,11 @@
+id: primus-record-interval
+name: Primus record interval
+quantity: >-
+  One Primus record (30 samples at 62.5 Hz): the phase width the delay fits use for the end-tidal CO2 and peak
+  pressure, which are held from the last breath until the Primus is polled.
+value: 0.48
+unit: s
+status: measured
+study: numerics-derivation-release
+about: [primus-numerics]
+date: 2026-11-07

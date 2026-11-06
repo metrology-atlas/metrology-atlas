@@ -91,3 +91,20 @@ def test_typed_ok_in_a_form(tmp_path):
 def test_form_checked_before_its_parameters_warns(tmp_path):
     ds = _load(tmp_path, _form(studies=["st"], checked=dt.date(2026, 10, 15)), _param("other", 9.9))
     assert any("checked on 2026-10-15, before its studies' parameters other changed" in w for w in ds.warnings)
+
+
+def test_plus_adds_a_number_or_a_linked_share(tmp_path):
+    form = _form(bias_s={"median": {"parameter": "late", "plus": {"parameter": "gap", "scale": 0.5}},
+                         "p5": {"parameter": "late", "use": "p5", "plus": 1.0}, "p95": 5.3, "scope": "recording"},
+                 support_s={"parameter": "span", "use": "p10-p90", "plus": 0.5})
+    ds = _load(tmp_path, form, _param("late", 4.17, p5=3.55), _param("gap", 2.0), _param("span", 6.6, p10=4.9, p90=8.3))
+    f = ds.items["variable"]["s"]["timing"][0]
+    assert f["bias_s"]["median"] == pytest.approx(5.17) and f["bias_s"]["p5"] == pytest.approx(4.55)
+    assert f["support_s"] == pytest.approx([5.4, 8.8])
+
+
+def test_plus_must_be_one_number(tmp_path):
+    form = _form(bias_s={"median": {"parameter": "late", "plus": {"parameter": "span", "use": "p10-p90"}},
+                         "p5": 3.4, "p95": 5.3, "scope": "recording"})
+    with pytest.raises(AtlasError, match="'plus' must be"):
+        _load(tmp_path, form, _param("late", 4.17), _param("span", 6.6, p10=4.9, p90=8.3))

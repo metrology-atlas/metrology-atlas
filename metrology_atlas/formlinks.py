@@ -18,7 +18,10 @@ A link's keys:
   ``p95``, ``min``, ``max``, ``sd``), or a pair for a range field (``p10-p90``, ``p5-p95``, ``q1-q3``, ``min-max``);
 - ``scale``: a multiplier, applied after the unit conversion (needed when the parameter's unit is not a time);
 - ``rectangular``: true when the number is a full width to be turned into a standard uncertainty (divided by
-  sqrt(12)).
+  sqrt(12));
+- ``plus``: a number of seconds, or another link to one number, added after the rest (for a bias that is a measured
+  delay plus a known share of another quantity, such as half of a polling gap:
+  ``{parameter: hr-label-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}``).
 
 Form fields are in seconds; a parameter in ms, min or h is converted. :func:`typed_form_copies` lists form numbers
 typed where a parameter of a study the form cites holds the same number, for the engine to warn about.
@@ -30,7 +33,7 @@ import math
 
 from metrology_atlas.values import written_decimals
 
-KEYS = {"parameter", "use", "scale", "rectangular"}
+KEYS = {"parameter", "use", "scale", "rectangular", "plus"}
 TIME_UNITS = {"s": 1.0, "ms": 1e-3, "min": 60.0, "h": 3600.0}
 SPREAD_KEYS = {"p5", "p10", "q1", "q3", "p90", "p95", "min", "max", "sd"}
 PAIRS = {"p10-p90": ("p10", "p90"), "p5-p95": ("p5", "p95"), "q1-q3": ("q1", "q3"), "min-max": ("min", "max")}
@@ -71,6 +74,16 @@ def _value(link: dict, ds, where: str, problems: list[str]):
         problems.append(f"{where}: link to '{pid}': its unit '{unit}' is not a time, so give a 'scale' to seconds")
         return None
     out = [float(n) * factor / (math.sqrt(12.0) if link.get("rectangular") else 1.0) for n in nums]
+    if "plus" in link:
+        extra = link["plus"]
+        if is_link(extra):
+            extra = _value(extra, ds, f"{where} (plus)", problems)
+            if extra is None:
+                return None
+        if isinstance(extra, list) or not isinstance(extra, (int, float)) or isinstance(extra, bool):
+            problems.append(f"{where}: link to '{pid}': 'plus' must be a number of seconds or a link to one number")
+            return None
+        out = [x + float(extra) for x in out]
     return out if len(out) == 2 else out[0]
 
 

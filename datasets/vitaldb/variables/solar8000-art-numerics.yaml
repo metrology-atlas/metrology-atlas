@@ -17,9 +17,9 @@ timing:
   - 5
   stamp_position: close
   removes_bias_s: &id001
-    median: 1.3
-    p5: 0.0
-    p95: 2.74
+    median: {parameter: solar8000-poll-gap, scale: 0.5, plus: 1.3}
+    p5: {parameter: solar8000-poll-gap, scale: 0.5, plus: 0.0}
+    p95: {parameter: solar8000-poll-gap, scale: 0.5, plus: 2.74}
     scope: recording
     status: measured
     evidence: 'label delays: systolic 1.05, diastolic 1.1, mean 1.7 s (medians); CVP 3.8 s (2.85-4.8)'
@@ -32,6 +32,13 @@ timing:
       u_s: 0.16
       scope: recording
       evidence: 'label SE median: ART 0.15-0.16 s, CVP 0.21 s'
+    - name: wait for the poll
+      type: B
+      distribution: rectangular
+      u_s: {parameter: solar8000-poll-gap, rectangular: true}
+      scope: independent
+      evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
+        (the delay fits' uniform phase)
   correction: per-case delay label
   corrects:
   - solar-win
@@ -57,6 +64,13 @@ timing:
       distribution: empirical
       u_s: 0.8328
       scope: recording
+    - name: wait for the poll
+      type: B
+      distribution: rectangular
+      u_s: {parameter: solar8000-poll-gap, rectangular: true}
+      scope: independent
+      evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
+        (the delay fits' uniform phase)
   domain: recorder-pc
   status: measured
   evidence: label delays from window end (above); 2 s polls; CVP later (3.8 s median)

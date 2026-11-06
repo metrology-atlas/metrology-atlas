@@ -16,9 +16,9 @@ timing:
   - 30
   stamp_position: close
   removes_bias_s:
-    median: 3.0
-    p5: 0.55
-    p95: 8.5
+    median: {parameter: primus-record-interval, scale: 0.5, plus: 3.0}
+    p5: {parameter: primus-record-interval, scale: 0.5, plus: 0.55}
+    p95: {parameter: primus-record-interval, scale: 0.5, plus: 8.5}
     scope: recording
     status: measured
     evidence: 'label delays: ETCO2 median 1.55 s, PIP 4.6 s, RR 4.3 s (p5-p95 over all three 0.55-8.5 s)'
@@ -31,6 +31,14 @@ timing:
       u_s: 0.21
       scope: recording
       evidence: 'label SE median: ETCO2 0.20 s, PIP 0.23 s; RR weaker, 1.0 s'
+    - name: wait for the record
+      type: B
+      distribution: rectangular
+      u_s: {parameter: primus-record-interval, rectangular: true}
+      scope: independent
+      evidence: ETCO2 and PIP wait between none and all of one Primus record (0.48 s), as the delay fits model
+        them; RR waits up to a whole 7 s poll (a further 3.5 s on average and 2.0 s standard uncertainty, not in
+        this pooled form)
   correction: per-case delay label
   corrects:
   - primus-num
@@ -52,9 +60,9 @@ timing:
   - 30
   stamp_position: close
   bias_s:
-    median: 3.0
-    p5: 0.55
-    p95: 8.5
+    median: {parameter: primus-record-interval, scale: 0.5, plus: 3.0}
+    p5: {parameter: primus-record-interval, scale: 0.5, plus: 0.55}
+    p95: {parameter: primus-record-interval, scale: 0.5, plus: 8.5}
     scope: recording
     status: measured
   uncertainty:
@@ -64,6 +72,14 @@ timing:
       distribution: empirical
       u_s: 2.4164
       scope: recording
+    - name: wait for the record
+      type: B
+      distribution: rectangular
+      u_s: {parameter: primus-record-interval, rectangular: true}
+      scope: independent
+      evidence: ETCO2 and PIP wait between none and all of one Primus record (0.48 s), as the delay fits model
+        them; RR waits up to a whole 7 s poll (a further 3.5 s on average and 2.0 s standard uncertainty, not in
+        this pooled form)
   domain: recorder-pc
   status: measured
   evidence: 'label delays from window end: ETCO2 1.55, PIP 4.6, RR 4.3 s (medians); 7 s polls; ETCO2 and PIP one breath,
@@ -111,7 +127,3 @@ derived_from:
   tracks:
   - PIP_MBAR
   note: The Primus computes PIP from its airway pressure sensor, whose waveform it also exports.
-typed_ok:
-- field: timing[primus-lab].removes_bias_s.median
-  parameter: cvp-delay
-  why: the Primus numerics' typical delay (3.0 s), not the CVP delay's p10
