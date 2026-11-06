@@ -8,6 +8,9 @@ against: recorder-pc
 modes: [frequent]
 rate: snuadc-stamp-arithmetic
 correction:
-  rule: Small forward steps of +5 to +15 ms, about one an hour; never the 0.48 s pull-back of step mode.
+  rule: >-
+    Small forward steps of +5 to +15 ms, about one an hour; never the 0.48 s pull-back of step mode. The SNUADC
+    runs slow (a median +3.3 ppm); at each read the recorder fills the shortfall with blank samples, which show
+    as whole-sample gaps in the stamps ([[study:vital-recorder-stamping-rules]]).
   size: snuadc-frequent-steps
 status: measured

@@ -80,8 +80,10 @@ open_questions:
     summary: >-
       At 6–8 h, where the route agrees with the resets, step-mode recordings without a whole reset interval sit a
       median +19.6 ppm above the stamp model's rate (134 recordings). If real, the stamp model gives those units a rate
-      too fast, which would bear on [[observation:snuadc-long-uncorrected]]. The burst lag in the same recordings, and a
-      finer estimator for shorter ones, would test it.
+      too fast, which would bear on [[observation:snuadc-long-uncorrected]]. The recorder's rules predict it: a unit
+      shows a reset only if it gains 0.5 s within a segment, so those without one are selected for slower rates
+      ([[study:vital-recorder-stamping-rules]]). The burst lag in the same recordings, and a finer estimator for
+      shorter ones, would test it.
 code:
   - vitaldb-bench/tools/solar_snuadc_clock.py
   - vitaldb-bench/tools/solar_length_check.py

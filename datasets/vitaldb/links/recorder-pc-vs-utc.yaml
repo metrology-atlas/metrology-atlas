@@ -11,8 +11,9 @@ correction:
   rule: |
     UTCk sets the PC clock from KRISS's NTP server, ntp.kriss.re.kr, which KRISS keeps on UTC(KRIS)
     ([[reference:kriss-utck]]). KRISS warns of errors from a few milliseconds to a few hundred milliseconds, depending on the
-    network. How often UTCk synchronised during the collection is not known (asked). Whatever correction it made is
-    smaller than 0.5 s: no simultaneous jump of every device of that size was found in any file
+    network. UTCk was run by hand, at irregular times, and no logs were kept
+    ([[reference:lee2026correspondence-nov]]), so when it synchronised and by how much cannot be recovered. Whatever
+    correction it made is smaller than 0.5 s: no simultaneous jump of every device of that size was found in any file
     ([[parameter:pc-step-bound]]).
   period: pc-sync-period
 status: estimated

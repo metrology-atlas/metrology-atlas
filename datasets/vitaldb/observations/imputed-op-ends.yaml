@@ -1,8 +1,9 @@
 id: imputed-op-ends
 name: Op end was filled in from the recording end in 537 cases
 summary: >-
-  In 537 cases (8.4%) the op end is exactly 10 minutes before the end of the recording, so it was filled in rather
-  than charted. These cases are concentrated in thoracic surgery and under sedation or spinal anaesthesia.
+  In 537 cases (8.4%) the op end is exactly 10 minutes before the end of the recording. Recordings end 10 minutes
+  after the SpO2 and the ECG heart rate stop ([[reference:lee2026correspondence-nov]]), so these op ends are the
+  moment the patient was disconnected, filled in where none was charted. These cases are concentrated in thoracic surgery and under sedation or spinal anaesthesia.
 status: established
 clocks: [hospital-records]
 devices: [clinical-records]

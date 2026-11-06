@@ -67,7 +67,9 @@ discussion: |
 limitations: |
   The check needs a BIS with its own corrections: 224 recordings, three quarters in step mode (165), mostly on port COM4. The hum
   is measured over the first 60 min of a recording and applied to all of it. It gives a rate, not an offset. The
-  drift is stated for recordings without corrections; with corrections there is none to speak of.
+  drift is stated for recordings without corrections; with corrections there is none to speak of. It does not
+  apply to frequent-correction recordings: the ten with a hum rate say fast (−33 to −117 ppm), where their own
+  steps say slow ([[study:vital-recorder-stamping-rules]]).
 open_questions:
   - title: "Why recordings with one correction sit apart"
     kind: hypothesis

@@ -28,17 +28,15 @@ results: |
     (minor resection) to 2.3% (breast). Emergency 9.8%, elective 8.2%. ([[observation:imputed-op-ends]])
 discussion: |
   - The noisy anaesthesia ends were most likely charted as an interval after op end, in whole 5-minute steps.
+  - Recordings end 10 minutes after the SpO2 and the ECG heart rate stop ([[reference:lee2026correspondence-nov]]),
+    so an op end 598–604 s before the recording end is the moment monitoring stopped, the patient's disconnection,
+    put in where no op end was charted. It is a device time, not a charted one, and lies after the true end of the
+    operation by however long the patient stayed monitored.
   - Excluded values return a status rather than a distribution; flagged values are fitted and returned with the flag.
   - The 1900 dates are the "missing time stored as zero" bug from §5.5 of the review.
 limitations: |
   - The noisy anaesthesia ends were missed in an earlier fit, because their noise (about 10⁻⁶ s) slipped under the test threshold.
 open_questions:
-  - title: "Was op end imputed deliberately?"
-    kind: next step
-    summary: >-
-      Was op end imputed from recording end deliberately? Times were entered by hand, usually at 5-minute resolution
-      ([[reference:lee2026correspondence]]), which does not explain ends 598–604 s before the recording end. Asked of
-      the dataset's creator (October 2026).
   - title: "Why imputed op ends cluster in thoracic and non-general cases"
     kind: phenomenon
     summary: >-

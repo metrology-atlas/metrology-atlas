@@ -9,7 +9,9 @@ modes: [step]
 rate: snuadc-step-rate
 correction:
   rule: |
-    Triggered by drift, not by a timer: once the stamps are about 0.5 s ahead, the recorder pulls the track back.
+    Triggered by drift, not by a timer: once the count of a fast SNUADC is more than 0.5 s ahead of the PC, the
+    recorder discards the excess samples and restarts the count from the PC time
+    ([[study:vital-recorder-stamping-rules]]).
     The stamps show only −0.480 s of the true correction of about 0.500 s, because about 19 ms of signal is never
     sampled ([[parameter:snuadc-reset-loss]]). In all recordings ([[study:device-correction-schedules]]): 3,417
     resets in 2,540 recordings, a median 2.08 h apart; the drift count usually starts with the recording (the first

@@ -104,9 +104,9 @@ open_questions:
   - title: "Which firmware ran"
     kind: phenomenon
     summary: >-
-      The deployed version, and which converter channel feeds which track, are not known. The dataset's creator
-      pointed to the public repository ([[reference:lee2026correspondence]]); whether it is the version that ran
-      during the collection has been asked.
+      The deployed version, and which converter channel feeds which track, are not known. The firmware was
+      published in November 2018 and the same code was used before then, but which version ran on each unit was not
+      recorded ([[reference:lee2026correspondence-nov]]).
   - title: "Missing output codes and the stored scale"
     kind: next step
     summary: >-
@@ -130,4 +130,4 @@ open_questions:
       The board sends no time, so Vital Recorder assigns every stamp. Its rule is inferred from the data (the stamp
       sawtooth and its corrections); a description or the code would test the stamp model directly. Asked of the
       dataset's creator.
-references: [snuadc, lee2026correspondence]
+references: [snuadc, lee2026correspondence, lee2026correspondence-nov]

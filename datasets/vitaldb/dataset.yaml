@@ -100,7 +100,7 @@ utc_step:
   clock: recorder-pc
   kind: sync
   effect: >-
-    Synchronised to UTC(KRIS) with KRISS's UTCk (the dataset's creator; interval not known), drifting tens of ppm
+    Synchronised to UTC(KRIS) with KRISS's UTCk, by hand at irregular times (the dataset's creator), drifting tens of ppm
     in between. Not observable in the release: dates are shifted to 2100. No step of 0.5 s or more was found.
   bias_s: [0.003, 0.9]
   status: estimated

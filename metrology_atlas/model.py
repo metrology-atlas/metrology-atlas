@@ -397,6 +397,8 @@ KINDS: dict[str, Kind] = {
                       help="Form numbers checked and found to be a different quantity that happens to equal a "
                            "parameter's number (give field and parameter); the typed-copy check skips them."),
                 Field("code", "strs", help="For a derived variable: the code that computes it, as software-id/path."),
+                Field("figures", "objs", fields=FIGURE, help="Figures of the signal itself, such as its power spectrum; "
+                      "[[figure:id]] in the prose places one, the rest follow at the end of the page."),
                 Field("version", "str", help="For a derived variable: the version of its algorithm. Each version of a "
                                              "feature is its own variable."),
                 Field("superseded_by", "ref", ref="variable",

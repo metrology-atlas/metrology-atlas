@@ -64,17 +64,9 @@ discussion: |
   every 7,230 s by whole 16 ms samples, but its AWP pauses at the same moments while CO2 carries on, so the
   same-jump test rejected nearly all of them ([[study:device-correction-schedules]]).
 limitations: |
-  The 2 s limit and the same-jump test can miss corrections during gaps. The cases with no correction at all are not
-  yet explained (slower units, a third recorder mode, or both); the shared bursts point to slower units
-  ([[observation:snuadc-long-uncorrected]]).
-open_questions:
-  - title: "Recordings that never correct their clocks"
-    kind: phenomenon
-    summary: >-
-      Some recordings never correct their clocks within the 2 s test. Slower units, a third recorder mode, or both,
-      could explain it. The shared bursts point to slower units (about −36 ppm where the BIS rate is known;
-      [[observation:snuadc-long-uncorrected]]); their drift units have not been compared with the rest. Followed up
-      on [[study:snuadc-stamp-sawtooth]].
+  The 2 s limit and the same-jump test can miss corrections during gaps. The cases with no correction at all are
+  fast units that never get half a second ahead within a segment ([[study:vital-recorder-stamping-rules]],
+  [[observation:snuadc-long-uncorrected]]).
 code:
   - vitaldb-bench/tools/syncscan.py
   - vitaldb-bench/tools/syncanalyze.py

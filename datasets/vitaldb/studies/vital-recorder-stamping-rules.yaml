@@ -1,0 +1,82 @@
+id: vital-recorder-stamping-rules
+name: How the Vital Recorder stamps SNUADC records, tested against the release
+summary: >-
+  The Vital Recorder counts SNUADC samples from the PC time and compares the count with the PC clock at every read: a
+  count behind by up to 0.5 s is filled with blank time, one behind by more starts a new segment, and one ahead by
+  more than 0.5 s loses its excess samples and restarts from the PC time. These rules account for all three SNUADC
+  modes in the release: step mode is a fast converter, frequent-correction mode a slow one, and a recording with no
+  correction a fast one that never gains half a second within a segment.
+date: 2026-11-06
+status: current
+methods: [stamp-reading, source-review]
+techniques: [coincident-jumps, null-controls]
+clocks: [snuadc-sample, recorder-pc]
+devices: [snuadc, vital-recorder]
+variables: [snuadc-ecg-ii]
+data: |
+  The rules as described by Hyung-Chul Lee, who wrote the Vital Recorder ([[reference:lee2026correspondence-nov]]).
+  Tested on the release: the SNUADC mode labels of all recordings; the hum rates of the recordings with no
+  correction ([[study:hum-snuadc-rate]]); the reset-interval rates of the step-mode recordings
+  ([[study:snuadc-stamp-sawtooth]]); the longest SNUADC segment of each recording; and the ECG II stamps of every
+  frequent-correction recording, read from the files.
+background: |
+  The SNUADC sends blocks of samples, and the recorder stamps them. Three behaviours had been found in the stamps
+  without knowing why ([[study:clock-correction-scan]]): pull-backs of about 0.48 s every two hours or so (step
+  mode), small forward steps of a few milliseconds (frequent-correction mode), and, in many long recordings, no
+  correction at all ([[observation:snuadc-long-uncorrected]]).
+method: |
+  **The rules.** The first sample of a segment is stamped with the PC time at the block's arrival minus the block's
+  duration. Stamps then advance by counting samples. At each read the counted time is compared with the PC clock:
+
+  - behind by up to 0.5 s: blank samples are inserted to close the gap (stored as empty time, a gap in the stamps);
+  - behind by more than 0.5 s: a new segment starts at the PC time;
+  - ahead by more than 0.5 s: the excess samples at the end of the block are discarded and the count restarts from
+    the PC time.
+
+  So a converter that runs fast against the PC gains on it until it is half a second ahead and is then reset (step
+  mode); a slow one falls behind and is filled at every read (frequent-correction mode); and a fast one that never
+  gains half a second within a segment shows no correction.
+
+  **Tests** ([[code:vitaldb-bench/tools/vital_recorder_rules_check.py]], output
+  `$W/recorder_rules/summary.json`; rates as the PC's frequency minus the SNUADC's, negative when the SNUADC is fast):
+
+  1. *No correction.* The rules allow only fast converters that never gain 0.5 s within a segment:
+     −0.5 s / T ≤ rate ≤ 0, with T the recording's longest SNUADC segment. Tested on the recordings with a hum rate
+     (robust SD 13 ppm against the BIS bursts).
+  2. *Step mode.* Every reset-interval rate must be fast.
+  3. *Frequent-correction mode.* Every forward stamp step of ECG II between 0.1 ms and 100 ms (a step and its reverse
+     within two records left out): its size, whether it is a whole number of samples (blank samples keep the
+     count's grid), the rate it implies (total forward steps over the recording's hours), and whether the signal is
+     continuous across it (blank time, not stored zeros), against record boundaries with no step.
+results: |
+  - **No correction (1,238 recordings with a hum rate).** 81.8% have a rate inside the allowed window and 98.5%
+    within two noise SDs of it. 5 are clearly slow and 14 clearly too fast. The rates are a median −44.8 ppm
+    (p5–p95 −91.6 to −15.3), the bounds a median −73.0 ppm (longest segments a median 1.9 h).
+  - **Step mode (640 recordings).** All are fast: a median −63.0 ppm (p5–p95 −80.3 to −36.9).
+  - **Frequent-correction mode (all 120 recordings, 762 forward steps).** Every step is a whole number of samples
+    (within 0.1 sample), 2–18 ms in 718 of them, spread nearly evenly across that range, with few above 20 ms. They imply
+    the SNUADC runs slow, by a median +3.3 ppm (p5–p95 0.0 to +18.1). The signal is continuous across 94.8% of the
+    steps (99.7% at boundaries with no step): the blanks are empty time, not stored zero samples.
+discussion: |
+  The three SNUADC modes are one rule seen through converters of different speed: fast units make step mode, slow
+  ones frequent-correction mode, and fast ones that never get half a second ahead make no correction. That settles
+  [[observation:snuadc-long-uncorrected]]: there is no third recorder mode. Two consequences follow. The stamps of a
+  recording with no correction still drift, by up to half a second over its longest segment, and that drift is
+  invisible in them. And the hum rate of [[study:hum-snuadc-rate]] does not apply to frequent-correction
+  recordings: the ten that have one say fast (−33 to −117 ppm), where their own steps say slow.
+limitations: |
+  The rules are the author's account of the software, tested here against what it left in the files; the code was
+  not read. The 0.5 s thresholds are as described; the tests check the direction of each mode and the size of the
+  frequent steps, not the thresholds' exact values. The hum rates carry 13 ppm of noise, so a recording near the
+  window's edge cannot be placed. Which software version recorded each file is not known.
+open_questions:
+  - title: "The few recordings outside the window"
+    kind: phenomenon
+    summary: >-
+      Of the recordings with no correction, 5 look slow and 14 too fast for the rules by more than two noise SDs. A
+      slow one should have been filled; a fast one should have been reset. Hum rates in error (a wandering grid, a
+      setup's calibration) or a segment boundary missed in the count would explain them; their stamps have not been
+      looked at one by one.
+code:
+  - vitaldb-bench/tools/vital_recorder_rules_check.py
+references: [lee2026correspondence-nov]

@@ -28,14 +28,13 @@ results: |
   - The package reproduces the stored log-likelihood within 0.14.
 discussion: |
   - Related times are rounded in opposite directions, so the anchor is fitted per variable and never assumed shared.
+  - The imputed op ends mark the patient's disconnection from the monitors, not the end of the operation:
+    recordings end 10 minutes after the SpO2 and the ECG heart rate stop ([[reference:lee2026correspondence-nov]]).
+    Excluding them is right.
   - Intervals inherit both biases: charted emergence (op end to anaesthesia end) is inflated by about 6 min (median 6.0 min, [[study:value-model-aneend]]).
 limitations: |
   - The latent has two narrow peaks (13 and 17 min before the recording ends). With most values on a 5-minute grid, fine structure in a narrow latent is hard to separate from rounding, so these peaks should not be read as real.
 open_questions:
-  - title: "Was op end imputed deliberately?"
-    kind: next step
-    summary: >-
-      Was op end imputed from recording end deliberately? This is to be asked of the VitalDB team.
   - title: "Where the imputed op ends are"
     kind: next step
     summary: >-

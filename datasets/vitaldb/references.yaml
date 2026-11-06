@@ -80,6 +80,14 @@
   note: >-
     Recorder PCs synchronised with KRISS's UTCk during collection; operation, anaesthesia and operating-room times
     entered by hand in the EMR, usually at 5-minute resolution; SNUADC is open source.
+- id: lee2026correspondence-nov
+  group: Data and recording
+  citation: 'Lee H-C. Correspondence with A. J. Goodwin, November 2026.'
+  note: >-
+    UTCk run by hand at irregular times, with no logs kept; the EMR server probably on the hospital's default
+    network time; recordings end 10 minutes after SpO2 and the ECG heart rate stop; SNUADC firmware published in
+    November 2018, the same code used before, the version on each unit not recorded; how the Vital Recorder stamps
+    SNUADC records.
 - id: kriss-utck
   group: Data and recording
   citation: 'Korea Research Institute of Standards and Science (KRISS). UTCk: standard time synchronisation program. Accessed 30 October 2026.'
