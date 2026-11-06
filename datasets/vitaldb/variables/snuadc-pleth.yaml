@@ -245,3 +245,7 @@ chain:
   - 0.002
   - 0.002
   status: measured
+typed_ok:
+- field: chain[0].bias_s[0]
+  parameter: snuadc-raw-frequent-bias
+  why: the sawtooth chain step's smallest offset (0.01 s just after a correction), not the frequent-mode p95

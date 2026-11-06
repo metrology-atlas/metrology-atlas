@@ -1,0 +1,12 @@
+id: snuadc-raw-step-bias
+name: SNUADC raw stamps in step mode
+quantity: >-
+  How late a step-mode SNUADC record's raw stamp sits against the stamp model, a stamp just after a correction taken
+  as on time; median over records of every tenth step-mode recording.
+value: 0.26
+unit: s
+spread: {p5: 0.03, p95: 0.55, n: 257, text: "257 step-mode recordings, 20.7 million records; snu_raw_offset/summary.json (step, anchored)"}
+status: measured
+study: snuadc-stamp-sawtooth
+about: [snuadc-ecg-ii, snuadc-art]
+date: 2026-11-06

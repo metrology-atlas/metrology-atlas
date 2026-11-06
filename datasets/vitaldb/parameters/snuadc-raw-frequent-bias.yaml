@@ -1,0 +1,12 @@
+id: snuadc-raw-frequent-bias
+name: SNUADC raw stamps in frequent-correction mode
+quantity: >-
+  How late a frequent-correction-mode SNUADC record's raw stamp sits against the stamp model, measured as the step
+  form.
+value: 0.007
+unit: s
+spread: {p5: 0.003, p95: 0.013, n: 380, text: "380 recordings, 15.1 million records; snu_raw_offset/summary.json (small, anchored)"}
+status: measured
+study: snuadc-stamp-sawtooth
+about: [snuadc-ecg-ii, snuadc-art]
+date: 2026-11-06

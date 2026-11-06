@@ -106,9 +106,9 @@ timing:
   stamp_position: instant
   grid_s: 0.002
   bias_s:
-    median: 0.26
-    p5: 0.03
-    p95: 0.55
+    median: {parameter: snuadc-raw-step-bias}
+    p5: {parameter: snuadc-raw-step-bias, use: p5}
+    p95: {parameter: snuadc-raw-step-bias, use: p95}
     scope: structured
     status: measured
   uncertainty:
@@ -138,9 +138,9 @@ timing:
   stamp_position: instant
   grid_s: 0.002
   bias_s:
-    median: 0.007
-    p5: 0.003
-    p95: 0.013
+    median: {parameter: snuadc-raw-frequent-bias}
+    p5: {parameter: snuadc-raw-frequent-bias, use: p5}
+    p95: {parameter: snuadc-raw-frequent-bias, use: p95}
     scope: structured
     status: measured
   uncertainty:
@@ -211,3 +211,7 @@ chain:
 measures:
 - measurand: arterial-pressure
   method: invasive, arterial line (the Solar8000's analogue output)
+typed_ok:
+- field: chain[0].bias_s[0]
+  parameter: snuadc-raw-frequent-bias
+  why: the sawtooth chain step's smallest offset (0.01 s just after a correction), not the frequent-mode p95

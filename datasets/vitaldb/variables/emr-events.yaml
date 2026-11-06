@@ -19,7 +19,7 @@ timing:
   stamp_position: instant
   grid_s: 300
   removes_bias_s:
-    value: 150
+    value: {parameter: emr-rounding}
     scope: independent
     status: measured
   uncertainty:
@@ -28,7 +28,7 @@ timing:
     - name: 5-minute grid (rounded up)
       type: B
       distribution: rectangular
-      u_s: 86.6025
+      u_s: {parameter: emr-rounding, use: sd}
       scope: independent
   correction: half the 5-minute step, known in advance
   corrects:
@@ -46,7 +46,7 @@ timing:
   grid_s: 300
   bias_s:
     name: rounded up to the next 5-minute mark
-    value: 150
+    value: {parameter: emr-rounding}
     scope: independent
     status: measured
   uncertainty:
@@ -54,7 +54,7 @@ timing:
     - name: 5-minute grid (rounded up)
       type: B
       distribution: rectangular
-      u_s: 86.6025
+      u_s: {parameter: emr-rounding, use: sd}
       scope: independent
   domain: records
   status: measured

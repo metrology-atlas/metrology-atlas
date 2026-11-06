@@ -19,10 +19,10 @@ timing:
   - 0
   stamp_position: instant
   grid_s: 0.0078
-  removes_bias_s: &id001
-    median: -0.787
-    p5: -0.97
-    p95: -0.601
+  removes_bias_s:
+    median: {parameter: bis-eeg-offset}
+    p5: {parameter: bis-eeg-offset, use: p5}
+    p95: {parameter: bis-eeg-offset, use: p95}
     n: 2702
     scope: recording
     status: measured
@@ -70,7 +70,14 @@ timing:
   - 0
   stamp_position: instant
   grid_s: 0.0078
-  removes_bias_s: *id001
+  removes_bias_s:
+    median: {parameter: bis-eeg-offset}
+    p5: {parameter: bis-eeg-offset, use: p5}
+    p95: {parameter: bis-eeg-offset, use: p95}
+    n: 2702
+    scope: recording
+    status: measured
+    evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (reframe_stage3/bis_numbers.json)
   uncertainty:
     upper_bound: true
     interval95_s:
@@ -108,7 +115,14 @@ timing:
   - 0
   stamp_position: instant
   grid_s: 0.0078
-  removes_bias_s: *id001
+  removes_bias_s:
+    median: {parameter: bis-eeg-offset}
+    p5: {parameter: bis-eeg-offset, use: p5}
+    p95: {parameter: bis-eeg-offset, use: p95}
+    n: 2702
+    scope: recording
+    status: measured
+    evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (reframe_stage3/bis_numbers.json)
   uncertainty:
     upper_bound: true
     interval95_s:
@@ -157,11 +171,18 @@ timing:
   - 0
   stamp_position: instant
   grid_s: 0.0078
-  bias_s: *id001
+  bias_s:
+    median: {parameter: bis-eeg-offset}
+    p5: {parameter: bis-eeg-offset, use: p5}
+    p95: {parameter: bis-eeg-offset, use: p95}
+    n: 2702
+    scope: recording
+    status: measured
+    evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (reframe_stage3/bis_numbers.json)
   look_ahead:
     lead_s:
-    - 0.6
-    - 0.97
+    - {parameter: bis-eeg-offset, use: p95, scale: -1}
+    - {parameter: bis-eeg-offset, use: p5, scale: -1}
     note: 'On the working reference, a BIS EEG stamp comes 0.6-1.0 s before the event: raw BIS stamps put the EEG ahead
       of the SNUADC signals.'
   uncertainty:
@@ -204,7 +225,7 @@ chain:
   kind: clock
   effect: The BIS monitor stamps its EEG on its own clock; for the same event its stamps come 0.60–0.97 s before
     the ECG's (look-ahead). It drifts +25 ppm against the PC and is pulled forward on a fixed 8,192 s timer (median +[[value:bis-step]]).
-  bias_s: [-0.97, -0.601]
+  bias_s: {parameter: bis-eeg-offset, use: p5-p95}
   drift: +25 ppm against the PC; corrected every 8,192 s
   status: measured
   studies:
@@ -214,7 +235,7 @@ chain:
   effect: The stamp model removes the drift and corrections; one constant per SNUADC mode, from bursts seen in both
     the ECG and the EEG, removes the offset. What is left is a standard uncertainty of 63 ms with the mode's constant
     (an upper bound, median absolute error 42 ms) and 30 ms with the recording's own bursts (whole release).
-  bias_s: [-0.97, -0.601]
+  bias_s: {parameter: bis-eeg-offset, use: p5-p95}
   u_s: 0.0634
   status: measured
   studies:

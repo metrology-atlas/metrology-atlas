@@ -111,3 +111,7 @@ derived_from:
   tracks:
   - PIP_MBAR
   note: The Primus computes PIP from its airway pressure sensor, whose waveform it also exports.
+typed_ok:
+- field: timing[primus-lab].removes_bias_s.median
+  parameter: cvp-delay
+  why: the Primus numerics' typical delay (3.0 s), not the CVP delay's p10
