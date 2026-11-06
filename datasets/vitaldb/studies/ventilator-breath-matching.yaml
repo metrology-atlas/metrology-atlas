@@ -151,5 +151,5 @@ figures:
     theme: example traces
     source: vitaldb-bench tools/vent_match_figure.py
     records: [4644, 4817, 3148, 750, 2443, 1403, 3706, 5780, 2838, 1936, 3146, 3549, 2172, 629]
-    caption: Lag of the Primus ventilator against SNUADC, from CVP after breath matching, in 14 cases. The lag ramps by about 50–200 ppm and steps at Primus stamp jumps (red dashed lines). [[case:1936]] and [[case:3549]] show offset plateaus near 8 s; in [[case:3549]] and [[case:2172]] red crosses mark values before the fix.
+    caption: Lag of the Primus ventilator against SNUADC, from CVP after breath matching, in 14 cases. The lag ramps by about 50–200 ppm and steps at Primus stamp jumps (red dashed lines). [[case:1936]] and [[case:3549]] show offset plateaus near 8 s; in [[case:3549]] and [[case:2172]] red crosses mark values before the fix. The later breath rule ([[study:primus-awp-anchoring]], work/primus_breath_rule/stretch_k.json) takes one to three breaths off every stretch of [[case:3549]], all set by the main mode rather than by their own pauses, so its plateau is most likely whole breaths; in [[case:1936]] it keeps the matched breath in five of six stretches, so that plateau is not explained.
     alt: Fourteen small scatter plots of lag in ms against hours, with filled and open dots and red dashed vertical lines.

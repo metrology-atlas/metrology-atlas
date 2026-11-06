@@ -5,9 +5,10 @@ summary: >-
   and is reset, with an error of up to about ±2 s, at irregular gaps. Separately, about a quarter to a third of the
   stretches in the release-wide breath matching were measured a whole breath off, which inflated the apparent
   per-recording offset. Each stretch's breath is now set from pauses in ventilation or a rule, and the breath error
-  that remains is stated on its own.
+  that remains is stated on its own. Most of the AWP's lead over the breath is real on the recorder's timeline,
+  bounded by the PC-stamped PIP numerics.
 date: 2026-11-02
-status: draft
+status: current
 methods: [stamp-reading, shared-events]
 techniques: [windowed-cross-correlation, null-controls]
 clocks: [primus-clock, snuadc-sample]
@@ -66,19 +67,7 @@ results: |
 
     [[figure:primus-awp-offsets-by-rate]]
 
-  - **Matching breaths cannot tell which breath is right (null result, two recordings).** The shape correlation is
-    nearly equal one breath apart (0.971 against 0.970), and the breath-size check is weak (correlations 0.02–0.40),
-    changes between blocks (k = 0, 1, 0) and disagrees between the two references (CVP mostly k = 0, ART k = 2).
-    In the recording placed a breath above the main mode, CVP (5.2–5.8 s) and ART (5.7–6.2 s) agree at about
-    5.5 s, so not every offset a breath above the main mode is a slip: some may be real.
-  - **A clear pause in ventilation does fix the breath (test, four recordings).** 20 of 160 event edges resolved,
-    in all four recordings. In three recordings the CVP events give 0.7–1.0 s (and 2.4 s later in one), r 0.7–0.9,
-    matching the matched lag (k about 0); in one, the ART events give 1.5 s against a matched 5.3 s, a breath off.
-    In the recording with both references at about 5.5 s, the strongest events come in a regular series and do not
-    resolve the breath; the one that does gives 0.8–0.9 s against a matched 5.7 s, so there both references were
-    a breath off, probably because both start from the same coarse estimate. Many events are uninformative
-    (correlation under 0.5, or the peak at the edge of the range).
-  - **Release-wide, pauses in ventilation say most +1-breath offsets are slips (2 November, preliminary).** 26,022
+  - **Release-wide, pauses in ventilation say most +1-breath offsets are slips (2 November).** 26,022
     events in 3,470 recordings; 5,166 edges in 943 recordings resolve the breath (work/primus_vent_events/
     summary.json). With CVP (2,318 resolved edges) the event lag is a median 1.7 s (p10–p90 0.6–3.9 s) and, in
     breath periods, falls away steadily from 0–0.5 breaths with no second mode one breath up, where the matched
@@ -86,6 +75,13 @@ results: |
     a quarter of 0) for about 70% of CVP edges and is about one breath late for about 20%. The ART events sit later
     than the matched ART lag by a third to half a breath, so the arterial breathing modulation answers a pause
     later than its breath-by-breath shape does: ART pauses are not used as a reference.
+  - **The first test of pauses (four recordings, before the release-wide run).** 20 of 160 event edges resolved,
+    in all four recordings. In three recordings the CVP events give 0.7–1.0 s (and 2.4 s later in one), r 0.7–0.9,
+    matching the matched lag (k about 0); in one, the ART events give 1.5 s against a matched 5.3 s, a breath off.
+    In the recording with both references at about 5.5 s, the strongest events come in a regular series and do not
+    resolve the breath; the one that does gives 0.8–0.9 s against a matched 5.7 s, so there both references were
+    a breath off, probably because both start from the same coarse estimate. Many events are uninformative
+    (correlation under 0.5, or the peak at the edge of the range).
   - **The pause method has no bias against CVP (bias check, 2 November).** Where a CVP event and the matching agree
     on the breath (1,350 edges, k within a quarter of 0), event minus matched lag is a median 0.000 s (IQR −0.11 to
     +0.14 s; p10–p90 −0.24 to +0.33 s), the same at stops and restarts, at weaker and stronger correlations, and
@@ -129,6 +125,11 @@ results: |
     of the spread between recordings is in the AWP stamps, the rest in the reference, the fits or the breath
     rule. The PIP fit maps the AWP stamps to recorder time with a drift from each stretch's start, which the CVP
     lag does not, so the two differ by a few tenths of a second (work/primus_anchor_check/numerics_summary.json).
+  - **Matching breaths cannot tell which breath is right (null result, two recordings).** The shape correlation is
+    nearly equal one breath apart (0.971 against 0.970), and the breath-size check is weak (correlations 0.02–0.40),
+    changes between blocks (k = 0, 1, 0) and disagrees between the two references (CVP mostly k = 0, ART k = 2).
+    In the recording placed a breath above the main mode, CVP (5.2–5.8 s) and ART (5.7–6.2 s) agree at about
+    5.5 s, so not every offset a breath above the main mode is a slip: some may be real.
   - **Two attempts to bound the lead from single PIP records did not work (tests, six recordings).** Choosing the
     delay at which the share of matched PIP records rises fails because peak pressure barely changes between
     neighbouring breaths, and using records that match exactly one recent breath gives delays that do not hang
@@ -145,7 +146,7 @@ discussion: |
   every breath right can keep to stretches with their own resolved CVP pauses.
 
 limitations: |
-  Draft. The breath of most stretches comes from the rule, not from their own pauses, and the rule is right for about
+  The breath of most stretches comes from the rule, not from their own pauses, and the rule is right for about
   86% of those it reaches (leave-one-out on 498 stretches with their own pauses, which are themselves the reference).
   ART pauses answer later than ART matching (+0.16 s where they agree, more in the tails), so recordings with ART only
   rest on a correction. The breath periods come from the ventilator's settings, sampled every fourth record.
