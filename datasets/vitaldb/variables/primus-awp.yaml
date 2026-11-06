@@ -160,7 +160,9 @@ timing:
       AWP lead at a median [[value:primus-awp-lead-bound]] (5th-95th percentile 0.35 to 3.40 s), close to the lead
       against CVP; a few tenths of a second of that lead are the CVP reference's own delay and the airway-to-CVP
       physiology. The stamps are early because the recorder anchors each AWP stretch and counts samples from the
-      anchor, and the anchor is set early (primus-awp-anchoring).
+      anchor, and the anchor is set early (primus-awp-anchoring). Across recordings the bound follows the lead against
+      CVP only in part (Theil slope 0.47, Spearman 0.37, 924 recordings; primus_anchor_check numerics), so the
+      typical lead is real, but for a single recording the split between real lead and reference delay is less certain.
   studies:
   - primus-awp-conversion
   - primus-awp-anchoring
