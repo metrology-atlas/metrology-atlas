@@ -6,7 +6,7 @@ summary: >-
   recordings with duplicated or interleaved records. Primus AWP gaps are whole lost messages (CO2 gaps mostly are not); most SNUADC and BIS gaps
   are not.
 date: 2026-10-19
-status: draft
+status: current
 methods: [data-continuity]
 techniques: [remainder-test]
 clocks: [recorder-pc, snuadc-sample, bis-clock, primus-clock]

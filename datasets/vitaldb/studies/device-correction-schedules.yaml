@@ -3,12 +3,13 @@ name: When each device's clock is corrected, in every recording
 summary: >-
   From the steps between records in all 6,388 recordings: the BIS is corrected every [[value:bis-period]] and the Primus every
   [[value:primus-period]], on their own timers (the first correction comes at any time after the device starts); the SNUADC is
-  reset when 0.49 s of drift has built up. With the full rerun of the correction fit, it gives each device's drift
+  reset when its count gets half a second ahead of the PC, the recorder's rule
+  ([[study:vital-recorder-stamping-rules]]). With the full rerun of the correction fit, it gives each device's drift
   against the recorder PC in 4,728 BIS and 2,728 SNUADC recordings, and shows that the Primus's 20–23 s AWP pauses
   belong to its correction cycle. Every rate here is relative to the recorder PC, whose own clock drifts and is
   corrected.
 date: 2026-10-19
-status: draft
+status: current
 methods: [data-continuity, stamp-reading]
 techniques: [remainder-test]
 clocks: [bis-clock, snuadc-sample, primus-clock, recorder-pc]
@@ -51,7 +52,8 @@ results: |
     (about 18, 28, 44 and 50 ppm), which [[observation:device-drift-by-setup]] ties to setups. The census fit gives
     it in all 4,728 BIS recordings with a correction (median 21.1 ppm, 5th–95th 2.1–52.8) and agrees with the
     intervals where both exist (median difference 0.00 ppm; 33% differ by more than 1 ppm).
-  - **SNUADC: reset when 0.49 s of drift has built up.** 3,417 resets in 2,540 recordings, each a stamp step of [[value:snuadc-reset-stamp-step]] (SD 0.7 ms): 2,411 as five records
+  - **SNUADC: reset on a drift threshold** (the recorder resets a converter whose count is more than 0.5 s ahead of
+    the PC; [[study:vital-recorder-stamping-rules]]). 3,417 resets in 2,540 recordings, each a stamp step of [[value:snuadc-reset-stamp-step]] (SD 0.7 ms): 2,411 as five records
     out of order ([[observation:reset-records-out-of-order]]), 991 as one step. Between resets, a median 2.08 h
     (5th–95th percentile 1.65–3.57). Drift in the 642 recordings with two resets or more: median −62.9 ppm
     (5th–95th −80.3 to −36.9) against the recorder PC, again in clusters, and the same within 0.01 ppm from the

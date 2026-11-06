@@ -6,7 +6,7 @@ summary: >-
   message beyond whole ones. A continuity test with controls shows which classes lose data: shared pauses
   and most longer SNUADC gaps do; steps under one message, and SNUADC's lone one-message steps, mostly do not.
 date: 2026-10-19
-status: draft
+status: current
 methods: [data-continuity, signal-continuity]
 techniques: [remainder-test, junction-scores, null-controls]
 clocks: [recorder-pc, snuadc-sample, bis-clock, primus-clock]
@@ -85,7 +85,9 @@ limitations: |
   - The controls come from 40 recordings; join_z's power depends on how steep the signal is near the step.
   - Losses of a few samples (the SNUADC sub-message steps) are below what join_z can see;
     [[observation:small-snuadc-gaps]] found from beat intervals that sub-second SNUADC gaps lose data, which this
-    test can neither confirm nor rule out at 2–20 ms.
+    test can neither confirm nor rule out at 2–20 ms. The recorder's rules account for the frequent-correction
+    mode's 2–20 ms steps as blank time added for a slow converter, and the signal runs on across 94.8% of them
+    (99.7% at boundaries without a step; [[study:vital-recorder-stamping-rules]]).
   - Backward steps were capped at 3,000 per track in the scan.
 open_questions:
   - title: "The remaining backward steps"

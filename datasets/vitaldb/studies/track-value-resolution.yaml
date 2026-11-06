@@ -6,7 +6,7 @@ summary: >-
   of 12; BIS EEG is a 16-bit grid of 0.05 µV. Numerics are 32-bit floats on decimal grids of 1, 0.1, 0.01 or 0.001,
   one per track; settings sit on coarser grids of 10 or 100.
 date: 2026-10-19
-status: draft
+status: current
 methods: [value-resolution]
 devices: [snuadc, primus, bis, cardioq, solar8000, orchestra, ev1000, vigileo, vigilance]
 variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, primus-co2, primus-awp, bis-eeg, bis-index, solar8000-hr,
@@ -85,7 +85,7 @@ results: |
   - The same quantity from two devices agrees: Primus and Solar8000 minute volume (0.1 L/min), TV (1 mL), and the
     TV setting (0.01 L on the Primus, 10 mL on the Solar8000).
   - Corrupt values appear in a few tracks: BIS SQI to −2.1 × 10⁸, BIS index to −1,333, Orchestra concentrations and
-    volumes to 10⁶, Primus mean airway pressure 4,000. They will be listed with the leads-off and no-signal codes.
+    volumes to 10⁶, Primus mean airway pressure 4,000. Listing them beside the leads-off and no-signal codes is left for later.
 
   **Noise floor and hidden sample rates of the waveforms** ([[code:vitaldb-bench/tools/waveform_survey.py]] (300 random recordings, seed 20261106; `$W/waveform_survey/summary.json`)). The floor is the
   spectrum over 80–98% of Nyquist in one-minute epochs, against the rounding floor of a uniform ±½ step error (0 dB:
