@@ -40,7 +40,5 @@ discussion: |
   Times taken from different track subsets share an axis only in absolute file time. [[code:vitaldb-reader/src/vitaldb_reader/vital_file.py|vitaldb-reader]] reads whole
   files, so nothing in the builds moves. Beat-train alignment recovers offsets to about 1 ms, and serves as an
   integrity check and as a second cross-device method; the time-zero convention belongs in a reporting checklist.
-limitations: |
-  The offsets and counts were computed in a session whose script was not saved; only the inputs (482 annotation files, R peaks on a 1/360 s grid) have been checked since.
 code:
   - vitaldb-bench/tools/time_zeros.py

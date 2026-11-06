@@ -106,7 +106,6 @@ limitations: |
   finding the slip; stretches at the ends cannot be tested that way. The first version's slip-prediction result
   (tiers A and B, 26% to 29%) concerns the current fit and is not repeated here. The manual labels of
   [[study:ppg-sawtooth-slips]] include 25 grid-predicted slips, which will check the predicted steps by eye.
-  No script or output is saved for this study yet; its figure was made ad hoc.
 open_questions:
   - title: "Slips that come slowly"
     kind: phenomenon
