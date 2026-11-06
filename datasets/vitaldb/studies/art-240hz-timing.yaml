@@ -26,8 +26,9 @@ method: |
 results: |
   - **No sawtooth.** The swing over the cycle equals the control's (median 1.24 ms both; larger than the control in 14
     of 29; at most 2.1 ms). A sawtooth would give about 4 ms.
-  - **No drift.** The changes expected from the cycle's rate are −70 to −270 ms; the observed changes scatter around
-    zero, of both signs (physiology).
+  - **No drift.** The changes expected from the cycle's rate are −70 to −270 ms; the observed changes are smaller
+    (a median −14.6 ms, 21 of 29 negative) and do not follow the expected ones (Spearman −0.04): physiology, not
+    the cycle.
 discussion: |
   The 240 Hz pattern is in how the values are written (the output stage), not in when the pressure was sampled, so the
   arterial pressure's timing forms need no term for it. The cycle remains a usable marker of the output stage's clock

@@ -48,8 +48,10 @@ results: |
     pressure changes on every sample. Folded on the cycle, ART and PLETH steps are 10–13% larger at one point than at
     the opposite one; in 30 recordings across every SNUADC port the swing is ART 0.23 (median; beyond twice the
     largest control in 28 of 30), PLETH 0.29 (30 of 30), ECG II 0.03 (as control), CVP 0.05. The peak sits at the
-    same place in every recording, PLETH about 0.35 ms before ART, close to the SNUADC channel-to-channel read skew of
-    about 0.3 ms. The cycle runs at 239.986–239.994 Hz on the SNUADC count (−25 to −58 ppm).
+    same place in every recording: PLETH one fold bin (0.35 ms, the fold's resolution) earlier than ART on its own
+    stamps. A channel read later sees the cycle earlier against its stamps, so this is ART being read first, the
+    same skew [[study:monitor-lines]] describes as ART leading PLETH, close to the SNUADC channel-to-channel read
+    skew of about 0.3 ms. The cycle runs at 239.986–239.994 Hz on the SNUADC count (−25 to −58 ppm).
   - **No interpolation.** Pairs of equal differences of 2 codes or more are no more common than in the smoothed and
     re-rounded null (above it in 3–6% of SNUADC recordings).
 discussion: |

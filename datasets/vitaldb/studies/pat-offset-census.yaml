@@ -100,7 +100,7 @@ figures:
     source: vitaldb-bench tools/pat_offset_census.py
     caption: >-
       Left: per-recording median of the stored ECG→PLETH delay to the steepest upstroke (grey, 5,536 recordings) and of finger minus arterial
-      PAT (blue, 2,900 with an arterial line); one peak each. Middle: finger minus arterial PAT per PC key (median and
+      PAT (blue, the 2,900 with a finger minus arterial value); one peak each. Middle: finger minus arterial PAT per PC key (median and
       interquartile range, 31 keys with at least 20 recordings) against the global 497 ms (±15 ms shaded). Right: bin
       medians along the case order (bins of 400 cases) minus the overall median.
     alt: Left, two single-peaked histograms near 497 and 715 ms. Middle, 31 short intervals all centred within 15 ms of a red line at 497 ms. Right, two flat lines within a few milliseconds of zero.

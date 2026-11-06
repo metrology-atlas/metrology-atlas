@@ -4,7 +4,8 @@ background: |
   - The dataset paper (Lee et al., Sci Data 2022) says anaesthesia start and end are recorded at 5-minute intervals. That holds for anaesthesia end, but not for most anaesthesia starts.
   - Of the gaps from anaesthesia start to op start, 48.4% are multiples of 5 min, against 20% by chance.
 data: |
-  - 6,387 anaesthesia starts from `clinical_data.csv`.
+  - 6,387 anaesthesia starts from `clinical_data.csv` (all but [[case:1563]], whose 1900 admission date makes every
+    time in it invalid).
   - The clock minute is reconstructed from the admission date (see the clock-reconstruction study). Two cases with an admission that is not a whole minute, [[case:1342]] and [[case:5723]], are flagged `clock_uncertain`.
   - The charted start falls before recording start in 91.7% of cases (median 583 s).
 method: |

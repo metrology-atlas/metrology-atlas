@@ -36,7 +36,9 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
 
   2a. **What the peak means.** For windows symmetric about their centres, the lag at which changes agree best is the difference
   between the two windows'' centres (delay plus half the window), whatever the signal''s volatility, which sets only the
-  height and width of the curve. So the lag plus HR''s delay and half its 6 s window gives where PLETH_HR''s window is centred
+  height and width of the curve. So the lag plus HR''s delay and half its window (6 s as fitted; the mean of the last 8 R–R intervals found since in [[study:hr-derivation]]
+  spans about 6.9 s at 70 beats/min, which would move the centre about 0.4 s later, not refitted) gives where
+  PLETH_HR''s window is centred
   before its stamp. Repeated by the recording''s mean rate, to see whether that centre moves with the rate, as a window
   counted in beats would.
 

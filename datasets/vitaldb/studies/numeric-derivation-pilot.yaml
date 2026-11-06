@@ -21,7 +21,9 @@ method: |
   processing and transmission delay, and φ is where within the device's update phase the computation fell (uniform
   over one poll for values the monitor recomputes on its own schedule; for Primus values, over one Primus record
   interval, about 7 s, which counts the hold until the next record twice: see below). Values are uniform over their reporting bin (rounded or truncated). Every delay is
-  measured from the window's end, the anchor; the window's middle is a derived description only.
+  measured from the window's end, the anchor; the window's middle is a derived description only. The table below
+  gives that derived middle (d plus half the poll gap: 1 s for the Solar8000, 3.5 s for the Primus), so it is not
+  comparable with the d of [[study:numeric-delay-variability]].
 
   **Fit.** Each numeric was fitted against beat-by-beat or breath-by-breath values from its waveform. Candidates: a
   mean, median or exponential average over N events or T seconds, rate and waveform-mean variants, delays from −3 to
@@ -31,7 +33,7 @@ results: |
   6.3 s; ±0.4 s, not locked to breaths). Solar8000's ETCO2 and ventilator values change only every 6–8 s: Primus
   values relayed through the Solar8000. Every Solar8000 ST_II record is written twice at the same stamp.
 
-  | Numeric | Best fit (cases) | Delay from window end |
+  | Numeric | Best fit (cases) | Delay to window middle (d + half a poll) |
   |---|---|---|
   | HR | median R–R over ~6 s, truncated (14/24; superseded by [[study:hr-derivation]]) | 3.6 s |
   | ART systolic | median over 3 s, or EWMA ½ | 2.1 s |

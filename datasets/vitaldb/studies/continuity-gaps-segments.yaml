@@ -2,11 +2,11 @@ id: continuity-gaps-segments
 name: Gaps and unbroken segments in every waveform
 summary: >-
   Every gap and every unbroken segment in the 6,388 recordings, per waveform. The curves are not smooth: a cliff
-  at about 18 s in every device marks the recorder's pauses, SNUADC segments stop at 5 hours, Primus segments at
+  at about 18 s in every device but the CardioQ marks the recorder's pauses, SNUADC segments stop at 5 hours, Primus segments at
   about 2.0 hours and BIS segments at about 2.3 hours (each device's correction cycle), and BIS's short gaps grow with the time since the last one (clock
   resynchronisations, not lost data).
 date: 2026-10-19
-status: draft
+status: current
 methods: [data-continuity]
 techniques: [censored-durations, null-controls]
 clocks: [recorder-pc, snuadc-sample, bis-clock, primus-clock]
@@ -32,7 +32,7 @@ method: |
     interior only (a gap at both ends), and a Kaplan–Meier estimate with edge segments censored.
   - Each gap's length against the time since the previous gap in the same track (or since the start).
 results: |
-  - **A cliff at about 18 s in every device** (ECG II: 1,968 gaps of 15–25 s, median 17.9 s; the same in PLETH,
+  - **A cliff at about 18 s in every device but the CardioQ** (ECG II: 1,968 gaps of 15–25 s, median 17.9 s; the same in PLETH,
     ART, CVP, Primus and BIS). These are the recorder's pauses ([[observation:recording-pauses]]), common to
     every device, not losses in any one signal. Above about 30 s the curve falls smoothly to gaps of hours.
   - **A step at 0.2 s in SNUADC:** gaps of exactly one message.

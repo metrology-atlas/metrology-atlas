@@ -3,7 +3,8 @@ background: |
   - Op end is a charted event time with a 1-minute chronon.
   - About one in twelve op ends appears to have been set from the recording itself rather than from the record (see the imputed-times study).
 data: |
-  - 5,850 op ends, after excluding the 537 imputed from the recording (598–604 s before it ends; status `imputed`).
+  - 5,850 op ends, after excluding the 537 imputed from the recording (598–604 s before it ends; status `imputed`)
+    and [[case:1563]] (a 1900 admission date makes every time in it invalid).
   - 92 op ends do not share the sub-minute offset of the other charted times in their case and are flagged `clock_offset_mismatch`.
   - 52 op ends come after anaesthesia end and 108 equal it (anaesthesia ends with placeholder dates left out; 53
     with them; `screens.py timestamp-imputed-and-conformance`). Leaving out the imputed op ends (7 and 1 of them), the

@@ -4,7 +4,7 @@ background: |
   - It is almost entirely rounded: 95% fall on a 5-minute clock mark, with clear 10-minute preference.
 data: |
   - Anaesthesia ends from `clinical_data.csv`, modelled against the recording end.
-  - Excluded: the anaesthesia ends derived from an imputed op end (stored with floating-point noise), the 1900 placeholder in [[case:4476]], and two values outside the model range, [[case:3980]] (+720 min, probably a 12-hour clock error) and [[case:4959]] (+1,441 min, probably a date error).
+  - Excluded: the anaesthesia ends derived from an imputed op end (stored with floating-point noise), the 1900 placeholder in [[case:4476]], and two values outside the model range, [[case:3980]] (+720 min, probably a 12-hour clock error) and [[case:4959]] (+1,441 min, probably a date error); and [[case:1563]], whose 1900 admission date makes every time in it invalid. 6,254 are modelled.
   - 2,037 of the 6,388 anaesthesia ends (32%) fall after the end of recording. This is plausible, since monitors come off before handover, but these cannot be checked against the signals.
 method: |
   - Anaesthesia end = recording end + G, with G a log-spline density (K = 8).

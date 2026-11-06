@@ -27,7 +27,7 @@ results: |
   - The dose rises with weight^0.6 rather than in proportion, falls about 4% per decade of age, and is about 10% higher in men of the same weight.
   - The residual is heavy-tailed (df 3.3). A log-normal residual is about 330 BIC points worse.
   - A weight-dependent propensity adds nothing (ΔBIC 1.2), because the latent already moves the heap from 100 to 150 mg.
-  - Closing the set ends is worse (−log L 3,867–3,929 against 3,850).
+  - Closing the set ends is worse (−log L 3,867–3,929 against 3,850, on the original fitter's scale).
   - The engine's likelihood (−3,847.5) differs from the original closed-form fit's (−3,850.2) by 2.6, a known gap pinned in the library's tests.
 discussion: |
   - Doses below 60 mg or above 150 mg that are rounded to the set are written as 60 or 150, because the set ends are open.

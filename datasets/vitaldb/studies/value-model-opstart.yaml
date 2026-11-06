@@ -3,7 +3,7 @@ background: |
   - Op start is a charted event time with a 1-minute chronon.
   - Op start, op end and anaesthesia end share a 5-minute grid. Op start falls on a 5-minute clock mark in 92% of cases.
 data: |
-  - 6,387 op starts.
+  - 6,387 op starts (all but [[case:1563]], whose 1900 admission date makes every time in it invalid).
   - One op start does not share the sub-minute offset of the other charted times in its case and is flagged `clock_offset_mismatch`.
 method: |
   - The same approach as the anaesthesia times: the true op start is placed a log-spline offset after the recording start (K = 10).
