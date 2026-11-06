@@ -256,6 +256,6 @@ figures:
     theme: population results
     source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
     caption: >-
-      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,140 recordings. The plethysmogram's content ends by about 8 Hz; a quarter of recordings carry a line at 24.5 Hz.
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,140 recordings. The plethysmogram's content ends by about 8 Hz; a quarter of recordings carry a line near 24.5 Hz.
     alt: >-
       A log-log spectrum peaking near 1 Hz, falling steeply by 8 Hz to a floor just above the dashed rounding floor, with a small labelled peak at 24.5 Hz.

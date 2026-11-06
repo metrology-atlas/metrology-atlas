@@ -93,7 +93,8 @@ discussion: |
 
   The analogue path matters for any reading of filtering from the waveforms: the board adds none in the band, so the
   response measured in a SNUADC track is that of the monitor's output stage, and a change within a recording is a
-  monitor setting or the monitor's own processing, not the converter. Without an anti-aliasing filter, the monitor's
+  monitor setting or the monitor's own processing, not the converter. Measured over the release, the ECG's is a
+  low-pass of about 20 Hz, fourth order, the same on every unit ([[study:waveform-frequency-content]]). Without an anti-aliasing filter, the monitor's
   output update rate is sampled as it is; the 240 Hz line in arterial pressure and the plethysmogram
   ([[study:monitor-lines]]) is consistent with this.
 limitations: Read, not tested on the device. The deployed firmware and board versions are unknown (the netlist is dated March 2016); the channel-to-track mapping is unknown. Component tolerances are not stated, so the corner frequencies are nominal.

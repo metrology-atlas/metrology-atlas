@@ -53,9 +53,10 @@ results: |
     above rounding) by 10–20 Hz. A roll-off fits ART at about 9 Hz in a third of recordings (1,118 of 3,503), but
     that is where the pressure waveform's own content ends, and a filter there cannot be told from it. PLETH has
     no corner in all but 24 of 6,140 recordings.
-  - **Lines that are not mains.** The CO2 waveform carries a line at 24.75 Hz in 80% of recordings (25.65 Hz in
-    19%, 12.5 Hz in 12%), the update grid of [[study:primus-co2-update-grid]] seen as a spectrum. A quarter of
-    plethysmograms (25%) carry a line at 24.5 Hz, 8 dB above rounding.
+  - **Lines that are not mains.** The CO2 waveform carries a line near 25 Hz in 80% of recordings (in the bin
+    centred at 24.75 Hz; the bins are about 1.2 Hz wide there, and the next one, at 25.65 Hz, has it in 19%) and at
+    12.5 Hz in 12%: the 24.974 Hz update grid of [[study:primus-co2-update-grid]] seen as a spectrum. A quarter of
+    plethysmograms (25%) carry a line in the 24.5 Hz bin, 8 dB above rounding, whose source is not known.
   - **Mains hum is rare and no notch shows.** At 60 Hz ECG II carries a line in 269 of 6,337 recordings (4.2%), ECG
     V5 in 109 of 3,367, ART in 13 and PLETH in 11; no recording of any track has a notch; the rest cannot be told,
     because above the ECG's low-pass there is too little signal left for a notch to cut.
@@ -93,6 +94,12 @@ open_questions:
     summary: >-
       The Solar 8000M's operator and service manuals would say what bandwidth its analogue ECG output carries in
       each filter mode; the spectra say the release used one setting almost throughout.
+  - title: "The plethysmogram's line near 24.5 Hz"
+    kind: phenomenon
+    summary: >-
+      A quarter of plethysmograms carry a line near 24.5 Hz that is neither mains nor the oximeter's 30 Hz frame
+      family ([[study:monitor-lines]]). A scan at fine resolution in the recordings that have it would give its exact
+      frequency and whether it follows a clock.
   - title: "What the within-recording changes are"
     kind: next step
     summary: >-
