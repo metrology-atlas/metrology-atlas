@@ -215,3 +215,13 @@ typed_ok:
 - field: chain[0].bias_s[0]
   parameter: snuadc-raw-frequent-bias
   why: the sawtooth chain step's smallest offset (0.01 s just after a correction), not the frequent-mode p95
+figures:
+  - id: spectrum-snuadc-art
+    file: spectrum-snuadc-art.png
+    study: waveform-frequency-content
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 3,503 recordings. Heart-rate harmonics to about 10 Hz, then the floor; no filter can be seen where the pressure has no content left.
+    alt: >-
+      A log-log spectrum with peaks at the heart rate and its harmonics up to about 10 Hz, then a flat floor just above the dashed rounding floor.

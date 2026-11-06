@@ -249,3 +249,13 @@ typed_ok:
 - field: chain[0].bias_s[0]
   parameter: snuadc-raw-frequent-bias
   why: the sawtooth chain step's smallest offset (0.01 s just after a correction), not the frequent-mode p95
+figures:
+  - id: spectrum-snuadc-pleth
+    file: spectrum-snuadc-pleth.png
+    study: waveform-frequency-content
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,140 recordings. The plethysmogram's content ends by about 8 Hz; a quarter of recordings carry a line at 24.5 Hz.
+    alt: >-
+      A log-log spectrum peaking near 1 Hz, falling steeply by 8 Hz to a floor just above the dashed rounding floor, with a small labelled peak at 24.5 Hz.

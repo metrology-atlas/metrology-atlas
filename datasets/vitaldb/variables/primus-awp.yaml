@@ -176,3 +176,13 @@ typed_ok:
 measures:
 - measurand: airway-pressure
   method: ventilator pressure sensor
+figures:
+  - id: spectrum-primus-awp
+    file: spectrum-primus-awp.png
+    study: waveform-frequency-content
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,360 recordings. Breathing and its harmonics, falling steadily to the waveform's Nyquist frequency of 31 Hz.
+    alt: >-
+      A log-log spectrum peaking near 0.25 Hz and falling about five decades by 30 Hz.

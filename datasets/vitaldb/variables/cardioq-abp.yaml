@@ -77,3 +77,13 @@ measures:
   - ABP
   unit: mmHg
   method: 'invasive, the CardioQ''s pressure input (to check: its own transducer or the monitor''s output)'
+figures:
+  - id: spectrum-cardioq-abp
+    file: spectrum-cardioq-abp.png
+    study: waveform-frequency-content
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 27 recordings, so the band is wide. Heart-rate harmonics to about 10 Hz, then the floor.
+    alt: >-
+      A log-log spectrum with heart-rate peaks near 1–3 Hz, falling to a flat floor above 20 Hz.

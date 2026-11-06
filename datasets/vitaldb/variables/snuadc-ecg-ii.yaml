@@ -201,8 +201,9 @@ chain:
   - paced-ecg
 - node: Monitor analogue output
   kind: transport
-  effect: The ECG reaches SNUADC as the patient monitor's analogue output. Any delay inside the monitor is common
-    to the ECG and pressure channels and has not been measured.
+  effect: The ECG reaches SNUADC as the patient monitor's analogue output, through a low-pass of about 20 Hz, fourth
+    order, the same on every unit ([[study:waveform-frequency-content]]). That filter delays and smooths the QRS; its
+    delay, and any other inside the monitor, has not been measured.
   status: assumed
 - node: Stored sample time
   kind: stamping
@@ -221,3 +222,13 @@ typed_ok:
 - field: chain[0].bias_s[0]
   parameter: snuadc-raw-frequent-bias
   why: the sawtooth chain step's smallest offset (0.01 s just after a correction), not the frequent-mode p95
+figures:
+  - id: spectrum-snuadc-ecg-ii
+    file: spectrum-snuadc-ecg-ii.png
+    study: waveform-frequency-content
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,337 recordings. The ECG is flat to about 15 Hz and falls steeply above its low-pass of about 20 Hz (fourth order), the same on every SNUADC unit, to near the rounding floor; the peak near 1 Hz is the heart rate.
+    alt: >-
+      A log-log spectrum flat at about 1e-3 mV squared per hertz to 15 Hz, falling four decades by 100 Hz towards a dashed floor, with a marked low-pass near 20 Hz.

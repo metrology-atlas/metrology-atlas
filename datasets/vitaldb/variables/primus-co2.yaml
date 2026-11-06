@@ -172,3 +172,13 @@ typed_ok:
 measures:
 - measurand: airway-co2
   method: sidestream capnography
+figures:
+  - id: spectrum-primus-co2
+    file: spectrum-primus-co2.png
+    study: waveform-frequency-content
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,362 recordings. Breathing below 1 Hz; the line at 24.75 Hz, in 80% of recordings, is the waveform's update grid.
+    alt: >-
+      A log-log spectrum peaking near 0.25 Hz and falling to a floor about 20 dB above the rounding floor, with a labelled peak near 25 Hz.

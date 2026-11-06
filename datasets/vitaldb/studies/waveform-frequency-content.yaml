@@ -1,0 +1,118 @@
+id: waveform-frequency-content
+name: What frequencies each waveform carries
+summary: >-
+  The power spectrum of every waveform, minute by minute, across all 6,388 recordings. The ECG reaches SNUADC through
+  a low-pass of about 20 Hz, fourth order, the same on every unit; the BIS EEG stops abruptly near 47 Hz; the
+  plethysmogram and pressures carry almost nothing above 10–20 Hz, so their fitted roll-off cannot be told from the
+  end of their own content. Mains hum is rare and no notch filter shows. Most ECG recordings end with about ten
+  minutes of noise, as the recordings are cut ten minutes after the ECG heart rate stops. The CO2 waveform carries a
+  line near 25 Hz from its update grid, and a quarter of plethysmograms a line at 24.5 Hz.
+date: 2026-11-06
+status: current
+methods: [value-resolution]
+clocks: [snuadc-sample, bis-clock, primus-clock]
+devices: [snuadc, bis, primus, cardioq]
+variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth, bis-eeg, primus-co2, primus-awp, cardioq-abp]
+data: |
+  Every waveform track of 50 Hz or more in all 6,388 files: 1.17 million gap-free minutes of ECG II (6,337
+  recordings), 1.10 million of PLETH (6,140), 0.81 million of ART (3,503), CVP (1,361), ECG V5 (3,367), BIS EEG
+  (5,566), Primus CO2 and AWP (6,362 and 6,360) and CardioQ (27 and 29). Results in `$W/spectra/agg/summary.json`;
+  the per-recording and per-minute spectra stay on the analysis machine.
+background: |
+  What a waveform can show depends on the filters it passed through: a low-pass shapes every fiducial an analysis
+  times (an R peak, a pulse foot), a notch removes the mains, and an output that updates on its own grid leaves
+  lines of its own. None of this is documented for the monitors' analogue outputs that SNUADC samples, or for the
+  Primus and BIS waveforms. The spectra also answer smaller questions: whether mains hum or a notch is present,
+  whether a recording's filtering changes part-way, and how the channels line up.
+method: |
+  [[code:vitaldb-bench/tools/spectra_scan.py]] reads each waveform on its value grid in one-minute gap-free epochs
+  on an absolute 60 s grid, and takes a Welch spectrum of each (Hann, 50% overlap, segments of about 8 s), in dB
+  above the rounding floor q = 1/(6 fs). Per recording: the median spectrum and its quartiles on 160 log-spaced
+  bins; per minute: band levels (0.2–1, 5–15 and 30–45 Hz, the top of the band, the floor near Nyquist) and the
+  mains lines at 60, 120 and 180 Hz against their surroundings. For channel pairs it sums the cross-spectra and
+  reads the coherence and the time difference at each mains line.
+  [[code:vitaldb-bench/tools/spectra_agg.py]] then, per recording, fits a power-law signal through an n-th order
+  low-pass over a white floor, keeping a fit only when its corner stands at least 10 dB above the floor; finds
+  narrow lines above 8 Hz; classifies the mains (line above +3 dB, notch below −3 dB, else can't tell); marks
+  flat and noisy minutes; and looks for one step of 10 dB or more in the 30–45 Hz level against the 5–15 Hz level
+  within a recording.
+
+  The synthetic check (spectra_scan.py synth, `$W/spectra/synth.json`) recovers a Butterworth corner to within 8%
+  at 25–150 Hz, and its order where the corner is below 0.3 of Nyquist; a notch reads −16.5 dB against +3.7 dB for
+  a line; a channel delay of 0, 37 and 370 µs reads −4, 28 and 368 µs.
+results: |
+  - **ECG: a low-pass of about 20 Hz, fourth order.** ECG II's corner is a median 20.2 Hz (IQR 18.4–22.0, p5–p95
+    15.1–25.5 Hz; 5,141 of 6,337 recordings) and its order 4.1 (IQR 3.7–4.5); ECG V5 20.8 Hz (2,612 of 3,367). The
+    SNUADC unit makes no difference (medians 19.0–20.6 Hz across six units), so the filter is upstream, in the
+    monitor's analogue output. Above it the spectrum falls to within about 2 dB of the rounding floor (median 2.2
+    dB).
+  - **BIS EEG: a sharp cut near 47 Hz.** Above about 43 Hz the EEG falls by four orders of magnitude within a few
+    hertz, steeper than the fit's highest order (it fits 132 and 171 recordings, corners about 43 Hz); the floor
+    beyond sits 14 and 12 dB above rounding (EEG1, EEG2). The alpha band near 10 Hz shows in the median spectrum.
+  - **Pressures and plethysmogram: no corner to measure.** ART, CVP and PLETH have reached their floor (1.4–1.5 dB
+    above rounding) by 10–20 Hz. A roll-off fits ART at about 9 Hz in a third of recordings (1,118 of 3,503), but
+    that is where the pressure waveform's own content ends, and a filter there cannot be told from it. PLETH has
+    no corner in all but 24 of 6,140 recordings.
+  - **Lines that are not mains.** The CO2 waveform carries a line at 24.75 Hz in 80% of recordings (25.65 Hz in
+    19%, 12.5 Hz in 12%), the update grid of [[study:primus-co2-update-grid]] seen as a spectrum. A quarter of
+    plethysmograms (25%) carry a line at 24.5 Hz, 8 dB above rounding.
+  - **Mains hum is rare and no notch shows.** At 60 Hz ECG II carries a line in 269 of 6,337 recordings (4.2%), ECG
+    V5 in 109 of 3,367, ART in 13 and PLETH in 11; no recording of any track has a notch; the rest cannot be told,
+    because above the ECG's low-pass there is too little signal left for a notch to cut.
+  - **Recordings end with about ten minutes of noise.** In 2,905 of 6,337 ECG II recordings (46%) the last 9–11
+    minutes have a floor 6 dB or more above the recording's own, and in 2,732 of 3,367 ECG V5 recordings (81%):
+    the leads come off and the recorder carries on for ten minutes, as the recordings are cut ten minutes after
+    the SpO2 and the ECG heart rate stop ([[reference:lee2026correspondence-nov]],
+    [[observation:imputed-op-ends]]).
+  - **Changes within a recording.** The 30–45 Hz level steps by 10 dB or more against the 5–15 Hz level, outside
+    noisy and flat minutes, in 271 of 6,073 ECG II recordings (4.5%), 511 of 3,490 ART (15%) and 56 of 6,014 PLETH
+    (0.9%). These are candidates, not yet looked at one by one: a change of filter setting and a change of noise
+    would both show.
+  - **ECG V5 is sampled about 0.14 ms after ECG II.** The two leads pick up the mains the same way (coherence at
+    60 Hz a median 0.97), and its phase puts V5 a median 140 µs after ECG II (IQR 78–160 µs; 2,898 recordings),
+    111 µs at 180 Hz (1,481): the converter reads its channels in turn. Between unlike channels (ECG and ART, ART
+    and PLETH) the line's phase differs by milliseconds and by harmonic, so it measures how each picks up the mains,
+    not when it is sampled.
+discussion: |
+  The ECG's 20 Hz low-pass matters most for timing. A fourth-order filter at 20 Hz delays the QRS and smooths its
+  peak, by milliseconds to tens of milliseconds depending on its design (not measured here), and the same in every
+  recording since it does not vary by unit; it is part of the
+  monitor-output delay the ECG timing chain leaves unmeasured, and an R-peak detector should be tuned to it rather
+  than to a diagnostic-bandwidth ECG. The pressures and plethysmogram carry no content above about 15 Hz, so any
+  filter they passed through is invisible here. The noisy end of recordings is a practical warning: the last ten
+  minutes of ECG are usually not ECG.
+limitations: |
+  The fitted corner is a −3 dB point of a model (power law through an n-th order low-pass over white noise); the
+  ECG's own spectrum is not a power law, so the corner is good to a few hertz, not to the decimal. A filter whose
+  corner lies where the signal has already reached the floor cannot be seen. The changes within recordings and the
+  rare wide-band ECG recordings have not been inspected. Mains is classified from the median minute; hum that
+  comes and goes is counted only through the share of minutes with a line.
+open_questions:
+  - title: "Which filter setting gives the ECG's 20 Hz?"
+    kind: next step
+    summary: >-
+      The Solar 8000M's operator and service manuals would say what bandwidth its analogue ECG output carries in
+      each filter mode; the spectra say the release used one setting almost throughout.
+  - title: "What the within-recording changes are"
+    kind: next step
+    summary: >-
+      Looking at the minutes either side of each candidate step (filter setting, electrocautery, a lead change)
+      would say how many are a change of filtering.
+code:
+  - vitaldb-bench/tools/spectra_scan.py
+  - vitaldb-bench/tools/spectra_agg.py
+  - vitaldb-bench/scripts/run_spectra.sh
+references: [lee2026correspondence-nov]
+figures:
+  - id: spectra-all
+    file: spectra-all.png
+    theme: population results
+    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    caption: >-
+      The power spectrum of every waveform track in the release, in physical units per hertz: the median over
+      recordings of each recording's median minute (line) and the interquartile range across recordings (band), with
+      the rounding floor (dashed). A fitted low-pass is marked where at least half the recordings give one; lines
+      found in at least 20% of recordings are labelled.
+    alt: >-
+      Twelve log-log panels of power against frequency, one per waveform track, each with a median line, a shaded
+      band and a dashed floor near the bottom.
