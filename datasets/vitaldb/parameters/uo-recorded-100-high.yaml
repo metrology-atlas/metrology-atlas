@@ -1,0 +1,13 @@
+id: uo-recorded-100-high
+name: Recorded 100 mL urine output, upper end of the true volume's 95% interval
+quantity: Recorded 100 mL urine output, upper end of the true volume's 95% interval.
+value: 136.6
+unit: 'mL'
+spread:
+  text: >-
+    97.5th percentile of the same posterior; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py; $W/worked_examples/urine_output.json).
+status: derived
+study: value-model-intraop-uo
+about:
+- intraop-uo
+date: 2026-11-08

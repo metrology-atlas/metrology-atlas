@@ -2,7 +2,7 @@
 
 A record is a point in time–value space: one recorded time and one recorded value. What it tells us is a joint
 probability density function (PDF) over the true times and values that could have produced it. This page is the
-worked example behind Figure 1 of the paper on the Metrology Atlas: two records, each shown before correction (what
+worked example behind a figure of earlier drafts of the paper on the Metrology Atlas: two records, each shown before correction (what
 the stored record alone allows, across the release) and after correction (what the atlas gives for one typical
 record, from that record's own labels). It gives the atlas items behind every element of the figure.
 
@@ -10,7 +10,7 @@ The typical record is built from medians of the per-record labels. It is not a n
 
 ![Four panels. Left column, monitor heart rate; right column, laboratory haematocrit. Top row, before correction: a bimodal delay for the heart rate and a two-analyser mixture for the haematocrit. Bottom row, after correction: one narrow peak for the heart rate and one narrow block for the haematocrit.](figures/worked-example-record-pdf.png)
 
-*Figure 1 of the paper. Top row: before correction. Bottom row: after correction, for one typical record.*
+*Top row: before correction. Bottom row: after correction, for one typical record. The paper now uses [one heart-rate record](worked-example-heart-rate.md) and [a rounded urine volume](worked-example-urine-output.md) instead.*
 
 ## Monitor heart rate of 72 bpm (panels A and C)
 

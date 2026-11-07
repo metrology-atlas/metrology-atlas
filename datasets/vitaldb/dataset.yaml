@@ -193,6 +193,10 @@ pages:
     title: "Worked example: one heart-rate record"
     file: worked-example-heart-rate.md
     section: Time
+  - id: worked-example-urine-output
+    title: "Worked example: a rounded urine volume"
+    file: worked-example-urine-output.md
+    section: Value
   - id: how-it-was-made
     title: How this atlas was made
     file: how-it-was-made.md

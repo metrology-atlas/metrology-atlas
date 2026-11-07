@@ -1,0 +1,13 @@
+id: uo-share-on-100
+name: Urine output records on a multiple of 100 mL
+quantity: Urine output records on a multiple of 100 mL.
+value: 22.1
+unit: '%'
+spread:
+  text: >-
+    share of the 3,684 positive records in clinical_data.csv; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py; $W/worked_examples/urine_output.json).
+status: derived
+study: value-model-intraop-uo
+about:
+- intraop-uo
+date: 2026-11-08

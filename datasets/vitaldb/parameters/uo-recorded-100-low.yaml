@@ -1,0 +1,13 @@
+id: uo-recorded-100-low
+name: Recorded 100 mL urine output, lower end of the true volume's 95% interval
+quantity: Recorded 100 mL urine output, lower end of the true volume's 95% interval.
+value: 60.6
+unit: 'mL'
+spread:
+  text: >-
+    2.5th percentile of the posterior of the true volume for a recorded 100 mL, department unknown; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py; $W/worked_examples/urine_output.json).
+status: derived
+study: value-model-intraop-uo
+about:
+- intraop-uo
+date: 2026-11-08

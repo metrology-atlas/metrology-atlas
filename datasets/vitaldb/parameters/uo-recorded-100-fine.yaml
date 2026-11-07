@@ -1,0 +1,13 @@
+id: uo-recorded-100-fine
+name: Recorded 100 mL urine output, share read to 10 mL or finer
+quantity: Recorded 100 mL urine output, share read to 10 mL or finer.
+value: 22.6
+unit: '%'
+spread:
+  text: >-
+    posterior weight of the 10 mL and 5 mL modes (19.3% and 3.3%) for a recorded 100 mL, department unknown; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py; $W/worked_examples/urine_output.json).
+status: derived
+study: value-model-intraop-uo
+about:
+- intraop-uo
+date: 2026-11-08
