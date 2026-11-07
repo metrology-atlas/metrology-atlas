@@ -1,17 +1,23 @@
 id: pleth-hr-delay
 name: PLETH_HR delay
-quantity: Delay from the end of PLETH_HR's window of 10 pulse intervals to its stamp.
-value: 4.5
+quantity: >-
+  Shortest delay from the end of PLETH_HR's window of 10 pulse intervals to its stamp. The value then waits between
+  none and all of one 2 s poll before the recorder stamps it (solar8000-poll-gap), so its bias is this delay plus
+  1.0 s on average.
+value: 3.7
 unit: s
 spread:
-  text: median over 6,151 recordings; 5th–95th percentile 3.25–5.75 s; robust SD between recordings 0.74 s
-    (vitaldb-bench tools/adhoc/audit_low_checks.py)
-  p5: 3.25
-  p95: 5.75
-  sd: 0.74
+  text: >-
+    median over 6,151 recordings; 5th–95th percentile 2.6–4.8 s; robust SD between recordings 0.59 s (vitaldb-bench
+    tools/pleth_hr_derivation.py, uniform-phase fit; $W/examples/pleth_hr_derivation_phase/agg/summary.json, key
+    phase). Replaces, on 7 Nov 2026, the exact-match delay of 4.5 s (3.25–5.75 s, robust SD 0.74 s), which fitted one
+    delay with no wait for the poll and so carried most of the wait inside it.
+  p5: 2.6
+  p95: 4.8
+  sd: 0.59
   n: 6151
 status: measured
 study: pleth-hr-derivation
 about:
 - solar8000-pleth-hr
-date: 2026-11-01
+date: 2026-11-07

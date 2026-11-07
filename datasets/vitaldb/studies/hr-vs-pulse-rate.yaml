@@ -44,8 +44,7 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
   counted in beats would.
 
   3. **The atlas''s prediction.** The lag at which the two intervals line up, from the recording''s HR delay label and window
-  (6 s) and PLETH_HR''s delay (2.79 s) and window (taken as 10 s; the atlas''s form at the time, since replaced
-  from [[study:pleth-hr-derivation]] by 4.5 s over 10 pulse intervals): with their centres together, L = d_PR − d_HR + (w_PR
+  (6 s) and PLETH_HR''s delay (2.79 s) and window (taken as 10 s; the atlas''s form at the time, since replaced from [[study:pleth-hr-derivation]] by 3.7 s plus the wait for the 2 s poll, over 10 pulse intervals): with their centres together, L = d_PR − d_HR + (w_PR
   − w_HR)/2.
 
   4. **Agreement:** PLETH_HR minus HR, as stamped, at the atlas''s lag and at each group''s best lag: the mean difference
@@ -67,10 +66,13 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
   HR delays, which is not explained.
 
   - **Where PLETH_HR''s window sits.** Adding each group''s HR delay and half its window puts PLETH_HR''s window centre
-  8.46 s before its stamp in the early group and 8.76 s in the late: about [[value:pleth-hr-window-centre]].
+  8.46 s before its stamp in the early group and 8.76 s in the late, with HR''s delays as fitted, which leave
+  out the wait for the recorder''s poll. Counting it (1.0 s on average, [[parameter:solar8000-poll-gap]]), as the
+  atlas''s HR forms do since 7 Nov 2026, gives 9.46 and 9.76 s: about [[value:pleth-hr-window-centre]].
   The atlas''s earlier form for PLETH_HR (delay 2.79 s, window 8–12 s; replaced from [[study:pleth-hr-derivation]]) put
   it at about 7.8 s; the pilot''s direct recomputation (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]])
-  put it at about 8.5 s at 70 /min, and the rule found since (10 intervals, 4.5 s) at 8.8 s ([[study:pleth-hr-derivation]]). The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
+  put it at about 8.5 s at 70 /min, and the rule found since (10 intervals, counting its own wait for the poll) at 8.9 s
+  ([[study:pleth-hr-derivation]]), 0.7 s less far before the stamp than this comparison: an open question there. The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
   at 90 /min), as a window counted in beats would, but the HR delay labels move with the rate too, so this comparison cannot
   split PLETH_HR''s delay from its window.
 
@@ -107,8 +109,8 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
   [[figure:hr-vs-pulse-rate]]'
 discussion: 'The comparison works in both directions. On the timing side it is an independent check of the atlas: the HR
   delay groups, found from the ECG, reappear in a different module''s signal, [[value:hr-group-lag-in-pulse-rate]] apart against 2.56 s between the same
-  recordings'' HR delays. It also measures where PLETH_HR''s window sits, about 0.7 s earlier than the atlas''s earlier form for it put
-  it. On the value side the difference holds physiology as well as error: its spread rises with the rate as beats fail to
+  recordings'' HR delays. It also measures where PLETH_HR''s window sits, about 1.7 s earlier than the atlas''s earlier form for
+  it put it once the wait for the poll is counted on the HR side (0.7 s without it). On the value side the difference holds physiology as well as error: its spread rises with the rate as beats fail to
   make a pulse, so it is not a measure of either numeric''s error, and it gives neither variable a value budget. That is
   the line between related measurands and one measurand measured twice ([[study:cuff-vs-arterial-agreement]]).'
 limitations: '- Both numerics are truncated or rounded to whole beats per minute and update every 2 s, so the lag is read
@@ -144,3 +146,6 @@ figures:
     2/3, 1/2, and double), along which beats without a pulse, or missed by the ECG, collect.'
   alt: Two density plots dominated by a bright line of equality, with fainter straight lines fanning below it at three-quarters,
     two-thirds and half of the heart rate, and a sparse cloud elsewhere.
+typed_ok:
+  - {parameter: pleth-hr-window-centre, text: "10", why: "10 s blocks of change, and the 10 s window PLETH_HR was taken to have, not the window centre"}
+  - {parameter: pleth-hr-window-centre, text: "9.6", why: "the window centre at 60 /min in one group, not the cohort value"}

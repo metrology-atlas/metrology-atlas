@@ -2,12 +2,15 @@ id: pleth-hr-window-centre
 name: PLETH_HR window centre
 quantity: Where PLETH_HR's window is centred before its stamp (delay plus half the window), from where its changes line
   up with HR's.
-value: 8.5
+value: 9.6
 unit: s
 spread:
-  text: 8.46 s (early HR group) and 8.76 s (late); shorter at higher rates
+  text: >-
+    9.46 s (early HR group) and 9.76 s (late), counting the wait for the 2 s poll on the HR side (1.0 s on average,
+    solar8000-poll-gap), as the HR forms do since 7 Nov 2026; 8.46 and 8.76 s without it, as first reported. Shorter
+    at higher rates.
 status: measured
 study: hr-vs-pulse-rate
 about:
 - solar8000-pleth-hr
-date: 2026-11-01
+date: 2026-11-07

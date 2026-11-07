@@ -16,14 +16,15 @@ timing:
   - 11.0
   stamp_position: close
   bias_s:
-    median: {parameter: pleth-hr-delay}
-    p5: {parameter: pleth-hr-delay, use: p5}
-    p95: {parameter: pleth-hr-delay, use: p95}
+    median: {parameter: pleth-hr-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p5: {parameter: pleth-hr-delay, use: p5, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
+    p95: {parameter: pleth-hr-delay, use: p95, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     n: 6151
     scope: recording
     status: measured
-    evidence: delay from the end of a window of 10 pulse intervals, per recording, recomputing PLETH_HR from the
-      plethysmogram's pulses ([[parameter:pleth-hr-delay]])
+    evidence: shortest delay from the end of a window of 10 pulse intervals, per recording, recomputing PLETH_HR
+      from the plethysmogram's pulses ([[parameter:pleth-hr-delay]]), plus half the 2 s poll
+      ([[parameter:solar8000-poll-gap]])
   uncertainty:
     components:
     - name: between recordings
@@ -33,11 +34,19 @@ timing:
       scope: recording
       status: measured
       evidence: robust SD (1.4826 x median absolute deviation) of the per-recording delays, 6,151 recordings
+    - name: wait for the poll
+      type: B
+      distribution: rectangular
+      u_s: {parameter: solar8000-poll-gap, rectangular: true}
+      scope: independent
+      evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
+        (the delay fit's uniform phase)
   domain: recorder-pc
   status: measured
-  evidence: 'a mean of the last 10 pulse intervals, leaving out those far from their median (6.0-11.0 s at the release''s 5th-95th percentile pulse intervals), reported
-    4.5 s after it ends, so centred about 8.8 s before the stamp, which the comparison with heart rate confirms
-    (8.5 s). Replaces, on 1 Nov 2026, the earlier form (delay 2.79 s, 5th-95th percentile -1.8 to 4.97 s, window 8-12 s;
+  evidence: 'a mean of the last 10 pulse intervals, leaving out those far from their median (6.0-11.0 s at the release''s 5th-95th percentile pulse intervals), ready 3.7 s after it ends and stamped at the next 2 s poll, 4.7 s after it on average, so centred about 8.9 s
+    before the stamp; the comparison with heart rate, counting the wait for the poll on the HR side too, puts the
+    centre about 9.5–9.8 s (an open question in pleth-hr-derivation). Delay in the convention of the HR fits since
+    7 Nov 2026 (the exact-match delay was 4.5 s, with the wait inside it). Replaces, on 1 Nov 2026, the earlier form (delay 2.79 s, 5th-95th percentile -1.8 to 4.97 s, window 8-12 s;
     numerics-derivation-release), which assumed a median of about 12 beats and centred the window about 1 s too late.'
   studies:
   - pleth-hr-derivation
