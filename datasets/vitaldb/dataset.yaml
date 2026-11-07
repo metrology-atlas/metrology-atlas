@@ -189,6 +189,10 @@ pages:
     title: "Worked example: a record as a PDF"
     file: worked-example-record-pdf.md
     section: Time
+  - id: worked-example-heart-rate
+    title: "Worked example: one heart-rate record"
+    file: worked-example-heart-rate.md
+    section: Time
   - id: how-it-was-made
     title: How this atlas was made
     file: how-it-was-made.md

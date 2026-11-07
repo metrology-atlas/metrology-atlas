@@ -14,19 +14,15 @@ The typical record is built from medians of the per-record labels. It is not a n
 
 ## Monitor heart rate of 72 bpm (panels A and C)
 
-**The value.** [[variable:solar8000-hr]] is computed by the monitor from the intervals between R peaks in the last
-few seconds of ECG, and rounded down: a recorded 72 means anything from 72 up to, but not including, 73, equally
-likely. The rounding was tested against rounding to the nearest in the whole release
-([[study:numerics-derivation-release]]). This holds before and after correction.
-
-**The time, before correction.** The value describes a stretch of ECG, its support, of 6–10 s, which closed a delay
-before the stamp. Across the release that delay is bimodal: the recording computers fall into an early group
-([[parameter:hr-delay-early]]) and a late group ([[parameter:hr-delay-late]]) ([[study:hr-delay-groups]]). Timing
-forms: [as stamped, early group](variables/solar8000-hr.md#form-hr-early) and [as stamped, late group](variables/solar8000-hr.md#form-hr-late).
-
-**The time, after correction.** Each recording has a delay label (timing form [after the per-case delay label](variables/solar8000-hr.md#form-hr-lab)): its group, its window and
-its delay, with a standard uncertainty of 0.26 s (median of the labels' standard errors). The typical record is in
-the late group, with a delay of 4.3 s (the late group's median) and a 6 s window.
+How a heart-rate record was made, and how it can be read, is worked through step by step in
+[Worked example: one heart-rate record](worked-example-heart-rate.md). In short: [[variable:solar8000-hr]] is
+truncated, so a recorded 72 is anything from 72 up to, but not including, 73, before and after correction
+([[study:hr-derivation]]). Before correction the time is the sum of two groups of recordings
+([[study:hr-delay-groups]]; timing forms [as stamped, early group](variables/solar8000-hr.md#form-hr-early) and
+[as stamped, late group](variables/solar8000-hr.md#form-hr-late)). After correction the recording's own label gives
+its delay, with a standard uncertainty of [[value:hr-label-se]] (timing form
+[after the per-case delay label](variables/solar8000-hr.md#form-hr-lab)), and the wait for the recorder's poll, up to
+[[value:solar8000-poll-gap]], remains. Panels A and C of this figure do not yet draw that wait.
 
 ## Laboratory haematocrit of 35% (panels B and D)
 
@@ -49,8 +45,8 @@ drawn 410 s (6.8 min, the blood-gas median) before its stamp, so its value stays
 
 | In the caption | Value | From |
 |---|---|---|
-| Support before correction | 6–10 s | [[variable:solar8000-hr]], [timing form after the per-case delay label](variables/solar8000-hr.md#form-hr-lab): interval described |
-| Standard uncertainty of a recording's delay label | 0.26 s | [[variable:solar8000-hr]], [timing form after the per-case delay label](variables/solar8000-hr.md#form-hr-lab): its uncertainty component |
+| Support before correction | the last [[value:hr-window|number]] R–R intervals: [[value:hr-window-span]] at the median rate | [[study:hr-derivation]]; [timing form after the per-case delay label](variables/solar8000-hr.md#form-hr-lab): interval described |
+| Standard uncertainty of a recording's delay label | [[value:hr-label-se]] | [[parameter:hr-label-se]] |
 | Share of recorded 35% from the blood-gas analyser | about three in four (77%) | [[software:vitaldb-resolution]] value model |
 | Length of the arterial-line access | about 89 s | [[variable:lab-blood-gas]], [timing form draw time from arterial access](variables/lab-blood-gas.md#form-lab-draw): its component (√12 × u) |
 
