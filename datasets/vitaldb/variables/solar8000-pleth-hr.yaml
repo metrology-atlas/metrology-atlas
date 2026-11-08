@@ -40,12 +40,13 @@ timing:
       u_s: {parameter: solar8000-poll-gap, rectangular: true}
       scope: independent
       evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
-        (the delay fit's uniform phase)
+        (the delay fit's uniform phase); the monitor's HR and PLETH_HR change about 1 s later than this predicts, so the mean delay may be longer
+        ([[study:numeric-delay-check]])
   domain: recorder-pc
   status: measured
   evidence: 'a mean of the last 10 pulse intervals, leaving out those far from their median (6.0-11.0 s at the release''s 5th-95th percentile pulse intervals), ready 3.7 s after it ends and stamped at the next 2 s poll, 4.7 s after it on average, so centred about 8.9 s
     before the stamp; the comparison with heart rate, counting the wait for the poll on the HR side too, puts the
-    centre about 9.5–9.8 s (an open question in pleth-hr-derivation). Delay in the convention of the HR fits since
+    centre about 9.5 s (the gap is an open question in pleth-hr-derivation). Delay in the convention of the HR fits since
     7 Nov 2026 (the exact-match delay was 4.5 s, with the wait inside it). Replaces, on 1 Nov 2026, the earlier form (delay 2.79 s, 5th-95th percentile -1.8 to 4.97 s, window 8-12 s;
     numerics-derivation-release), which assumed a median of about 12 beats and centred the window about 1 s too late.'
   studies:

@@ -37,7 +37,8 @@ timing:
       u_s: {parameter: solar8000-poll-gap, rectangular: true}
       scope: independent
       evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
-        (the delay fits' uniform phase)
+        (the delay fits' uniform phase); the monitor's HR and PLETH_HR change about 1 s later than this predicts, so the mean delay may be longer
+        ([[study:numeric-delay-check]])
   correction: per-case delay label (early or late group)
   corrects:
   - hr-early
@@ -76,7 +77,8 @@ timing:
       u_s: {parameter: solar8000-poll-gap, rectangular: true}
       scope: independent
       evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
-        (the delay fits' uniform phase)
+        (the delay fits' uniform phase); the monitor's HR and PLETH_HR change about 1 s later than this predicts, so the mean delay may be longer
+        ([[study:numeric-delay-check]])
   domain: recorder-pc
   status: measured
   evidence: label delays of the early group, 2,228 recordings (labels of 1 Nov); within-group spread as a robust SD
@@ -110,7 +112,8 @@ timing:
       u_s: {parameter: solar8000-poll-gap, rectangular: true}
       scope: independent
       evidence: a value waits between none and all of the 2 s record gap before the recorder stamps it
-        (the delay fits' uniform phase)
+        (the delay fits' uniform phase); the monitor's HR and PLETH_HR change about 1 s later than this predicts, so the mean delay may be longer
+        ([[study:numeric-delay-check]])
   domain: recorder-pc
   status: measured
   evidence: label delays of the late group, 3,771 recordings (labels of 1 Nov); within-group spread as a robust SD; one

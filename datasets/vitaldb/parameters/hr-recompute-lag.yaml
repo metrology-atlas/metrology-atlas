@@ -1,0 +1,14 @@
+id: hr-recompute-lag
+name: Monitor HR behind its recomputation
+quantity: Monitor HR behind its recomputation, in the change-agreement test.
+value: 0.96
+unit: s
+spread:
+  text: >-
+    lag of best agreement of the monitor's HR behind HR recomputed from the R peaks at its label delay plus half the gap; 95% 0.89-1.03 s, 6,145 recordings (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v1/agg/summary.json).
+status: measured
+study: numeric-delay-check
+about:
+- solar8000-hr
+- solar8000-pleth-hr
+date: 2026-11-08

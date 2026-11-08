@@ -1,0 +1,95 @@
+id: numeric-delay-check
+name: Monitor numerics recomputed from the waveforms, as a check of their delays
+summary: 'The Solar8000''s heart rate and pulse rate, recomputed from the ECG and the plethysmogram with the atlas''s
+  windows and fitted delays, against the monitor''s own values: in 6,145 recordings both monitor numerics change about
+  1 s later than the delay convention predicts (HR [[value:hr-recompute-lag]], PLETH_HR [[value:pr-recompute-lag]]),
+  although the test recovers a lag of zero on synthetic data. Their mean delays may therefore be up to about 1 s longer
+  than the timing forms state. The same work found that the comparison of pulse rate with heart rate read its lag at the
+  edges of 2 s steps, which biased it upwards.'
+date: 2026-11-08
+status: current
+methods:
+- delays-and-windows
+devices:
+- solar8000
+- snuadc
+variables:
+- solar8000-hr
+- solar8000-pleth-hr
+- snuadc-ecg-ii
+- snuadc-pleth
+data: 'Every recording with ECG, plethysmogram, HR and PLETH_HR: 6,145 of 6,388 used (none failed). The first 4 hours of
+  plethysmogram; HR delay labels of quality good (results/pat/numeric_delay_labels.csv, 1 Nov, 8-interval rule).'
+background: 'Two routes place PLETH_HR''s window: its own recomputation ([[study:pleth-hr-derivation]]) and the lag at
+  which its changes line up with HR''s ([[study:hr-vs-pulse-rate]]). Once the wait for the recorder''s poll was counted
+  the same way in both (7 Nov), they disagreed by about 1 s, 0.75 s beyond the pulse-arrival time. This study finds
+  where that came from, and tests the delay convention itself: a value stamped at t was computed at t - d - φ, φ
+  uniform over the 2 s gap, so its mean delay is d plus half a gap.'
+method: '1. **Both routes term by term** on the same recordings, by HR delay group and by thirds of heart rate
+  ([[code:vitaldb-bench/examples/pr_window_routes.py]]).
+
+  2. **The comparison''s lag reading, on synthetic data**: HR and PLETH_HR simulated from one heartbeat series with known
+  windows, delays, poll and pulse-arrival time, through the comparison''s own scan and lag reading, with polls exactly 2 s
+  apart and with the Solar8000''s 1.999–2.001 s gaps ([[code:vitaldb-bench/examples/sim_pr_window_routes.py]]).
+
+  3. **Each numeric against its recomputation**: HR (the mean of the last 8 R–R intervals within 15% of their median,
+  truncated) from the R peaks, and PLETH_HR (rmean of 10 pulse intervals, rounded) from the pulses, both on the SNUADC
+  stamp-model times; each value placed at its last beat + its fitted delay + half the gap, and stamped at the monitor''s
+  own stamps. A correct window and delay give a lag of zero ([[code:vitaldb-bench/tools/numeric_recompute_lag.py]], WSL,
+  41 min; $W/examples/numeric_recompute_lag_v1/agg/summary.json).
+
+  4. **The same test on synthetic data** with a known monitor, one that updates after every beat and one that updates on
+  its own 2 s grid, the delay fitted as the atlas does ([[code:vitaldb-bench/examples/sim_recompute_lag.py]]).'
+results: '- **The comparison''s lag was read at step edges.** HR and PLETH_HR are stamped together every 2 s, so their
+  agreement against lag is a staircase. Read at exactly 2k s, a step''s edge, the recorder''s 1.999–2.001 s gaps give
+  record k or k − 1 by chance: on synthetic data that overestimates the window centre by 0.2–0.36 s, and read at the
+  steps'' midpoints (2k + 1 s) it is unbiased. On the release the midpoint reading lowers the lag by about 0.5 s
+  ([[study:hr-vs-pulse-rate]]).
+
+  - **The two routes, after that:** the comparison centres PLETH_HR''s window [[value:pleth-hr-window-centre]] before its
+  stamp, the derivation 8.9 s; 0.48–0.55 s apart, 0.2–0.3 s beyond the pulse-arrival time (0.27 s, by which the pulses
+  follow the R peaks), more at fast heart rates.
+
+  - **Both numerics change later than the convention predicts.** Against their recomputations the monitor''s HR lags by
+  [[value:hr-recompute-lag]] (95% interval 0.89–1.03 s) and PLETH_HR by [[value:pr-recompute-lag]] (1.08–1.33 s);
+  PLETH_HR''s lag minus HR''s is [[value:pr-minus-hr-recompute-lag]] (−0.27 to −0.06 s), part of what separates the routes.
+  HR''s lag differs between its delay groups (1.45 s early, 0.47 s late) and PLETH_HR''s does not (1.24 and 1.15 s).
+
+  - **Not the test.** On synthetic data the test reads a lag of +0.05 s (a monitor updating after every beat) and +0.03 s
+  (on its own 2 s grid), so the release''s 1 s is in the monitor. The synthetic runs also show the convention (fitted
+  delay plus half the gap) about 0.35 s short of the true mean delay, even when the model''s form is right.
+
+  - **One time base.** The plethysmogram''s raw stamps and its stamp-model times agree at the pulses (median difference 0),
+  and its fitted delay is 3.7 s on either.'
+discussion: 'Most of the gap between the two routes was a reading error in the comparison, now corrected; it also explains
+  why the HR delay groups looked 0.3 s closer together in the pulse rate than in the HR delays. The larger finding is
+  about the convention. Both monitor numerics change about 1 s later than their fitted delays plus half a gap predict,
+  and the test itself is unbiased, so the polled numerics'' mean delays in the atlas''s timing forms may be short by up to
+  about 1 s. The atlas keeps the forms as they are for v2 and states this beside them; changing them needs the same test
+  for the arterial and Primus numerics and an explanation for HR''s group difference.'
+limitations: '- The recomputations use our own R-peak and pulse detectors, not the monitor''s.
+
+  - The monitor may process its numerics beyond the window (smoothing, holding), which value matching cannot see and
+  timing of changes can; the test measures the effect, not its cause.
+
+  - Only HR and PLETH_HR are tested; the arterial, CVP and Primus numerics share the convention but not this check.'
+open_questions:
+- title: Are the polled numerics older than their timing forms say?
+  kind: phenomenon
+  summary: The monitor's HR and PLETH_HR change about 1 s later than their fitted delays plus half the poll gap predict,
+    and synthetic data show the test is unbiased and the convention about 0.35 s short. If the monitor smooths or holds
+    its numerics, every polled numeric's mean delay (HR, PLETH_HR, arterial and CVP numerics, Primus numerics) may be up
+    to about 1 s longer than its form. Next steps are the same test for the other numerics and a model of the monitor's
+    update.
+- title: Why HR's lag differs between its delay groups
+  kind: phenomenon
+  summary: Against its recomputation, HR lags by 1.45 s in the early delay group and 0.47 s in the late one; PLETH_HR,
+    which arrives in the same message, lags by about the same in both. A difference in the poll cannot do this; the
+    group's delay labels, or a difference in the monitors behind the two groups, might.
+code:
+- vitaldb-bench/examples/pr_window_routes.py
+- vitaldb-bench/examples/sim_pr_window_routes.py
+- vitaldb-bench/tools/numeric_recompute_lag.py
+- vitaldb-bench/examples/sim_recompute_lag.py
+typed_ok:
+  - {parameter: pr-recompute-lag, text: "1.24", why: "PLETH_HR's lag in the early HR delay group, which equals the cohort value"}

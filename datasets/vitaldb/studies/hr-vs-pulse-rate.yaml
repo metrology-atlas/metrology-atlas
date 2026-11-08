@@ -31,9 +31,9 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
   from −20 to +20 s, in 0.5 s steps. Values outside 30–200 /min, and records older than 6 s, are left out.
 
   2. **When they agree.** For each lag, the correlation of changes between consecutive 10 s blocks, pooled within recordings,
-  overall and in each HR delay group. Both numerics arrive in one message every 2 s, so the correlation is flat between
-  whole-record lags (2k s); the peak is read from those lags by a parabola through the highest and its neighbours (bootstrap
-  over recordings).
+  overall and in each HR delay group. Both numerics arrive in one message every 2 s, so the correlation is a staircase, one step per record; the peak is read at the steps'' midpoints (2k + 1 s, taken as
+  lag 2k) by a parabola through the highest and its neighbours (bootstrap over recordings). The first computation read
+  the steps'' edges (2k s), which biased the lag upwards ([[study:numeric-delay-check]]).
 
   2a. **What the peak means.** For windows symmetric about their centres, the lag at which changes agree best is the difference
   between the two windows'' centres (delay plus half the window), whatever the signal''s volatility, which sets only the
@@ -57,23 +57,24 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
   offset means a window of a fixed time; no ridge, a median.
 
   '
-results: '- **The HR delay groups show in the pulse rate.** Changes line up with pulse rate read 3.71 s after the HR stamp
-  in the early group (95% interval 3.59–3.83 s, 1,628 recordings) and 1.45 s after it in the late group (1.34–1.56 s, 3,111):
-  [[value:hr-group-lag-in-pulse-rate]] apart, against 2.56 s between the same recordings'' HR delays (2.28 s between
-  the groups'' delays over all cases, [[parameter:hr-delay-early]], [[parameter:hr-delay-late]]). Pulse rate is computed
+results: '- **The HR delay groups show in the pulse rate.** Changes line up with pulse rate read 3.27 s after the HR stamp
+  in the early group (95% interval 3.15–3.37 s, 2,060 recordings) and 0.89 s after it in the late group (0.80–0.96 s,
+  3,295): [[value:hr-group-lag-in-pulse-rate]] apart, against 2.32 s between the same recordings'' HR delays
+  ([[parameter:hr-delay-early]], [[parameter:hr-delay-late]]). Pulse rate is computed
   from the plethysmogram by another module, so this confirms the two HR groups independently of the ECG analysis that
-  found them ([[study:hr-delay-groups]]), though their separation in the pulse rate is about 0.3 s smaller than in the
-  HR delays, which is not explained.
+  found them ([[study:hr-delay-groups]]). The 0.3 s shortfall first reported came from reading the lag at the steps''
+  edges.
 
-  - **Where PLETH_HR''s window sits.** Adding each group''s HR delay and half its window puts PLETH_HR''s window centre
-  8.46 s before its stamp in the early group and 8.76 s in the late, with HR''s delays as fitted, which leave
-  out the wait for the recorder''s poll. Counting it (1.0 s on average, [[parameter:solar8000-poll-gap]]), as the
-  atlas''s HR forms do since 7 Nov 2026, gives 9.46 and 9.76 s: about [[value:pleth-hr-window-centre]].
+  - **Where PLETH_HR''s window sits.** Adding each group''s HR delay, the mean wait for the recorder''s
+  poll (1.0 s, [[parameter:solar8000-poll-gap]]) and half of HR''s 8 R–R intervals puts PLETH_HR''s window centre 9.48 s
+  before its stamp in the early group and 9.45 s in the late: about [[value:pleth-hr-window-centre]]
+  ([[code:vitaldb-bench/examples/pr_window_routes.py]]).
   The atlas''s earlier form for PLETH_HR (delay 2.79 s, window 8–12 s; replaced from [[study:pleth-hr-derivation]]) put
   it at about 7.8 s; the pilot''s direct recomputation (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]])
   put it at about 8.5 s at 70 /min, and the rule found since (10 intervals, counting its own wait for the poll) at 8.9 s
-  ([[study:pleth-hr-derivation]]), 0.7 s less far before the stamp than this comparison: an open question there. The centre moves earlier as the rate rises (from about 8.7–9.6 s at 60 /min to 8.1–8.2 s
-  at 90 /min), as a window counted in beats would, but the HR delay labels move with the rate too, so this comparison cannot
+  ([[study:pleth-hr-derivation]]): 0.5 s less far before the stamp than this comparison, 0.2–0.3 s beyond the
+  pulse-arrival time ([[study:numeric-delay-check]]). The centre moves earlier as the rate rises, as a window counted in
+  beats would, but the HR delay labels move with the rate too, so this comparison cannot
   split PLETH_HR''s delay from its window.
 
   - **No bias.** Pulse rate minus HR is [[value:pr-hr-difference]] over the cohort (limits of agreement −11.7 to +11.7 /min; [[parameter:pr-hr-difference]]).
@@ -108,9 +109,9 @@ results: '- **The HR delay groups show in the pulse rate.** Changes line up with
 
   [[figure:hr-vs-pulse-rate]]'
 discussion: 'The comparison works in both directions. On the timing side it is an independent check of the atlas: the HR
-  delay groups, found from the ECG, reappear in a different module''s signal, [[value:hr-group-lag-in-pulse-rate]] apart against 2.56 s between the same
-  recordings'' HR delays. It also measures where PLETH_HR''s window sits, about 1.7 s earlier than the atlas''s earlier form for
-  it put it once the wait for the poll is counted on the HR side (0.7 s without it). On the value side the difference holds physiology as well as error: its spread rises with the rate as beats fail to
+  delay groups, found from the ECG, reappear in a different module''s signal, [[value:hr-group-lag-in-pulse-rate]] apart against 2.32 s between the same
+  recordings'' HR delays. It also measures where PLETH_HR''s window sits, [[value:pleth-hr-window-centre]] before its stamp,
+  within about 0.5 s of the PLETH_HR derivation''s own estimate ([[study:pleth-hr-derivation]]). On the value side the difference holds physiology as well as error: its spread rises with the rate as beats fail to
   make a pulse, so it is not a measure of either numeric''s error, and it gives neither variable a value budget. That is
   the line between related measurands and one measurand measured twice ([[study:cuff-vs-arterial-agreement]]).'
 limitations: '- Both numerics are truncated or rounded to whole beats per minute and update every 2 s, so the lag is read
@@ -120,8 +121,11 @@ limitations: '- Both numerics are truncated or rounded to whole beats per minute
   a different window moves the predicted lag by half the change.
 
   - Recordings with an uncertain HR group are left out of the group comparison.'
+
 code:
 - vitaldb-bench/examples/hr_vs_pulse_rate.py
+- vitaldb-bench/examples/pr_window_routes.py
+
 - vitaldb-bench/examples/run_scan.sh
 references:
 - bland1986statistical
@@ -148,4 +152,4 @@ figures:
     two-thirds and half of the heart rate, and a sparse cloud elsewhere.
 typed_ok:
   - {parameter: pleth-hr-window-centre, text: "10", why: "10 s blocks of change, and the 10 s window PLETH_HR was taken to have, not the window centre"}
-  - {parameter: pleth-hr-window-centre, text: "9.6", why: "the window centre at 60 /min in one group, not the cohort value"}
+  - {parameter: hr-group-lag-in-pulse-rate, text: "2.4", why: "an SD of the rate difference in /min, not the group lag"}

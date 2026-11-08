@@ -82,12 +82,12 @@ open_questions:
 
 - title: Where PLETH_HR's window sits, by the two routes
   kind: conflict
-  summary: Counting the wait for the 2 s poll on both sides (7 Nov 2026), this study centres PLETH_HR's window 8.9 s
-    before its stamp, and the comparison with heart rate about [[value:pleth-hr-window-centre]] ([[study:hr-vs-pulse-rate]]); before, with the
-    wait inside one route's delay and left out of the other's, they agreed to 0.3 s. The comparison takes HR's window
-    as 6 s; the 8 R–R intervals found since would move its centre about 0.4 s further, widening the gap. Candidates are
-    our pulse detector against the monitor's (a fixed offset in where a pulse is timed), the plethysmogram's hardware
-    delay (0.385 s, applied here), or HR and pulse rate taking different shares of the same poll.
+  summary: With the wait for the poll counted on both sides and the comparison's lag read at its steps' midpoints
+    (8 Nov 2026), this study centres PLETH_HR's window 8.9 s before its stamp and the comparison with heart rate
+    [[value:pleth-hr-window-centre]] ([[study:hr-vs-pulse-rate]]), 0.5 s apart, 0.2–0.3 s beyond the pulse-arrival time,
+    more at fast heart rates. Most of the 1 s gap of 7 Nov was the comparison reading its lag at its steps' edges. Of
+    what is left, the delay fits account for about 0.2 s ([[study:numeric-delay-check]]); a window of 11 or 12
+    intervals, which fit almost as well as 10, would move this study's centre by about half an interval.
 code:
 - vitaldb-bench/tools/pleth_hr_derivation.py
 - vitaldb-bench/examples/run_scan.sh
