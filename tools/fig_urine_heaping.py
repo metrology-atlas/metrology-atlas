@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Figure 2 of the paper and the atlas page "Worked example: a rounded urine volume": the recorded intraoperative urine
+"""Figure 3 of the paper and the atlas page "Worked example: a rounded urine volume": the recorded intraoperative urine
 volumes in VitalDB against the true volumes the value model infers (A), and what two recorded values mean (B).
 
     python tools/fig_urine_heaping.py RESOLUTION_REPO RELEASE --summary SUMMARY.json OUT [OUT ...]

@@ -1,12 +1,12 @@
 # Worked example: a rounded urine volume
 
-This page talks through Figure 2 of the paper on the Metrology Atlas: what a hand-charted urine volume in VitalDB
+This page talks through Figure 3 of the paper on the Metrology Atlas: what a hand-charted urine volume in VitalDB
 means. [Worked example: one heart-rate record](worked-example-heart-rate.md) is mostly about time; this one is about
 value. Every number here is read from this atlas, from the release's own records and the fitted value model.
 
 ![Two panels sharing a volume axis from 0 to 400 mL. A: a histogram of recorded urine volumes per 5 mL, with tall spikes at every multiple of 50 mL and a smooth red curve of the true volumes beneath them; the bars at 100 and 260 mL are dark. B: the PDF of the true volume for a recorded 100 mL, a wide stepped shape from 50 to 150 mL built from four rounding modes, and for a recorded 260 mL, a narrow block from 255 to 265 mL from the 5 and 10 mL modes only.](figures/worked-example-urine-output.png)
 
-*Figure 2 of the paper.*
+*Figure 3 of the paper.*
 
 ## The record
 
