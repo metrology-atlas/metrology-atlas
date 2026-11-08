@@ -1,11 +1,15 @@
 id: pc-grid-rate-multi
-name: Recorder PC rate against the grid, recordings with two or more SNUADC corrections
-quantity: Rate of the recorder PC against the mains grid in recordings with two or more SNUADC stamp corrections.
-value: -13.8
+name: Recorder PC rate against the grid, SNUADC rate from whole teeth
+quantity: Rate of the recorder PC against the mains grid in recordings whose SNUADC rate comes from at least one whole tooth (two stamp corrections in one stretch).
+value: -14.0
 unit: ppm
-spread: {q1: -29.7, q3: -3.0, n: 360}
+spread: {q1: -29.5, q3: -3.4, p10: -50.4, p90: 4.4, n: 318}
 status: measured
 study: mains-grid-pc-rate
 about: [recorder-pc-vs-grid]
-date: 2026-10-30
-notes: Selected by rate (which recordings carry corrections depends on their rate); not a population value.
+date: 2026-11-09
+notes: >-
+  Selected by rate: only recordings that drift fast enough to collect two corrections in one stretch get a rate, so
+  this describes those recordings, not every PC. Until 9 November this parameter was the rate in recordings with two
+  or more corrections (-13.8 ppm, 360), which included 42 without a whole tooth (vitaldb-bench tools/mains_hum.py agg
+  --min-teeth 1).

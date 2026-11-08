@@ -60,10 +60,13 @@ discussion: |
   form that uses the hum rate.
 
   **The constant k.** g, pooled over recordings with corrections, depends on how many corrections they carry (+1.6 ppm
-  with one, −13.8 ppm with two or more), because which recordings carry corrections is selected by their rate
-  ([[study:mains-grid-pc-rate]]). k calibrates g for the recordings the rate is applied to. Pooling g from recordings
-  with two or more corrections instead removes most of the offset but leaves a larger spread (18 ppm), from fewer
-  recordings per setup.
+  with one, −13.8 ppm with two or more). That was read as selection by rate; it is mostly a measurement artefact
+  (9 November): with one correction there is no whole tooth, and the SNUADC "rate" in g is a line fitted through a
+  single step, which carries no rate ([[study:mains-grid-pc-rate]], [[parameter:pc-grid-rate-single]], withdrawn).
+  k is calibrated against the BIS bursts, so it absorbs the offset this puts into the pooled g, and the check above
+  measures the hum rate's error as it is; but the one-correction recordings widen each setup's g. Pooling g from
+  recordings with two or more corrections instead removed most of the offset but left a larger spread (18 ppm), from
+  fewer recordings per setup.
 limitations: |
   The check needs a BIS with its own corrections: 224 recordings, three quarters in step mode (165), mostly on port COM4. The hum
   is measured over the first 60 min of a recording and applied to all of it. It gives a rate, not an offset. The
@@ -71,11 +74,12 @@ limitations: |
   apply to frequent-correction recordings: the ten with a hum rate say fast (−33 to −117 ppm), where their own
   steps say slow ([[study:vital-recorder-stamping-rules]]).
 open_questions:
-  - title: "Why recordings with one correction sit apart"
-    kind: hypothesis
+  - title: "g from whole teeth only"
+    kind: next step
     summary: >-
-      That the split of g by number of corrections is selection by rate is the likeliest reading, not proven. A
-      simulation of the selection from the release's rate and length distributions would test it.
+      g is pooled from every recording with a correction, including those without a whole tooth, whose SNUADC rate is a
+      line fit, not a rate. Pooling only rates from whole teeth (vitaldb-bench tools/mains_hum.py agg --min-teeth 1)
+      and recalibrating k may narrow the hum rate's error; it leaves fewer recordings per setup (318 in all).
   - title: "The hum over the whole recording"
     kind: next step
     summary: >-
@@ -94,3 +98,5 @@ figures:
       recording with the port's assumed rate (grey, median [[value:snuadc-uncorrected-drift-hourly]]) and with the hum rate (blue, [[value:snuadc-uncorrected-drift-hum-hourly]]). (b) The change the hum makes to the rate against the drift the bursts show with the assumed rate; on
       the dashed line the hum predicts it exactly.
     alt: Two overlaid histograms of drift in ms per hour, and a scatter of predicted against measured drift.
+typed_ok:
+  - {parameter: pc-grid-rate-single, text: "1.6", why: "the withdrawn value, quoted to explain the old split"}

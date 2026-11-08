@@ -1,8 +1,8 @@
 id: recorder-pc-vs-grid
 name: Recorder PC against the mains grid
 summary: >-
-  Through the SNUADC hum, the recorder PC's rate against the grid: about −14 to +2 ppm (medians, depending on which
-  recordings), differing between setups from −47 to +18 ppm.
+  Through the SNUADC hum, the recorder PC's rate against the grid: about −14 ppm (median; the PC runs slow), in
+  recordings whose SNUADC rate comes from whole teeth; setup medians −25 to −3 ppm (preliminary).
 clock: recorder-pc
 against: mains-grid
 rate: pc-grid-rate

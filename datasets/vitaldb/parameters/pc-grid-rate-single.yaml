@@ -1,11 +1,15 @@
 id: pc-grid-rate-single
-name: Recorder PC rate against the grid, recordings with one SNUADC correction
+name: Recorder PC rate against the grid, recordings with one SNUADC correction (withdrawn)
 quantity: Rate of the recorder PC against the mains grid in recordings with one SNUADC stamp correction.
 value: 1.6
 unit: ppm
 spread: {q1: -16.9, q3: 16.2, n: 846}
-status: measured
+status: withdrawn
 study: mains-grid-pc-rate
 about: [recorder-pc-vs-grid]
-date: 2026-10-30
-notes: Selected by rate (which recordings carry corrections depends on their rate); not a population value.
+date: 2026-11-09
+notes: >-
+  Withdrawn 9 November 2026: not a rate. With one correction there is no whole tooth, and physiosync.stamp_clock
+  falls back to a line fitted through a staircase of one step, whose slope depends on where the step falls. On
+  synthetic recordings with a known rate that fit is off by -49 to +23 ppm (10th-90th percentile; vitaldb-bench examples/sim_stamp_clock_onecorr.py), against 0.0
+  ppm from whole teeth. The +1.6 ppm and its spread are the fit's, not the PCs'.

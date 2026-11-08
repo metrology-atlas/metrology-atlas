@@ -1,10 +1,13 @@
 id: pc-grid-rate-setups
 name: Recorder PC rate against the grid, range of setup medians
-quantity: Range of the per-setup median rate of the recorder PC against the mains grid (setups with 30 or more recordings).
+quantity: Range of the per-setup median rate of the recorder PC against the mains grid (setups with 10 or more recordings whose SNUADC rate comes from whole teeth).
 unit: ppm
-spread: {min: -47, max: 18, n: 9}
-display: "setup medians −47 to +18 ppm (9 setups)"
+spread: {min: -24.8, max: -3.3, n: 7}
+display: "setup medians −25 to −3 ppm (7 setups, 10–23 recordings each)"
 status: measured
 study: mains-grid-pc-rate
 about: [recorder-pc-vs-grid]
-date: 2026-10-30
+date: 2026-11-09
+notes: >-
+  Preliminary: few recordings per setup. Until 9 November, −47 to +18 ppm over 9 setups with 30 or more recordings,
+  most of them without a whole tooth, whose rates are not rates ([[parameter:pc-grid-rate-single]]).
