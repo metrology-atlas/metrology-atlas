@@ -3,8 +3,9 @@ name: Mains hum as an outside clock, and the recording PCs against the grid
 summary: >-
   The SNUADC waveforms carry the mains hum at 120 and 360 Hz in 39% of recordings. The grid is regulated to its
   nominal frequency, so the hum is a clock outside the recording, and through it the recorder PC's rate against the
-  grid can be measured where the SNUADC's own rate is: the PCs run slow, about 14 ppm. Rates from recordings with only
-  one SNUADC correction, which had suggested setups differing by tens of ppm, are not rates (9 November).
+  grid can be measured where the SNUADC's own rate is known, from the recording's whole teeth or its setup's: the PCs
+  run slow, about 13 ppm, and two stations stand apart (−57 and +7 ppm). One-correction "rates", line fits through one
+  step, were dropped (9 November).
 date: 2026-11-09
 status: current
 methods: [signal-borne-clocks]
@@ -29,10 +30,14 @@ method: |
     −(device fast) ppm, so line = f_grid − f_SNUADC.
   - **The PC against the grid.** With r = f_PC − f_SNUADC, the SNUADC rate from its stamp corrections
     (physiosync.stamp_clock; negative = SNUADC fast), g = r − line = f_PC − f_grid: positive means the PC runs fast.
-    Only rates from at least one **whole tooth** (two corrections in one stretch) are used. With one correction,
-    stamp_clock fits a line through a staircase of one step instead, and that slope depends on where the step falls,
-    not on the rate: on synthetic recordings with a known rate it is off by −49 to +23 ppm (10th–90th percentile),
-    against 0.0 ppm from whole teeth (vitaldb-bench examples/sim_stamp_clock_onecorr.py).
+    r is the recording's own rate where it has at least one **whole tooth** (two corrections in one stretch). With
+    one correction, stamp_clock fits a line through a staircase of one step instead, and that slope depends on where
+    the step falls, not on the rate: on synthetic recordings with a known rate it is off by −49 to +23 ppm (10th–90th
+    percentile), against 0.0 ppm from whole teeth (vitaldb-bench examples/sim_stamp_clock_onecorr.py). Such a
+    recording borrows its **setup's rate** instead: the median of the whole-teeth rates of the same recording station
+    (its device ports), the recording left out, where there are at least 5. Within a setup a recording's own rate
+    sits a robust SD of 0.75 ppm from that median (5th–95th percentile −2.0 to +2.1 ppm; 375 recordings checked;
+    vitaldb-bench examples/setup_rate_check.py), as the setups page records for the SNUADC's drift.
   - **Controls.** Two SNUADC channels' hum phases against each other; minute-by-minute line frequency in two channels.
 results: |
   - **Hum present** in [[value:snuadc-hum-share|number]] of 6,348 recordings with SNUADC, mainly at 120 Hz and 360 Hz (seen at 140 Hz). The 60 Hz
@@ -44,29 +49,37 @@ results: |
     their minute-by-minute frequencies have rank correlation +0.63. The grid varies by 11–20 ppm (SD) from minute to
     minute.
   - **The PC against the grid** (1,206 recordings with hum and at least one correction; 9 November, `mains_hum.py agg
-    --min-teeth 1 --setup-min-n 10`):
+    --setup-rates`):
 
-    | SNUADC rate | n | g, median | IQR |
+    | SNUADC rate from | n | g, median | IQR |
     |---|---|---|---|
-    | From whole teeth | 318 | [[value:pc-grid-rate-multi]] | −29.5 to −3.4 |
-    | No whole tooth (a line fit, not a rate) | 888 | +1.1 ppm | −17.7 to +15.8 |
+    | The recording's own whole teeth | 318 | [[value:pc-grid-rate-multi]] | −29.5 to −3.4 |
+    | Its setup's rate, borrowed | 580 | −11.8 ppm | −26.9 to −0.6 |
+    | Both | 898 | [[value:pc-grid-rate]] | −27.2 to −1.4 |
+    | Neither (no setup rate; not used) | 308 | −0.7 ppm | |
 
-    By setup, whole teeth only (≥ 10 recordings, 7 setups): medians −25 to −3 ppm ([[parameter:pc-grid-rate-setups]]), none with 30. By
-    SNUADC port: COM4 −12.6 ppm (195), COM18 −15.7 (38), COM9 −10.3 (30).
+    Within the 13 setups with at least 5 recordings of each kind, borrowed minus own medians run from −22 to +16 ppm
+    (median −5): about the sampling noise of such small medians, with no sign of a bias from borrowing.
+  - **By setup** (≥ 30 recordings, 8 setups): medians −57 to +7 ppm ([[parameter:pc-grid-rate-setups]]). Six lie
+    from −16 to −5 ppm; the COM12 station runs at −57 ppm (36 recordings) and the COM19 station at +7 ppm (71). By
+    SNUADC port: COM4 −11.0 ppm (526), COM18 −16.6 (92), COM19 +6.8 (74), COM9 −15.2 (58), COM25 −14.9 (39), COM12
+    −56.3 (38), COM13 −28.0 (22).
   - **Superseded (28–30 October):** the same split by number of corrections, +1.6 ppm with one (846) and −13.8 ppm
     with two or more (360), setup medians −47 to +18 ppm (9 setups) and ports from −43 to +13.5 ppm. Those spreads
     came mostly from the recordings without a whole tooth ([[parameter:pc-grid-rate-single]], withdrawn).
 discussion: |
-  The first check of any clock in the release against an outside, regulated reference. Where the SNUADC's rate is
-  measured, the recording PCs run slow against the grid by about 14 ppm, and the setups' medians fall within about
-  20 ppm of one another. The earlier finding that setups differ by tens of ppm, from −47 to +18 ppm, came from the
-  recordings with a single correction, whose "rates" were line fits through one step (9 November, confirmed on synthetic
-  recordings).
+  The first check of any clock in the release against an outside, regulated reference. Most recording PCs run slow
+  against the grid by about 10–16 ppm; two stations do not, one 57 ppm slow and one 7 ppm fast, so the PCs are not
+  held to one rate. The finding that setups differ stands, but its numbers have changed: the earlier −47 to +18 ppm
+  rested on one-correction recordings whose "rates" were line fits through one step (9 November, confirmed on
+  synthetic recordings), and with whole teeth alone the two outlying stations dropped out for want of recordings.
 
   **Which recordings carry corrections is selected by their rate.** A recording only gets stamp corrections once its
   stamps have run 480 ms ahead, and a whole tooth needs a second one in the same stretch, which depends on r = line +
-  g, so g is selected along with it: −14 ppm describes the recordings fast enough to collect two corrections, not
-  every PC. [[study:hum-snuadc-rate]] calibrates g on recordings like those it is applied to.
+  g, so g is selected along with it. Borrowing the setup's rate brings in the slower recordings of the same stations
+  and weakens that selection (−11.8 ppm borrowed against −14.0 ppm own), but recordings with no correction at all,
+  and stations with too few whole teeth, are still left out. [[study:hum-snuadc-rate]] calibrates g on recordings
+  like those it is applied to.
 
   This replaces the assumed PC drift ([[parameter:pc-utc-drift]], 0.1–10 ppm): the measured rates are larger. It
   gives a rate, not an offset: the PC's absolute time (its NTP steps) is not seen this way
@@ -76,13 +89,12 @@ limitations: |
   recording's value carries that. The grid is assumed to keep its nominal frequency on average; the release's
   shifted dates make it impossible to look the grid up. Only recordings with hum and a measured rate.
 open_questions:
-  - title: "Do setups differ?"
-    kind: next step
+  - title: "Why do setups differ?"
+    kind: phenomenon
     summary: >-
-      With rates from whole teeth only, seven setups have 10 or more recordings, with medians from −25 to −3 ppm.
-      Whether that spread is real (PC hardware, time-synchronisation configuration, the theatre) or sampling noise
-      needs more recordings per setup, for example rates from the hum against another device with a measured rate.
-      Whether a PC's rate changes over the years of the release is not known.
+      Six setups' PCs run 5 to 16 ppm slow against the grid; the COM12 station's runs 57 ppm slow and the COM19
+      station's 7 ppm fast. PC hardware, time-synchronisation configuration, or the theatre. Whether a PC's rate
+      changes over the years of the release is not known.
   - title: "The 240 Hz line"
     kind: next step
     summary: >-
@@ -92,18 +104,22 @@ code:
   - vitaldb-bench/tools/mains_phase.py
   - vitaldb-bench/tools/mains_hum_plot.py
   - vitaldb-bench/examples/sim_stamp_clock_onecorr.py
+  - vitaldb-bench/examples/setup_rate_check.py
 figures:
   - id: pc-rate-vs-grid
     file: pc-rate-vs-grid.png
     theme: distributions of measured parameters
     source: vitaldb-bench tools/mains_hum_plot.py
     caption: >-
-      The recorder PC's clock rate against the mains grid, through the SNUADC hum. (a) Where the SNUADC's rate comes
-      from whole teeth (blue, a median of −14 ppm), and where it does not (grey): there the "rate" is a line fitted
-      through one step, so its spread is the fit's, not the PCs'. (b) Median and interquartile range by recording setup,
-      whole teeth only, setups with 10 or more such recordings: −25 to −3 ppm.
-    alt: Two overlaid histograms, a narrower blue one centred near −14 ppm and a wider grey one near zero, and a
-      dot-and-range plot for seven setups, all below zero.
+      The recorder PC's clock rate against the mains grid, through the SNUADC hum. (a) By where the SNUADC's rate
+      comes from: the recording's own whole teeth (blue, a median of −14 ppm), its setup's rate, borrowed (orange,
+      −12 ppm), or neither (grey): there the "rate" is a line fitted through one step, not a rate, and it is not used.
+      (b) Median and interquartile range by recording setup, own and borrowed rates together, setups with 30 or more
+      recordings: −57 to +7 ppm.
+    alt: Three overlaid histograms, blue and orange centred near −13 ppm and grey near zero, and a dot-and-range plot
+      for eight setups, six between −16 and −5 ppm, one near −57 and one near +7.
 typed_ok:
   - {parameter: pc-grid-rate-multi, text: "-14", why: "the median rounded to whole ppm in prose and the figure caption; the results table links the value"}
   - {parameter: pc-grid-rate-single, text: "1.6", why: "the withdrawn value, quoted as the superseded result"}
+  - {parameter: pc-grid-rate-multi, text: "-14.0", why: "the own-teeth median set against the borrowed one in the discussion"}
+  - {parameter: pc-grid-rate, text: "-13", why: "the overall median rounded in the figure's alt text"}

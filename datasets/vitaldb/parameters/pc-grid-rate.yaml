@@ -1,14 +1,18 @@
 id: pc-grid-rate
 name: Recorder PC rate against the mains grid
-quantity: How fast the recorder PC runs against the grid (f_PC − f_grid), per recording, through the SNUADC hum.
+quantity: How fast the recorder PC runs against the grid (f_PC − f_grid), per recording, through the SNUADC hum, where the SNUADC's own rate is known (from the recording's whole teeth or its setup's).
+value: -12.6
 unit: ppm
-display: "about −14 ppm (median; the PC runs slow), recordings whose SNUADC rate comes from whole teeth; setups −25 to −3 ppm"
+spread: {q1: -27.2, q3: -1.4, p10: -48.9, p90: 8.2, n: 898}
+display: "about −13 ppm (median; the PC runs slow); setups −57 to +7 ppm"
 status: measured
 study: mains-grid-pc-rate
 about: [recorder-pc-vs-grid]
 date: 2026-11-09
 notes: >-
-  −14.0 ppm (IQR −29.5 to −3.4) in 318 recordings whose SNUADC rate comes from whole teeth
-  ([[parameter:pc-grid-rate-multi]]). Selected by rate, so not a population value. Recordings with one correction have
-  no measured rate ([[parameter:pc-grid-rate-single]], withdrawn).
-  Against UTC only if the grid keeps its nominal frequency on average (assumed).
+  898 recordings with hum and a known SNUADC rate: 318 with the rate from their own whole teeth
+  ([[parameter:pc-grid-rate-multi]], −14.0 ppm) and 580 that borrow their setup's rate (−11.8 ppm; the median of the
+  setup's whole-teeth rates with the recording left out, which predicts a recording's own rate to a robust SD of
+  0.75 ppm). Recordings with one correction and no setup rate have no measured rate
+  ([[parameter:pc-grid-rate-single]], withdrawn). Against UTC only if the grid keeps its nominal frequency on average
+  (assumed). (vitaldb-bench tools/mains_hum.py agg --setup-rates)
