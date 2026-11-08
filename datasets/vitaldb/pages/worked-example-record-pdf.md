@@ -38,7 +38,7 @@ central laboratory; [[variable:lab-blood-gas]], [[variable:lab-central]], [[stud
 
 **After correction.** The panel stamped with the value names the analyser (a panel with pH is a blood gas), and the
 draw's label places the draw within one arterial-line access ([[study:arterial-line-accesses]]; timing form
-[draw time from arterial access](variables/lab-blood-gas.md#form-lab-draw)). Where in that access the draw happened is uniform over about 89 s. The typical record is a blood gas
+[draw time from arterial access](variables/lab-blood-gas.md#form-lab-draw)). Where in that access the draw happened is uniform over the access, a median [[value:lab-access-length]] long. The typical record is a blood gas
 drawn 410 s (6.8 min, the blood-gas median) before its stamp, so its value stays the whole-percent band.
 
 ## Numbers in the caption
@@ -48,7 +48,7 @@ drawn 410 s (6.8 min, the blood-gas median) before its stamp, so its value stays
 | Support before correction | the last [[value:hr-window|number]] R–R intervals: [[value:hr-window-span]] at the median rate | [[study:hr-derivation]]; [timing form after the per-case delay label](variables/solar8000-hr.md#form-hr-lab): interval described |
 | Standard uncertainty of a recording's delay label | [[value:hr-label-se]] | [[parameter:hr-label-se]] |
 | Share of recorded 35% from the blood-gas analyser | about three in four (77%) | [[software:vitaldb-resolution]] value model |
-| Length of the arterial-line access | about 89 s | [[variable:lab-blood-gas]], [timing form draw time from arterial access](variables/lab-blood-gas.md#form-lab-draw): its component (√12 × u) |
+| Length of the arterial-line access | about 77 s: √12 × [[value:lab-draw-position-u]], the root mean square over all draws, which the long accesses weight (the median access is [[value:lab-access-length]]) | [[variable:lab-blood-gas]], [timing form draw time from arterial access](variables/lab-blood-gas.md#form-lab-draw): its component (√12 × u) |
 
 The figure is drawn by `figures/src/fig_record_distributions.py` in the paper's source, from the atlas file, the
 per-record label tables of [[software:vitaldb-bench]] (numeric delay and lab draw labels), and

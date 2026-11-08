@@ -16,6 +16,11 @@ STATUS_COL = {"measured": "#1b7f4b", "derived": "#1b7f4b", "estimated": "#b26b00
 STATUS_DASH = {"estimated": "8,5", "assumed": "2,5"}
 FONT = "Inter, Helvetica, Arial, sans-serif"
 NODE_W, NODE_H, ROW_H, MARGIN = 250, 60, 190, 40
+# The print layout (print_=True), for a figure set at a page's text width (about 455 pt): narrower boxes, wrapped
+# labels and type about twice the screen size, so that the smallest text prints at about 6 pt. No hover, no script.
+SCREEN = dict(node_w=NODE_W, node_h=NODE_H, row_h=ROW_H, gap=34, margin=MARGIN, min_w=1000, t=15, s=11.5, n=12, k=12,
+              r=11, wrap=False)
+PRINT = dict(node_w=190, node_h=100, row_h=150, gap=30, margin=20, min_w=0, t=18, s=15, n=14, k=16, r=12, wrap=True)
 
 
 def _param_text(ds, pid):
@@ -42,7 +47,19 @@ def _short(text, n):
     return text if len(text) <= n else text[: n - 1].rstrip() + "…"
 
 
-def graph(ds, root="utc"):
+def _lines(text, size, width, bold=False):
+    """Wrap text to a box width, estimating Inter's advance as 0.54 (semibold) or 0.53 of the font size per character."""
+    n = max(int(width / (size * (0.54 if bold else 0.53))), 8)
+    out, line = [], ""
+    for w in str(text).split():
+        if line and len(line) + 1 + len(w) > n:
+            out.append(line); line = w
+        else:
+            line = f"{line} {w}".strip()
+    return out + [line] if line else out
+
+
+def graph(ds, root="utc", L=SCREEN):
     """Layout: rows by distance from the root; deeper clocks centred under the clock they are measured against."""
     clocks, links = ds.items["clock"], ds.items["link"]
     live = {k: l for k, l in links.items() if l.get("status") not in ("withdrawn", "superseded")}
@@ -66,7 +83,7 @@ def graph(ds, root="utc"):
             if l["clock"] not in kids[l["against"]]:
                 kids[l["against"]].append(l["clock"])
     parent = {k: p for p, ks in kids.items() for k in ks}
-    gap = NODE_W + 34
+    gap = L["node_w"] + L["gap"]
     xpos = {}
 
     def centre_out(cs):
@@ -90,10 +107,11 @@ def graph(ds, root="utc"):
             for i, c in enumerate(centre_out(row)):
                 xpos[c] = (i - (len(row) - 1) / 2) * gap
     lo, hi = min(xpos.values()), max(xpos.values())
-    width = max(hi - lo + NODE_W + 2 * MARGIN, 1000)
-    height = 70 + max(rows) * ROW_H + NODE_H + 30
+    width = max(hi - lo + L["node_w"] + 2 * L["margin"], L["min_w"])
+    top = 60 if L is SCREEN else 20
+    height = top + 10 + max(rows) * L["row_h"] + L["node_h"] + 30
     off = (width - (hi - lo)) / 2 - lo
-    xy = {c: (xpos[c] + off, 60 + depth[c] * ROW_H + NODE_H / 2) for c in depth}
+    xy = {c: (xpos[c] + off, top + depth[c] * L["row_h"] + L["node_h"] / 2) for c in depth}
     pairs = {}
     for lid, l in sorted(live.items(), key=lambda kv: (depth.get(kv[1]["clock"], 9), xy.get(kv[1]["clock"], (0, 0))[0])):
         pairs.setdefault((l["clock"], l["against"]), []).append(lid)
@@ -118,18 +136,20 @@ def link_rows(ds, g):
     return rows
 
 
-def overview_svg(ds, root="utc", href=lambda kind, id_: ""):
+def overview_svg(ds, root="utc", href=lambda kind, id_: "", print_=False):
     """Draw the timing graph as an SVG: every clock below the clock it is measured against, links labelled with drift
-    and correction interval; `href` gives each box's link.
+    and correction interval; `href` gives each box's link. `print_` gives the layout for a printed page (PRINT).
     """
-    g = graph(ds, root)
+    L = PRINT if print_ else SCREEN
+    NODE_W, NODE_H = L["node_w"], L["node_h"]
+    g = graph(ds, root, L)
     clocks, xy, depth = g["clocks"], g["xy"], g["depth"]
     info = {r["id"]: r for r in link_rows(ds, g)}
     W, H = g["width"], g["height"]
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:.0f} {H:.0f}" font-family="{FONT}" role="img" '
            f'aria-label="The atlas timing graph: clocks and the links measured between them">',
-           "<style>.t{font-size:15px;font-weight:600;fill:#14213d}.s{font-size:11.5px;fill:#555}"
-           ".n{font-size:12px;font-weight:700;fill:#fff}.k{font-size:12px;fill:#444}"
+           f"<style>.t{{font-size:{L['t']}px;font-weight:600;fill:#14213d}}.s{{font-size:{L['s']}px;fill:#555}}"
+           f".n{{font-size:{L['n']}px;font-weight:700;fill:#fff}}.k{{font-size:{L['k']}px;fill:#444}}"
            ".hit{cursor:pointer}.hit:hover .box{stroke-width:2.6}.hit:hover .line{stroke-width:4.5}"
            "#tip text{font-size:12.5px;fill:#14213d}#tip .h{font-weight:700}</style>"]
     # links
@@ -151,7 +171,7 @@ def overview_svg(ds, root="utc", href=lambda kind, id_: ""):
             bx, by = (x1 + x2) / 2, (y1 + NODE_H / 2 + my) / 2
         else:
             d = f"M{x1:.0f},{y1 - NODE_H / 2:.0f} L{x2:.0f},{y2 + NODE_H / 2:.0f}"
-            by = y1 - NODE_H / 2 - 26
+            by = y1 - NODE_H / 2 - (26 if L is SCREEN else 22)
             f = (y1 - NODE_H / 2 - by) / max(y1 - y2 - NODE_H, 1)
             bx = x1 + f * (x2 - x1)
         lines = []
@@ -165,8 +185,8 @@ def overview_svg(ds, root="utc", href=lambda kind, id_: ""):
                    f'<path class="line" d="{d}" fill="none" stroke="{col}" stroke-width="2.6"'
                    + (f' stroke-dasharray="{dash}"' if dash else "") + "/>"
                    f'<path d="{d}" fill="none" stroke="transparent" stroke-width="14"/>'
-                   f'<circle cx="{bx:.0f}" cy="{by:.0f}" r="11" fill="{col}"/>'
-                   f'<text x="{bx:.0f}" y="{by + 4:.0f}" text-anchor="middle" class="n">{n}</text>'
+                   f'<circle cx="{bx:.0f}" cy="{by:.0f}" r="{L["r"]}" fill="{col}"/>'
+                   f'<text x="{bx:.0f}" y="{by + L["n"] * 0.35:.0f}" text-anchor="middle" class="n">{n}</text>'
                    f"<title>{escape(chr(10).join(lines))}</title></a>")
     # clocks
     for c, (x, y) in xy.items():
@@ -175,19 +195,34 @@ def overview_svg(ds, root="utc", href=lambda kind, id_: ""):
         if cl.get("nominal"):
             lines.append("Nominal: " + _short(cl["nominal"], 80))
         url = href("clock", c)
+        if L["wrap"]:
+            # title and nominal wrapped to the box, the block centred in it
+            tl = _lines(cl["name"], L["t"], NODE_W - 14, bold=True)
+            sl = _lines(_short(cl.get("nominal") or "", 40), L["s"], NODE_W - 14)
+            lh_t, lh_s = L["t"] * 1.15, L["s"] * 1.2
+            y0 = y - (len(tl) * lh_t + len(sl) * lh_s + 4) / 2 + L["t"] * 0.85
+            texts = "".join(f'<text x="{x:.0f}" y="{y0 + i * lh_t:.0f}" text-anchor="middle" class="t">{escape(t)}</text>'
+                            for i, t in enumerate(tl))
+            ys = y0 + (len(tl) - 1) * lh_t + 4 + lh_s
+            texts += "".join(f'<text x="{x:.0f}" y="{ys + i * lh_s:.0f}" text-anchor="middle" class="s">{escape(t)}</text>'
+                             for i, t in enumerate(sl))
+        else:
+            texts = (f'<text x="{x:.0f}" y="{y - 3:.0f}" text-anchor="middle" class="t">{escape(cl["name"])}</text>'
+                     f'<text x="{x:.0f}" y="{y + 16:.0f}" text-anchor="middle" class="s">{escape(_short(cl.get("nominal") or "", 36))}</text>')
         out.append(f'<a class="hit" href="{url}" target="_top" data-tip={quoteattr(json.dumps(lines))}>'
                    f'<rect class="box" x="{x - NODE_W / 2:.0f}" y="{y - NODE_H / 2:.0f}" width="{NODE_W}" height="{NODE_H}" '
-                   f'rx="8" fill="#f5f7fb" stroke="#14213d" stroke-width="1.4"/>'
-                   f'<text x="{x:.0f}" y="{y - 3:.0f}" text-anchor="middle" class="t">{escape(cl["name"])}</text>'
-                   f'<text x="{x:.0f}" y="{y + 16:.0f}" text-anchor="middle" class="s">{escape(_short(cl.get("nominal") or "", 36))}</text>'
+                   f'rx="8" fill="#f5f7fb" stroke="#14213d" stroke-width="1.4"/>' + texts +
                    f"<title>{escape(chr(10).join(lines))}</title></a>")
     # legend
-    lx = MARGIN
+    lx = L["margin"]
     for i, (st, lab) in enumerate((("measured", "measured"), ("estimated", "estimated"), ("assumed", "assumed"))):
-        x = lx + i * 150
+        x = lx + i * (150 if L is SCREEN else 170)
         out.append(f'<line x1="{x}" y1="{H - 18}" x2="{x + 36}" y2="{H - 18}" stroke="{STATUS_COL[st]}" stroke-width="2.6"'
                    + (f' stroke-dasharray="{STATUS_DASH[st]}"' if st in STATUS_DASH else "") + "/>"
                    f'<text x="{x + 44}" y="{H - 14}" class="k">{lab}</text>')
+    if print_:
+        out.append("</svg>")
+        return "\n".join(out)
     out.append(f'<text x="{lx + 470}" y="{H - 14}" class="k">Numbers: the links in the table below. '
                f'Hover for detail; click to open a page.</text>')
     # hover panel

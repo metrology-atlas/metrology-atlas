@@ -1679,7 +1679,7 @@ class Site:
                 f"| **Time** | {clocks} [clocks](clocks/index.md) and {links} [links](links/index.md) between them; "
                 f"{chains} variables with a written chain from UTC, {timed} with timing against the working reference | "
                 "each timing form's budget; the stamp grids and the intervals values describe (chart below) |\n"
-                f"| **Value** | {(str(acc) + ' variables so far') if acc else 'Not yet described for any variable: it needs the instruments’ calibration records ([why](studies/instrument-calibration.md))'} | {valued} variables, {models} with fitted rounding models "
+                f"| **Value** | {(str(acc) + (' variable' if acc == 1 else ' variables') + ' so far') if acc else 'Not yet described for any variable: it needs the instruments’ calibration records ([why](studies/instrument-calibration.md))'} | {valued} variables, {models} with fitted rounding models "
                 "([Value](value.md)) |\n\n")
 
     def references_page(self) -> str:

@@ -3,6 +3,8 @@
     python -m metrology_atlas check datasets/vitaldb
     python -m metrology_atlas json  datasets/vitaldb --out build/vitaldb.metrology.json
     python -m metrology_atlas site  datasets/vitaldb --out build/vitaldb      (then: zensical build in that folder)
+    python -m metrology_atlas graph datasets/vitaldb --out timing-graph.svg [--print]   (the timing graph alone;
+        --print: the layout for a printed page, as in the paper's Figure 5)
     add --release to json/site for the public build: links into repositories that are not public are left out
 """
 
@@ -31,10 +33,10 @@ def todo(ds) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Command line: check, json, site or todo for a dataset folder; returns the exit code."""
+    """Command line: check, json, site, graph or todo for a dataset folder; returns the exit code."""
     ap = argparse.ArgumentParser(prog="metrology-atlas")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("check", "json", "site", "todo"):
+    for name in ("check", "json", "site", "todo", "graph"):
         p = sub.add_parser(name)
         p.add_argument("dataset")
         if name not in ("check", "todo"):
@@ -42,6 +44,9 @@ def main(argv: list[str] | None = None) -> int:
         if name in ("json", "site"):
             p.add_argument("--release", action="store_true",
                            help="public build: software that is not public is shown as not yet released, unlinked")
+        if name == "graph":
+            p.add_argument("--print", dest="print_", action="store_true",
+                           help="the layout for a printed page: wrapped labels, larger type, no hover")
     a = ap.parse_args(argv)
     try:
         ds = load(a.dataset)
@@ -60,6 +65,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ok: {counts}")
     elif a.cmd == "todo":
         print(todo(ds))
+    elif a.cmd == "graph":
+        from pathlib import Path
+        from metrology_atlas.overview import overview_svg
+        Path(a.out).write_text(overview_svg(ds, print_=a.print_), encoding="utf-8")
+        print(f"wrote {a.out}")
     elif a.cmd == "json":
         print(f"wrote {write_json(ds, a.out)} ({counts})")
     else:
