@@ -1,19 +1,22 @@
 id: recorder-pc-vs-utc
 name: Recorder PC against UTC
 summary: >-
-  The recorder PCs were synchronised to UTC(KRIS), Korea's national time scale, with UTCk, the time program of the Korea
-  Research Institute of Standards and Science (KRISS), as the dataset's creator reports ([[reference:lee2026correspondence]]).
-  The offset itself is not observed in the release, and no step of 0.5 s or more appears anywhere in it. The PC's rate
-  is measured against the mains grid instead ([[link:recorder-pc-vs-grid]]).
+  Vital Recorder does not stamp with the Windows clock. At start-up it reads the time once from the VitalDB server
+  and stores its difference from the PC clock; after that its time advances only by the PC's hardware timer (the
+  Windows multimedia timer, 1 ms resolution) [[reference:lee2026correspondence-9nov]]. Its offset from UTC is therefore the server's own offset and the
+  delay of that one request, plus the timer's drift since the start: [[value:pc-grid-rate]] against the grid
+  ([[link:recorder-pc-vs-grid]]), so [[value:pc-utc-offset]] after 5 hours. The offset itself is not observed in
+  the release, whose dates are shifted.
 clock: recorder-pc
 against: utc
 correction:
   rule: |
-    UTCk sets the PC clock from KRISS's NTP server, ntp.kriss.re.kr, which KRISS keeps on UTC(KRIS)
-    ([[reference:kriss-utck]]). KRISS warns of errors from a few milliseconds to a few hundred milliseconds, depending on the
-    network. UTCk was run by hand, at irregular times, and no logs were kept
-    ([[reference:lee2026correspondence-nov]]), so when it synchronised and by how much cannot be recovered. Whatever
-    correction it made is smaller than 0.5 s: no simultaneous jump of every device of that size was found in any file
-    ([[parameter:pc-step-bound]]).
+    The server time is read again at every start of Vital Recorder: it restarts itself once it has run for more than
+    5 hours (an option on by default), and whenever the PC restarts, for example after Windows updates
+    ([[parameter:pc-sync-period]]; [[reference:lee2026correspondence-9nov]]). Within a run nothing steps the recorder's time: no simultaneous jump of
+    every device of 0.5 s or more was found in any file ([[parameter:pc-step-bound]]). The PC's Windows clock, which
+    was synchronised by hand to UTC(KRIS), Korea's national time scale, with KRISS's UTCk program
+    ([[reference:lee2026correspondence]], [[reference:lee2026correspondence-nov]], [[reference:kriss-utck]]), mattered
+    only when the server request failed at start-up. How often that happened is not known.
   period: pc-sync-period
-status: estimated
+status: documented

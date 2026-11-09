@@ -1,8 +1,17 @@
 id: pc-utc-offset
 name: Recorder PC offset from UTC
-quantity: How far the recorder PC's time may sit from UTC at any moment.
-value: 0.003
+quantity: How far the recorder's time may sit from UTC at any moment.
+value: 0.23
 unit: s
-display: "a few ms to a few hundred ms (KRISS's stated range for UTCk; assumed); below 0.5 s at every step"
-status: assumed
+display: "grows with the time since the recorder started: about 0.23 s after 5 h at the median PC rate, about 1 s at the fastest setup; plus the server's own offset and the delay of the start-up request (not known)"
+status: estimated
 about: [recorder-pc-vs-utc]
+date: 2026-11-10
+notes: >-
+  The recorder's time is the server time read at start-up, advanced by the PC's hardware timer [[reference:lee2026correspondence-9nov]], so its offset
+  grows at the timer's rate against UTC: [[value:pc-grid-rate]] against the mains grid (median), with setup medians
+  as in [[parameter:pc-grid-rate-setups]] ([[link:recorder-pc-vs-grid]]), with the grid
+  taken to keep UTC's rate. Over the longest run before a restart, 5 hours, that is about 0.23 s at the median and
+  about 1 s at the fastest setup. The server's own offset from UTC and the delay of the request are not known.
+  Until 9 November: "a few ms to a few hundred ms" (KRISS's stated range for UTCk), now applicable only if the server
+  request failed.

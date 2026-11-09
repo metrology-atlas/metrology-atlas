@@ -1,6 +1,14 @@
 id: pc-sync-period
-name: Recorder PC synchronisation interval
-quantity: Time between synchronisations of the recorder PC to UTC(KRIS) by KRISS's UTCk.
-display: "irregular: UTCk run by hand, no logs kept (the dataset's creator)"
-status: assumed
+name: Recorder time re-read interval
+quantity: Time between Vital Recorder's reads of the server time, which happen at each start of the recorder.
+value: 18000
+unit: s
+display: "at every start: after more than 5 h of running, and at every PC restart (a rule in the recorder)"
+status: documented
 about: [recorder-pc-vs-utc]
+date: 2026-11-09
+notes: >-
+  Vital Recorder restarts itself once it has run for more than 5 hours (an option on by default) and re-reads the
+  server time at each start [[reference:lee2026correspondence-9nov]]. Until 9 November the atlas described a Windows clock synchronised to UTC(KRIS) by
+  hand at irregular times with no logs kept ([[reference:lee2026correspondence-nov]]); that synchronisation mattered
+  only when the server request failed.

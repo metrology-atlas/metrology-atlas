@@ -4,6 +4,6 @@ summary: Coordinated Universal Time, the reference every chain of clocks in the 
 type: reference
 nominal: Civil time
 description: |
-  No clock in the release is tied to UTC directly. The recorder PCs were synchronised to UTC(KRIS) with KRISS's UTCk, as the dataset's creator reports, but
-  the release shifts every date to the year 2100, so the offset of any VitalDB time from UTC is unobserved,
-  bounded by the PC's synchronisation ([[link:recorder-pc-vs-utc]]).
+  No clock in the release is tied to UTC directly. Vital Recorder takes the VitalDB server's time at each start and
+  then runs on the PC's hardware timer ([[link:recorder-pc-vs-utc]]), but the release shifts every date to the year
+  2100, so the offset of any VitalDB time from UTC is unobserved.

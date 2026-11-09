@@ -1,9 +1,9 @@
 """The timing graph as a diagram, generated from the atlas's clocks, links and parameters.
 
 Every clock is placed by its distance from the root reference (UTC): a link from clock A against clock B puts A one
-row below B. Each link carries a numbered badge; its line is coloured by status (measured, estimated, assumed). The
-detail of each link (drift, correction, status) is in a table keyed by those numbers (overview_table) and in an
-information panel that opens on hover; clicking a clock or a link opens its page. Nothing is typed in by hand.
+row below B. Each link carries a numbered badge; its line is coloured by status (measured, documented, estimated,
+assumed). The detail of each link (drift, correction, status) is in a table keyed by those numbers (overview_table)
+and in an information panel that opens on hover; clicking a clock or a link opens its page. Nothing is typed in by hand.
 """
 
 from __future__ import annotations
@@ -215,15 +215,16 @@ def overview_svg(ds, root="utc", href=lambda kind, id_: "", print_=False):
                    f"<title>{escape(chr(10).join(lines))}</title></a>")
     # legend
     lx = L["margin"]
-    for i, (st, lab) in enumerate((("measured", "measured"), ("estimated", "estimated"), ("assumed", "assumed"))):
-        x = lx + i * (150 if L is SCREEN else 170)
+    for i, (st, lab) in enumerate((("measured", "measured"), ("documented", "documented"), ("estimated", "estimated"),
+                                   ("assumed", "assumed"))):
+        x = lx + i * (135 if L is SCREEN else 175)
         out.append(f'<line x1="{x}" y1="{H - 18}" x2="{x + 36}" y2="{H - 18}" stroke="{STATUS_COL[st]}" stroke-width="2.6"'
                    + (f' stroke-dasharray="{STATUS_DASH[st]}"' if st in STATUS_DASH else "") + "/>"
                    f'<text x="{x + 44}" y="{H - 14}" class="k">{lab}</text>')
     if print_:
         out.append("</svg>")
         return "\n".join(out)
-    out.append(f'<text x="{lx + 470}" y="{H - 14}" class="k">Numbers: the links in the table below. '
+    out.append(f'<text x="{lx + 570}" y="{H - 14}" class="k">Numbers: the links in the table below. '
                f'Hover for detail; click to open a page.</text>')
     # hover panel
     out.append('<g id="tip" visibility="hidden" pointer-events="none"><rect rx="6" fill="#ffffff" stroke="#14213d" '

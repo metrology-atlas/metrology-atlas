@@ -100,9 +100,11 @@ utc_step:
   clock: recorder-pc
   kind: sync
   effect: >-
-    Synchronised to UTC(KRIS) with KRISS's UTCk, by hand at irregular times (the dataset's creator), drifting tens of ppm
-    in between. Not observable in the release: dates are shifted to 2100. No step of 0.5 s or more was found.
-  bias_s: [0.003, 0.9]
+    Vital Recorder takes the VitalDB server's time at each start and then runs on the PC's hardware timer, drifting
+    about 13 ppm (median; up to about 57 ppm by setup) until the next start, at most about 5 h later: up to about
+    0.23 s at the median, about 1 s at the fastest setup (H.-C. Lee, 9 November 2026). Not observable in the release:
+    dates are shifted to 2100. No step of 0.5 s or more was found within a file.
+  bias_s: [0.003, 1.0]
   status: estimated
   link: recorder-pc-vs-utc
   parameter: pc-utc-offset

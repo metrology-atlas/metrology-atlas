@@ -7,8 +7,8 @@ clock: hospital-records
 against: recorder-pc
 correction:
   rule: >-
-    Not observable. The recorder PCs were synchronised to UTC(KRIS) ([[link:recorder-pc-vs-utc]]); the EMR
-    server was probably on the hospital's default network time, not UTCk ([[reference:lee2026correspondence-nov]]),
-    so the two can differ by whatever separates those sources. Times in the record were entered by hand, usually
+    Not observable. The recorder takes the VitalDB server's time at each start ([[link:recorder-pc-vs-utc]]); the
+    EMR server was probably on the hospital's default network time ([[reference:lee2026correspondence-nov]]), so the
+    two can differ by whatever separates those sources, and by the recorder's drift since its last start. Times in the record were entered by hand, usually
     at 5-minute resolution ([[parameter:emr-rounding]]).
 status: assumed

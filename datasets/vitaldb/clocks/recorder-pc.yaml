@@ -1,14 +1,16 @@
 id: recorder-pc
 name: Recorder PC clock
-summary: The Windows clock of the PC running Vital Recorder. It stamps every record, and every other clock is linked
-  to it, directly or through others.
+summary: Vital Recorder's clock on the recording PC. It stamps every record, and every other clock is linked to it,
+  directly or through others.
 type: software
-nominal: Windows time, synced by KRISS UTCk
-description: 'Vital Recorder stamps each record on arrival with this clock, and every device link is measured against
-  it. Its own link to UTC cannot be observed in the release, because dates are shifted to the year 2100. The dataset''s
-  creator reports that the PCs were synchronised to UTC(KRIS) with KRISS''s UTCk program ([[link:recorder-pc-vs-utc]]);
-  it was run by hand at irregular times and no logs were kept ([[reference:lee2026correspondence-nov]]), so how
-  often, and with what offsets, is not known.
+nominal: VitalDB server time read at each start, then the PC's Windows multimedia timer (1 ms)
+description: 'Vital Recorder stamps each record with this clock, and every device link is measured against it. It
+  is not the Windows clock: at start-up the recorder reads the time once from the VitalDB server and stores its
+  difference from the PC clock, and after that its time advances only by the PC''s hardware timer, the Windows
+  multimedia timer (1 ms resolution). It restarts itself once it has run for more than 5 hours, and with every PC
+  restart, and reads the server time again at each start (H.-C. Lee, 9 November 2026; [[link:recorder-pc-vs-utc]]).
+  The hand synchronisation of the Windows clock to UTC(KRIS) with KRISS''s UTCk mattered only when the server request
+  failed. Its own link to UTC cannot be observed in the release, because dates are shifted to the year 2100.
 
 
   It does not step visibly: across all 6,388 files no simultaneous jump of every device of 0.5 s or more was found,
@@ -25,11 +27,14 @@ description: 'Vital Recorder stamps each record on arrival with this clock, and 
 
   The recording itself pauses for about 18 s on a 5-hour timer that does not start with the recording
 
-  ([[observation:recording-pauses]]); whether that timer belongs to the PC or to Vital Recorder is not known.
+  ([[observation:recording-pauses]]). Vital Recorder''s automatic restart after 5 hours of running would fit; whether
+  it also happens during a recording has been asked of its developer.
+
+  Its rate is the hardware timer''s: [[value:pc-grid-rate]] against the mains grid ([[link:recorder-pc-vs-grid]]).
 
   '
-references: [lee2022vitaldb, rfc5905, lee2026correspondence-nov]
-utc_plan: 'The only link the release cannot show. What is known: the PCs were synchronised to UTC(KRIS) with KRISS''s
-  UTCk, run by hand at irregular times with no logs kept (the dataset''s creator), and no step of 0.5 s or more
-  appears in any file. To go further: a finer search for the small simultaneous steps each synchronisation would
-  leave, or recordings with a known external time (a dated event, a GPS-stamped device).'
+references: [lee2022vitaldb, rfc5905, lee2026correspondence-nov, lee2026correspondence-9nov]
+utc_plan: 'The only link the release cannot show. What is known: the recorder takes the VitalDB server''s time at
+  each start and then runs on the PC''s hardware timer, whose rate against the grid is measured; no step of 0.5 s or
+  more appears within any file. Not known: the server''s own offset from UTC and the delay of the start-up request.
+  To go further: recordings with a known external time (a dated event, a GPS-stamped device).'
