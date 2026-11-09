@@ -3,7 +3,7 @@ name: The stamp sawtooth model for SNUADC and BIS
 summary: >-
   Fitting each track's record stamps against its sample count as a drift with corrections (a sawtooth) puts SNUADC
   and BIS on one timeline without any artefact. Checked against shared bursts, the EEG–ECG timing error falls from
-  about 790 ms on the recorded stamps to 33 ms with one constant per SNUADC mode in the pilot, and 42 ms over the
+  about 790 ms on the recorded stamps to 33 ms with one constant per SNUADC mode in the pilot, and 40 ms over the
   whole release.
 date: 2026-11-09
 status: current
@@ -16,8 +16,9 @@ data: |
   191 benchmark cases with BIS; validation on 143 cases with at least 5 good burst windows each way, and on 3,683
   ten-minute windows in 165 cases. Later refitted on 250 cases with the signal lost at each SNUADC reset. Rerun on
   the whole release (19 October): all 5,520 recordings with ECG II and BIS EEG; with model3, 36,928 good burst
-  windows in the 2,710 recordings with at least 5. Rerun on 9 November with setup-rate fallbacks (model4, adopted):
-  36,937 good windows in 2,716 recordings.
+  windows in the 2,710 recordings with at least 5. Rerun on 9 November with setup-rate fallbacks (model4):
+  36,937 good windows in 2,716 recordings; and again that evening with the no-correction rate bound (model5,
+  adopted): 36,946 good windows in 2,717 recordings.
 background: |
   Between corrections a device stamps by its own sample count, so the offset between two devices ramps at the
   difference of their clock rates; the corrections pull each device back towards the recorder's clock. Both are
@@ -30,7 +31,12 @@ method: |
   keeps its stamps. A step-mode track without a whole tooth takes its recording station's (setup's) rate, the median
   of the setup's whole-teeth rates where it has at least 5, else its port's typical rate; a BIS track without one
   takes its unit's mean rate, else its setup's, else its port's (model4, 9 November; vitaldb-bench
-  tools/fallback_rate.py). Until then (model3) a step-mode SNUADC track took its port's rate, which is poor where one
+  tools/fallback_rate.py). A SNUADC track with no correction at all can have gained less than 0.5 s over each
+  stretch between gaps: Vital Recorder re-anchors the count when it runs more than 0.5 s ahead of the recorder's
+  clock, and inserts blank samples when it falls behind ([[reference:lee2026correspondence-9nov]]). So its borrowed
+  rate is capped at 0.5 s over its longest stretch (model5, 9 November; [[code:vitaldb-bench/examples/snuadc_rate_bound.py]]
+  found 1,040 of 3,410 such recordings whose borrowed rate broke the bound, and a median drift left of +111 ms/h in
+  those without gaps). Until then (model3) a step-mode SNUADC track took its port's rate, which is poor where one
   port serves stations whose converters differ, and a BIS that made corrections without a whole tooth kept
   stamp_clock's line fit, which is not a rate (physiosync 0.3.4 rate_measured). Since 17 October the 17.7 ms lost at each SNUADC step-mode
   correction is added back ([[study:paced-ecg]]).
@@ -40,24 +46,29 @@ method: |
   Fallback rates: `python tools/port_rates.py $W/correction_census/part_*.jsonl --ports $W/setups/ports.jsonl
   --out-snuadc $W/port_rates/snuadc_step_rates_v3.json --out-bis $W/port_rates/bis_port_rates_v3.json --setup-min 5
   --snuadc-ports-from $W/results/pat/snuadc_step_rates.json`. Whole-release burst validation: `P=4
-  STEP_RATES=$W/port_rates/snuadc_step_rates_v3.json BIS_RATES=$W/port_rates/bis_port_rates_v3.json bash
-  tools/run_burst_validation.sh model4 burst_validation_m4b` (about 30 minutes), then `python
-  tools/burst_validation_agg.py --inp $W/burst_validation_m4b --modes $W/results/sync_full/snuadc_mode_label.json
-  --ports $W/results/sync_full/snuadc_mode.json --variant model4 --out $W/burst_validation_m4b`. The BIS forms'
-  numbers: `python tools/bis_numbers.py --stamps $W/burst_validation_stamps --model $W/burst_validation_m4b
-  --model-variant model4 --out $W/bis_numbers/bis_numbers_m4b.json`.
+  STEP_RATES=$W/port_rates/snuadc_step_rates_v4.json BIS_RATES=$W/port_rates/bis_port_rates_v3.json bash
+  tools/run_burst_validation.sh model5 burst_validation_m5` (about 30 minutes; snuadc_step_rates_v4.json is v3 with
+  "no_correction_bound_s": 0.5), then `python
+  tools/burst_validation_agg.py --inp $W/burst_validation_m5 --modes $W/results/sync_full/snuadc_mode_label.json
+  --ports $W/results/sync_full/snuadc_mode.json --variant model5 --out $W/burst_validation_m5`. The BIS forms'
+  numbers: `python tools/bis_numbers.py --stamps $W/burst_validation_stamps --model $W/burst_validation_m5
+  --model-variant model5 --out $W/bis_numbers/bis_numbers_m5.json`. The bound check: `python
+  examples/snuadc_rate_bound.py --modes $W/results/sync_full/snuadc_mode.json --step-rates
+  $W/port_rates/snuadc_step_rates_v3.json --burst $W/burst_validation_m4b/per_recording.csv --out
+  $W/port_rates/snuadc_rate_bound.json`.
 
   How late the raw stamps sit: `python tools/snu_raw_offset.py scan --root $R --units $W/results/sync_full/units.csv
   --step-rates $W/port_rates/snuadc_step_rates_v3.json --every 10 --out $W/snu_raw_offset_v3/part.jsonl` (resumable;
   about 5 minutes), then `python tools/snu_raw_offset.py agg $W/snu_raw_offset_v3/part.jsonl --out $W/snu_raw_offset_v3`.
 
   The error-by-level figure compares, on the same whole-release windows, the recorded stamps and the adopted model:
-  `python tools/stamp_error_levels.py --stamps $W/burst_validation_stamps --model $W/burst_validation_m4b --variant
-  model4 --modes $W/results/sync_full/snuadc_mode_label.json --out $W/stamp_error_levels_m4b` (summary.json and the
+  `python tools/stamp_error_levels.py --stamps $W/burst_validation_stamps --model $W/burst_validation_m5 --variant
+  model5 --modes $W/results/sync_full/snuadc_mode_label.json --out $W/stamp_error_levels_m5` (summary.json and the
   figure).
   The validation figure then adds six example recordings, the constants by mode and the within-recording SDs:
-  `python tools/burst_figures.py validation --stamps $W/burst_validation_stamps --model $W/burst_validation_m4b --modes
-  $W/results/sync_full/snuadc_mode_label.json --levels $W/stamp_error_levels_m4b/summary.json --out $W/burst_figures_m4b`.
+  `python tools/burst_figures.py validation --stamps $W/burst_validation_stamps --model $W/burst_validation_m5 --variant model5
+  --modes $W/results/sync_full/snuadc_mode_label.json --levels $W/stamp_error_levels_m5/summary.json --out
+  $W/burst_figures_m5`.
 results: |
   - **Whole teeth** on 151 SNUADC and 184 BIS tracks of 191; the rates agree with the correction scan where that is
     plausible.
@@ -116,12 +127,11 @@ results: |
     (78), and −766 ms with no SNUADC correction (1,099). A median error of 42 ms against the mode's constant (p90 150
     ms) and 17 ms against the recording's own constant (p90 79 ms); within-recording SD 23 ms. (The first bullet above
     is the first model, before the recordings with no correction were given a rate.)
-  - **The adopted model (model4, 9 November): setup rates before port rates, and no line fits.** Over 2,716
+  - **Model4 (9 November): setup rates before port rates, and no line fits.** Over 2,716
     recordings: EEG minus ECG −805 ms in step mode (1,531; interquartile range −834 to −781), −665 ms in
     frequent-correction mode (78) and −769 ms with no SNUADC correction (1,100). A median error of 40 ms against the
     mode's constant (p90 145 ms) and 15 ms against the recording's own constant (p90 75 ms); within-recording SD 20 ms;
-    the drift left over a recording a median 28 ms/h (model3 40 ms/h; p90 127 against 130). These are the values in
-    [[parameter:eeg-ecg-offset]] and [[parameter:stamp-model-error]]. A recording station's rate predicts a
+    the drift left over a recording a median 28 ms/h (model3 40 ms/h; p90 127 against 130). A recording station's rate predicts a
     recording's own rate to a robust SD of 0.75 ppm for the SNUADC and 1.45 ppm for the BIS
     ([[code:vitaldb-bench/examples/setup_rate_check.py]]); where a SNUADC track took its setup's rate the drift left
     fell from a median 48 to 27 ms/h (750 recordings) and from 28 to 15 ms/h (243 with the BIS on its own teeth). Port
@@ -129,6 +139,14 @@ results: |
     slow to collect whole teeth, drift more slowly than the fast stations those medians are made of), so the adopted
     rates keep the earlier port values with the new setup table (first model4 run against the adopted one,
     $W/port_rates/m3_m4_compare.json and m3_m4b_compare.json).
+  - **The adopted model (model5, 9 November): model4 with the no-correction rate bound.** Only the 304 recordings
+    whose SNUADC rate was capped change: their drift left falls from a median 103 to 44 ms/h (p90 168 to 116;
+    signed, +100 to +35 ms/h, so the true rates sit somewhat below the bound, which is a maximum), better by more than
+    20 ms/h in 217 and worse in 13; every other recording is unchanged ($W/port_rates/m4b_m5_compare.py). Over 2,717
+    recordings: EEG minus ECG −805, −665 and −769 ms as in model4 (1,531, 78 and 1,101 recordings). A median error of
+    40 ms against the mode's constant (p90 138 ms) and 15 ms against the recording's own constant (p90 66 ms);
+    within-recording SD 20 ms; drift left a median 25.4 ms/h (p90 115). These are the values in
+    [[parameter:eeg-ecg-offset]] and [[parameter:stamp-model-error]].
   - **How late the raw stamps sit (3 November, rerun 9 November with model4's rates; [[code:vitaldb-bench/tools/snu_raw_offset.py]]).** On every tenth
     recording (637 with ECG II), each record's stamp minus the model's time for it, with a stamp just after a
     correction taken as on time: step-mode recordings (257) sit a median [[value:snuadc-raw-step-bias|.2]] late (p5–p95 0.03–0.49 s; tooth
@@ -145,8 +163,8 @@ results: |
   [[figure:sync-demo-stamp-model]]
 discussion: |
   The model needs no artefact; the bursts only check it and supply the constant. With the constant for the case's
-  SNUADC mode, a typical window lines up to about 42 ms over the whole release (33 ms in the pilot); with the
-  recording's own bursts, to about 17 ms. These are the numbers behind the BIS EEG "after sync" timing in the
+  SNUADC mode, a typical window lines up to about 40 ms over the whole release (33 ms in the pilot); with the
+  recording's own bursts, to about 15 ms. These are the numbers behind the BIS EEG "after sync" timing in the
   planner.
 limitations: |
   Recordings that change correction mode partway, or have many gaps, still fail (p99 about 250 ms). The error
@@ -162,7 +180,10 @@ open_questions:
       PC that shares events with the SNUADC (bursts against a BIS with whole teeth, in 122 recordings; calibration,
       so tested on held-out windows), or the setup's unit. Where the BIS has teeth the bursts imply the SNUADC
       drifts about −36 ppm rather than [[value:snuadc-step-rate|number]], the fast-BIS, slow-SNUADC pattern of
-      [[study:device-correction-schedules]]'s open question.
+      [[study:device-correction-schedules]]'s open question. Vital Recorder's re-anchoring rule now bounds the rate
+      from the stamps' silence: with no correction the converter gained less than 0.5 s over each stretch, which
+      model5 uses as a cap ([[reference:lee2026correspondence-9nov]]); the drift left by capped recordings suggests
+      their rates sit a little below it.
   - title: "Recordings that change correction mode partway"
     kind: phenomenon
     summary: >-
@@ -185,6 +206,7 @@ code:
   - vitaldb-bench/examples/setup_rate_check.py
   - vitaldb-bench/tools/burst_figures.py
   - vitaldb-bench/tools/snu_raw_offset.py
+  - vitaldb-bench/examples/snuadc_rate_bound.py
 figures:
   - id: sync-demo-stamp-model
     file: sync-demo-1216.png
@@ -210,24 +232,24 @@ figures:
     theme: agreement and residuals
     source: vitaldb-bench tools/burst_figures.py
     records: [4644, 359, 2580, 5780, 750, 1703]
-    caption: The stamp sawtooth model flattens the EEG-minus-ECG offset in [[case:4644]], [[case:2580]], [[case:750]] and [[case:1703]] (step mode) and in [[case:359]] and [[case:5780]] (small-correction mode). Over the whole release (36,175 windows in 2,671 recordings; stamp model with setup-rate fallbacks, 9 November), with each recording's own constant the median timing error falls from 794 ms to 15 ms; the constant left is −805 ms in step mode (1,531 recordings) and −665 ms in small-correction mode (78); the within-recording SD falls from 100 to 20 ms (median).
+    caption: The stamp sawtooth model flattens the EEG-minus-ECG offset in [[case:4644]], [[case:2580]], [[case:750]] and [[case:1703]] (step mode) and in [[case:359]] and [[case:5780]] (small-correction mode). Over the whole release (36,180 windows in 2,672 recordings; stamp model with setup-rate fallbacks and the no-correction rate bound, 9 November), with each recording's own constant the median timing error falls from 794 ms to 15 ms; the constant left is −805 ms in step mode (1,531 recordings) and −665 ms in small-correction mode (78); the within-recording SD falls from 100 to 20 ms (median).
     alt: Six scatter plots of recorded against model stamps beside bars of error by correction level and two histograms.
   - id: validation
     file: stamp-model-error-by-level.png
     theme: agreement and residuals
     source: vitaldb-bench tools/stamp_error_levels.py
     caption: |
-      EEG–ECG timing error per 10-minute window at each level of correction, on the whole release (36,197 shared-burst
-      windows good on both the recorded stamps and the adopted model, in 2,671 recordings; model4, 9 November).
+      EEG–ECG timing error per 10-minute window at each level of correction, on the whole release (36,180 shared-burst
+      windows good on both the recorded stamps and the adopted model, in 2,672 recordings; model5, 9 November).
     alt: >-
       Bar chart of median and 90th-percentile timing error for five correction levels, falling from 794 and 1,016 ms
-      for recorded stamps to 15 and 75 ms for the stamp model with the recording's own constant.
+      for recorded stamps to 15 and 66 ms for the stamp model with the recording's own constant.
   - id: burst-validation-full
     file: burst-validation-full.png
     theme: agreement and residuals
     source: vitaldb-bench tools/burst_validation_agg.py
     caption: >-
-      The stamp model checked with ECG–EEG bursts in every recording (9 November, model4). Left: the constant left after the
+      The stamp model checked with ECG–EEG bursts in every recording (9 November, model5). Left: the constant left after the
       model, per recording, by SNUADC correction mode. Middle: the remaining timing error per 10-minute window,
       against the mode's constant (leave-one-out) and the recording's own. Right: the drift left over each
       recording: near zero where both clocks were fitted from whole teeth (blue), and centred near zero, but wider,

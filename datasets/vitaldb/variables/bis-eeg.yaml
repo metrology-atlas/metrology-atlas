@@ -30,20 +30,20 @@ timing:
   uncertainty:
     upper_bound: true
     interval95_s:
-    - -0.227
-    - 0.165
+    - -0.195
+    - 0.163
     components:
     - name: the recording's constant against its SNUADC mode's
       type: A
       distribution: empirical
-      u_s: 0.0548
+      u_s: 0.0545
       scope: recording
     - name: 'within the recording: drift and steps left by the stamp model'
       type: A
       distribution: empirical
-      u_s: 0.0227
+      u_s: 0.0216
       scope: structured
-      length_s: 435
+      length_s: 426
       correlation: exponential
       evidence: correlation length 7 min, from the burst windows (vitaldb-bench tools/bis_numbers.py)
     - name: sample or stamp grid
@@ -57,9 +57,9 @@ timing:
   domain: reference
   status: measured
   evidence: 'held-out burst windows against the mode''s leave-one-out constant: robust SD 59 ms, median absolute error 40
-    ms (2,716 recordings, 36,937 windows); step mode 48 ms, others 96-127 ms; latency -0.80 s in link K. Stamp model
-    with setup-rate fallbacks (burst validation model4, 9 Nov 2026); with model3 (port rates, BIS line fits) 62 ms,
-    42 ms, 2,710 recordings'
+    ms (2,717 recordings, 36,946 windows); step mode 48 ms, others 94-127 ms; latency -0.80 s in link K. Stamp model
+    with setup-rate fallbacks and the no-correction rate bound (burst validation model5, 9 Nov 2026); model4 gave the
+    same 59 and 40 ms (2,716 recordings); with model3 (port rates, BIS line fits) 62 ms, 42 ms, 2,710 recordings'
   studies:
   - shared-bursts
   - snuadc-stamp-sawtooth
@@ -83,15 +83,15 @@ timing:
   uncertainty:
     upper_bound: true
     interval95_s:
-    - -0.11
-    - 0.148
+    - -0.097
+    - 0.129
     components:
     - name: the recording's own constant, leave-one-window-out
       type: A
       distribution: empirical
-      u_s: 0.0267
+      u_s: 0.0254
       scope: structured
-      length_s: 435
+      length_s: 426
       correlation: exponential
       evidence: correlation length 7 min, from the burst windows
     - name: sample or stamp grid
@@ -104,8 +104,8 @@ timing:
   - bis-raw
   domain: reference
   status: measured
-  evidence: 'each burst window against the median of the recording''s other windows: robust SD 27 ms, median absolute error
-    18 ms (2,716 recordings; model4, 9 Nov 2026; 30 and 20 ms with model3)'
+  evidence: 'each burst window against the median of the recording''s other windows: robust SD 25 ms, median absolute error
+    17 ms (2,717 recordings; model5, 9 Nov 2026; 27 and 18 ms with model4, 30 and 20 ms with model3)'
   studies:
   - shared-bursts
   - snuadc-stamp-sawtooth

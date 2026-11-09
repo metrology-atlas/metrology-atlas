@@ -9,6 +9,7 @@ study: snuadc-stamp-sawtooth
 about: [bis-vs-snuadc]
 date: 2026-11-09
 notes: >-
-  The whole release, stamp model with the rules of model4 (setup-rate fallbacks, 9 November; interquartile range
-  −834 to −781 ms in step mode). Recordings with no SNUADC correction sit at −769 ms (1,100). With model3: −804 ms
+  The whole release, stamp model with the rules of model5 (setup-rate fallbacks and the no-correction rate bound,
+  9 November; interquartile range −834 to −781 ms in step mode). Recordings with no SNUADC correction sit at −769 ms
+  (1,101). Model4 gave the same constants (1,100 with no correction). With model3: −804 ms
   (1,526), −660 ms (78), −766 ms (1,099). The pilot gave −803 ms (117 cases) and −690 ms (29).

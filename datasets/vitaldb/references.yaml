@@ -88,6 +88,14 @@
     network time; recordings end 10 minutes after SpO2 and the ECG heart rate stop; SNUADC firmware published in
     November 2018, the same code used before, the version on each unit not recorded; how the Vital Recorder stamps
     SNUADC records.
+- id: lee2026correspondence-9nov
+  group: Data and recording
+  citation: 'Lee H-C. Correspondence with A. J. Goodwin, 9 November 2026 (on the v2 draft).'
+  note: >-
+    How Vital Recorder keeps time and stamps each device: its clock is the server time read at each start plus the
+    Windows multimedia timer; BIS EEG and numerics stamped at arrival minus 1 s; Primus waveforms counted, re-anchored
+    only beyond 5 s; SNUADC read every 10 samples, a block discarded and the count re-anchored when it runs more than
+    0.5 s ahead of the recorder's clock, blank samples inserted when it falls behind.
 - id: kriss-utck
   group: Data and recording
   citation: 'Korea Research Institute of Standards and Science (KRISS). UTCk: standard time synchronisation program. Accessed 30 October 2026.'
