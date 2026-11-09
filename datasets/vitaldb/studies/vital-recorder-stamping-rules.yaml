@@ -6,7 +6,7 @@ summary: >-
   more than 0.5 s loses its excess samples and restarts from the PC time. These rules account for all three SNUADC
   modes in the release: step mode is a fast converter, frequent-correction mode a slow one, and a recording with no
   correction a fast one that never gains half a second within a segment.
-date: 2026-11-06
+date: 2026-11-10
 status: current
 methods: [stamp-reading, source-review]
 techniques: [coincident-jumps, null-controls]
@@ -14,7 +14,8 @@ clocks: [snuadc-sample, recorder-pc]
 devices: [snuadc, vital-recorder]
 variables: [snuadc-ecg-ii]
 data: |
-  The rules as described by Hyung-Chul Lee, who wrote the Vital Recorder ([[reference:lee2026correspondence-nov]]).
+  The rules as described by Hyung-Chul Lee, who wrote the Vital Recorder ([[reference:lee2026correspondence-nov]]),
+  with his corrections of 9 November [[reference:lee2026correspondence-9nov]].
   Tested on the release: the SNUADC mode labels of all recordings; the hum rates of the recordings with no
   correction ([[study:hum-snuadc-rate]]); the reset-interval rates of the step-mode recordings
   ([[study:snuadc-stamp-sawtooth]]); the longest SNUADC segment of each recording; and the ECG II stamps of every
@@ -25,13 +26,19 @@ background: |
   mode), small forward steps of a few milliseconds (frequent-correction mode), and, in many long recordings, no
   correction at all ([[observation:snuadc-long-uncorrected]]).
 method: |
-  **The rules.** The first sample of a segment is stamped with the PC time at the block's arrival minus the block's
-  duration. Stamps then advance by counting samples. At each read the counted time is compared with the PC clock:
+  **The rules.** The recorder reads the serial stream whenever at least 10 samples (120 bytes) have arrived; 100
+  samples make one stored record, so a record holds about ten reads. The first sample of a segment is stamped with
+  the PC time at the block's arrival minus the block's duration. Stamps then advance by counting samples. At each
+  read the counted time is compared with the PC clock:
 
-  - behind by up to 0.5 s: blank samples are inserted to close the gap (stored as empty time, a gap in the stamps);
+  - behind by one sample period or more, up to 0.5 s: blank samples are inserted to close the gap (stored as empty
+    time, a gap in the stamps);
   - behind by more than 0.5 s: a new segment starts at the PC time;
-  - ahead by more than 0.5 s: the excess samples at the end of the block are discarded and the count restarts from
-    the PC time.
+  - ahead by more than [[value:snuadc-ahead-threshold]]: the whole block just read (normally about 10 samples, about
+    20 ms) is discarded and the count restarts from its arrival time.
+
+  (Corrected on 9 November [[reference:lee2026correspondence-9nov]]: the read size is at least 10 samples, not 100, and a reset discards the whole
+  block just read, not only its excess.)
 
   So a converter that runs fast against the PC gains on it until it is half a second ahead and is then reset (step
   mode); a slow one falls behind and is filled at every read (frequent-correction mode); and a fast one that never
@@ -57,12 +64,19 @@ results: |
     (within 0.1 sample), 2–18 ms in 718 of them, spread nearly evenly across that range, with few above 20 ms. They imply
     the SNUADC runs slow, by a median +3.3 ppm (p5–p95 0.0 to +18.1). The signal is continuous across 94.8% of the
     steps (99.7% at boundaries with no step): the blanks are empty time, not stored zero samples.
+  - **The signal lost at a reset is the discarded block.** A block of about 10 samples is about 20 ms; the paced ECG
+    measures [[value:snuadc-reset-loss]] lost at each step-mode reset (17.3–20.3 ms), and the stamps show −0.480 s
+    of a correction of about 0.500 s ([[study:paced-ecg]]).
 discussion: |
   The three SNUADC modes are one rule seen through converters of different speed: fast units make step mode, slow
   ones frequent-correction mode, and fast ones that never get half a second ahead make no correction. That settles
   [[observation:snuadc-long-uncorrected]]: there is no third recorder mode. Two consequences follow. The stamps of a
   recording with no correction still drift, by up to half a second over its longest segment, and that drift is
-  invisible in them. And the hum rate of [[study:hum-snuadc-rate]] does not apply to frequent-correction
+  invisible in them; since 9 November the stamp model caps the rate it borrows for them at that half second
+  ([[study:snuadc-stamp-sawtooth]], model5). Because a converter that falls behind is filled up to the latest
+  arrival at every read, the stamps follow the latest arrivals: the working reference is probably late on true time
+  by close to the largest transfer delay from the SNUADC to the recorder, not the average [[reference:lee2026correspondence-9nov]]. That shifts every
+  absolute delay measured against it by the same amount and leaves every relative one unchanged. And the hum rate of [[study:hum-snuadc-rate]] does not apply to frequent-correction
   recordings: the ten that have one say fast (−33 to −117 ppm), where their own steps say slow.
 limitations: |
   The rules are the author's account of the software, tested here against what it left in the files; the code was
@@ -79,4 +93,6 @@ open_questions:
       looked at one by one.
 code:
   - vitaldb-bench/tools/vital_recorder_rules_check.py
-references: [lee2026correspondence-nov]
+references: [lee2026correspondence-nov, lee2026correspondence-9nov]
+typed_ok:
+  - {parameter: snuadc-ahead-threshold, text: "0.5", why: "the recorder's rules quoted as stated, including the behind-by-0.5 s rule and the bound derived from them; the ahead threshold itself is linked"}

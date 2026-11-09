@@ -7,14 +7,20 @@ nominal: 500 Hz ADC sample clock
 modes:
 - id: step
   name: Step mode
-  description: The recorder lets the stamps drift, then pulls the track back by about half a second once the drift
-    reaches that size. See [[link:snuadc-step-vs-pc]].
+  description: A converter that runs fast against the recorder. The stamps drift until the count is half a second
+    ahead; the recorder then discards the block just read and re-anchors. See [[link:snuadc-step-vs-pc]].
 - id: frequent
   name: Frequent-correction mode
-  description: Stamps follow the PC closely, with occasional forward steps of 5–15 ms (about one an hour). Between
-    corrections the stamps show only stamp arithmetic; the corrections themselves suggest a drift against the PC of
-    a few ppm, which is not yet reconciled ([[study:stamp-arithmetic]]).
-description: 'All SNUADC channels share this clock: they start together and carry the same record timing. The public
+  description: A converter that runs slow against the recorder. At each read the recorder fills the shortfall with
+    blank samples, so the stamps follow the PC with small forward steps of whole samples (a median +3.3 ppm slow;
+    [[study:vital-recorder-stamping-rules]]). Not a setting of the recorder, but the same rule as step mode, applied to
+    a slower converter.
+description: 'Vital Recorder counts its samples from an anchor taken at arrival and compares the count with its own
+  clock at every read; the stamps therefore follow the latest arrivals, and this working reference is probably late
+  on true time by close to the largest transfer delay from the board to the recorder (H.-C. Lee, 9 November 2026).
+
+
+  All SNUADC channels share this clock: they start together and carry the same record timing. The public
   firmware
 
   of the board (an ATmega32U4 with a 16 MHz crystal) schedules each sample 2 ms after the last, or at once if it
@@ -26,5 +32,6 @@ description: 'All SNUADC channels share this clock: they start together and carr
   '
 utc_plan: 'Measured to the recorder PC in both modes (stamp sawtooth, confirmed by the paced ECG and the PC-stamped
   heart rate); from there the route rests on the assumed PC–UTC link. The reset-order fix and the stamp-arithmetic
-  census are done (17 October). To strengthen: explain the long recordings with no correction, and give each
-  recording without a correction its own rate rather than its port''s.'
+  census are done (17 October). The long recordings with no correction are explained (a fast converter that never gains half a
+  second within a stretch), and their borrowed rates are capped by that half second (model5). To strengthen: a rate
+  of their own for each, and the transfer delay that sets how late the reference sits.'

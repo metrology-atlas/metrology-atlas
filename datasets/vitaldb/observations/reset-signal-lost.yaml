@@ -8,6 +8,10 @@ clocks: [snuadc-sample]
 devices: [snuadc]
 variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
 studies: [paced-ecg, reset-cluster-order, snuadc-stamp-sawtooth, snuadc-firmware]
+description: |
+  The cause is the recorder: when the SNUADC count runs more than 0.5 s ahead of its clock, Vital Recorder discards
+  the whole block just read, normally about 10 samples (about 20 ms), and re-anchors the count at that block's
+  arrival [[reference:lee2026correspondence-9nov]]. The measured loss is close to one such block.
 consequence: |
   Timed by sample count, every sample after a reset is about 18 ms early. Over a case's one to three resets this adds
   up, and it biases drift rates estimated from correction sizes by about 3.6%.

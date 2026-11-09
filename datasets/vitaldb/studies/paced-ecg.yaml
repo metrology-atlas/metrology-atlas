@@ -31,7 +31,7 @@ results: |
     both leads). The record stamps step by −480.6 to −481.0 ms, and the train on stamp time by −498.0 to −502.2 ms
     ([[case:830]]'s two readings are stored wrapped by one pacing period, +500.4 and +499.8 ms). So the true correction
     is about [[value:snuadc-step-correction-size]], close to a 0.5 s threshold, and the stamps show only 0.48 s of it because about 9–10 samples are
-    never taken. Every record still holds 100 samples, so nothing in the file shows the loss.
+    never taken: the recorder discards the block it has just read, normally about 10 samples [[reference:lee2026correspondence-9nov]]. Every record still holds 100 samples, so nothing in the file shows the loss.
   - **Recording gaps of 16–18 s shift the stamps by 124–136 ms** against the pacing train (two gaps in two cases, one
     seen on both leads).
   - **No other breaks.** Apart from corrections and gaps, no phase step of 6 ms or more went without an intervening

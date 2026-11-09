@@ -5,8 +5,9 @@ type: acquisition
 clocks: [snuadc-sample]
 description: |
   SNUADC records the monitor's analogue waveform outputs (ECG leads, arterial pressure, plethysmogram, CVP) and
-  sends them to Vital Recorder in 0.2 s records of 100 samples. Its records are stamped by the recorder, which
-  models the board's timing (see [[clock:snuadc-sample]]). Its analogue path is flat to about 100 kHz, with no
+  streams them to Vital Recorder, which reads the stream whenever at least 10 samples have arrived and stores 0.2 s
+  records of 100 samples [[reference:lee2026correspondence-9nov]]. The recorder stamps them by counting samples from an anchor taken at arrival
+  ([[study:vital-recorder-stamping-rules]]; see [[clock:snuadc-sample]]). Its analogue path is flat to about 100 kHz, with no
   anti-aliasing filter, so any filtering seen in its tracks is the monitor's ([[study:snuadc-firmware]]).
 references: [lee2022vitaldb]
 docs:

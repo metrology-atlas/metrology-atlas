@@ -1,0 +1,14 @@
+id: snuadc-ahead-threshold
+name: Vital Recorder's SNUADC re-anchoring threshold
+quantity: How far the SNUADC sample count may run ahead of the recorder's clock before Vital Recorder discards the block just read and re-anchors the count at arrival.
+value: 0.5
+unit: s
+display: "0.5 s ahead (a rule in the recorder)"
+status: documented
+about: [snuadc-step-vs-pc, snuadc-sample]
+date: 2026-11-09
+notes: >-
+  A rule in Vital Recorder's code, reported by its developer ([[reference:lee2026correspondence-nov]],
+  corrected in [[reference:lee2026correspondence-9nov]]). It also bounds a converter that never resynchronises: over a
+  stretch between gaps it gained less than this, which the stamp model uses as a cap on that converter's rate
+  ([[study:snuadc-stamp-sawtooth]], model5).
