@@ -5,10 +5,10 @@ value: -0.19
 unit: s
 spread:
   text: >-
-    on the recordings with both; 95% -0.27 to -0.06 s (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v1/agg/summary.json).
+    on the recordings with both; 95% -0.26 to -0.05 s (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v3/agg/summary.json; rerun 9 Nov with setup-rate fallbacks, v1 gave -0.19 s, -0.27 to -0.06).
 status: measured
 study: numeric-delay-check
 about:
 - solar8000-hr
 - solar8000-pleth-hr
-date: 2026-11-08
+date: 2026-11-09

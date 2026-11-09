@@ -5,10 +5,10 @@ value: 0.96
 unit: s
 spread:
   text: >-
-    lag of best agreement of the monitor's HR behind HR recomputed from the R peaks at its label delay plus half the gap; 95% 0.89-1.03 s, 6,145 recordings (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v1/agg/summary.json).
+    lag of best agreement of the monitor's HR behind HR recomputed from the R peaks at its label delay plus half the gap; 95% 0.90-1.03 s, 6,145 recordings (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v3/agg/summary.json; rerun 9 Nov with the stamp model's setup-rate fallbacks, v1 with port rates gave 0.96 s, 0.89-1.03).
 status: measured
 study: numeric-delay-check
 about:
 - solar8000-hr
 - solar8000-pleth-hr
-date: 2026-11-08
+date: 2026-11-09
