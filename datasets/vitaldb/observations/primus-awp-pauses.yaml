@@ -22,6 +22,10 @@ description: |
   correlation 0.69 against −0.35).
 
   [[figure:primus-awp-pauses]]
+  **The pause comes from the Primus.** Vital Recorder's Primus driver has no periodic timer: it requests the
+  real-time configuration again only when the device sends a configuration-change or initialisation command, and its
+  communication timeout is 30 s [[reference:lee2026correspondence-9nov]]. A 21 s gap every 7,230 s is therefore the Primus's own behaviour, not the
+  recorder's.
 consequence: |
   An AWP gap of about 21 s is the Primus's two-hourly resynchronisation: about 21 s of airway pressure is never
   recorded. It is not a disconnection, and CO2 covers the same breaths. Within the Primus nothing needs re-timing

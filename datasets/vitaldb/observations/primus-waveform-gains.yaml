@@ -9,7 +9,7 @@ status: established
 devices: [primus]
 variables: [primus-co2, primus-awp, primus-numerics]
 studies: [track-value-resolution]
-references: [vitaldb-docs-fileformat]
+references: [vitaldb-docs-fileformat, lee2026correspondence-9nov]
 description: |
   Whole release (19 October 2026), the waveform's maximum or mean over the 7–10 s before each numeric; the
   median per recording of numeric ÷ waveform, then its median and 10th–90th percentiles over recordings:
@@ -25,6 +25,9 @@ description: |
   0.748 is 0.075 / 0.1. Mean airway pressure agrees in the same way (0.992 to 0.993 after rescaling, in every
   configuration). The code is tools/numeric_vs_wave.py in vitaldb-bench; the device page lists each configuration
   with its corrected factors.
+  The recorder does not hard-code these factors: it reads the minimum, maximum and number of bins of each
+  real-time curve from the Primus's configuration response [[reference:lee2026correspondence-9nov]]. 0.075 mmHg per code is 0.01 kPa, consistent with
+  the device reporting CO2 in kPa; why most files store 0.1 is not known.
 consequence: |
   In most recordings the CO2 waveform overstates CO2 by a third (a breath at ETCO2 35 mmHg peaks at about 47); in
   950 recordings AWP reads about 3% high at typical pressures, and in 26 it reads about a quarter of the true value. Anything computed from these waveforms

@@ -16,6 +16,14 @@ correction:
     ([[parameter:primus-drift-implied]]), far less than the drift: the stamps also step at the AWP pauses, by amounts unrelated to the drift built up: a median −1 ms
     (p10–p90 −164 to +187 ms) where CO2 carries on, up to seconds where CO2 stops too ([[study:primus-pause-steps]]), so over a recording
     the Primus wanders from the PC by a median 1.5 s.
+
+    How the recorder stamps the Primus waveforms [[reference:lee2026correspondence-9nov]]: it collects samples until at least 30 are available, stamps
+    them by counting at 1/62.5 s, and re-anchors the count to the arrival time (less the duration of the samples
+    collected) only when the two differ by more than 5 s. Samples lost in transmission are therefore not detected
+    unless the error passes 5 s, and every later sample is stamped early by the amount lost, which would explain why
+    the stretches look anchored too early. The recorder has no periodic timer for the Primus, so the 7,230 s schedule
+    is the device's own. How the small whole-sample steps and the steps at the AWP pauses arise under these rules is
+    not yet settled.
   period: primus-period
   size: primus-step
 status: measured
