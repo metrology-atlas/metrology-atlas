@@ -13,9 +13,12 @@ on:
 permissions:
   contents: read
 
+# One Pages deployment at a time, and never cancel one in progress: a cancelled deployment can leave GitHub Pages
+# holding the queue, and the next deploy then waits until it times out. Pull-request checks have their own group and
+# can be cancelled freely.
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -52,5 +55,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000   # 30 min (the default, 10 min, is sometimes not enough for the queue)
