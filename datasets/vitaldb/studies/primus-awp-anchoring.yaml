@@ -103,7 +103,7 @@ results: |
     one stretch in seven that relies on it is still a breath off.
   - **The Primus numbers with each stretch on its right breath (2 November).** tools/primus_numbers.py (which
     reproduces the earlier numbers exactly with no breath correction): the AWP bias against the breath on CVP is a
-    median [[value:primus-awp-bias]] per recording (5th–95th percentile −3.552 to −0.443 s, was −1.787 s, −5.782 to
+    median [[value:primus-awp-bias]] per recording (5th–95th percentile −3.557 to −0.439 s, was −1.787 s, −5.782 to
     +0.693 s), and its spread between recordings [[value:primus-awp-between-rsd]] (was 1.325 s). Within a stretch on
     its right breath the matching is as before (robust SD 79 ms). After the rule, [[value:primus-breath-error-share]]
     of windows sit in a stretch still a whole breath off; as a mixture its standard deviation is

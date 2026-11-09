@@ -155,7 +155,7 @@ timing:
     - *id002
   domain: primus
   status: measured
-  evidence: AWP offset median -1.47 s, p5-p95 -3.55 to -0.44 s (1,067 recordings, CVP breaths, each stretch on its right
+  evidence: AWP offset median -1.47 s, p5-p95 -3.56 to -0.44 s (1,067 recordings, CVP breaths, each stretch on its right
     breath), incl. AWP-CVP physiology; drifts +104 ppm against the PC between AWP pauses; plus the 3.6 s sampling line,
     so +2.16 s (p5-p95 +0.07 to +3.18 s); the CO2 stamp comes after its breath in at least 95% of recordings
   studies:

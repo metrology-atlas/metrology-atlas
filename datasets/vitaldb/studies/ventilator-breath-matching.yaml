@@ -29,13 +29,16 @@ method: |
   the right k. Injected errors of one or two breaths tested it.
 
   Commands (vitaldb-bench; $R the release, $W the work folder). Release-wide lags and their held-out errors, in
-  eight parts p = 0–7 (cases equal to p modulo 8): `python tools/primus_sync_accuracy.py scan --root $R --cases
-  $(seq -s, $((p ? p : 8)) 8 6388) --modes $W/results/sync_full/snuadc_mode_label.json --ports
-  $W/results/sync_full/snuadc_mode.json --step-rates $W/results/pat/snuadc_step_rates.json --out
-  $W/primus_sync_accuracy/part_$p.jsonl`, then `python tools/primus_sync_accuracy.py agg
-  $W/primus_sync_accuracy/part_*.jsonl --out $W/primus_sync_accuracy/agg` (reproduced 3 November from the saved
-  parts). With each stretch on its right breath (the breath rule of [[study:primus-awp-anchoring]]): `python
-  tools/primus_numbers.py --work $W --out $W/primus_numbers` (reproduced 3 November). One slope per recording with an
+  four parts p = 0–3 (cases equal to p modulo 4): `python tools/primus_sync_accuracy.py scan --root $R --cases
+  $(seq -s, $((p ? p : 4)) 4 6388) --modes $W/results/sync_full/snuadc_mode_label.json --ports
+  $W/results/sync_full/snuadc_mode.json --step-rates $W/port_rates/snuadc_step_rates_v3.json --out
+  $W/primus_sync_accuracy_v3/part_$p.jsonl`, then `python tools/primus_sync_accuracy.py agg
+  $W/primus_sync_accuracy_v3/part_*.jsonl --out $W/primus_sync_accuracy_v3/agg`. With each stretch on its right
+  breath (the breath rule of [[study:primus-awp-anchoring]]): `python tools/primus_numbers.py --work $W --sync
+  $W/primus_sync_accuracy_v3 --out $W/primus_numbers_v3`. Rerun 9 November with the stamp model's setup-rate
+  fallbacks ([[study:snuadc-stamp-sawtooth]]); the 19 October run used port rates (old rates file and folders
+  without _v3; it reproduces exactly). The headline numbers did not change: 79 ms robust SD, [[value:primus-breath-error-share]] of windows a
+  whole breath off; the 95% interval and the raw lags moved by under 5 ms. One slope per recording with an
   offset at every pause: tools/primus_pause_aware.py. Drift and steps at the pauses: `python
   tools/primus_drift_probe.py CASES OUT.jsonl`. The breath-matching figure: `python tools/vent_sync_pilot.py --root
   $R --cases 4644,4817,3148,750,2443,1403,3706,5780,2838,1936,3146,3549,2172,629 --units
@@ -60,13 +63,13 @@ results: |
     within stretches is a median **+[[value:primus-drift-breath]]** (p10–p90 +28 to +184), and the per-stretch offsets halve the residual
     (195 to 99 ms). The steps at the 390 pauses (median −29 ms, p10–p90 −685 to +494 ms) are unrelated to the drift
     built up in the stretch before (correlation 0.0): the pauses move the stamps but do not reset the drift.
-  - **Error over the whole release, held out (19 October;
+  - **Error over the whole release, held out (19 October, rerun 9 November;
     [[code:vitaldb-bench/tools/primus_sync_accuracy.py]]).** Each 10-minute window predicted from all the others
     (a slope and an offset in each stretch between AWP pauses; every CVP window, whatever breath its stretch sits
     on): a median absolute error of 55 ms (p90 187 ms, p95 284 ms) in 1,067 recordings with CVP, against 74 ms (p90 259 ms) with one slope per recording and a new offset at every AWP pause
     ([[code:vitaldb-bench/tools/primus_pause_aware.py]]). The arterial mean pressure as a second reference is
-    noisier (83 ms; p90 343 ms, 1,384 recordings),
-    sometimes a breath out; where both exist (462) their drifts differ by a median 49 ppm. An injected shift of
+    noisier (83 ms; p90 347 ms, 1,385 recordings),
+    sometimes a breath out; where both exist (462) their drifts differ by a median 48 ppm. An injected shift of
     0.25 s and drift of 100 ppm (196 recordings) come back as 0.252 s and 99.6 ppm (medians, one slope per
     recording).
   - **The same errors with each stretch on its right breath (2 November;
@@ -148,7 +151,7 @@ figures:
       Top: each clock's time minus the synchronised time. The SNUADC's stamps drift and are pulled back by half a
       second about every two hours; the BIS's stamps sit about 0.8 s off and are pushed forward every 8,192 s; the
       Primus drifts about 4 s over the recording and steps at its airway-pressure pauses (dotted lines). After
-      synchronisation the typical error left is about 3 ms (SNUADC), 42 ms (BIS) and 55 ms (Primus, whole-release
+      synchronisation the typical error left is about 3 ms (SNUADC), 40 ms (BIS) and 55 ms (Primus, whole-release
       medians; bands). Middle: the same electrocautery and muscle bursts seen in the ECG and the EEG, as recorded
       and on the synchronised times, a check independent of the correction. Bottom: the airway-to-central-venous
       pressure lag of the breath cycle, as recorded and, after, as the error left when each 10-minute window is

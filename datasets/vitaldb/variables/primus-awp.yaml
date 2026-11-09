@@ -31,8 +31,8 @@ timing:
   uncertainty:
     upper_bound: true
     interval95_s:
-    - -4.41
-    - 4.4
+    - -4.43
+    - 4.42
     likely_u_s: 0.0395
     components:
     - name: breath matching within the recording (a line per stretch between AWP pauses)
@@ -145,7 +145,7 @@ timing:
       shared_with: Primus clock
   domain: primus
   status: measured
-  evidence: offset median -1.47 s, p5-p95 -3.55 to -0.44 s (1,067 recordings, CVP breaths, each stretch on its right
+  evidence: offset median -1.47 s, p5-p95 -3.56 to -0.44 s (1,067 recordings, CVP breaths, each stretch on its right
     breath; the stamps sit before the breath seen in the CVP), incl. AWP-CVP physiology; drifts +104 ppm against the PC
     between AWP pauses
   look_ahead:
@@ -155,7 +155,7 @@ timing:
     basis: real
     note: >-
       The AWP stamps sit before the breath they record. Against the breath seen in the SNUADC CVP the lead is a median
-      1.47 s (5th-95th percentile 0.44 to 3.55 s, each stretch on its right breath). Most of it is real on the recorder's
+      1.47 s (5th-95th percentile 0.44 to 3.56 s, each stretch on its right breath). Most of it is real on the recorder's
       own timeline: the PIP numerics, stamped by the PC on arrival, cannot exist before their breath, and they bound the
       AWP lead at a median [[value:primus-awp-lead-bound]] (5th-95th percentile 0.35 to 3.40 s), close to the lead
       against CVP; a few tenths of a second of that lead are the CVP reference's own delay and the airway-to-CVP

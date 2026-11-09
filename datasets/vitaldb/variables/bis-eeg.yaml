@@ -235,8 +235,8 @@ chain:
 - node: Synchronised to the ECG
   kind: correction
   effect: The stamp model removes the drift and corrections; one constant per SNUADC mode, from bursts seen in both
-    the ECG and the EEG, removes the offset. What is left is a standard uncertainty of 63 ms with the mode's constant
-    (an upper bound, median absolute error 42 ms) and 30 ms with the recording's own bursts (whole release).
+    the ECG and the EEG, removes the offset. What is left is a standard uncertainty of 59 ms with the mode's constant
+    (an upper bound, median absolute error 40 ms) and 27 ms with the recording's own bursts (whole release).
   bias_s: {parameter: bis-eeg-offset, use: p5-p95}
   u_s: 0.0634
   status: measured
