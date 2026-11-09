@@ -4,7 +4,7 @@ quantity: The fixed time Vital Recorder subtracts from a BIS packet's arrival ti
 value: -1.0
 unit: s
 display: "arrival minus 1 s (a rule in the recorder)"
-status: assumed
+status: documented
 about: [bis-vs-pc, bis-eeg, bis-index]
 date: 2026-11-09
 notes: >-

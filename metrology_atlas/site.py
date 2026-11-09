@@ -30,6 +30,7 @@ QUESTION_LABEL = {"phenomenon": "unexplained phenomenon", "hypothesis": "weakly 
 STATUS_NOTE = {
     "measured": "Measured in a study.",
     "derived": "Calculated from measured values.",
+    "documented": "A rule of the device or software, from its code, manual or developer; not measured here.",
     "estimated": "Estimated from related measurements or documentation; not measured directly.",
     "assumed": "Set by assumption; not measured here.",
     "withdrawn": "Withdrawn: shown for the record, do not use.",
@@ -355,7 +356,7 @@ class Site:
         return "\n\n".join(out)
 
     # -- a clock's route back to UTC ---------------------------------------------------------------------------
-    STATUS_COST = {"measured": 1.0, "derived": 1.2, "estimated": 2.0, "assumed": 3.0, "superseded": 6.0, "withdrawn": 9.0}
+    STATUS_COST = {"measured": 1.0, "derived": 1.2, "documented": 1.5, "estimated": 2.0, "assumed": 3.0, "superseded": 6.0, "withdrawn": 9.0}
 
     def _graph(self) -> dict[str, list[tuple[str, str]]]:
         g: dict[str, list[tuple[str, str]]] = {}
@@ -1468,7 +1469,7 @@ class Site:
         for k in KINDS.values():
             out += f"| [{k.title}]({k.folder}/index.md) | {len(self.ds.items[k.name])} | {k.help} |\n"
         out += (f"\nThe whole atlas is also one machine-readable file: [{json_name}](data/{json_name}). "
-                "Every number carries its status (measured, derived, estimated or assumed), its spread and the study "
+                "Every number carries its status (measured, derived, documented, estimated or assumed), its spread and the study "
                 "it came from.\n")
         rest = [f for f in figs.values() if f["id"] not in self.placed]
         if rest:
@@ -1788,6 +1789,7 @@ here the measurements were made long ago, so each part of the model is reconstru
 | Agreement of repeated measurements | {_vim('2.15', 'measurement precision')} | An SD of replicates. *Accuracy* ({_vim('2.13', 'measurement accuracy')}) is used only in words, never with a number. |
 | A clock's "Route to UTC" | {_vim('2.42', 'metrological traceability chain')} | Each link adds uncertainty. Where a link is assumed, the chain is broken and the time is not {_vim('2.41', 'metrologically traceable')}. |
 | Status **measured** | {_vim('2.28', 'Type A evaluation')} | Evaluated from the data by a study. |
+| Status **documented** | {_vim('2.29', 'Type B evaluation')} | A rule of the device or software, from its code, manual or developer: stronger than an assumption, but not measured here. |
 | Status **estimated** or **assumed** | {_vim('2.29', 'Type B evaluation')} | From documentation, the literature or judgement. |
 | Status **derived** | propagation | Computed from other evaluated quantities. |
 | The measurement-space figure | the joint distribution of the output quantities | A schematic: each part drawn from its bias and uncertainty. |

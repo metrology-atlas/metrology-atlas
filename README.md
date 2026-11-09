@@ -51,8 +51,8 @@ cd build/vitaldb && zensical build          # the site lands in build/vitaldb/si
   parameter names its study and what it is about; the study page lists its parameters.
 - Prose is Markdown. `[[clock:recorder-pc]]` (or `[[clock:recorder-pc|the PC]]`) links to another item, and
   `[[code:software-id/path/file.py]]` links into a repository; both are checked.
-- Every number is a parameter with a status: `measured`, `derived`, `estimated`, `assumed`, `withdrawn` or
-  `superseded`.
+- Every number is a parameter with a status: `measured`, `derived`, `documented` (a rule of the device or software,
+  from its code, manual or developer), `estimated`, `assumed`, `withdrawn` or `superseded`.
 - Figures live in the dataset's `figures/` folder; `[[figure:id]]` places one inline.
 - A variable's `timing:` lists the forms its times come in, each with the interval a value describes, its bias and
   its uncertainty budget against the working reference, and its clock domain; the **synchronisation planner** combines them. Its `value:` gives the value

@@ -54,7 +54,7 @@ class Kind:
         return next((f for f in self.fields if f.name == name), None)
 
 
-STATUS = ("measured", "derived", "estimated", "assumed", "withdrawn", "superseded")
+STATUS = ("measured", "derived", "documented", "estimated", "assumed", "withdrawn", "superseded")
 OBS_STATUS = ("established", "likely", "open", "withdrawn")
 STUDY_STATUS = ("current", "draft", "open", "superseded", "withdrawn")
 ANCHOR_BASIS = ("tested", "convention", "assumption", "open")

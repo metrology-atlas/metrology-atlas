@@ -208,7 +208,7 @@ CODE = r"""
     const tier = sigma < 0.005 ? 'within-beat timing (for example pulse arrival time)' : sigma < 0.05 ? 'beat-to-beat alignment' :
       sigma < 1 ? 'breath-level alignment' : sigma < 10 ? 'trends over tens of seconds' : 'trends over minutes or longer';
     const warn = [];
-    const est = rows.filter((r) => r.f.status !== 'measured');
+    const est = rows.filter((r) => r.f.status !== 'measured' && r.f.status !== 'documented');
     if (est.length) warn.push('Estimated, not measured: ' + est.map((r) => esc(r.s.name) + ' (' + esc(r.f.name) + ')').join(', ') + '.');
     if (drift === null) warn.push('The drift between some of these clocks is not known, so a safe window length cannot be bounded: ' + esc(driftNote) + '.');
     if (tooLong) warn.push('The shortest sensible window (' + fmt(wMin) + ') is longer than the drift limit (' + fmt(drift) + '): correct the drift (synchronise those signals) or loosen the tolerance.');

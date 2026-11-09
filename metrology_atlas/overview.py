@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from xml.sax.saxutils import escape, quoteattr
 
-STATUS_COL = {"measured": "#1b7f4b", "derived": "#1b7f4b", "estimated": "#b26b00", "assumed": "#7a7a7a",
+STATUS_COL = {"measured": "#1b7f4b", "derived": "#1b7f4b", "documented": "#1f5fa8", "estimated": "#b26b00", "assumed": "#7a7a7a",
               "superseded": "#bbbbbb", "withdrawn": "#bbbbbb"}
 STATUS_DASH = {"estimated": "8,5", "assumed": "2,5"}
 FONT = "Inter, Helvetica, Arial, sans-serif"
