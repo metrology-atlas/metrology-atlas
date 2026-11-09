@@ -1,13 +1,14 @@
 id: eeg-ecg-offset
 name: EEG–ECG constant after the stamp model
 quantity: EEG minus ECG stamp for the same burst, left after the stamp model, per SNUADC mode.
-value: -0.804
+value: -0.8045
 unit: s
-display: "−804 ms in step mode (1,526 recordings); −660 ms in frequent-correction mode (78)"
+display: "−805 ms in step mode (1,531 recordings); −665 ms in frequent-correction mode (78)"
 status: measured
 study: snuadc-stamp-sawtooth
 about: [bis-vs-snuadc]
-date: 2026-10-19
+date: 2026-11-09
 notes: >-
-  The whole release, stamp model with the rules of model3 (interquartile range −833 to −776 ms in step mode). The
-  pilot gave −803 ms (117 cases) and −690 ms (29). Recordings with no SNUADC correction sit at −766 ms (1,099).
+  The whole release, stamp model with the rules of model4 (setup-rate fallbacks, 9 November; interquartile range
+  −834 to −781 ms in step mode). Recordings with no SNUADC correction sit at −769 ms (1,100). With model3: −804 ms
+  (1,526), −660 ms (78), −766 ms (1,099). The pilot gave −803 ms (117 cases) and −690 ms (29).

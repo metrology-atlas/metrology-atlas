@@ -43,7 +43,7 @@ date or a patient.
 | SNUADC correction mode (step or frequent) | 0–68% frequent by port | mostly one mode | [[observation:snuadc-mode-setups]] |
 | SNUADC step-mode drift | medians −44 to −81 ppm by setup | within 3 ppm in 97% of cases | [[parameter:snuadc-step-rate]], [[observation:device-drift-by-setup]] |
 | BIS drift | medians 18–55 ppm by setup | within 3 ppm in 83% of cases | [[parameter:bis-rate]], [[observation:device-drift-by-setup]] |
-| EEG minus ECG constant offset | −804 ms step, −660 ms frequent mode (whole release) | tight within a port or unit | [[observation:eeg-ecg-offset-by-mode]], [[parameter:eeg-ecg-offset]] |
+| EEG minus ECG constant offset | −805 ms step, −665 ms frequent mode (whole release) | tight within a port or unit | [[observation:eeg-ecg-offset-by-mode]], [[parameter:eeg-ecg-offset]] |
 | Solar8000 heart-rate delay group (1.9 or 4.2 s) | set by the PC | 94% of cases follow their PC's majority | [[observation:hr-two-delay-groups]], [[study:hr-delay-groups]] |
 
 ## The setup register

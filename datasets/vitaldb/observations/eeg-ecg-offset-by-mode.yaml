@@ -1,7 +1,7 @@
 id: eeg-ecg-offset-by-mode
 name: The EEG–ECG offset is fixed by the SNUADC correction mode
 summary: >-
-  After the stamp model, BIS EEG stamps still sit early against the SNUADC ECG by a constant (EEG minus ECG): −804 ms in step mode and −660 ms in
+  After the stamp model, BIS EEG stamps still sit early against the SNUADC ECG by a constant (EEG minus ECG): −805 ms in step mode and −665 ms in
   frequent-correction mode over the whole release, tight within a port or unit. The mode, a property of the setup,
   sets the constant.
 status: established
@@ -12,9 +12,10 @@ studies: [snuadc-stamp-sawtooth, loop-closure]
 description: |
   Pilot, 117 step-mode and 29 frequent-mode cases: using the constant of the case's mode (leave-one-out) lines a
   typical window up to 33 ms (median; p90 116 ms), against 38 ms (p90 154 ms) with one constant for all recordings
-  and 16 ms with the case's own constant from cardiac artefact bursts. Whole release (2,710 recordings, 19 October):
-  −804 ms in step mode (1,526), −660 ms in frequent-correction mode (78) and −766 ms with no SNUADC correction
-  (1,099); the mode's constant lines a window up to 42 ms (p90 150 ms), the recording's own to 17 ms (p90 79 ms). Why the constant differs between modes is open
+  and 16 ms with the case's own constant from cardiac artefact bursts. Whole release (2,716 recordings, 9 November,
+  stamp model with setup-rate fallbacks): −805 ms in step mode (1,531), −665 ms in frequent-correction mode (78) and
+  −769 ms with no SNUADC correction (1,100); the mode's constant lines a window up to 40 ms (p90 145 ms), the
+  recording's own to 15 ms (p90 75 ms). With the 19 October model: −804, −660 and −766 ms; 42 and 17 ms. Why the constant differs between modes is open
   ([[study:loop-closure]]).
 consequence: One EEG–ECG constant for all recordings is wrong by about 110 ms for the minority in frequent-correction mode.
 handling: The stamp model can apply the constant of the recording's mode instead of one for all; the setup register says which setups use frequent-correction mode.
