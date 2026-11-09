@@ -186,7 +186,9 @@ timing:
     - {parameter: bis-eeg-offset, use: p95, scale: -1}
     - {parameter: bis-eeg-offset, use: p5, scale: -1}
     note: 'On the working reference, a BIS EEG stamp comes 0.6-1.0 s before the event: raw BIS stamps put the EEG ahead
-      of the SNUADC signals.'
+      of the SNUADC signals. The cause is the recorder, not the monitor: Vital Recorder stamps each 0.125 s EEG packet
+      at its arrival minus a fixed 1 s, and a packet arrives about 0.2 s after its first sample on the working
+      reference, so the stamps come about 0.8 s early [[reference:lee2026correspondence-9nov]].'
   uncertainty:
     components:
     - name: between recordings

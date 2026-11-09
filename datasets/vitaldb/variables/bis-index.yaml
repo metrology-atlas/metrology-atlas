@@ -30,7 +30,8 @@ timing:
   domain: bis
   status: measured
   evidence: stamped 3-4 s after the newest EEG it averages (p10-p90; p95 6 s), 3,297 good fits; window about 16 s (48%)
-    or 29-61 s (40%); half the weight older than 31 s
+    or 29-61 s (40%); half the weight older than 31 s. Vital Recorder stamps the index, like the EEG, at arrival minus
+    1 s (H.-C. Lee, 9 Nov 2026), so this delay against the EEG stamps is unaffected by it
   checked: 2026-11-01
   studies:
   - bis-index-delay

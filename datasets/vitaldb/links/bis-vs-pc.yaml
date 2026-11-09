@@ -3,13 +3,21 @@ name: BIS against the recorder PC
 summary: >-
   The BIS EEG stamps drift about +25 ppm against the PC (median from the correction steps of 1,939 recordings; a fit
   over every recording's stamps gives +21 ppm in 4,728) and are pulled forward on a fixed 8,192 s timer of the BIS's
-  own, which does not start with the recording.
+  own, which does not start with the recording. The timer is probably the BIS packet counter wrapping: 8,192 s is
+  65,536 packets of 0.125 s, and Vital Recorder re-anchors the stamps whenever the sequence is not consecutive.
 clock: bis-clock
 against: recorder-pc
 rate: bis-rate
 correction:
   rule: |
-    On a fixed timer: every 8,192 s the run is cut and restarted forward by whatever drift has built up. A correction
+    Vital Recorder stamps a BIS EEG packet (0.125 s) at its arrival minus a fixed 1 s, places the following packets
+    0.125 s apart by their sequence numbers while the sequence is consecutive and the result stays within 2 s of
+    arrival minus 1 s, and otherwise re-anchors at arrival minus 1 s [[reference:lee2026correspondence-9nov]]. The 2 s limit is never reached in VitalDB
+    (at +25 ppm it would take 22 h; the corrections are a median 0.149 s, none near 2 s;
+    [[code:vitaldb-bench/examples/lee_rules_check.py]]), so every correction is a break in the sequence. On a fixed
+    timer: every 8,192 s the run is cut and restarted forward by whatever drift has built up. 8,192 s is exactly
+    65,536 packets, so the cut is probably the packet counter wrapping round, which the recorder reads as a break
+    (an inference from the arithmetic, not yet confirmed). A correction
     moves every BIS track together. In all recordings ([[study:device-correction-schedules]]), 95% of corrections
     after the first are 8,192 ± 20 s apart, and the first comes at any time after the BIS starts: the timer is the
     BIS's own. The rate is relative to the recorder PC, whose own corrections are part of what it measures.

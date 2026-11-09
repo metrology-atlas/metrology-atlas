@@ -10,4 +10,7 @@ about: [bis-vs-pc]
 date: 2026-10-19
 notes: >-
   The whole release: 95% of corrections after the first are 8,192 ± 20 s apart; the first comes at any time after the
-  BIS starts. The pilot ([[study:correction-periods]]) found the same in 95% of 266 intervals.
+  BIS starts. The pilot ([[study:correction-periods]]) found the same in 95% of 266 intervals. 8,192 s is 65,536
+  EEG packets of 0.125 s: probably the BIS's 16-bit packet counter wrapping round, which Vital Recorder treats as a
+  break in the sequence and re-anchors at arrival minus 1 s [[reference:lee2026correspondence-9nov]]. The counter runs from when the BIS starts, which
+  is why the first correction comes at any time in a recording (an inference, not yet confirmed).

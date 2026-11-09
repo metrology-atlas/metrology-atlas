@@ -1,0 +1,13 @@
+id: bis-packet-arrival-delay
+name: BIS packet arrival delay
+quantity: Time from a BIS EEG packet's first sample to its arrival at the recorder, on the working reference.
+value: 0.2
+unit: s
+display: "about 0.2 s (the recorder's developer)"
+status: estimated
+about: [bis-vs-pc, bis-eeg]
+date: 2026-11-09
+notes: >-
+  Reported by Vital Recorder's developer ([[reference:lee2026correspondence-9nov]]). Together with the recorder's
+  fixed 1 s subtraction ([[parameter:bis-recorder-subtraction]]) it predicts BIS EEG stamps about 0.8 s early, as
+  measured ([[parameter:bis-eeg-offset]]: −0.787 s median).

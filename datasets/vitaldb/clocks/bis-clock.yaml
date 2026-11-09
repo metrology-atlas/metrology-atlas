@@ -4,9 +4,11 @@ summary: The BIS monitor's own clock.
 type: oscillator
 nominal: 128 Hz EEG sample clock
 description: The BIS monitor's own clock. Its EEG stamps drift by about +25 ppm against the recorder PC and are
-  corrected on a fixed 8,192 s timer.
+  corrected on a fixed 8,192 s timer, probably its 16-bit packet counter wrapping (65,536 packets of 0.125 s). Vital
+  Recorder stamps each packet at arrival minus a fixed 1 s and counts on by sequence number [[reference:lee2026correspondence-9nov]].
 tags:
 - stub
 utc_plan: 'Two routes, and they close: through its own stamps to the PC, and through shared bursts to SNUADC. A
-  constant latency (−0.80 s or −0.67 s by SNUADC mode, whole release) belongs in the link. To strengthen: use the cardiac artefact
+  constant latency (−0.80 s or −0.67 s by SNUADC mode, whole release) belongs in the link: mostly the recorder''s
+  fixed 1 s subtraction, less about 0.2 s from the first sample to arrival. To strengthen: use the cardiac artefact
   where there are no bursts.'

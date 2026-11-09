@@ -10,3 +10,8 @@ status: measured
 study: shared-bursts
 about: [bis-eeg]
 date: 2026-11-06
+notes: >-
+  Why it is negative: Vital Recorder stamps each BIS EEG packet (0.125 s, 16 samples) at its arrival minus a fixed
+  1 s, and places the following packets 0.125 s apart by their sequence numbers; a packet arrives about 0.2 s after
+  its first sample on the working reference, so the stamps sit about 0.8 s early [[reference:lee2026correspondence-9nov]]. The BIS numerics (index,
+  SQI, EMG, SR, SEF) are stamped the same way, at arrival minus 1 s.

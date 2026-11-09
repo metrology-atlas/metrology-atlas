@@ -1,0 +1,13 @@
+id: bis-recorder-subtraction
+name: Vital Recorder's BIS stamp subtraction
+quantity: The fixed time Vital Recorder subtracts from a BIS packet's arrival time to stamp it (EEG and numerics).
+value: -1.0
+unit: s
+display: "arrival minus 1 s (a rule in the recorder)"
+status: assumed
+about: [bis-vs-pc, bis-eeg, bis-index]
+date: 2026-11-09
+notes: >-
+  A rule in Vital Recorder's code, reported by its developer ([[reference:lee2026correspondence-9nov]]), not a
+  measurement. With [[parameter:bis-packet-arrival-delay]] it accounts for the measured [[parameter:bis-eeg-offset]]:
+  −1 s plus about 0.2 s is about −0.8 s.
