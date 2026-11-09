@@ -3,12 +3,12 @@ name: Recorder PC clock
 summary: Vital Recorder's clock on the recording PC. It stamps every record, and every other clock is linked to it,
   directly or through others.
 type: software
-nominal: VitalDB server time read at each start, then the PC's Windows multimedia timer (1 ms)
+nominal: Server time, then the PC timer
 description: 'Vital Recorder stamps each record with this clock, and every device link is measured against it. It
   is not the Windows clock: at start-up the recorder reads the time once from the VitalDB server and stores its
   difference from the PC clock, and after that its time advances only by the PC''s hardware timer, the Windows
-  multimedia timer (1 ms resolution). It restarts itself once it has run for more than 5 hours, and with every PC
-  restart, and reads the server time again at each start (H.-C. Lee, 9 November 2026; [[link:recorder-pc-vs-utc]]).
+  multimedia timer (1 ms resolution). It restarts itself once it has run for more than 5 hours and is waiting for the
+  next patient, and with every PC restart, and reads the server time again at each start (H.-C. Lee, 9 November 2026; [[link:recorder-pc-vs-utc]]).
   The hand synchronisation of the Windows clock to UTC(KRIS) with KRISS''s UTCk mattered only when the server request
   failed. Its own link to UTC cannot be observed in the release, because dates are shifted to the year 2100.
 

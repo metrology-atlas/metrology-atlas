@@ -12,8 +12,9 @@ against: utc
 correction:
   rule: |
     The server time is read again at every start of Vital Recorder: it restarts itself once it has run for more than
-    5 hours (an option on by default), and whenever the PC restarts, for example after Windows updates
-    ([[parameter:pc-sync-period]]; [[reference:lee2026correspondence-9nov]]). Within a run nothing steps the recorder's time: no simultaneous jump of
+    5 hours and is waiting for the next patient (an option on by default), and whenever the PC restarts, for example after Windows updates
+    ([[parameter:pc-sync-period]]; [[reference:lee2026correspondence-9nov]]). A run therefore lasts at least 5 hours
+    unless the PC restarts, and can last longer through a long case. Within a run nothing steps the recorder's time: no simultaneous jump of
     every device of 0.5 s or more was found in any file ([[parameter:pc-step-bound]]). The PC's Windows clock, which
     was synchronised by hand to UTC(KRIS), Korea's national time scale, with KRISS's UTCk program
     ([[reference:lee2026correspondence]], [[reference:lee2026correspondence-nov]], [[reference:kriss-utck]]), mattered

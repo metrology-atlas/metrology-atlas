@@ -1,14 +1,12 @@
 id: pc-sync-period
 name: Recorder time re-read interval
 quantity: Time between Vital Recorder's reads of the server time, which happen at each start of the recorder.
-value: 18000
-unit: s
-display: "at every start: after more than 5 h of running, and at every PC restart (a rule in the recorder)"
+display: "start of the recorder: once it has run more than 5 h and is waiting for the next patient, and at every PC restart (a rule in the recorder)"
 status: documented
 about: [recorder-pc-vs-utc]
 date: 2026-11-09
 notes: >-
-  Vital Recorder restarts itself once it has run for more than 5 hours (an option on by default) and re-reads the
-  server time at each start [[reference:lee2026correspondence-9nov]]. Until 9 November the atlas described a Windows clock synchronised to UTC(KRIS) by
+  Vital Recorder restarts itself once it has run for more than 5 hours and is waiting for the next patient (an
+  option on by default), and re-reads the server time at each start [[reference:lee2026correspondence-9nov]]. Until 9 November the atlas described a Windows clock synchronised to UTC(KRIS) by
   hand at irregular times with no logs kept ([[reference:lee2026correspondence-nov]]); that synchronisation mattered
   only when the server request failed.
