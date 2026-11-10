@@ -68,8 +68,8 @@ results: |
     [[figure:primus-awp-offsets-by-rate]]
 
   - **Release-wide, pauses in ventilation say most +1-breath offsets are slips (2 November).** 26,022
-    events in 3,470 recordings; 5,166 edges in 943 recordings resolve the breath (work/primus_vent_events/
-    summary.json). With CVP (2,318 resolved edges) the event lag is a median 1.7 s (p10–p90 0.6–3.9 s) and, in
+    events in 3,470 recordings; 5,165 edges in 939 recordings resolve the breath (work/primus_vent_events_v4/
+    summary.json, v4 rates, 10 Nov; 5,166 in 943 before). With CVP (2,316 resolved edges) the event lag is a median 1.7 s (p10–p90 0.6–4.0 s) and, in
     breath periods, falls away steadily from 0–0.5 breaths with no second mode one breath up, where the matched
     offsets have one. Where a matched window is within 10 minutes, the matched lag agrees with the event (k within
     a quarter of 0) for about 70% of CVP edges and is about one breath late for about 20%. The ART events sit later
@@ -83,31 +83,32 @@ results: |
     a breath off, probably because both start from the same coarse estimate. Many events are uninformative
     (correlation under 0.5, or the peak at the edge of the range).
   - **The pause method has no bias against CVP (bias check, 2 November).** Where a CVP event and the matching agree
-    on the breath (1,350 edges, k within a quarter of 0), event minus matched lag is a median 0.000 s (IQR −0.11 to
-    +0.14 s; p10–p90 −0.24 to +0.33 s), the same at stops and restarts, at weaker and stronger correlations, and
+    on the breath (1,344 edges, k within a quarter of 0), event minus matched lag is a median +0.006 s (IQR −0.11 to
+    +0.14 s; p10–p90 −0.25 to +0.33 s; v4 rates; 0.000 s on 1,350 edges before), the same at stops and restarts, at weaker and stronger correlations, and
     with the matched window within 2 minutes. Its spread, about 0.2 s, is far inside half a breath, so a resolved
-    CVP pause fixes the breath. For ART the same comparison gives +0.16 s (IQR −0.03 to +0.35 s, 587 edges).
+    CVP pause fixes the breath. For ART the same comparison gives +0.15 s (IQR −0.05 to +0.33 s, 584 edges; +0.16 s before).
     The selection (k within a quarter breath) limits the differences to about ±1 s, so this tests bias, not the
     tails.
   - **A rule for every stretch, checked by leaving stretches out (2 November).** tools/primus_breath_rule.py
-    (work/primus_breath_rule/) gives each stretch a whole number of breaths k to take off its matched lag:
+    (work/primus_breath_rule_v4/, on the v4 sync windows and vent events, 11 Nov) gives each stretch a whole number of breaths k to take off its matched lag:
     (1) from its own resolved CVP pauses; (2) carried from a neighbour across a gap that keeps the 0.48 s grid,
     so that the corrected offset is continuous; (3) otherwise the k that puts its corrected start nearest the main
-    mode, 1.28 s (the median over stretches fixed by their own CVP pauses); (4) recordings with ART only, the same
-    with ART pauses corrected by their +0.16 s. Of 3,121 CVP stretches, 498 are set by their own pauses, 393 by
-    carrying and 2,230 by the main mode (ART-only: 185, 141 and 2,079 of 2,405). Leaving out each of the 498
-    stretches with its own pauses: trusting the matching (k = 0) is right for 72%; carrying, where it reaches
-    (116), is right for 81%; the main mode (382) for 86%. The rule changes k in 28% of CVP stretches and 44% of
-    ART-only ones. The corrected start offsets of the stretches fixed by their own pauses are a median 1.28 s,
-    IQR 0.67–2.08 s, 5th–95th percentile 0.06–4.54 s: wide, so the main mode cannot be right for all, and about
+    mode, 1.25 s (the median over stretches fixed by their own CVP pauses); (4) recordings with ART only, the same
+    with ART pauses corrected by their +0.15 s. Of 3,119 CVP stretches, 497 are set by their own pauses, 394 by
+    carrying and 2,228 by the main mode (ART-only: 185, 143 and 2,087 of 2,415). Leaving out each of the 497
+    stretches with its own pauses: trusting the matching (k = 0) is right for 73%; carrying, where it reaches
+    (114), is right for 81%; the main mode (383) for 86%. The rule changes k in 28% of CVP stretches and 45% of
+    ART-only ones. The corrected start offsets of the stretches fixed by their own pauses are a median 1.25 s,
+    IQR 0.64–2.05 s, 5th–95th percentile 0.05–4.58 s (2 November, before the v4 rates: 1.28 s, 0.67–2.08 s): wide, so the main mode cannot be right for all, and about
     one stretch in seven that relies on it is still a breath off.
-  - **The Primus numbers with each stretch on its right breath (2 November).** tools/primus_numbers.py (which
+  - **The Primus numbers with each stretch on its right breath (2 November; v4 rates 11 November,
+    work/primus_numbers_v4).** tools/primus_numbers.py (which
     reproduces the earlier numbers exactly with no breath correction): the AWP bias against the breath on CVP is a
-    median [[value:primus-awp-bias]] per recording (5th–95th percentile −3.557 to −0.439 s, was −1.787 s, −5.782 to
+    median [[value:primus-awp-bias]] per recording (5th–95th percentile −3.540 to −0.449 s, was −1.787 s, −5.782 to
     +0.693 s), and its spread between recordings [[value:primus-awp-between-rsd]] (was 1.325 s). Within a stretch on
     its right breath the matching is as before (robust SD 79 ms). After the rule, [[value:primus-breath-error-share]]
     of windows sit in a stretch still a whole breath off; as a mixture its standard deviation is
-    [[value:primus-breath-error-sd]], and the 95% interval of the matching error with it −4.41 to +4.40 s. The
+    [[value:primus-breath-error-sd]], and the 95% interval of the matching error with it −4.39 to +4.39 s. The
     timing forms of primus-awp and primus-co2 carry these, the breath error as its own component.
 
     [[figure:primus-awp-correction]]
@@ -147,8 +148,8 @@ discussion: |
 
 limitations: |
   The breath of most stretches comes from the rule, not from their own pauses, and the rule is right for about
-  86% of those it reaches (leave-one-out on 498 stretches with their own pauses, which are themselves the reference).
-  ART pauses answer later than ART matching (+0.16 s where they agree, more in the tails), so recordings with ART only
+  86% of those it reaches (leave-one-out on 497 stretches with their own pauses, which are themselves the reference).
+  ART pauses answer later than ART matching (+0.15 s where they agree, more in the tails), so recordings with ART only
   rest on a correction. The breath periods come from the ventilator's settings, sampled every fourth record.
   Physiology between the airway pressure and CVP is not separated from the stamp offset.
 

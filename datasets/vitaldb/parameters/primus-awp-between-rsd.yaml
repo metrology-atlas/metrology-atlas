@@ -1,12 +1,12 @@
 id: primus-awp-between-rsd
 name: Spread of the Primus AWP offset between recordings
 quantity: Robust SD between recordings of the per-recording AWP-to-CVP lag, each stretch on its right breath.
-value: 0.702
+value: 0.694
 unit: s
 spread: {n: 1067}
 status: measured
 study: primus-awp-anchoring
 about: [primus-awp]
-date: 2026-11-02
+date: 2026-11-11
 notes: >-
-  tools/primus_numbers.py, raw_lag_per_recording_s.rsd. It was 1.325 s before the breath correction.
+  tools/primus_numbers.py, raw_lag_per_recording_s.rsd (work/primus_numbers_v4, v4 rates, 11 Nov 2026; 0.702 before). It was 1.325 s before the breath correction.

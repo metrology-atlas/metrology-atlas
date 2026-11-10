@@ -1,13 +1,13 @@
 id: primus-breath-error-sd
 name: Primus breath error as a standard uncertainty
 quantity: Standard deviation of the whole-breath error of Primus breath matching (a mixture), sqrt(p) times the median breath period.
-value: 1.509
+value: 1.498
 unit: s
-spread: {text: "p 12.4%, median breath period 4.286 s; 95% interval of the matching error with it −4.41 to +4.40 s"}
+spread: {text: "p 12.2%, median breath period 4.286 s; 95% interval of the matching error with it −4.39 to +4.39 s"}
 status: estimated
 study: primus-awp-anchoring
 about: [primus-awp, primus-co2]
-date: 2026-11-02
+date: 2026-11-11
 notes: >-
-  tools/primus_numbers.py breath_error. Not Gaussian: 87.6% of stretches are on their right breath (error as the
+  tools/primus_numbers.py breath_error (work/primus_numbers_v4, v4 rates, 11 Nov 2026). Not Gaussian: 87.8% of stretches are on their right breath (error as the
   matching, robust SD 79 ms), the rest a whole breath either way. The 95% interval is the mixture's, by simulation.

@@ -3,7 +3,7 @@ name: Primus ETCO2 delay
 quantity: Delay from the end of the breath's CO2 plateau to the stamp of the Primus ETCO2.
 value: 1.55
 unit: s
-spread: {p10: 0.75, p90: 3.4}
+spread: {p10: 0.75, p90: 3.4, text: "median and p10–p90 over cases; tools/numeric_delay_variability.py agg, work/examples/numeric_delay_variability_v4/agg/summary.json (tracks.ETCO2.d_p10_25_50_75_90; v4 rates, 10 Nov 2026, recorded run; the same values as before)"}
 status: measured
 study: numeric-delay-variability
 about: [primus-numerics]

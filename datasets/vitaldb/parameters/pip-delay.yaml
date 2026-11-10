@@ -3,7 +3,7 @@ name: Primus PIP delay
 quantity: Delay from the end of inspiration to the stamp of the Primus peak pressure.
 value: 4.6
 unit: s
-spread: {p10: 3.65, p90: 6.5}
+spread: {p10: 3.65, p90: 6.5, text: "median and p10–p90 over cases; tools/numeric_delay_variability.py agg, work/examples/numeric_delay_variability_v4/agg/summary.json (tracks.PIP.d_p10_25_50_75_90; v4 rates, 10 Nov 2026, recorded run; the same values as before)"}
 status: measured
 study: numeric-delay-variability
 about: [primus-numerics]

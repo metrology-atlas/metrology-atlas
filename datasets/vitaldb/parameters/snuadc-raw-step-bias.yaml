@@ -5,7 +5,7 @@ quantity: >-
   as on time; median over records of every tenth step-mode recording.
 value: 0.24
 unit: s
-spread: {p5: 0.03, p95: 0.49, n: 257, text: "257 step-mode recordings, 20.7 million records; snu_raw_offset_v3/summary.json (step, anchored); with port fallback rates (3 Nov) 0.26 s, 0.03-0.55 s"}
+spread: {p5: 0.03, p95: 0.49, n: 257, text: "257 step-mode recordings, 20.7 million records; snu_raw_offset_v4/summary.json (step, anchored; v4 rates, 10 Nov, recorded run, identical to the 9 Nov v3 run); with port fallback rates (3 Nov) 0.26 s, 0.03-0.55 s"}
 status: measured
 study: snuadc-stamp-sawtooth
 about: [snuadc-ecg-ii, snuadc-art]

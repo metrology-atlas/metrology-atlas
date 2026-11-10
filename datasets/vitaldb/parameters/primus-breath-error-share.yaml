@@ -1,13 +1,13 @@
 id: primus-breath-error-share
 name: Share of Primus breath matching a whole breath off
 quantity: Probability that a stretch's breath-matched AWP lag is still a whole breath off after the breath rule, averaged over the windows.
-value: 12.4
+value: 12.2
 unit: "%"
-spread: {n: 37881, text: "by the rule's step: own CVP pauses 0% (taken as the reference), carried 19%, main mode 14.1% (leave-one-out, 498 stretches)"}
+spread: {n: 37875, text: "by the rule's step: own CVP pauses 0% (taken as the reference), carried 19.3%, main mode 13.8% (leave-one-out, 497 stretches)"}
 status: estimated
 study: primus-awp-anchoring
 about: [primus-awp, primus-co2]
-date: 2026-11-02
+date: 2026-11-11
 notes: >-
   tools/primus_numbers.py breath_error.p_window_weighted, from tools/primus_breath_rule.py's leave-one-out shares. The
-  error holds for a whole stretch between AWP pauses (median 3,642 s).
+  error holds for a whole stretch between AWP pauses (median 3,627 s; work/primus_numbers_v4, v4 rates, 11 Nov 2026).

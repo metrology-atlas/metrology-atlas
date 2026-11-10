@@ -2,7 +2,7 @@ id: numerics-derivation-release
 name: How the monitor numerics are computed, over the whole release
 summary: >-
   The numeric-derivation pilot repeated on every recording (6,388) and the SpO2 dropout timing on 6,152. Each
-  numeric describes a short window that ends before its stamp: HR 8 beats ([[study:hr-derivation]]), pleth HR about 12 beats, arterial
+  numeric describes a short window that ends before its stamp: HR 8 beats ([[study:hr-derivation]]), pleth HR about 10 beats, arterial
   pressure 2–4 beats, CVP about 5 s, ETCO2 and PIP one breath, RR about 30 s. Solar8000 HR is truncated, not rounded,
   in [[value:hr-truncation-share]] of recordings.
 date: 2026-10-29
@@ -16,8 +16,9 @@ data: |
   rates (stage-3 rerun; vitaldb-bench tools/numeric_derivation_readout.py on `overnight_v4/numeric`, compared leaf
   by leaf with the October run by examples/stage3_batch2_compare.py in `stage3_batch2_compare/`). The rerun also
   has the outlier-rejecting and trimmed means added to the candidates on 1 November. Numerics: no errors;
-  recordings per numeric in the table, the same in both runs. SpO2 and pleth HR (October run; their rerun is in
-  progress): 6,152 analysed, 236 without pleth or SpO2; 23 recordings failed on the first run (12 files at 100 Hz where a filter cut-off exceeded Nyquist, 11 an off-by-one at the end of a recording) and were
+  recordings per numeric in the table, the same in both runs. SpO2 and pleth HR: rerun 10–11 Nov 2026 with the v4 rates
+  (`overnight_v4b/spo2`; the envelope band for 500 Hz PLETH kept at 30–240 Hz, as in October, after a 29 Oct fix for
+  100 Hz files had narrowed it to 225 Hz), compared with the October run in `stage3_batch2_compare/`; 6,152 analysed, 236 without pleth or SpO2; 23 recordings failed on the first run (12 files at 100 Hz where a filter cut-off exceeded Nyquist, 11 an off-by-one at the end of a recording) and were
   rerun after a fix, with no errors.
 background: |
   [[study:numeric-derivation-pilot]] found the algorithm and window behind each numeric on 24 cases (231 for pleth HR),
@@ -41,7 +42,7 @@ results: |
   | Numeric | Recordings | Best algorithm (share) | Window it describes | Delay, window end to stamp | Value |
   |---|---|---|---|---|---|
   | Solar8000 HR | 6,343 | outlier-rejecting mean of 8–10 beats 65% (the rule of [[study:hr-derivation]]); 60 / mean of 8 beats 13%; median R–R over time 12% | 8 beats (8–10) | 3.35 s (1.85–4.2) | **truncated** ([[value:hr-truncation-share]]) |
-  | Pleth HR | 6,150 | median of beats 57%; median over time 31% | about 12 beats (10–12) | 3.4 s (2.55–4.1) | rounded (floor better in 9%) |
+  | Pleth HR | 6,150 | outlier-rejecting mean of the pulse intervals 88% (the rule of [[study:pleth-hr-derivation]]); median of beats 4% | about 10 beats (10–12) | 3.8 s (3.05–4.35) | rounded (floor better in 5%) |
   | ART systolic | 3,483 | exponential average of about 2 beats 45%; median of 4 beats or 3 s 54% | 2–4 beats | 1.3 s (0.8–1.85) | offset from SNUADC ART −4.5 to +4.2 mmHg |
   | ART mean | 3,485 | exponential average of 4 beats 69%; waveform mean over 8 s 27% | 4 beats or about 8 s | 1.35 s (0.9–2.0) | offset −4.2 to +4.0 mmHg |
   | ART diastolic | 3,483 | exponential average of about 2 beats 83% | 2 beats | 0.95 s (0.45–1.45) | offset −3.5 to +4.3 mmHg |
@@ -61,11 +62,11 @@ results: |
   breath; PEEP's median becomes +1.6 s. The atlas's timing forms already rest on the labels. The disagreement was
   found by asking an AI assistant a planning question against the atlas file.
 
-  **SpO2 and pleth HR (6,152 recordings).** At pulse loss (2,638 flat and 4,730 low-perfusion episodes) the last SpO2
-  value comes a median 0.8 s after the pulse is lost (IQR −0.04 to 2.0 s, flat episodes; 0.7 s with low perfusion); after
-  the pulse returns, SpO2 reappears a median 5.4 s later (3.7–7.7 s; 5.8 s with low perfusion). Pleth HR behaves the same. Electrocautery bursts (77,904) move SpO2 no more than
-  random times do (6.7% against 5.8% of 367,684 controls). Pleth-only artefacts (9,186) do move it (28% against
-  6%), but the onset spreads over 0–37 s, too wide to give a latency.
+  **SpO2 and pleth HR (6,152 recordings).** At pulse loss (2,639 flat and 4,732 low-perfusion episodes) the last SpO2
+  value comes a median 0.8 s after the pulse is lost (IQR −0.05 to 2.0 s, flat episodes; 0.7 s with low perfusion); after
+  the pulse returns, SpO2 reappears a median 5.4 s later (3.7–7.7 s; 5.8 s with low perfusion). Pleth HR behaves the same. Electrocautery bursts (77,984) move SpO2 no more than
+  random times do (6.7% against 5.8% of 367,692 controls). Pleth-only artefacts (9,186) do move it (28% against
+  6%), but the onset spreads over 0–38 s, too wide to give a latency.
 discussion: |
   The pilot's picture holds over the release, with tighter delays. These numbers set the numerics' timing forms:
   the windows are their supports (D10), the delays their biases as release distributions, and HR's truncation is a
@@ -92,7 +93,8 @@ open_questions:
     kind: phenomenon
     summary: >-
       The lower tail of pleth HR's delay reaches −1.8 s (p5). Probably poorly identified fits rather than a true
-      lead; to check.
+      lead; to check. In the rerun of 10–11 Nov, with the outlier-rejecting mean among the candidates, the 10th
+      percentile is 1.0 s (was 0.6 s); the 5th is not in the saved summary.
 code:
   - vitaldb-bench/tools/numeric_derivation_pilot.py
   - vitaldb-bench/tools/numeric_derivation_agg.py

@@ -3,7 +3,7 @@ name: Solar8000 CVP delay
 quantity: Delay from the end of the 4 s waveform-mean window to the stamp of the Solar8000 CVP.
 value: 3.8
 unit: s
-spread: {p10: 3.05, p90: 4.6}
+spread: {p10: 3.05, p90: 4.6, text: "median and p10–p90 over cases; tools/numeric_delay_variability.py agg, work/examples/numeric_delay_variability_v4/agg/summary.json (tracks.CVP.d_p10_25_50_75_90; v4 rates, 10 Nov 2026, recorded run; the same values as before)"}
 status: measured
 study: numeric-delay-variability
 about: [solar8000-art-numerics]

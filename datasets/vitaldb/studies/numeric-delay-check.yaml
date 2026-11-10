@@ -36,7 +36,7 @@ method: '1. **Both routes term by term** on the same recordings, by HR delay gro
   truncated) from the R peaks, and PLETH_HR (rmean of 10 pulse intervals, rounded) from the pulses, both on the SNUADC
   stamp-model times; each value placed at its last beat + its fitted delay + half the gap, and stamped at the monitor''s
   own stamps. A correct window and delay give a lag of zero ([[code:vitaldb-bench/tools/numeric_recompute_lag.py]], WSL,
-  41 min; $W/examples/numeric_recompute_lag_v3/agg/summary.json, rerun 9 November with the stamp model''s setup-rate
+  41 min; $W/examples/numeric_recompute_lag_v4/agg/summary.json (v4 rates, 10 Nov, recorded run; identical to the 9 Nov v3 run in every recording), rerun 9 November with the stamp model''s setup-rate
   fallbacks [[study:snuadc-stamp-sawtooth]], which moved every lag by under 10 ms; v1 with port rates).
 
   4. **The same test on synthetic data** with a known monitor, one that updates after every beat and one that updates on

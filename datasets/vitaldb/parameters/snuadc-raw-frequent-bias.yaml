@@ -5,7 +5,7 @@ quantity: >-
   form.
 value: 0.007
 unit: s
-spread: {p5: 0.003, p95: 0.013, n: 380, text: "380 recordings, 15.1 million records; snu_raw_offset/summary.json (small, anchored)"}
+spread: {p5: 0.003, p95: 0.013, n: 380, text: "380 recordings, 15.1 million records; snu_raw_offset_v4/summary.json (small, anchored; v4 rates, 10 Nov, recorded run; the same in the 3 Nov and 9 Nov runs)"}
 status: measured
 study: snuadc-stamp-sawtooth
 about: [snuadc-ecg-ii, snuadc-art]
