@@ -51,7 +51,7 @@ timing:
   - numerics-derivation-release
   - hr-delay-groups
   - hr-derivation
-  checked: 2026-11-07
+  checked: 2026-11-10
 - id: hr-early
   name: as stamped, early group
   kind: as_stored
@@ -86,7 +86,7 @@ timing:
   - numerics-derivation-release
   - hr-delay-groups
   - hr-derivation
-  checked: 2026-11-07
+  checked: 2026-11-10
 - id: hr-late
   name: as stamped, late group
   kind: as_stored
@@ -122,7 +122,7 @@ timing:
   - numerics-derivation-release
   - hr-delay-groups
   - hr-derivation
-  checked: 2026-11-07
+  checked: 2026-11-10
 chain:
 - node: Heart rate algorithm
   kind: window

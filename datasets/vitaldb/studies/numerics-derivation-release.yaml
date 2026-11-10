@@ -12,9 +12,12 @@ techniques: [null-controls]
 devices: [solar8000, primus]
 variables: [solar8000-hr, solar8000-pleth-hr, solar8000-art-numerics, solar8000-spo2, primus-numerics, snuadc-ecg-ii, snuadc-art, snuadc-pleth, primus-co2, primus-awp]
 data: |
-  The whole release, 6,388 recordings, run 28–29 Oct 2026. Numerics: no errors; recordings per numeric in the
-  table. SpO2 and pleth HR: 6,152 analysed, 236 without pleth or SpO2; 23 recordings failed on the first run (12
-  files at 100 Hz where a filter cut-off exceeded Nyquist, 11 an off-by-one at the end of a recording) and were
+  The whole release, 6,388 recordings, run 28–29 Oct 2026 and the numerics rerun 9–10 Nov 2026 with the v4 SNUADC
+  rates (stage-3 rerun; vitaldb-bench tools/numeric_derivation_readout.py on `overnight_v4/numeric`, compared leaf
+  by leaf with the October run by examples/stage3_batch2_compare.py in `stage3_batch2_compare/`). The rerun also
+  has the outlier-rejecting and trimmed means added to the candidates on 1 November. Numerics: no errors;
+  recordings per numeric in the table, the same in both runs. SpO2 and pleth HR (October run; their rerun is in
+  progress): 6,152 analysed, 236 without pleth or SpO2; 23 recordings failed on the first run (12 files at 100 Hz where a filter cut-off exceeded Nyquist, 11 an off-by-one at the end of a recording) and were
   rerun after a fix, with no errors.
 background: |
   [[study:numeric-derivation-pilot]] found the algorithm and window behind each numeric on 24 cases (231 for pleth HR),
@@ -37,14 +40,14 @@ results: |
 
   | Numeric | Recordings | Best algorithm (share) | Window it describes | Delay, window end to stamp | Value |
   |---|---|---|---|---|---|
-  | Solar8000 HR | 6,343 | median R–R over time 46%; 60 / mean of 8 beats 23%; median of 8–10 beats 22% (an outlier-rejecting mean of 8, not among these candidates, fits best: [[study:hr-derivation]]) | about 8 s (6–10 s) | 3.25 s (1.75–4.2) | **truncated** ([[value:hr-truncation-share]]) |
+  | Solar8000 HR | 6,343 | outlier-rejecting mean of 8–10 beats 65% (the rule of [[study:hr-derivation]]); 60 / mean of 8 beats 13%; median R–R over time 12% | 8 beats (8–10) | 3.35 s (1.85–4.2) | **truncated** ([[value:hr-truncation-share]]) |
   | Pleth HR | 6,150 | median of beats 57%; median over time 31% | about 12 beats (10–12) | 3.4 s (2.55–4.1) | rounded (floor better in 9%) |
-  | ART systolic | 3,483 | exponential average of about 2 beats 45%; median of 4 beats or 3 s 54% | 2–4 beats | 1.25 s (0.8–1.85) | offset from SNUADC ART −4.5 to +4.2 mmHg |
-  | ART mean | 3,485 | exponential average of 4 beats 69%; waveform mean over 8 s 28% | 4 beats or about 8 s | 1.35 s (0.9–2.0) | offset −4.2 to +4.0 mmHg |
+  | ART systolic | 3,483 | exponential average of about 2 beats 45%; median of 4 beats or 3 s 54% | 2–4 beats | 1.3 s (0.8–1.85) | offset from SNUADC ART −4.5 to +4.2 mmHg |
+  | ART mean | 3,485 | exponential average of 4 beats 69%; waveform mean over 8 s 27% | 4 beats or about 8 s | 1.35 s (0.9–2.0) | offset −4.2 to +4.0 mmHg |
   | ART diastolic | 3,483 | exponential average of about 2 beats 83% | 2 beats | 0.95 s (0.45–1.45) | offset −3.5 to +4.3 mmHg |
-  | CVP | 1,343 | waveform mean over time 75% | about 5 s (4–5) | 3.15 s (2.35–3.75) | offset −4.7 to +3.0 mmHg |
+  | CVP | 1,343 | waveform mean over time 75% | about 5 s (4–5) | 3.15 s (2.4–3.75) | offset −4.7 to +3.0 mmHg |
   | Primus ETCO2 | 6,321 | peak of the last breath 84% | 1 breath | −2.05 s (−3.05 to −1.3) as fitted, against the CO2 waveform; [[value:etco2-delay]] corrected (below) | |
-  | Primus RR | 6,316 | 60 / mean breath interval over 20–30 s 52% | about 30 s | 6.4 s (3.8–9.4) | rounded (98.5%) |
+  | Primus RR | 6,316 | 60 / mean breath interval over 20–30 s 44%; trimmed mean of about 8 breath intervals 28% | about 30 s | 6.1 s (3.65–8.85) | rounded (98.5%) |
   | Primus PIP | 5,982 | peak airway pressure of the last breath 98% | 1 breath | 1.3 s (0.7–2.05) as fitted; [[value:pip-delay]] corrected (below) | |
   | Primus PEEP | 5,975 | no clear winner | | | |
 
@@ -96,3 +99,4 @@ code:
   - vitaldb-bench/tools/numeric_derivation_readout.py
   - vitaldb-bench/tools/spo2_event_pilot.py
   - vitaldb-bench/tools/spo2_event_agg.py
+  - vitaldb-bench/examples/stage3_batch2_compare.py
