@@ -2,16 +2,17 @@ id: hr-group-lag-in-pulse-rate
 name: HR delay groups seen in the pulse rate
 quantity: Difference between the HR delay groups in the lag at which pulse rate changes line up with HR changes (early minus
   late).
-value: 2.38
+value: 2.39
 unit: s
 spread:
   text: >-
-    early 3.27 s (3.15–3.37), late 0.89 s (0.80–0.96) after the HR stamp, read at the plateau midpoints; the same
-    recordings' HR delays differ by 2.32 s; $W/examples/hr_vs_pulse_rate/agg_v2/summary.json. First computed at the
+    early 3.27 s (3.17–3.40), late 0.88 s (0.78–1.00) after the HR stamp, read at the plateau midpoints; the same
+    recordings' HR delays differ by 2.32 s; $W/examples/hr_vs_pulse_rate/agg_v4l/summary.json (labels of 11 Nov,
+    v4 rates; 2.38 s with the 1 Nov labels, agg_v2). First computed at the
     plateau edges (1 Nov): 2.26 s (3.71 and 1.45 s), against 2.56 s.
 status: measured
 study: hr-vs-pulse-rate
 about:
 - solar8000-hr
 - solar8000-pleth-hr
-date: 2026-11-08
+date: 2026-11-11

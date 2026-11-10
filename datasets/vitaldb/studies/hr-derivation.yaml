@@ -46,9 +46,10 @@ results: '- **A mean of [[value:hr-window|number]] intervals that leaves out out
 
   - **Truncated:** truncation reproduces about 35 points more values than rounding.
 
-  - **Delays:** from the window''s last beat to the stamp, a median 1.75 s (p10–p90 1.25–2.28 s) in the early delay group
-  (175 recordings) and 4.20 s (3.59–4.81 s) in the late group (369), 2.45 s apart; the groups found with the older rule
-  ([[study:hr-delay-groups]]) are the same. The window''s centre sits 5.0 and 7.6 s before the stamp.'
+  - **Delays:** from the window''s last beat to the stamp, a median 1.80 s (p10–p90 1.25–2.40 s) in the early delay group
+  (218 recordings) and 4.20 s (3.60–4.85 s) in the late group (382), 2.40 s apart, with the delay groups of
+  [[study:hr-delay-groups]] (labels of 11 Nov 2026; `examples/hr_derivation_v4/agg`). The window''s centre sits 5.1 and
+  7.6 s before the stamp.'
 discussion: 'Rejecting outliers explains a puzzle of the heart rate against pulse rate comparison ([[study:hr-vs-pulse-rate]]):
   a missed pulse puts PLETH_HR on a line below the diagonal, but a missed or extra R peak leaves HR almost unchanged, because
   the doubled or halved interval falls outside the band and is dropped. A median would do the same, which is why the

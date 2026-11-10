@@ -3,8 +3,8 @@ name: Solar8000 HR label delay, late group
 quantity: Per-case HR delay label in the late delay group, median over its cases.
 value: 4.20
 unit: s
-spread: {p5: 3.55, p10: 3.70, p90: 4.80, p95: 5.10, n: 3771, text: "labels of 1 Nov 2026; results/pat/hr_delay_group_labels.csv"}
+spread: {p5: 3.55, p10: 3.70, p90: 4.80, p95: 5.10, n: 3758, text: "labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py -> work/results/delay_labels_v4/hr_label_params.json)"}
 status: measured
 study: hr-delay-groups
 about: [solar8000-hr]
-date: 2026-11-01
+date: 2026-11-11

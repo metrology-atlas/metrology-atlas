@@ -58,16 +58,16 @@ method: '1. Both numerics held between their records and read at each HR stamp; 
 
   '
 results: '- **The HR delay groups show in the pulse rate.** Changes line up with pulse rate read 3.27 s after the HR stamp
-  in the early group (95% interval 3.15–3.37 s, 2,060 recordings) and 0.89 s after it in the late group (0.80–0.96 s,
-  3,295): [[value:hr-group-lag-in-pulse-rate]] apart, against 2.32 s between the same recordings'' HR delays
+  in the early group (95% interval 3.17–3.40 s, 2,079 recordings) and 0.88 s after it in the late group (0.78–1.00 s,
+  3,286; HR delay labels of 11 Nov, on the v4 rates, `examples/hr_vs_pulse_rate/agg_v4l`): [[value:hr-group-lag-in-pulse-rate]] apart, against 2.32 s between the same recordings'' HR delays
   ([[parameter:hr-delay-early]], [[parameter:hr-delay-late]]). Pulse rate is computed
   from the plethysmogram by another module, so this confirms the two HR groups independently of the ECG analysis that
   found them ([[study:hr-delay-groups]]). The 0.3 s shortfall first reported came from reading the lag at the steps''
   edges.
 
   - **Where PLETH_HR''s window sits.** Adding each group''s HR delay, the mean wait for the recorder''s
-  poll (1.0 s, [[parameter:solar8000-poll-gap]]) and half of HR''s 8 R–R intervals puts PLETH_HR''s window centre 9.48 s
-  before its stamp in the early group and 9.45 s in the late: about [[value:pleth-hr-window-centre]]
+  poll (1.0 s, [[parameter:solar8000-poll-gap]]) and half of HR''s 8 R–R intervals puts PLETH_HR''s window centre 9.50 s
+  before its stamp in the early group and 9.44 s in the late (`pr_window_routes_v4l`): about [[value:pleth-hr-window-centre]]
   ([[code:vitaldb-bench/examples/pr_window_routes.py]]).
   The atlas''s earlier form for PLETH_HR (delay 2.79 s, window 8–12 s; replaced from [[study:pleth-hr-derivation]]) put
   it at about 7.8 s; the pilot''s direct recomputation (a median of about 12 beats, 3.4 s after the window ends; [[study:numeric-derivation-pilot]])

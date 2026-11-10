@@ -15,8 +15,9 @@ method: |
   variance; a posterior of 0.9 assigns a group. Groups compared with the Solar8000 port, then with the full PC key
   (the ports of the four core devices), department, surgery, rhythm, case order and the HR records themselves.
 results: |
-  - **Groups at [[value:hr-delay-early]] (SD 0.38, mixture weight 0.39) and [[value:hr-delay-late]] (SD 0.42, 0.61):** 2,228 cases early, 3,771 late (37% and 63% of
-    those classified), 234 uncertain. With the HR rule found later ([[study:hr-derivation]]) the groups are sharper
+  - **Groups at [[value:hr-delay-early]] (SD 0.39, mixture weight 0.39) and [[value:hr-delay-late]] (SD 0.37, 0.61):** 2,253 cases early, 3,758 late (37% and 63% of
+    those classified), 221 uncertain (labels of 11 Nov 2026, from a full rescan on the v4 rates; the 1 Nov labels
+    gave 2,228, 3,771 and 234, and of the cases classified both times one changed group). With the HR rule found later ([[study:hr-derivation]]) the groups are sharper
     than with the first labels (SD 0.51 and 0.65; 795 uncertain), 2.28 s apart either way; 67 of 5,427 cases
     classified both times changed group.
   - **Not a different window:** both groups fit the same rule best, a mean of the last 8 R–R intervals
