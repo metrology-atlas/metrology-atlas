@@ -18,7 +18,7 @@ timing:
     median: {parameter: hr-label-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     p5: {parameter: hr-label-delay, use: p5, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     p95: {parameter: hr-label-delay, use: p95, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
-    n: 6233
+    n: 6232
     scope: recording
     status: measured
   uncertainty:
