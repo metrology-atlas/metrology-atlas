@@ -1,0 +1,171 @@
+"""Run records (metrology_atlas.provenance)."""
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from metrology_atlas import provenance as pv
+
+
+def git(repo, *a):
+    subprocess.run(["git", "-C", str(repo), *a], check=True, capture_output=True)
+
+
+@pytest.fixture
+def repo(tmp_path):
+    r = tmp_path / "code" / "bench"
+    (r / "tools").mkdir(parents=True)
+    tool = r / "tools" / "double.py"
+    tool.write_text(
+        "import sys, json, pathlib\n"
+        "src, out = sys.argv[1], pathlib.Path(sys.argv[2])\n"
+        "out.mkdir(parents=True, exist_ok=True)\n"
+        "x = json.loads(pathlib.Path(src).read_text())\n"
+        "(out / 'summary.json').write_text(json.dumps({'y': 2 * x['x']}))\n"
+        "sys.exit(int(x.get('fail', 0)))\n")
+    git(r, "init", "-q")
+    git(r, "-c", "user.email=t@t", "-c", "user.name=t", "add", ".")
+    git(r, "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "tool")
+    return r
+
+
+@pytest.fixture
+def work(tmp_path, monkeypatch):
+    w = tmp_path / "work"
+    w.mkdir()
+    monkeypatch.setenv("METROLOGY_ATLAS_ROOTS", f"W={w};code={tmp_path / 'code'}")
+    monkeypatch.delenv("PYTHONPATH", raising=False)
+    return w
+
+
+def records(out):
+    return [json.loads(p.read_text()) for p in sorted((out / "_runs").glob("run_*.json"))]
+
+
+def test_record_wraps_a_command(repo, work):
+    inp = work / "in.json"
+    inp.write_text('{"x": 21}')
+    out = work / "res"
+    code = pv.main(["record", "--out", str(out), "--", sys.executable, str(repo / "tools" / "double.py"),
+                    str(inp), str(out)])
+    assert code == 0
+    assert json.loads((out / "summary.json").read_text()) == {"y": 42}
+    [r] = records(out)
+    assert r["kind"] == "recorded" and r["exit_code"] == 0 and r["finished"]
+    assert r["script"]["path"] == "code:bench/tools/double.py"
+    assert r["script"]["git"]["dirty"] is False and len(r["script"]["git"]["commit"]) == 40
+    [i] = r["inputs"]                       # the output folder is not an input
+    assert i["path"] == "W:in.json" and i["sha256"] == pv.sha256(inp)
+    [o] = r["outputs"]
+    assert o["path"] == "W:res/summary.json" and o["sha256"] == pv.sha256(out / "summary.json")
+
+
+def test_exit_code_passed_on_and_recorded(repo, work):
+    inp = work / "in.json"
+    inp.write_text('{"x": 1, "fail": 3}')
+    out = work / "res"
+    assert pv.main(["record", "--out", str(out), "--", sys.executable, str(repo / "tools" / "double.py"),
+                    str(inp), str(out)]) == 3
+    assert records(out)[0]["exit_code"] == 3
+
+
+def test_changed_script_is_flagged(repo, work):
+    (repo / "tools" / "double.py").write_text((repo / "tools" / "double.py").read_text() + "\n# edit\n")
+    inp = work / "in.json"
+    inp.write_text('{"x": 1}')
+    out = work / "res"
+    pv.main(["record", "--out", str(out), "--", sys.executable, str(repo / "tools" / "double.py"), str(inp), str(out)])
+    g = records(out)[0]["script"]["git"]
+    assert g["dirty"] and g["file_changed"]
+
+
+def test_resume_adds_a_record(repo, work):
+    inp = work / "in.json"
+    inp.write_text('{"x": 1}')
+    out = work / "res"
+    for _ in range(2):
+        pv.main(["record", "--out", str(out), "--", sys.executable, str(repo / "tools" / "double.py"),
+                 str(inp), str(out)])
+    assert len(records(out)) == 2
+
+
+def test_folder_tree_hash_and_fingerprint(work):
+    f = work / "parts"
+    f.mkdir()
+    for i in range(3):
+        (f / f"part_{i}.jsonl").write_text(f"{i}\n")
+    d = pv.describe(f)
+    assert d["kind"] == "folder" and d["files"] == 3 and "tree_sha256" in d
+    (f / "part_0.jsonl").write_text("changed\n")
+    assert pv.describe(f)["tree_sha256"] != d["tree_sha256"]
+    big = pv.describe(f, tree_limit=2)
+    assert "tree_sha256" not in big and big["files"] == 3 and "mtime_newest" in big
+    large = pv.describe(f / "part_1.jsonl", hash_limit=1)
+    assert "sha256" not in large and "mtime" in large
+
+
+def test_option_value_and_declared_inputs(work):
+    a, b = work / "rates.json", work / "fixed.json"
+    a.write_text("{}")
+    b.write_text("[]")
+    out = work / "res"
+    out.mkdir()
+    rec = pv.new_record(out, ["python", "x.py", f"--step-rates={a}", "--cases", "1,2"], None, "recorded",
+                        extra=[str(b)], program=True)
+    paths = {i["path"]: i for i in rec["inputs"]}
+    assert set(paths) == {"W:rates.json", "W:fixed.json"} and paths["W:fixed.json"]["declared"]
+
+
+def test_flag_is_kept(work):
+    a = work / "units.csv"
+    a.write_text("case\n")
+    out = work / "res"
+    out.mkdir()
+    [i] = pv.inputs_of(["x.py", "--units", str(a)], out, None)
+    assert i["flag"] == "--units"
+
+
+def test_begin_end_for_a_driver(repo, work):
+    out = work / "scan"
+    rates = work / "rates.json"
+    rates.write_text("{}")
+    path = None
+    import contextlib, io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        pv.main(["begin", "--out", str(out), "--script", str(repo / "tools" / "double.py"), "--",
+                 "--step-rates", str(rates)])
+    path = Path(buf.getvalue().strip())
+    (out / "part_0.jsonl").write_text("{}\n")
+    (out / "_runs_warnings.txt").write_text("")
+    pv.main(["end", str(path), "--exit-code", "0"])
+    [r] = records(out)
+    assert r["exit_code"] == 0 and [o["path"] for o in r["outputs"]] == ["W:scan/part_0.jsonl"]
+    assert r["inputs"][0]["flag"] == "--step-rates"
+
+
+def test_reconstructed_needs_a_note(work):
+    out = work / "old"
+    out.mkdir()
+    (out / "summary.json").write_text("{}")
+    with pytest.raises(SystemExit):
+        pv.main(["reconstructed", "--out", str(out), "--", "python", "x.py"])
+    pv.main(["reconstructed", "--out", str(out), "--note", "runbook 9 Nov, 3a", "--", "python", "x.py"])
+    [r] = records(out)
+    assert r["kind"] == "reconstructed" and r["started"] is None and r["note"]
+    assert [o["path"] for o in r["outputs"]] == ["W:old/summary.json"]
+
+
+def test_runs_as_a_file_without_the_package(repo, work, tmp_path):
+    inp = work / "in.json"
+    inp.write_text('{"x": 2}')
+    out = work / "res"
+    mod = Path(pv.__file__)
+    r = subprocess.run([sys.executable, "-I", str(mod), "record", "--out", str(out), "--", sys.executable,
+                        str(repo / "tools" / "double.py"), str(inp), str(out)], capture_output=True, text=True,
+                       cwd=tmp_path)
+    assert r.returncode == 0, r.stderr
+    assert records(out)[0]["outputs"][0]["path"] == "W:res/summary.json"
