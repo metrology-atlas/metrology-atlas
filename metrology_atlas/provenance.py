@@ -93,21 +93,33 @@ def describe(p: Path, hash_limit: int = HASH_LIMIT, tree_limit: int = TREE_LIMIT
         else:
             d["mtime"] = dt.datetime.fromtimestamp(st.st_mtime).isoformat(timespec="seconds")
         return d
-    files = []
+    files, unreadable = [], 0
     for q in sorted(p.rglob("*")):
         parts = q.relative_to(p).parts
-        if (q.is_file() and RUNS not in parts and ".git" not in parts and "__pycache__" not in parts
-                and (skip is None or skip not in q.parents)):
-            files.append(q)
-    sizes = [q.stat().st_size for q in files]
-    d = {"path": portable(p), "kind": "folder", "files": len(files), "bytes": sum(sizes)}
-    if len(files) <= tree_limit and all(s <= hash_limit for s in sizes):
-        h = hashlib.sha256()
-        for q in files:
-            h.update(f"{q.relative_to(p).as_posix()}\0{sha256(q)}\n".encode())
-        d["tree_sha256"] = h.hexdigest()
+        if RUNS in parts or ".git" in parts or "__pycache__" in parts or (skip is not None and skip in q.parents):
+            continue
+        try:
+            if q.is_file():
+                s = q.stat()
+                files.append((q, s.st_size, s.st_mtime))
+        except OSError:             # protected or vanished files are counted, not fatal
+            unreadable += 1
+    d = {"path": portable(p), "kind": "folder", "files": len(files), "bytes": sum(f[1] for f in files)}
+    if unreadable:
+        d["unreadable"] = unreadable
+    tree = None
+    if not unreadable and len(files) <= tree_limit and all(f[1] <= hash_limit for f in files):
+        try:
+            h = hashlib.sha256()
+            for q, _, _ in files:
+                h.update(f"{q.relative_to(p).as_posix()}\0{sha256(q)}\n".encode())
+            tree = h.hexdigest()
+        except OSError:
+            tree = None
+    if tree:
+        d["tree_sha256"] = tree
     else:
-        d["mtime_newest"] = dt.datetime.fromtimestamp(max((q.stat().st_mtime for q in files), default=0)).isoformat(
+        d["mtime_newest"] = dt.datetime.fromtimestamp(max((f[2] for f in files), default=0)).isoformat(
             timespec="seconds")
     return d
 
@@ -169,7 +181,10 @@ def inputs_of(args: list[str], out: Path, script: Path | None, program: bool = F
             if r == Path("/") or r == Path.home():
                 continue
             seen.add(r)
-            d = describe(r, skip=out, **kw)
+            try:
+                d = describe(r, skip=out, **kw)
+            except OSError as e:
+                d = {"path": portable(r), "error": f"{type(e).__name__}: {e}"[:200]}
             d["arg_index"] = i
             if i > 0 and args[i - 1].startswith("--") and "=" not in args[i - 1]:
                 d["flag"] = args[i - 1]
@@ -194,14 +209,20 @@ def outputs_of(out: Path, since: float | None = None, hash_limit: int = HASH_LIM
     """Files in the output folder (not _runs or the _runs_* warnings), with SHA-256 up to the hash limit; only those changed since `since`."""
     res = []
     for q in sorted(Path(out).rglob("*")):
-        if q.is_file() and RUNS not in q.relative_to(out).parts and not q.name.startswith(RUNS):
+        if RUNS in q.relative_to(out).parts or q.name.startswith(RUNS):
+            continue
+        try:
+            if not q.is_file():
+                continue
             st = q.stat()
             if since is not None and st.st_mtime < since:
                 continue
             d = {"path": portable(q), "bytes": st.st_size}
             if st.st_size <= hash_limit:
                 d["sha256"] = sha256(q)
-            res.append(d)
+        except OSError as e:
+            d = {"path": portable(q), "error": f"{type(e).__name__}"}
+        res.append(d)
     return res
 
 
@@ -211,7 +232,10 @@ def new_record(out: Path, args: list[str], script: Path | None, kind: str, note:
     script = script or find_script(args)
     ins = inputs_of(args, out, script, program=program, **kw)
     for e in extra or []:
-        d = describe(Path(e), skip=Path(out).resolve(), **kw)
+        try:
+            d = describe(Path(e), skip=Path(out).resolve(), **kw)
+        except OSError as err:
+            d = {"path": portable(Path(e)), "error": f"{type(err).__name__}: {err}"[:200]}
         d["declared"] = True
         ins.append(d)
     return {
@@ -304,7 +328,13 @@ def main(argv: list[str] | None = None) -> int:
         rec["outputs"] = outputs_of(out, None, a.hash_limit)
         print(write(rec, out))
         return 0
-    rec = new_record(out, args, script, "recorded", a.note, a.input, program=(a.cmd == "record"), **kw)
+    try:
+        rec = new_record(out, args, script, "recorded", a.note, a.input, program=(a.cmd == "record"), **kw)
+    except Exception as e:     # the recorder must never stop the run: write what is known and go on
+        print(f"provenance: incomplete record ({type(e).__name__}: {e})", file=sys.stderr)
+        rec = {"schema": SCHEMA, "kind": "recorded", "started": now(), "finished": None, "exit_code": None,
+               "out": str(out), "command": args, "script": None, "inputs": [], "packages": [], "note": a.note,
+               "outputs": [], "record_error": f"{type(e).__name__}: {e}"[:300]}
     path = write(rec, out)
     if a.cmd == "begin":
         print(path)

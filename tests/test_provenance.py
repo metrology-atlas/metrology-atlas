@@ -169,3 +169,34 @@ def test_runs_as_a_file_without_the_package(repo, work, tmp_path):
                        cwd=tmp_path)
     assert r.returncode == 0, r.stderr
     assert records(out)[0]["outputs"][0]["path"] == "W:res/summary.json"
+
+
+def test_unreadable_files_do_not_stop_the_run(repo, work, monkeypatch):
+    f = work / "parts"
+    f.mkdir()
+    (f / "a.jsonl").write_text("1\n")
+    (f / "b.jsonl").write_text("2\n")
+    real = Path.stat
+
+    def stat(self, *a, **k):
+        if self.name == "b.jsonl":
+            raise PermissionError(13, "Permission denied", str(self))
+        return real(self, *a, **k)
+    monkeypatch.setattr(Path, "stat", stat)
+    d = pv.describe(f)
+    assert d["files"] == 1 and d["unreadable"] == 1 and "tree_sha256" not in d
+
+
+def test_recorder_failure_still_runs_the_command(repo, work, monkeypatch):
+    inp = work / "in.json"
+    inp.write_text('{"x": 5}')
+    out = work / "res"
+
+    def boom(*a, **k):
+        raise RuntimeError("broken")
+    monkeypatch.setattr(pv, "new_record", boom)
+    code = pv.main(["record", "--out", str(out), "--", sys.executable, str(repo / "tools" / "double.py"),
+                    str(inp), str(out)])
+    assert code == 0 and json.loads((out / "summary.json").read_text()) == {"y": 10}
+    [r] = records(out)
+    assert "broken" in r["record_error"] and r["exit_code"] == 0
