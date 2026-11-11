@@ -3,7 +3,7 @@ name: BIS EEG stamps against the release median, total
 quantity: Robust SD of the EEG-minus-ECG burst offset of all raw burst windows about the release median (the headline), raw BIS stamps shifted by the release median.
 value: 0.1707
 unit: s
-spread: {n: 2702, text: "36,788 windows; reframe_stage3/bis_numbers.json (fixed_shift)"}
+spread: {n: 2702, text: "36,788 windows; bis_numbers/bis_numbers_m5.json (fixed_shift)"}
 status: measured
 study: shared-bursts
 about: [bis-eeg]

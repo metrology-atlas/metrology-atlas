@@ -55,7 +55,8 @@ method: |
   --model-variant model5 --out $W/bis_numbers/bis_numbers_m5.json`. The bound check: `python
   examples/snuadc_rate_bound.py --modes $W/results/sync_full/snuadc_mode.json --step-rates
   $W/port_rates/snuadc_step_rates_v3.json --burst $W/burst_validation_m4b/per_recording.csv --out
-  $W/port_rates/snuadc_rate_bound.json`.
+  $W/port_rates/snuadc_rate_bound.json` (on the uncapped rates and model4b on purpose: it is the check that led to
+  the cap).
 
   How late the raw stamps sit: `python tools/snu_raw_offset.py scan --root $R --units $W/results/sync_full/units.csv
   --step-rates $W/port_rates/snuadc_step_rates_v3.json --every 10 --out $W/snu_raw_offset_v3/part.jsonl` (resumable;

@@ -5,7 +5,7 @@ quantity: >-
   recording (negative: the EEG stamps sit early).
 value: -0.787
 unit: s
-spread: {p5: -0.97, p95: -0.601, n: 2702, text: "36,788 burst windows; reframe_stage3/bis_numbers.json (raw)"}
+spread: {p5: -0.97, p95: -0.601, n: 2702, text: "36,788 burst windows; bis_numbers/bis_numbers_m5.json (raw)"}
 status: measured
 study: shared-bursts
 about: [bis-eeg]
