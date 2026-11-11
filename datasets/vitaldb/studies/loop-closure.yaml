@@ -96,7 +96,11 @@ open_questions:
       recordings, closes at +1 ppm. One of the BIS steps, the bursts or the SNUADC count carries about 10 ppm in
       these recordings, or the selection (step-mode units without resets, which [[study:solar-snuadc-clock]] finds
       about 20 ppm slower than the stamp model gives them) brings it. Splitting the loop by SNUADC mode and port
-      would locate it.
+      would locate it. The mains hum gives a third route to the SNUADC count (hum line plus the setup's PC rate
+      against the grid); in the 10 of these recordings where it can be formed it sides with the BIS route (hum minus
+      BIS +1.9 ppm, minus Solar8000 −26.7), but it scatters by about 16 ppm per recording and the answer changes with
+      the setup threshold, so it needs a hum-line quality filter and a port-level grid rate before it can test the
+      loop ([[code:vitaldb-bench/examples/hum_loop_check.py]], `$W/clock_network/hum_loop_check`).
   - title: "The BIS constant as processing latency"
     kind: hypothesis
     summary: >-
