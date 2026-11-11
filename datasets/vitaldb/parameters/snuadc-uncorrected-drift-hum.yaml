@@ -3,10 +3,10 @@ name: Drift of the working reference with the hum rate
 quantity: >-
   Error of the SNUADC rate from the mains hum in recordings without stamp corrections, against the BIS-checked drift
   (zero-centred robust SD over recordings).
-value: 12.8
+value: 12.0
 unit: ppm
-spread: {n: 224}
+spread: {n: 223, text: "vitaldb-bench tools/hum_snuadc_rate.py on the burst validation of model5 (work/hum_snuadc/m5/hum_summary.json, recorded run, 11 Nov 2026); the hum no longer narrows the stamp model's 9.5 ppm, but trims the tail (13% of recordings beyond 0.1 s/h against 19%); 12.8 ppm on model3"}
 status: measured
 study: hum-snuadc-rate
 about: [snuadc-sample]
-date: 2026-10-30
+date: 2026-11-11

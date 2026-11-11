@@ -1,10 +1,12 @@
 id: hum-snuadc-rate
 name: The SNUADC rate from the mains hum, where the stamps cannot give it
 summary: >-
-  57% of recordings carry no SNUADC stamp correction, so the working reference runs on an assumed rate and drifts by
-  [[value:snuadc-uncorrected-drift|.0]] against the recorder PC ([[value:snuadc-uncorrected-drift-hourly]], median). The mains hum gives each such recording its own rate;
-  checked against the BIS through a second, independent path, it cuts the drift to [[value:snuadc-uncorrected-drift-hum|.0]] ([[value:snuadc-uncorrected-drift-hum-hourly]]).
-date: 2026-10-29
+  57% of recordings carry no SNUADC stamp correction, so the working reference runs on a borrowed rate. Checked against
+  the BIS through a second, independent path, the stamp model's rate (model5, capped by the recorder's 0.5 s rule)
+  drifts by [[value:snuadc-uncorrected-drift]] ([[value:snuadc-uncorrected-drift-hourly]], median). The mains hum gives
+  each such recording its own rate, [[value:snuadc-uncorrected-drift-hum]] ([[value:snuadc-uncorrected-drift-hum-hourly]]):
+  it cut the drift from 31 ppm on the earlier model (model3), but on model5 it only trims the tail.
+date: 2026-11-11
 status: current
 methods: [signal-borne-clocks, shared-events]
 clocks: [snuadc-sample, recorder-pc, bis-clock]
@@ -16,8 +18,10 @@ data: |
   each whole recording (median 2.2 h) from the burst validation ([[study:shared-bursts]]). [[value:snuadc-uncorrected-share|number]] of the 6,350 recordings with SNUADC events
   with SNUADC have no stamp correction; [[value:snuadc-uncorrected-hum|number]] of them have hum.
 background: |
-  Without stamp corrections the stamp model cannot measure the SNUADC's rate, so it uses the typical rate of the
-  recording's SNUADC port, and the reference drifts by however far the recording's rate is from that. The hum is seen
+  Without stamp corrections the stamp model cannot measure the SNUADC's rate, so it borrows one: the typical rate of
+  the recording's setup or SNUADC port, capped since model5 so that the count gains less than the recorder's 0.5 s
+  in any stretch ([[study:vital-recorder-stamping-rules]]). The reference drifts by however far the recording's rate
+  is from that. The hum is seen
   on the SNUADC's own sample count whatever the stamps do.
 method: |
   - **Hum rate:** rate = line + g_setup + k. The line is the hum's frequency on the SNUADC count (f_grid − f_SNUADC);
@@ -26,21 +30,29 @@ method: |
     convention, so it replaces the assumed rate in physiosync.stamp_clock.
   - **The constant k** is calibrated on 174 recordings with SNUADC corrections whose BIS rate also comes from its own
     corrections: the burst drift left there against the hum rate minus the measured rate. k = −12.6 ppm.
-  - **Check, on recordings not used for g or k:** 224 recordings without SNUADC corrections, with hum, whose BIS rate
+  - **Check, on recordings not used for g or k:** 223 recordings (224 on model3) without SNUADC corrections, with hum, whose BIS rate
     comes from the BIS's own corrections. With the BIS on a measured rate, the drift of the BIS-against-ECG burst lag
     over the recording is the error of the SNUADC rate the stamp model used. It is compared with the error left when
     the hum rate is used instead.
 results: |
-  Error of the SNUADC rate against the burst reference, 224 recordings:
+  Error of the SNUADC rate against the burst reference, 223 recordings on model5 (11 Nov 2026, `$W/hum_snuadc/m5`,
+  recorded run) and 224 on model3 (29 Oct, `$W/hum_snuadc/release`):
 
   | Rate used | Zero-centred robust SD | Median drift | Recordings drifting more than 0.1 s/h |
   |---|---|---|---|
-  | The port's assumed rate (the stamp model today) | [[value:snuadc-uncorrected-drift|.0]] (95% 25–36) | [[value:snuadc-uncorrected-drift-hourly]] | 33% |
-  | The typical rate of the recording's SNUADC mode | 19 ppm (17–21) | 46 ms/h | |
-  | **The hum rate** | **[[value:snuadc-uncorrected-drift-hum|.0]]** | **[[value:snuadc-uncorrected-drift-hum-hourly]]** | **13%** |
+  | **The stamp model's rate, model5 (setup or port rate, capped at 0.5 s per stretch)** | **[[value:snuadc-uncorrected-drift]]** | **[[value:snuadc-uncorrected-drift-hourly]]** | **19%** |
+  | The hum rate, on model5 | [[value:snuadc-uncorrected-drift-hum]] | [[value:snuadc-uncorrected-drift-hum-hourly]] | 13% |
+  | The hum rate with g from whole teeth only, on model5 | 21 ppm | 52 ms/h | 14% |
+  | The port's assumed rate, model3 (uncapped) | 31 ppm | 76 ms/h | 33% |
+  | The typical rate of the recording's SNUADC mode, model3 | 19 ppm | 46 ms/h | |
+  | The hum rate, on model3 | 13 ppm | 31 ms/h | 13% |
 
-  - The hum rate follows the burst drift (rank correlation +0.53). Mode "none" recordings run a median 27 ppm off the
-    assumed rate; the hum sees this. After the hum rate the two modes are alike (13.8 and 12.6 ppm).
+  - **Model5 did most of what the hum route did.** The cap ([[study:vital-recorder-stamping-rules]]) keeps a borrowed
+    rate inside what the recording's own lack of corrections allows, and that alone takes the drift from 31 to
+    [[value:snuadc-uncorrected-drift]] (modes "none" 8.6 and "step" 10.1 ppm). The hum rate is unchanged (12 ppm)
+    and so no longer narrows the typical drift, but it still cuts the share drifting more than 0.1 s per hour.
+  - The hum rate follows the burst drift (rank correlation +0.53, model3). Mode "none" recordings ran a median 27 ppm
+    off the model3 rate; the hum sees this. After the hum rate the two modes are alike (11.9 and 12.2 ppm on model5).
   - **Reference noise:** where both rates come from corrections, the burst drift has a robust SD of 2.7 ppm (about its median; 3.0 ppm about zero), so the
     [[value:snuadc-uncorrected-drift-hum|.0]] is the hum rate's own error.
   - **Not crystal warm-up:** the hum line per 30-min block over whole recordings (47 recordings of 4 h or more) is
@@ -56,8 +68,9 @@ discussion: |
   **For the atlas.** The working reference's clock domain now states its drift against the recorder PC: [[value:snuadc-uncorrected-drift|.0]] in
   recordings without corrections, as a spread between recordings, and [[value:snuadc-uncorrected-drift-hum|.0]] with the hum rate (the domain
   'stamp-model time with the hum rate'). Signals synchronised to the reference share its drift, which cancels between
-  them; against signals stamped by the PC it limits how long a window can be. The SNUADC ECG and ART have a new
-  form that uses the hum rate.
+  them; against signals stamped by the PC it limits how long a window can be. The SNUADC ECG and ART have a form
+  that uses the hum rate; on model5 it is the better choice only for recordings far from the borrowed rate (the
+  tail), not in general.
 
   **The constant k.** g, pooled over recordings with corrections, depends on how many corrections they carry (+1.6 ppm
   with one, −13.8 ppm with two or more). That was read as selection by rate; it is mostly a measurement artefact
@@ -68,18 +81,19 @@ discussion: |
   recordings with two or more corrections instead removed most of the offset but left a larger spread (18 ppm), from
   fewer recordings per setup.
 limitations: |
-  The check needs a BIS with its own corrections: 224 recordings, three quarters in step mode (165), mostly on port COM4. The hum
+  The check needs a BIS with its own corrections: 223 recordings (224 on model3), three quarters in step mode (165), mostly on port COM4. The hum
   is measured over the first 60 min of a recording and applied to all of it. It gives a rate, not an offset. The
   drift is stated for recordings without corrections; with corrections there is none to speak of. It does not
   apply to frequent-correction recordings: the ten with a hum rate say fast (−33 to −117 ppm), where their own
   steps say slow ([[study:vital-recorder-stamping-rules]]).
 open_questions:
-  - title: "g from whole teeth only"
+  - title: "Combine the hum with the capped rate"
     kind: next step
     summary: >-
-      g is pooled from every recording with a correction, including those without a whole tooth, whose SNUADC rate is a
-      line fit, not a rate. Pooling only rates from whole teeth (vitaldb-bench tools/mains_hum.py agg --min-teeth 1)
-      and recalibrating k may narrow the hum rate's error; it leaves fewer recordings per setup (318 in all).
+      On model5 the stamp model's capped rate is better typically (9.5 against 12 ppm) and the hum better in the tail.
+      Using the hum rate only where it falls outside the cap's range, or weighting the two, may beat both. Pooling g
+      from whole teeth only was tried (11 Nov, `$W/hum_snuadc/m5_teeth`, tools/hum_snuadc_rate.py --min-teeth 1) and
+      was worse (21 ppm): too few recordings per setup (318 in all).
   - title: "The hum over the whole recording"
     kind: next step
     summary: >-
@@ -94,8 +108,8 @@ figures:
     theme: agreement and residuals
     source: vitaldb-bench tools/hum_snuadc_plot.py
     caption: >-
-      In 224 recordings without SNUADC stamp corrections, checked by the BIS bursts. (a) The drift left over each
-      recording with the port's assumed rate (grey, median [[value:snuadc-uncorrected-drift-hourly]]) and with the hum rate (blue, [[value:snuadc-uncorrected-drift-hum-hourly]]). (b) The change the hum makes to the rate against the drift the bursts show with the assumed rate; on
+      In 223 recordings without SNUADC stamp corrections, checked by the BIS bursts (model5). (a) The drift left over
+      each recording with the stamp model's capped rate (grey, median [[value:snuadc-uncorrected-drift-hourly]]) and with the hum rate (blue, [[value:snuadc-uncorrected-drift-hum-hourly]]). (b) The change the hum makes to the rate against the drift the bursts show with the assumed rate; on
       the dashed line the hum predicts it exactly.
     alt: Two overlaid histograms of drift in ms per hour, and a scatter of predicted against measured drift.
 typed_ok:
