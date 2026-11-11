@@ -5,7 +5,7 @@ summary: >-
   loops close within their noise; the BIS loop closes up to a constant latency; the proposed EMR loop is not a loop
   at all. Adjusted as a network over the whole release, every loop type closes on average, including two that reach
   the SNUADC through the PC-stamped Solar8000 numerics instead of its own stamps.
-date: 2026-10-13
+date: 2026-11-11
 status: current
 methods: [shared-events]
 techniques: [null-controls]

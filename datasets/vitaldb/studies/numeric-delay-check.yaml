@@ -6,7 +6,7 @@ summary: 'The Solar8000''s heart rate and pulse rate, recomputed from the ECG an
   although the test recovers a lag of zero on synthetic data. Their mean delays may therefore be up to about 1 s longer
   than the timing forms state. The same work found that the comparison of pulse rate with heart rate read its lag at the
   edges of 2 s steps, which biased it upwards.'
-date: 2026-11-08
+date: 2026-11-11
 status: current
 methods:
 - delays-and-windows

@@ -4,7 +4,7 @@ summary: 'The Solar8000''s pulse rate against its heart rate in 6,386 recordings
   −11.7 to +11.7 /min), and disagree more as the rate rises. Their changes line up [[value:hr-group-lag-in-pulse-rate|.1]] later in recordings whose HR is
   in the early delay group than in the late one, the gap between the groups'' delays: the two HR delay groups seen again,
   in a signal independent of the ECG. The comparison also places PLETH_HR''s window: centred about [[value:pleth-hr-window-centre]] before its stamp.'
-date: 2026-11-01
+date: 2026-11-11
 status: current
 methods:
 - method-comparison

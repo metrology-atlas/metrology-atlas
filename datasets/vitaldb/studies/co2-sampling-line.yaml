@@ -5,7 +5,7 @@ summary: >-
   the time the gas takes to travel down the sidestream sampling line. It is steady within a recording and across the
   release, and it is why the ETCO2 numeric is stamped about 3 s sooner than the peak pressure against their own
   waveforms.
-date: 2026-10-29
+date: 2026-10-30
 status: current
 methods: [delays-and-windows]
 techniques: [beat-matching]

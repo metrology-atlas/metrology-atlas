@@ -5,7 +5,7 @@ summary: >-
   Tracking that lag puts the Primus on the SNUADC timeline to about 55 ms over the whole release, with a line
   per stretch between its AWP pauses (49 ms in the pilot). At scale it measures the Primus drifting a median +[[value:primus-drift-breath]] against the recorder PC between its AWP
   pauses, with steps at the pauses that do not reset it.
-date: 2026-10-12
+date: 2026-11-11
 status: current
 methods: [shared-events]
 techniques: [windowed-cross-correlation, null-controls]

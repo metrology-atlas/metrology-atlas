@@ -4,7 +4,7 @@ summary: >-
   Electrocautery and muscle bursts appear in both the SNUADC ECG and the BIS EEG. Cross-correlating their envelopes
   gives the offset between the two devices' stamps every 10 minutes: about [[value:eeg-ecg-offset|.1]], in a sawtooth that follows both
   clocks' corrections.
-date: 2026-10-12
+date: 2026-11-11
 status: current
 methods: [shared-events]
 techniques: [windowed-cross-correlation, null-controls]

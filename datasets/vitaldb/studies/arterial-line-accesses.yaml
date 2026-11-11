@@ -4,7 +4,7 @@ summary: >-
   Flushes, zeroing and blood draws leave clear signatures in the arterial pressure. A detector finds them in the
   waveform alone (about one access per hour) and matches 77% of lab draws to an access within 15 minutes, against 26%
   for random times.
-date: 2026-10-11
+date: 2026-11-01
 status: current
 methods: [clinical-time, signal-continuity]
 techniques: [null-controls]

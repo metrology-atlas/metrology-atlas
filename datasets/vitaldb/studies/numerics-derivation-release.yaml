@@ -5,7 +5,7 @@ summary: >-
   numeric describes a short window that ends before its stamp: HR 8 beats ([[study:hr-derivation]]), pleth HR about 10 beats, arterial
   pressure 2–4 beats, CVP about 5 s, ETCO2 and PIP one breath, RR about 30 s. Solar8000 HR is truncated, not rounded,
   in [[value:hr-truncation-share]] of recordings.
-date: 2026-10-29
+date: 2026-11-10
 status: current
 methods: [delays-and-windows]
 techniques: [null-controls]

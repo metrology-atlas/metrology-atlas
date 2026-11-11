@@ -3,7 +3,7 @@ name: Paced ECG as an independent clock
 summary: >-
   Fixed-rate pacing gives a clock the recording chain cannot touch. Timing paced beats on three timelines shows that
   each SNUADC step-mode correction loses about [[value:snuadc-reset-loss|.0]] of signal, and that nothing else breaks the sample stream.
-date: 2026-10-17
+date: 2026-11-01
 status: current
 methods: [signal-borne-clocks]
 techniques: [template-beat-timing, phase-step-detection]

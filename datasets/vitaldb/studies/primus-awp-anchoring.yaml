@@ -7,7 +7,7 @@ summary: >-
   per-recording offset. Each stretch's breath is now set from pauses in ventilation or a rule, and the breath error
   that remains is stated on its own. Most of the AWP's lead over the breath is real on the recorder's timeline,
   bounded by the PC-stamped PIP numerics.
-date: 2026-11-02
+date: 2026-11-11
 status: current
 methods: [stamp-reading, shared-events]
 techniques: [windowed-cross-correlation, null-controls]

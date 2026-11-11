@@ -3,7 +3,7 @@ name: Two heart-rate delay groups, one poll apart
 summary: >-
   Solar8000 heart rate reaches the recorder either about [[value:hr-delay-early|.1]] or about [[value:hr-delay-late]] after its window ends: one 2 s poll
   apart. The group belongs to the recording PC, stays fixed through a case, and on some PCs varies from case to case.
-date: 2026-10-13
+date: 2026-11-11
 status: current
 methods: [delays-and-windows]
 devices: [solar8000, vital-recorder]

@@ -5,7 +5,7 @@ summary: 'PLETH_HR recomputed from the plethysmogram''s pulses in 6,151 recordin
   s) and stamped at the next 2 s poll. It wins in 99% of the recordings reproduced best. Its window is centred about 8.9 s before the stamp, further before the stamp (earlier)
   than the atlas''s earlier form for it assumed (7.8 s); the comparison with heart rate puts it at
   [[value:pleth-hr-window-centre]], an open question.'
-date: 2026-11-01
+date: 2026-11-07
 status: current
 methods:
 - delays-and-windows

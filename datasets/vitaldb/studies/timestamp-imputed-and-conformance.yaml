@@ -2,7 +2,7 @@ id: timestamp-imputed-and-conformance
 name: Imputed times, conformance failures and exclusion rules
 summary: |
   About one in twelve op ends was set from the recording rather than charted, and a small set of times fail basic conformance checks; all are encoded as exclusion rules.
-date: 2026-10-13
+date: 2026-10-30
 status: current
 methods:
 - clinical-time

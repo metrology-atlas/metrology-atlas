@@ -8,7 +8,7 @@ summary: >-
   against the recorder PC in 4,728 BIS and 2,728 SNUADC recordings, and shows that the Primus's 20–23 s AWP pauses
   belong to its correction cycle. Every rate here is relative to the recorder PC, whose own clock drifts and is
   corrected.
-date: 2026-10-19
+date: 2026-11-01
 status: current
 methods: [data-continuity, stamp-reading]
 techniques: [remainder-test]
