@@ -182,3 +182,20 @@ def test_an_input_folder_holding_the_output_folder(setup, tmp_path):
     tool.write_text(tool.read_text())                   # unchanged content
     f, _ = graph.check(ds(p={"value": 1, "sources": [{"output": "W:survey/cont/s.json", "key": "v"}]}))
     assert f[0].level == "ok", f[0].reasons
+
+
+def test_a_broad_folder_with_narrower_declared_inputs(setup):
+    w = setup.w
+    (w / "survey" / "steps").mkdir(parents=True)
+    (w / "survey" / "steps" / "s.txt").write_text("1")
+    tool = setup.code / "count.py"
+    tool.write_text("import sys, pathlib, json\no = pathlib.Path(sys.argv[2])\no.parent.mkdir(exist_ok=True)\n"
+                    "o.write_text(json.dumps({'v': 1}))\n")
+    pv.main(["record", "--out", str(w / "res"), "--input", str(w / "survey" / "steps"), "--", sys.executable, str(tool),
+             str(w / "survey"), str(w / "res" / "c.json")])
+    (w / "survey" / "unrelated.csv").write_text("a backup copied in later")
+    f, _ = graph.check(ds(p={"value": 1, "sources": [{"output": "W:res/c.json", "key": "v"}]}))
+    assert f[0].level == "ok", f[0].reasons
+    (w / "survey" / "steps" / "s.txt").write_text("2")
+    f, _ = graph.check(ds(p={"value": 1, "sources": [{"output": "W:res/c.json", "key": "v"}]}))
+    assert f[0].level == "stale"

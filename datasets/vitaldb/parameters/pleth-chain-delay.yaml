@@ -9,6 +9,14 @@ status: measured
 study: pat-offset-census
 about: [snuadc-pleth]
 sources:
-- output: W:results/pat/setup_offsets.json
+- output: W:pat_census/aggf/summary.json
+  key: ppg_foot_ms.p50
+  field: context
+  note: the median stored R-to-foot delay, 655 ms; the value is that minus the adopted PAT (270 ms)
+- output: W:results/pat/setup_offsets_v2.json
   key: all.offset_s
+  field: context
   scale: 1000
+  note: >-
+    a check: the benchmark estimate, 382.9 ms over 263 recordings (11 November, on ppg_labels_v2/records; the
+    10 October 384.6 ms over 262 used records that were not kept)

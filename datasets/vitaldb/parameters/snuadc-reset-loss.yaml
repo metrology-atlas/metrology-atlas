@@ -9,11 +9,15 @@ study: paced-ecg
 about: [snuadc-step-vs-pc, snuadc-ecg-ii]
 date: 2026-11-01
 notes: >-
-  Remeasured on 1 November from results/paced/breaks.jsonl; the first reading (17.2–18.2 ms) did not match it. The
+  Remeasured on 1 November from results/paced/breaks.jsonl (reproduced 11 November by a recorded rerun,
+  results/paced/breaks_rec.jsonl, and vitaldb-bench examples/paced_reset_loss.py); the first reading (17.2–18.2 ms) did not match it. The
   stamp model adopted 17.7 ms from that reading and still uses it: about 1 ms per reset less than this mean, or about
   0.15 ppm at one reset every 2 h, well inside the spread of the estimates. A refit with this loss left a burst-lag step of −3.3 ± 1.8 ms, which
   suggests the average loss may be nearer 15 ms.
 headline: true
 sources:
-- output: W:results/paced/breaks.jsonl
-  note: three measurements, remeasured 1 November
+- output: W:results/paced/reset_loss.json
+  key: mean_ms
+- output: W:results/paced/reset_loss.json
+  key: n_measurements
+  field: n

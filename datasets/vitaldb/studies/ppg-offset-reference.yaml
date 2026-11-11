@@ -34,7 +34,8 @@ results: |
   - **Anaesthesia lengthens PAT by about 40 ms** in monitor-based work (240 ms before induction, 279–284 ms after).
   - **For VitalDB** (adults under general anaesthesia, mean age about 58): about [[value:adopted-pat]], plausible range 250–290 ms.
   - **Hardware delay** with that value: about 385 ms (384.6 ms over the 262 benchmark recordings whose raw level lies
-    in 0.4–1.0 s; `setup_offsets.json`, to the PPG foot). Per-setup values of
+    in 0.4–1.0 s; `setup_offsets.json`, to the PPG foot; its input records were not kept, and the same tool on the
+    nearest records gives 382.9 ms over 263, `$W/results/pat/setup_offsets_v2.json`). Per-setup values of
     368–399 ms were reported here first; the full census ([[study:pat-offset-census]], 5,536 recordings) found no
     difference between setups beyond ±15 ms and the same value, 385 ms (655 ms to the foot minus [[value:adopted-pat]]), so one
     global delay is used. The adopted value and the delay must use the same fiducial: [[value:adopted-pat]] is to the foot.

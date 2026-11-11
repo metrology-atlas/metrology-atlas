@@ -176,11 +176,18 @@ class Graph:
         except (TypeError, ValueError):
             pass
         out = self.local(rec["out"]) if rec.get("out") else None
-        for i in rec.get("inputs") or []:
+        ins = rec.get("inputs") or []
+        locs = [self.local(i.get("path", "")) for i in ins]
+        for i, li in zip(ins, locs):
+            # a folder named on the command line that holds other, narrower inputs of the same run (--survey DIR with
+            # --input DIR/steps_agg): the narrower ones say what is read, so the folder itself is not compared
+            if li is not None and any(lj is not None and li in lj.parents for lj in locs):
+                continue
             c = self.changed(i, t0, out)
             if c:
                 why.append(f"input {self.norm(i['path'])}: {c}")
-            elif depth < 12 and i.get("path") and i.get("kind") != "root" \
+                continue
+            if depth < 12 and i.get("path") and i.get("kind") != "root" \
                     and self.norm(i["path"]).split(":", 1)[-1] not in ("", "."):
                 for up, up_path in self.producers(self.norm(i["path"]))[:1]:
                     v = self.verdict(up, up_path, depth + 1)
