@@ -104,7 +104,7 @@ method: |
     spread (robust SD of 30 s window medians) under each correction, on every recording of the scan with an arterial
     upstroke on at least half its beats.
 results: |
-  - **End to end against the arterial line** (2,976 recordings; `$W/correction_vs_art/agg_v5`). Spread of finger minus
+  - **End to end against the arterial line** (2,976 recordings; `$W/correction_vs_art/agg_v6`, the same numbers as agg_v5). Spread of finger minus
     arterial PAT, median (IQR; 90th centile), and the share of recordings left more than 2 ms worse than uncorrected:
 
     | Recordings with a sawtooth (1,867) | Spread, ms | Worse than uncorrected |

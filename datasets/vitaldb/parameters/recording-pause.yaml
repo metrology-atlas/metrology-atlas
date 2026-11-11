@@ -13,6 +13,5 @@ notes: >-
   The two medians use different definitions: the survey counts gaps in one track (from the end of one record to the start of the next), while
   this parameter counts moments when every device jumps together.
 sources:
-- output: W:results/clock/pc_steps_0.jsonl
-  note: per recording; aggregate not saved
-- output: W:results/clock/pc_steps_1.jsonl
+- output: W:recording_pause/summary.json
+  key: jump_s_p10_25_50_75_90.2

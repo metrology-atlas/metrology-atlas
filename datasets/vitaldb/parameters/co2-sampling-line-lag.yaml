@@ -12,8 +12,8 @@ notes: >-
   The whole release, up to the first 60 min of each recording. Steady over the release (block medians 3.59-3.63 s) and
   by recorder port (3.47-3.66 s).
 sources:
-- output: W:co2_transit/summary.json
-  key: lag_median_p5_95.3
-- output: W:co2_transit/summary.json
+- output: W:co2_transit/summary_tool.json
+  key: lag_s_p5_10_25_50_75_90_95.3
+- output: W:co2_transit/summary_tool.json
   key: with_lag
   field: n

@@ -165,3 +165,20 @@ def test_stale_findings_name_the_forms_that_use_the_parameter(setup):
     f, _ = graph.check(d)
     assert f[0].used_by == ["variable:v timing[raw].bias_s.median", "variable:v timing[raw].u_s"]
     assert "used by variable:v timing[raw].bias_s.median" in f[0].text()
+
+
+def test_an_input_folder_holding_the_output_folder(setup, tmp_path):
+    import os
+    import time
+    w = setup.w
+    (w / "survey").mkdir()
+    (w / "survey" / "a.txt").write_text("x")
+    old = time.time() - 100
+    os.utime(w / "survey" / "a.txt", (old, old))
+    tool = setup.code / "summ.py"
+    tool.write_text("import sys, pathlib\no = pathlib.Path(sys.argv[1]) / 'cont'\no.mkdir(exist_ok=True)\n"
+                    "(o / 's.json').write_text('{\"v\": 1}')\n(o / 'extra.csv').write_text('1')\n")
+    pv.main(["record", "--out", str(w / "survey" / "cont"), "--", sys.executable, str(tool), str(w / "survey")])
+    tool.write_text(tool.read_text())                   # unchanged content
+    f, _ = graph.check(ds(p={"value": 1, "sources": [{"output": "W:survey/cont/s.json", "key": "v"}]}))
+    assert f[0].level == "ok", f[0].reasons

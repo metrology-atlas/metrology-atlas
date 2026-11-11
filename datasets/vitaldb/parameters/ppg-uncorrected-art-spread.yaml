@@ -9,8 +9,8 @@ study: ppg-sawtooth-correction
 about: [ppg-sawtooth]
 date: 2026-11-05
 notes: >-
-  vitaldb-bench tools/correction_vs_art.py agg, $W/correction_vs_art/agg_v5/summary.json, by_group sawtooth, policy
+  vitaldb-bench tools/correction_vs_art.py agg, $W/correction_vs_art/agg_v6/summary.json (same numbers as agg_v5 of 5 November; agg_v6 reproduces with the current tool), by_group sawtooth, policy
   none.
 sources:
-- output: W:correction_vs_art/agg_v5/summary.json
+- output: W:correction_vs_art/agg_v6/summary.json
   key: by_group.sawtooth.none.median

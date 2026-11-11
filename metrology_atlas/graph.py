@@ -112,21 +112,23 @@ class Graph:
                 out.append((rec, p))
         return out
 
-    def current(self, p: Path, like: dict) -> dict | None:
-        """The file's or folder's identity now, in the form of the recorded one (cached)."""
-        if p in self.hashes:
-            return self.hashes[p]
+    def current(self, p: Path, like: dict, skip: Path | None = None) -> dict | None:
+        """The file's or folder's identity now, in the form of the recorded one (cached). skip: the run's own output
+        folder, left out of an input folder that contains it, as the recorder did."""
+        key = (p, skip)
+        if key in self.hashes:
+            return self.hashes[key]
         try:
             if like.get("sha256") or like.get("tree_sha256"):
-                d = pv.describe(p)
+                d = pv.describe(p, skip=skip)
             else:                      # a fingerprint was recorded: compare the fingerprint, no hashing
-                d = pv.describe(p, hash_limit=0, tree_limit=0)
+                d = pv.describe(p, hash_limit=0, tree_limit=0, skip=skip)
         except OSError:
             d = None
-        self.hashes[p] = d
+        self.hashes[key] = d
         return d
 
-    def changed(self, rec_item: dict, started: float | None = None) -> str | None:
+    def changed(self, rec_item: dict, started: float | None = None, skip: Path | None = None) -> str | None:
         """Why a recorded input or output no longer matches (None if it does, or cannot be compared).
 
         A folder whose tree hash differs only because files were added after the run (a summary written next to the
@@ -138,7 +140,7 @@ class Graph:
             return None                # outside the configured roots: cannot check here
         if not loc.exists():
             return "gone"
-        now = self.current(loc, rec_item)
+        now = self.current(loc, rec_item, skip if skip is not None and loc in skip.parents else None)
         if now is None:
             return None
         if rec_item.get("sha256"):
@@ -146,7 +148,7 @@ class Graph:
         if rec_item.get("tree_sha256"):
             if now.get("tree_sha256") == rec_item["tree_sha256"]:
                 return None
-            if started is not None and tree_before(loc, started) == rec_item["tree_sha256"]:
+            if started is not None and tree_before(loc, started, skip) == rec_item["tree_sha256"]:
                 return None
             return "content changed"
         if "files" in rec_item and now.get("files") != rec_item["files"]:
@@ -173,8 +175,9 @@ class Graph:
             t0 = dt.datetime.fromisoformat(rec["started"]).timestamp() if rec.get("started") else None
         except (TypeError, ValueError):
             pass
+        out = self.local(rec["out"]) if rec.get("out") else None
         for i in rec.get("inputs") or []:
-            c = self.changed(i, t0)
+            c = self.changed(i, t0, out)
             if c:
                 why.append(f"input {self.norm(i['path'])}: {c}")
             elif depth < 12 and i.get("path") and i.get("kind") != "root" \
@@ -187,13 +190,14 @@ class Graph:
         return why
 
 
-def tree_before(p: Path, t: float) -> str | None:
+def tree_before(p: Path, t: float, skip: Path | None = None) -> str | None:
     """Tree hash (as provenance.describe) of the folder's files last modified no later than t."""
     h, n = hashlib.sha256(), 0
     try:
         for q in sorted(p.rglob("*")):
             parts = q.relative_to(p).parts
-            if pv.RUNS in parts or ".git" in parts or "__pycache__" in parts or not q.is_file():
+            if pv.RUNS in parts or ".git" in parts or "__pycache__" in parts or not q.is_file() \
+                    or (skip is not None and skip in q.parents):
                 continue
             if q.stat().st_mtime > t + 1:
                 continue

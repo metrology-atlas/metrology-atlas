@@ -12,6 +12,5 @@ headline: true
 notes: >-
   Full release, replacing the pilot value of 2.06 h (p10–p90 1.70–2.31 h, 182 intervals). From the resets of all recordings ([[study:device-correction-schedules]], 19 October): median 2.08 h (5th–95th 1.65–3.57) between resets, in 642 recordings with two or more.
 sources:
-- output: W:results/clock/periods_a.jsonl
-  note: per recording; the release aggregate (19 Oct) was not saved
-- output: W:results/clock/periods_b.jsonl
+- output: W:signal_survey/continuity/summary.json
+  key: snuadc.interval_h_q.2

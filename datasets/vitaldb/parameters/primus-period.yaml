@@ -13,6 +13,7 @@ notes: >-
   interval ([[observation:primus-awp-pauses]]). The pilot ([[study:correction-periods]]) gave the same. Vital Recorder has no periodic timer for the Primus,
   so the interval is the device's own [[reference:lee2026correspondence-9nov]].
 sources:
-- output: W:results/clock/periods_a.jsonl
-  note: per recording; the release aggregate (19 Oct) was not saved
-- output: W:results/clock/periods_b.jsonl
+- output: W:signal_survey/continuity/summary.json
+  key: primus.pause_interval_top10s
+  field: context
+  note: the most common interval between pauses (and between corrections), 7,230 s

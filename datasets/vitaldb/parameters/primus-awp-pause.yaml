@@ -10,6 +10,8 @@ about: [primus-awp-pauses]
 date: 2026-10-30
 notes: 10,496 pauses in 5,502 recordings, every 7,230 s ([[parameter:primus-period]]).
 sources:
-- output: W:results/clock/periods_a.jsonl
-  note: per recording; the release aggregate (19 Oct) was not saved
-- output: W:results/clock/periods_b.jsonl
+- output: W:signal_survey/continuity/primus_awp_pauses.csv
+  note: median of the step column (the gap length), min and max
+- output: W:signal_survey/continuity/summary.json
+  key: primus.recordings_with_pauses
+  field: n
