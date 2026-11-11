@@ -7,8 +7,7 @@ unit: s
 spread:
   text: >-
     9.50 s (early HR group) and 9.44 s (late): the lag read at the plateau midpoints plus each recording's HR delay
-    label, the mean wait for the 2 s poll and half of 8 R–R intervals (vitaldb-bench examples/pr_window_routes.py;
-    $W/pr_window_routes_v4l/summary.json, v4 rates and labels; 9.48 and 9.45 s before). First reported as 8.5 s (plateau edges, a 6 s HR window, no poll), then 9.6 s
+    label, the mean wait for the 2 s poll and half of 8 R–R intervals (vitaldb-bench examples/pr_window_routes.py, v4 rates and labels; 9.48 and 9.45 s before). First reported as 8.5 s (plateau edges, a 6 s HR window, no poll), then 9.6 s
     (7 Nov, plateau edges).
 status: measured
 study: hr-vs-pulse-rate

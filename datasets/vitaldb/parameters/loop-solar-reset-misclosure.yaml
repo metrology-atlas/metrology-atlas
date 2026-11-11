@@ -11,7 +11,7 @@ study: loop-closure
 about: [snuadc-step-vs-pc]
 date: 2026-11-11
 notes: >-
-  Run r6 (11 November; as loop-solar-bis-misclosure): $W/clock_network/r6/summary.json, loop "resets + solar".
+  Run r6 (11 November; as loop-solar-bis-misclosure): loop "resets + solar".
   Run r5 (6 November, the earlier HR rule): −1.03 ppm (IQR −20.3 to +20.0, 178 loops).
 sources:
 - output: W:clock_network/r6/summary.json

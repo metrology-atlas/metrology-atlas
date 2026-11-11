@@ -3,7 +3,7 @@ name: Solar8000 HR label standard error
 quantity: Standard error of a case's HR delay label (the scatter of its 30-minute blocks), median over cases.
 value: 0.218
 unit: s
-spread: {p10: 0.090, p90: 0.546, n: 6232, text: "labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py -> work/results/delay_labels_v4/hr_label_params.json)"}
+spread: {p10: 0.090, p90: 0.546, n: 6232, text: "labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py)"}
 status: measured
 study: hr-delay-groups
 about: [solar8000-hr]

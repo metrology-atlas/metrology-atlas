@@ -7,7 +7,7 @@ unit: s
 spread:
   text: >-
     early 3.27 s (3.17–3.40), late 0.88 s (0.78–1.00) after the HR stamp, read at the plateau midpoints; the same
-    recordings' HR delays differ by 2.32 s; $W/examples/hr_vs_pulse_rate/agg_v4l/summary.json (labels of 11 Nov,
+    recordings' HR delays differ by 2.32 s (labels of 11 Nov,
     v4 rates; 2.38 s with the 1 Nov labels, agg_v2). First computed at the
     plateau edges (1 Nov): 2.26 s (3.71 and 1.45 s), against 2.56 s.
 status: measured

@@ -1,0 +1,2510 @@
+{
+ "schema": "metrology-atlas-provenance/0.1",
+ "made": "2026-11-11",
+ "atlas_commit": "13a21805fb34c801a029a9641da2353729df1f75",
+ "atlas_dirty": true,
+ "parameters": {
+  "art-mbp-delay": [
+   {
+    "output": "W:examples/numeric_delay_variability_v4/agg/summary.json",
+    "level": "ok",
+    "key": "tracks.ART_MBP.d_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_delay_variability.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bg-central-glucose": [
+   {
+    "output": "W:examples/lab_bg_vs_central/summary.json",
+    "level": "ok",
+    "key": "within_window.gluc.median_diff",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_bg_vs_central.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bg-central-haematocrit": [
+   {
+    "output": "W:examples/lab_bg_vs_central/summary.json",
+    "level": "ok",
+    "key": "within_window.hct.median_diff",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_bg_vs_central.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bg-central-potassium": [
+   {
+    "output": "W:examples/lab_bg_vs_central/summary.json",
+    "level": "ok",
+    "key": "within_window.k.median_diff",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_bg_vs_central.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bg-central-sodium": [
+   {
+    "output": "W:examples/lab_bg_vs_central/summary.json",
+    "level": "ok",
+    "key": "within_window.na.median_diff",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_bg_vs_central.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-eeg-offset": [
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "raw.bias_per_recording_s.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "raw.recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-index-delay": [
+   {
+    "output": "W:results/pat/bis_index_delay_summary.json",
+    "level": "ok",
+    "key": "good_fast_d_p10_25_50_75_90.2",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_index_delay.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov from the tool's docstring; the scan parts were not kept in the work folder, not reproduced"
+    }
+   }
+  ],
+  "bis-index-window": [
+   {
+    "output": "W:results/pat/bis_smoothing_labels_summary.json",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_smoothing_labels.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov from the tool's docstring (--scan f*.jsonl --root R --devices va/p?.jsonl --out RESULTS); not reproduced"
+    }
+   }
+  ],
+  "bis-period": [
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "bis.later_at_8192_share",
+    "field": "context",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-rate": [
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "bis.drift_ppm_q.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-shift-between-rsd": [
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "fixed_shift.between_recordings_rsd_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-shift-total-rsd": [
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "fixed_shift.u_headline_rsd_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-shift-within-rsd": [
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "fixed_shift.within_recording_rsd_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-snuadc-rate": [
+   {
+    "output": "W:direct_rate_m5/summary.json",
+    "level": "ok",
+    "key": "direct_ppm_p10_25_50_75_90_n.all.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/direct_rate_from_bursts.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:direct_rate_m5/summary.json",
+    "level": "ok",
+    "key": "direct_ppm_p10_25_50_75_90_n.all.5",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/direct_rate_from_bursts.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "bis-step": [
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "bis.step_s_median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "cardioq-reanchor": [
+   {
+    "output": "W:rare_device_sync_v4/summary.json",
+    "level": "ok",
+    "key": "CardioQ",
+    "field": "display",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/rare_device_sync.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "cardioq-snuadc-lag": [
+   {
+    "output": "W:rare_device_sync_v4/summary.json",
+    "level": "ok",
+    "key": "CardioQ",
+    "field": "display",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/rare_device_sync.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "co2-change-correlation-draw": [
+   {
+    "output": "W:examples/bg/lag_summary.json",
+    "level": "ok",
+    "key": "change_figure.monitor_draw.r",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/blood_gas_gradients.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "co2-sampling-line-lag": [
+   {
+    "output": "W:co2_transit/summary_tool.json",
+    "level": "ok",
+    "key": "lag_s_p5_10_25_50_75_90_95.3",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/co2_sampling_line.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:co2_transit/summary_tool.json",
+    "level": "ok",
+    "key": "with_lag",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/co2_sampling_line.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "cvp-delay": [
+   {
+    "output": "W:examples/numeric_delay_variability_v4/agg/summary.json",
+    "level": "ok",
+    "key": "tracks.CVP.d_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_delay_variability.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "eeg-ecg-offset": [
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "sync_mode_constant.mode_constants_s.step",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "emr-rounding": [
+   {
+    "output": "code:vitaldb/vitaldb-bench/results/pat/emr_markers_summary.json",
+    "level": "ok",
+    "field": "display",
+    "note": "the value is half the 300 s mark; the observed shifts are in this summary",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/emr_markers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov from the tool's docstring; committed with vitaldb-bench; parts not kept, not reproduced"
+    }
+   }
+  ],
+  "etco2-delay": [
+   {
+    "output": "W:examples/numeric_delay_variability_v4/agg/summary.json",
+    "level": "ok",
+    "key": "tracks.ETCO2.d_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_delay_variability.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-delay-early": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "early.mixture_mu",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-delay-late": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "late.mixture_mu",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-derivation-exact": [
+   {
+    "output": "W:examples/hr_derivation_v4/rule_exact.json",
+    "level": "ok",
+    "key": "exact_pct_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_rule_exact.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:examples/hr_derivation_v4/rule_exact.json",
+    "level": "ok",
+    "key": "recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_rule_exact.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-early-delay-rsd": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "early.rsd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-early-label-delay": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "early.label_delay_median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "early.n",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-group-lag-in-pulse-rate": [
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "timing.group_lag_difference_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-label-delay": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "hr-label-delay.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "hr-label-delay.n",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-label-se": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "hr-label-se.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-late-delay-rsd": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "late.rsd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-late-label-delay": [
+   {
+    "output": "W:results/delay_labels_v4/hr_label_params.json",
+    "level": "ok",
+    "key": "late.label_delay_median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_label_params.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-outlier-band": [
+   {
+    "output": "W:examples/hr_derivation_v4/agg/summary.json",
+    "level": "ok",
+    "key": "best",
+    "note": "the band is the last part of the winning candidate rmean|N|band",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hr_derivation.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-recompute-lag": [
+   {
+    "output": "W:examples/numeric_recompute_lag_v4l/agg/summary.json",
+    "level": "ok",
+    "key": "all.hr_lag_s",
+    "scale": -1,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_recompute_lag.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-truncation-share": [
+   {
+    "output": "W:overnight_v4/numeric/readout.json",
+    "level": "ok",
+    "key": "HR.floor_better_share",
+    "scale": 100,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_derivation_readout.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-window": [
+   {
+    "output": "W:examples/hr_derivation_v4/agg/summary.json",
+    "level": "ok",
+    "key": "best",
+    "note": "N is the middle part of the winning candidate rmean|N|band",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hr_derivation.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "hr-window-span": [
+   {
+    "output": "W:examples/hr_derivation_v4/window_span.json",
+    "level": "ok",
+    "key": "span_s_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_window_span.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "lab-access-length": [
+   {
+    "output": "W:results/pat/lab_draw_labels.csv",
+    "level": "ok",
+    "note": "median of end_s - start_s over matched blood gases",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_draw_labels.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "lab-bg-lag": [
+   {
+    "output": "W:results/pat/lab_draw_labels.csv",
+    "level": "ok",
+    "note": "median lag over matched blood gases (410 s), in minutes; aggregate not saved",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_draw_labels.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "lab-central-lag": [
+   {
+    "output": "W:line_access/summary_v2/summary.json",
+    "level": "ok",
+    "key": "table.central",
+    "field": "display",
+    "note": "matched central-lab groups and their chance (control) share; the lag itself is read from lab_time_labels.csv",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/line_access_summary.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "lab-draw-position-u": [
+   {
+    "output": "W:results/pat/lab_draw_labels.csv",
+    "level": "ok",
+    "note": "position of the draw in its access (rectangular), median access 53 s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/lab_draw_labels.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "line-access-rate": [
+   {
+    "output": "W:line_access/summary_v2/summary.json",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/line_access_summary.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "loop-bis-misclosure": [
+   {
+    "output": "W:clock_network/r6/summary.json",
+    "level": "ok",
+    "key": "loops.bis_steps + bursts + resets.misclosure_ppm_p5_25_50_75_95.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/clock_reconcile.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "loop-bis-z3-share": [
+   {
+    "output": "W:clock_network/r6/summary.json",
+    "level": "ok",
+    "key": "loops.bis_steps + bursts + resets.share_abs_z_over_3",
+    "scale": 100,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/clock_reconcile.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "loop-solar-bis-misclosure": [
+   {
+    "output": "W:clock_network/r6/summary.json",
+    "level": "ok",
+    "key": "loops.bis_steps + bursts + solar.misclosure_ppm_p5_25_50_75_95.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/clock_reconcile.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "loop-solar-reset-misclosure": [
+   {
+    "output": "W:clock_network/r6/summary.json",
+    "level": "ok",
+    "key": "loops.resets + solar.misclosure_ppm_p5_25_50_75_95.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/clock_reconcile.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:clock_network/r6/summary.json",
+    "level": "ok",
+    "key": "loops.resets + solar.loops",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/clock_reconcile.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "loop-variance-factor": [
+   {
+    "output": "W:clock_network/r6/summary.json",
+    "level": "ok",
+    "key": "methods",
+    "field": "display",
+    "note": "variance_factor per method",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/clock_reconcile.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "monitor-240hz-rate": [
+   {
+    "output": "W:monitor_lines/summary.json",
+    "level": "ok",
+    "key": "lines.ART 240 Hz.ppm",
+    "field": "display",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/monitor_lines.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "nibp-art-bias": [
+   {
+    "output": "W:examples/cuff_vs_arterial/agg/summary.json",
+    "level": "ok",
+    "key": "population.mean_diff",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/cuff_vs_arterial.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "nibp-between-patient-sd": [
+   {
+    "output": "W:examples/cuff_vs_arterial/agg/summary.json",
+    "level": "ok",
+    "key": "individual.between_patient_sd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/cuff_vs_arterial.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "nibp-moment": [
+   {
+    "output": "W:examples/cuff_vs_arterial/agg/summary.json",
+    "level": "ok",
+    "key": "timing.best_lag_s",
+    "scale": -1,
+    "note": "the lag is negative (the arterial window ends before the stamp); the parameter gives its size",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/cuff_vs_arterial.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "nibp-within-patient-sd": [
+   {
+    "output": "W:examples/cuff_vs_arterial/agg/summary.json",
+    "level": "ok",
+    "key": "individual.within_patient_sd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/cuff_vs_arterial.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "opend-imputed": [
+   {
+    "output": "W:screens/timestamp-imputed-and-conformance.json",
+    "level": "ok",
+    "key": "opend_imputed",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-resolution",
+      "path": "tools/screens.py",
+      "commit": "301576f782e2e4f6a69ca1816b7c50717c7a77a8",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pacemaker-interval-agreement": [
+   {
+    "output": "W:results/paced/breaks.jsonl",
+    "level": "ok",
+    "field": "display",
+    "note": "P_count against P_stamp per stretch",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/paced_breaks.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov: options --min-dominant 100 --min-share 0.6 found by matching the candidate set (59 entries, checked); the 11 Nov reruns give the same reset events but other entries differ since the reader change of 2 Nov"
+    }
+   }
+  ],
+  "paco2-etco2-between-patient-sd": [
+   {
+    "output": "W:examples/bg/co2_gradient_spread.json",
+    "level": "ok",
+    "key": "between_patient_sd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/co2_gradient_spread.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:examples/bg/co2_gradient_spread.json",
+    "level": "ok",
+    "key": "within_patient_sd_median",
+    "field": "context",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/co2_gradient_spread.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "paco2-etco2-gradient": [
+   {
+    "output": "W:examples/bg/summary.json",
+    "level": "ok",
+    "key": "etco2.point_at_draw.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/blood_gas_gradients.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pc-grid-rate": [
+   {
+    "output": "W:pc_grid_check/agg_check/summary_setup.json",
+    "level": "ok",
+    "key": "pc_vs_grid_ppm.all with corrections.p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/mains_hum.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pc-grid-rate-multi": [
+   {
+    "output": "W:pc_grid_check/agg_check/summary_setup.json",
+    "level": "ok",
+    "key": "pc_vs_grid_ppm.whole teeth.p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/mains_hum.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pc-grid-rate-setups": [
+   {
+    "output": "W:pc_grid_check/agg_check/summary_setup30.json",
+    "level": "ok",
+    "key": "pc_vs_grid_by_setup_medians",
+    "field": "spread",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/mains_hum.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pc-step-bound": [
+   {
+    "output": "W:results/clock/pc_steps_0.jsonl",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pc_clock_steps.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov: the PC-step scan of 17 Oct (two parts); not rerun (a full read of the release)"
+    }
+   },
+   {
+    "output": "W:results/clock/pc_steps_1.jsonl",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pc_clock_steps.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov: the PC-step scan of 17 Oct (two parts); not rerun (a full read of the release)"
+    }
+   }
+  ],
+  "pip-delay": [
+   {
+    "output": "W:examples/numeric_delay_variability_v4/agg/summary.json",
+    "level": "ok",
+    "key": "tracks.PIP.d_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_delay_variability.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pleth-chain-delay": [
+   {
+    "output": "W:pat_census/aggf/summary.json",
+    "level": "ok",
+    "key": "ppg_foot_ms.p50",
+    "field": "context",
+    "note": "the median stored R-to-foot delay, 655 ms; the value is that minus the adopted PAT (270 ms)",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pat_offset_census.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:results/pat/setup_offsets_v2.json",
+    "level": "ok",
+    "key": "all.offset_s",
+    "field": "context",
+    "scale": 1000,
+    "note": "a check: the benchmark estimate, 382.9 ms over 263 recordings (11 November, on ppg_labels_v2/records; the 10 October 384.6 ms over 262 used records that were not kept)",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/setup_offsets.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pleth-frame-clock-rate": [
+   {
+    "output": "W:setups/assign_frame",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/setup_assign.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov from the tool's docstring and PLAN (frame clock as a fingerprint); not reproduced"
+    }
+   }
+  ],
+  "pleth-hr-delay": [
+   {
+    "output": "W:examples/pleth_hr_derivation_rec/agg/summary.json",
+    "level": "ok",
+    "key": "phase.candidates.rmean|n|10|round.delay_median_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pleth_hr_derivation.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pleth-hr-window-centre": [
+   {
+    "output": "W:pr_window_routes_v4l/summary.json",
+    "level": "ok",
+    "key": "groups.early.route1_centre_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/pr_window_routes.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:pr_window_routes_v4l/summary.json",
+    "level": "ok",
+    "key": "groups.late.route1_centre_s",
+    "field": "context",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/pr_window_routes.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pleth-hr-window-pulses": [
+   {
+    "output": "W:examples/pleth_hr_derivation_rec/agg/summary.json",
+    "level": "ok",
+    "key": "best",
+    "field": "context",
+    "note": "N = 10 in the winning rule",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pleth_hr_derivation.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pleth-sawtooth-rate": [
+   {
+    "output": "W:results/pat/sawtooth_rate_by_setup.json",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": null,
+     "note": "reconstructed 11 Nov: the script that wrote it was not identified; not reproduced"
+    }
+   }
+  ],
+  "pleth-slip-step": [
+   {
+    "output": "W:ppg_correction_check/summary.json",
+    "level": "ok",
+    "key": "step_raw_ms_median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/ppg_sawtooth_figures.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "ppg-correction-art-spread": [
+   {
+    "output": "W:correction_vs_art/agg_v6/summary.json",
+    "level": "ok",
+    "key": "by_group.sawtooth.final.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_vs_art.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "ppg-uncorrected-art-spread": [
+   {
+    "output": "W:correction_vs_art/agg_v6/summary.json",
+    "level": "ok",
+    "key": "by_group.sawtooth.none.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_vs_art.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-below-hr-share": [
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "joint_as_stamped.beyond_10_pulse_below",
+    "scale": 100,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-hr-between-recording-sd": [
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "agreement.as_stamped.between_recording_sd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-hr-difference": [
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "agreement.as_stamped.mean_diff",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "agreement.as_stamped.recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-hr-ridge-ratio": [
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "joint_as_stamped.ridge.ratio",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-hr-within-recording-sd": [
+   {
+    "output": "W:examples/hr_vs_pulse_rate/agg_v4l/summary.json",
+    "level": "ok",
+    "key": "agreement.as_stamped.within_recording_sd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/hr_vs_pulse_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-minus-hr-recompute-lag": [
+   {
+    "output": "W:examples/numeric_recompute_lag_v4l/agg/summary.json",
+    "level": "ok",
+    "key": "all.pr_minus_hr_lag_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_recompute_lag.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "pr-recompute-lag": [
+   {
+    "output": "W:examples/numeric_recompute_lag_v4l/agg/summary.json",
+    "level": "ok",
+    "key": "all.pr_lag_s",
+    "scale": -1,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_recompute_lag.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-awp-between-rsd": [
+   {
+    "output": "W:primus_numbers_v4/summary.json",
+    "level": "ok",
+    "key": "raw_lag_per_recording_s.rsd",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-awp-bias": [
+   {
+    "output": "W:primus_numbers_v4/summary.json",
+    "level": "ok",
+    "key": "raw_lag_per_recording_s.median",
+    "scale": -1,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-awp-lead-bound": [
+   {
+    "output": "W:primus_anchor_check_v4/numerics_summary.json",
+    "level": "ok",
+    "key": "d_s_p5_10_25_50_75_90_95.3",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_anchor_check.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:primus_anchor_check_v4/numerics_summary.json",
+    "level": "ok",
+    "key": "with_rule_last_breath",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_anchor_check.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-awp-pause": [
+   {
+    "output": "W:signal_survey/continuity/primus_awp_pauses.csv",
+    "level": "ok",
+    "note": "median of the step column (the gap length), min and max",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "primus.recordings_with_pauses",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-breath-error-sd": [
+   {
+    "output": "W:primus_numbers_v4/summary.json",
+    "level": "ok",
+    "key": "breath_error.mixture_sd_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-breath-error-share": [
+   {
+    "output": "W:primus_numbers_v4/summary.json",
+    "level": "ok",
+    "key": "breath_error.p_window_weighted",
+    "scale": 100,
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-drift-breath": [
+   {
+    "output": "W:results/primus_drift_v4/summary.json",
+    "level": "ok",
+    "key": "slope_common_ppm.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/drift_probe_summary.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-drift-implied": [
+   {
+    "output": "W:signal_survey/continuity/primus_corrections.csv",
+    "level": "ok",
+    "field": "display",
+    "note": "correction size over interval",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-numeric-gap": [
+   {
+    "output": "W:overnight_v4/numeric/readout.json",
+    "level": "ok",
+    "key": "PIP.gap_median_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_derivation_readout.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-period": [
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "primus.pause_interval_top10s",
+    "field": "context",
+    "note": "the most common interval between pauses (and between corrections), 7,230 s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-record-interval": [
+   {
+    "output": "W:primus_awp_anchor/records_summary.json",
+    "level": "ok",
+    "key": "recordings_all_exact_(>=0.999)",
+    "field": "context",
+    "note": "the value is the record length, 30 samples at 62.5 Hz; this summary shows every AWP record 0.48 s after the one before in 6,312 of 6,360 recordings",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/primus_awp_anchor.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "primus-step": [
+   {
+    "output": "W:signal_survey/continuity/primus_corrections.csv",
+    "level": "ok",
+    "note": "median correction step",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "primus.correction_ms_top",
+    "field": "context",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "recording-duration": [
+   {
+    "output": "W:recording_duration/summary.json",
+    "level": "ok",
+    "key": "duration_s_p5_25_50_75_95.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/recording_duration.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:recording_duration/summary.json",
+    "level": "ok",
+    "key": "recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/recording_duration.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "recording-pause": [
+   {
+    "output": "W:recording_pause/summary.json",
+    "level": "ok",
+    "key": "jump_s_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/recording_pause.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "rr-delay": [
+   {
+    "output": "W:examples/numeric_delay_variability_v4/agg/summary.json",
+    "level": "ok",
+    "key": "tracks.RR_CO2.d_p10_25_50_75_90.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_delay_variability.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "sao2-spo2-difference": [
+   {
+    "output": "W:examples/bg/summary.json",
+    "level": "ok",
+    "key": "spo2.point_at_draw.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/blood_gas_gradients.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-frequent-steps": [
+   {
+    "output": "W:frequent_steps/summary.json",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/frequent_steps_summary.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-gap-stamp-shift": [
+   {
+    "output": "W:results/paced/breaks.jsonl",
+    "level": "ok",
+    "field": "display",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/paced_breaks.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov: options --min-dominant 100 --min-share 0.6 found by matching the candidate set (59 entries, checked); the 11 Nov reruns give the same reset events but other entries differ since the reader change of 2 Nov"
+    }
+   }
+  ],
+  "snuadc-hum-share": [
+   {
+    "output": "W:pc_grid_check/agg_check/summary_setup.json",
+    "level": "ok",
+    "key": "coverage.SNUADC hum",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/mains_hum.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-raw-frequent-bias": [
+   {
+    "output": "W:snu_raw_offset_v4/summary.json",
+    "level": "ok",
+    "key": "small.anchored_p5_p50_p95_s.1",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/snu_raw_offset.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:snu_raw_offset_v4/summary.json",
+    "level": "ok",
+    "key": "small.recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/snu_raw_offset.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-raw-step-bias": [
+   {
+    "output": "W:snu_raw_offset_v4/summary.json",
+    "level": "ok",
+    "key": "step.anchored_p5_p50_p95_s.1",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/snu_raw_offset.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:snu_raw_offset_v4/summary.json",
+    "level": "ok",
+    "key": "step.recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/snu_raw_offset.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-reset-loss": [
+   {
+    "output": "W:results/paced/reset_loss.json",
+    "level": "ok",
+    "key": "mean_ms",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/paced_reset_loss.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:results/paced/reset_loss.json",
+    "level": "ok",
+    "key": "n_measurements",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/paced_reset_loss.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-reset-stamp-step": [
+   {
+    "output": "W:signal_survey/continuity/snuadc_reset_events.csv",
+    "level": "ok",
+    "note": "median size of the reset steps",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-stamp-arithmetic": [
+   {
+    "output": "W:results/clock/census/stamp_census_summary.json",
+    "level": "ok",
+    "key": "stretch_ppm.median",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/snuadc_stamp_census.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-start-delay": [
+   {
+    "output": "W:snuadc_start_delay/summary.json",
+    "level": "ok",
+    "key": "SNUADC.start_s_p5_25_50_75_95_99.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/snuadc_start_delay.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:snuadc_start_delay/summary.json",
+    "level": "ok",
+    "key": "SNUADC.recordings",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/snuadc_start_delay.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-step-correction-size": [
+   {
+    "output": "W:signal_survey/continuity/snuadc_reset_events.csv",
+    "level": "ok",
+    "field": "context",
+    "note": "the stamp step (-0.4804 s) plus the lost signal (snuadc-reset-loss)",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:results/paced/reset_loss.json",
+    "level": "ok",
+    "key": "mean_ms",
+    "field": "context",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "examples/paced_reset_loss.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-step-period": [
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "snuadc.interval_h_q.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-step-rate": [
+   {
+    "output": "W:signal_survey/continuity/summary.json",
+    "level": "ok",
+    "key": "snuadc.drift_ppm_q_intervals.2",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/correction_schedules.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-uncorrected-drift": [
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "test.assumed_rate.zero_robust_sd_ppm",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "test.assumed_rate.n",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-uncorrected-drift-hourly": [
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "test.assumed_rate.median_abs_ms_per_h",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-uncorrected-drift-hum": [
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "test.hum_rate.zero_robust_sd_ppm",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-uncorrected-drift-hum-hourly": [
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "test.hum_rate.median_abs_ms_per_h",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-uncorrected-hum": [
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "rates_written",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "snuadc-uncorrected-share": [
+   {
+    "output": "W:hum_snuadc/m5/hum_summary.json",
+    "level": "ok",
+    "key": "recordings_without_corrections",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/hum_snuadc_rate.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "solar-delay-drift": [
+   {
+    "output": "W:examples/numeric_delay_variability_v4/agg/summary.json",
+    "level": "ok",
+    "key": "tracks",
+    "field": "display",
+    "note": "tracks.*.drift_s_per_h_p10_50_90",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-10",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_delay_variability.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "solar8000-poll-gap": [
+   {
+    "output": "W:signal_survey/numeric_agg/numerics.csv",
+    "level": "ok",
+    "note": "median record interval of Solar8000/HR and ART_MBP",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/numeric_agg.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "spo2-onset": [
+   {
+    "output": "code:vitaldb/vitaldb-bench/results/pat/spo2_event_pilot_summary.json",
+    "level": "ok",
+    "field": "display",
+    "note": "the 1 November pilot",
+    "run": {
+     "kind": "reconstructed",
+     "date": null,
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/spo2_event_pilot.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     },
+     "note": "reconstructed 11 Nov: the 1 Nov SpO2 pilot (231 cases), committed with vitaldb-bench; the release rerun is overnight_v4b/spo2"
+    }
+   }
+  ],
+  "stamp-model-error": [
+   {
+    "output": "W:bis_numbers/bis_numbers_m5.json",
+    "level": "ok",
+    "key": "sync_mode_constant.median_abs_s",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/bis_numbers.py",
+      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-recorded-100-fine": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "recorded.100.modes.2.weight_pct",
+    "field": "sum",
+    "note": "the 10 mL mode, plus the 5 mL mode below",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "recorded.100.modes.3.weight_pct",
+    "field": "sum",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-recorded-100-high": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "recorded.100.ci95_ml.1",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-recorded-100-low": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "recorded.100.ci95_ml.0",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-recorded-260-high": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "recorded.260.ci95_ml.1",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-recorded-260-low": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "recorded.260.ci95_ml.0",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-share-on-100": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "share_on_multiples_of_100_pct",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ],
+  "uo-share-on-50": [
+   {
+    "output": "W:worked_examples/urine_output.json",
+    "level": "ok",
+    "key": "share_on_multiples_of_50_not_100_pct",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "metrology-atlas",
+      "path": "tools/fig_urine_heaping.py",
+      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "committed": true
+     }
+    }
+   }
+  ]
+ }
+}

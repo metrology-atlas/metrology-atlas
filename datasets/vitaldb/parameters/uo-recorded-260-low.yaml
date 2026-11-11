@@ -5,7 +5,7 @@ value: 255.4
 unit: 'mL'
 spread:
   text: >-
-    2.5th percentile of the posterior of the true volume for a recorded 260 mL, department unknown; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py; $W/worked_examples/urine_output.json).
+    2.5th percentile of the posterior of the true volume for a recorded 260 mL, department unknown; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py).
 status: derived
 study: value-model-intraop-uo
 about:

@@ -14,7 +14,7 @@ variables: [primus-awp, primus-co2]
 data: |
   All 6,388 recordings were read; 1,021 had AWP, CVP, at least one AWP pause with enough breathing either side, and
   at least 200 mechanical breaths. 2,488 of their 3,665 pauses were measurable; up to two control moments per
-  recording at least 25 minutes from any pause. Rerun 10 Nov with the v4 rates ($W/primus_pause_steps_v4; the
+  recording at least 25 minutes from any pause. Rerun 10 Nov with the v4 rates (`$W/primus_pause_steps_v4`; the
   19 Oct run had 2,491 pauses, −1 ms and −269 ms); the table from examples/primus_pause_steps_table.py
   (agg/table.json), which reproduces the 19 Oct table exactly from that run.
 background: |

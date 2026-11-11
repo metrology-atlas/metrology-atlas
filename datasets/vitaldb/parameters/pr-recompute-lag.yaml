@@ -5,7 +5,7 @@ value: 1.23
 unit: s
 spread:
   text: >-
-    lag of best agreement of the monitor's PLETH_HR behind PLETH_HR recomputed from the pulses at its fitted delay plus half the gap; 95% 1.08-1.33 s (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v4l/agg/summary.json (v4 rates and the HR delay labels of 11 Nov, recorded run; with the 1 Nov labels, numeric_recompute_lag_v4, identical to the 9 Nov v3 run); rerun 9 Nov with setup-rate fallbacks, v1 with port rates gave 1.24 s).
+    lag of best agreement of the monitor's PLETH_HR behind PLETH_HR recomputed from the pulses at its fitted delay plus half the gap; 95% 1.08-1.33 s (vitaldb-bench tools/numeric_recompute_lag.py (v4 rates and the HR delay labels of 11 Nov, recorded run; with the 1 Nov labels, numeric_recompute_lag_v4, identical to the 9 Nov v3 run); rerun 9 Nov with setup-rate fallbacks, v1 with port rates gave 1.24 s).
 status: measured
 study: numeric-delay-check
 about:

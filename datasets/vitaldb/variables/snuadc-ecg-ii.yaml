@@ -227,7 +227,7 @@ figures:
     file: spectrum-snuadc-ecg-ii.png
     study: waveform-frequency-content
     theme: population results
-    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    source: vitaldb-bench tools/spectra_agg.py (`$W/spectra/agg`)
     caption: >-
       The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,337 recordings. The ECG is flat to about 15 Hz and falls steeply above its low-pass of about 20 Hz (fourth order), the same on every SNUADC unit, to near the rounding floor; the peak near 1 Hz is the heart rate.
     alt: >-

@@ -11,14 +11,13 @@ study: loop-closure
 about: [bis-vs-pc, bis-vs-snuadc]
 date: 2026-11-11
 notes: >-
-  Run r6 (11 November): vitaldb-bench tools/clock_edges.py --reset-loss --drop-missed --solar-min-h 6 --solar-dir
-  $W/solar_snuadc_clock_v4 --breath-dir $W/results/primus_drift_v4, then clock_reconcile.py; $W/clock_network/r6/
-  summary.json, loop "bis_steps + bursts + solar" (recorded runs). Run r5 (6 November) gave +4.11 ppm (IQR −17.3 to
+  Run r6 (11 November): vitaldb-bench tools/clock_edges.py (with the reset loss, missed corrections dropped, Solar8000
+  stretches of 6 h or more, the v4 Solar8000 clock and the v4 breath probe), then clock_reconcile.py; loop
+  "bis_steps + bursts + solar" (recorded runs). Run r5 (6 November) gave +4.11 ppm (IQR −17.3 to
   +28.2), with the Solar8000 route on the HR rule then in use (60 / median R–R over 6 s), which disagreed with the
   mean arterial pressure route by −9.9 ppm; with the current HR rule the two agree (+2.3 ppm), and each alone closes
   this loop at about 10 ppm (mean pressure 11.0 in both runs, HR 9.1), so the earlier +4.1 was a compromise of a
-  biased HR with the pressure route ([[study:solar-snuadc-clock]]; vitaldb-bench examples/solar_route_check.py,
-  $W/clock_network/r6_inputs/solar_route_check).
+  biased HR with the pressure route ([[study:solar-snuadc-clock]]; vitaldb-bench examples/solar_route_check.py).
 sources:
 - output: W:clock_network/r6/summary.json
   key: loops.bis_steps + bursts + solar.misclosure_ppm_p5_25_50_75_95.2

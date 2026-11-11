@@ -3,7 +3,7 @@ name: Drift of Solar8000 numeric delays within a case
 quantity: Change of a Solar8000 numeric's delay through a case, per hour.
 display: "0 s/h median (p10–p90 about ±0.5 s/h; HR −0.6 to +0.5 s/h)"
 notes: >-
-  tools/numeric_delay_variability.py agg, work/examples/numeric_delay_variability_v4/agg/summary.json
+  tools/numeric_delay_variability.py agg
   (tracks.*.drift_s_per_h_p10_50_90; v4 rates, 10 Nov 2026, recorded run). HR −0.61 to +0.52 s/h; ART −0.47 to +0.35;
   CVP −0.49 to +0.43. Earlier text gave HR ±0.65 s/h from a run with no saved output.
 status: measured

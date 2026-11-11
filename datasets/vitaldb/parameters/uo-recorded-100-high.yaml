@@ -5,7 +5,7 @@ value: 136.6
 unit: 'mL'
 spread:
   text: >-
-    97.5th percentile of the same posterior; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py; $W/worked_examples/urine_output.json).
+    97.5th percentile of the same posterior; vitaldb-resolution intraop_uo model v2 (tools/fig_urine_heaping.py).
 status: derived
 study: value-model-intraop-uo
 about:

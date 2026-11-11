@@ -5,7 +5,7 @@ quantity: >-
   recording of the airway-pressure-to-CVP lag, with an offset for each stretch between Primus AWP pauses.
 value: 105
 unit: ppm
-spread: {p10: 29, p90: 189, text: "178 recordings (v4 rates, 11 Nov; vitaldb-bench examples/drift_probe_summary.py on $W/results/primus_drift_v4; 104, 28–184 before); whole-recording lines give +92 ppm median in 1,060 (v4 rates; p10–p90 −48 to +233)"}
+spread: {p10: 29, p90: 189, text: "178 recordings (v4 rates, 11 Nov; vitaldb-bench examples/drift_probe_summary.py; 104, 28–184 before); whole-recording lines give +92 ppm median in 1,060 (v4 rates; p10–p90 −48 to +233)"}
 status: measured
 study: ventilator-breath-matching
 about: [primus-vs-pc]

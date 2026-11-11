@@ -82,7 +82,7 @@ figures:
     file: spectrum-cardioq-abp.png
     study: waveform-frequency-content
     theme: population results
-    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    source: vitaldb-bench tools/spectra_agg.py (`$W/spectra/agg`)
     caption: >-
       The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 27 recordings, so the band is wide. Heart-rate harmonics to about 10 Hz, then the floor.
     alt: >-

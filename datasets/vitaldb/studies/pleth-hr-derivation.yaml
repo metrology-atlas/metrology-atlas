@@ -50,7 +50,7 @@ results: '- **A mean of [[value:pleth-hr-window-pulses|number]] pulse intervals 
   - **Rounded, not truncated:** for the adopted rule, rounding reproduces more values than truncation in 99% of
     recordings (98.8%), where heart rate is truncated ([[observation:hr-truncated]]). This, the exact-match delay''s 5th–95th percentiles and robust SD, and the 6.0–11.0 s window come from the part files
     ([[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]); the summary holds only their p10–p90. The uniform-phase delay is in the summary''s phase block
-    ($W/examples/pleth_hr_derivation_phase/agg/summary.json).
+    (`$W/examples/pleth_hr_derivation_phase/agg/summary.json`).
 
   - **Ready [[value:pleth-hr-delay]] after its window ends, then stamped at the next poll** (shortest delay, median over
   recordings; 5th–95th percentile 2.6–4.8 s; robust SD 0.59 s; [[parameter:pleth-hr-delay]]). Fitted as one delay with

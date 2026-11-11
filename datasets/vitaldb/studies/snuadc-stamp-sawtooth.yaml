@@ -139,11 +139,11 @@ results: |
     rates rebuilt from whole teeth alone made the recordings that still fall back to a port worse (their stations, too
     slow to collect whole teeth, drift more slowly than the fast stations those medians are made of), so the adopted
     rates keep the earlier port values with the new setup table (first model4 run against the adopted one,
-    $W/port_rates/m3_m4_compare.json and m3_m4b_compare.json).
+    `$W/port_rates/m3_m4_compare.json` and m3_m4b_compare.json).
   - **The adopted model (model5, 9 November): model4 with the no-correction rate bound.** Only the 304 recordings
     whose SNUADC rate was capped change: their drift left falls from a median 103 to 44 ms/h (p90 168 to 116;
     signed, +100 to +35 ms/h, so the true rates sit somewhat below the bound, which is a maximum), better by more than
-    20 ms/h in 217 and worse in 13; every other recording is unchanged ($W/port_rates/m4b_m5_compare.py). Over 2,717
+    20 ms/h in 217 and worse in 13; every other recording is unchanged (`$W/port_rates/m4b_m5_compare.py`). Over 2,717
     recordings: EEG minus ECG −805, −665 and −769 ms as in model4 (1,531, 78 and 1,101 recordings). A median error of
     40 ms against the mode's constant (p90 138 ms) and 15 ms against the recording's own constant (p90 66 ms);
     within-recording SD 20 ms; drift left a median 25.4 ms/h (p90 115). These are the values in

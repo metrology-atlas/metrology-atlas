@@ -3,7 +3,7 @@ name: Hourly drift of the working reference without stamp corrections
 quantity: Median absolute drift per hour of the working reference on the stamp model's SNUADC rate (model5), in recordings without stamp corrections.
 value: 23
 unit: ms/h
-spread: {n: 223, text: "vitaldb-bench tools/hum_snuadc_rate.py on the burst validation of model5 (work/hum_snuadc/m5/hum_summary.json, recorded run, 11 Nov 2026); 76 ms/h with model3"}
+spread: {n: 223, text: "vitaldb-bench tools/hum_snuadc_rate.py on the burst validation of model5 (recorded run, 11 Nov 2026); 76 ms/h with model3"}
 status: measured
 study: hum-snuadc-rate
 about: [snuadc-sample]

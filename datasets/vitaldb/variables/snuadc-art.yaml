@@ -220,7 +220,7 @@ figures:
     file: spectrum-snuadc-art.png
     study: waveform-frequency-content
     theme: population results
-    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    source: vitaldb-bench tools/spectra_agg.py (`$W/spectra/agg`)
     caption: >-
       The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 3,503 recordings. Heart-rate harmonics to about 10 Hz, then the floor; no filter can be seen where the pressure has no content left.
     alt: >-

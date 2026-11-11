@@ -43,7 +43,7 @@ method: |
     release-wide lag and keeps, per window, the shape correlation's peaks over −3 to +8 s, and per 30-minute block
     the pilot's breath-size check ([[study:ventilator-breath-matching]], breath i against breath i + k). Run on
     one recording in the main mode and one placed a breath above it, before any release-wide run
-    (work/primus_breath_id/test/; a test on the 2 November inputs, not repeated on the November rates, which
+    (`work/primus_breath_id/test/`; a test on the 2 November inputs, not repeated on the November rates, which
     do not change the comparison of lags one breath apart within a window).
   - **Breath identity from pauses in ventilation (test on four recordings).** tools/primus_vent_events.py finds
     runs of no breaths while the AWP stream continues (and the start and end of ventilation), and times the stop
@@ -51,7 +51,7 @@ method: |
     (0.1–0.7 Hz, the reference low-passed over 2 s) are cross-correlated within ±150 s of each edge over lags −3 to
     +12 s. An edge resolves the breath when its peak correlation is at least 0.5 and 0.15 above the correlation one
     breath either side. Its lag is compared with the matched lag of the nearest window in the same stretch (within
-    10 minutes): k = (matched − event) / T (work/primus_vent_events/test/).
+    10 minutes): k = (matched − event) / T (`work/primus_vent_events/test/`).
 results: |
   - **The AWP stamps are an anchor plus a sample count.** In 6,312 of 6,360 recordings every record is exactly
     0.48 s after the one before; none is stamped on arrival. AWP and CO2 are anchored separately: their gaps coincide
@@ -70,8 +70,8 @@ results: |
     [[figure:primus-awp-offsets-by-rate]]
 
   - **Release-wide, pauses in ventilation say most +1-breath offsets are slips (2 November).** 26,022
-    events in 3,470 recordings; 5,165 edges in 939 recordings resolve the breath (work/primus_vent_events_v4/
-    summary.json, v4 rates, 10 Nov; 5,166 in 943 before). With CVP (2,316 resolved edges) the event lag is a median 1.7 s (p10–p90 0.6–4.0 s) and, in
+    events in 3,470 recordings; 5,165 edges in 939 recordings resolve the breath (`work/primus_vent_events_v4/summary.json`, v4
+    rates, 10 Nov; 5,166 in 943 before). With CVP (2,316 resolved edges) the event lag is a median 1.7 s (p10–p90 0.6–4.0 s) and, in
     breath periods, falls away steadily from 0–0.5 breaths with no second mode one breath up, where the matched
     offsets have one. Where a matched window is within 10 minutes, the matched lag agrees with the event (k within
     a quarter of 0) for about 70% of CVP edges and is about one breath late for about 20%. The ART events sit later
@@ -92,7 +92,7 @@ results: |
     The selection (k within a quarter breath) limits the differences to about ±1 s, so this tests bias, not the
     tails.
   - **A rule for every stretch, checked by leaving stretches out (2 November).** tools/primus_breath_rule.py
-    (work/primus_breath_rule_v4/, on the v4 sync windows and vent events, 11 Nov) gives each stretch a whole number of breaths k to take off its matched lag:
+    (`work/primus_breath_rule_v4/`, on the v4 sync windows and vent events, 11 Nov) gives each stretch a whole number of breaths k to take off its matched lag:
     (1) from its own resolved CVP pauses; (2) carried from a neighbour across a gap that keeps the 0.48 s grid,
     so that the corrected offset is continuous; (3) otherwise the k that puts its corrected start nearest the main
     mode, 1.25 s (the median over stretches fixed by their own CVP pauses); (4) recordings with ART only, the same
@@ -104,7 +104,7 @@ results: |
     IQR 0.64–2.05 s, 5th–95th percentile 0.05–4.58 s (2 November, before the v4 rates: 1.28 s, 0.67–2.08 s): wide, so the main mode cannot be right for all, and about
     one stretch in seven that relies on it is still a breath off.
   - **The Primus numbers with each stretch on its right breath (2 November; v4 rates 11 November,
-    work/primus_numbers_v4).** tools/primus_numbers.py (which
+    `work/primus_numbers_v4`).** tools/primus_numbers.py (which
     reproduces the earlier numbers exactly with no breath correction): the AWP bias against the breath on CVP is a
     median [[value:primus-awp-bias]] per recording (5th–95th percentile −3.540 to −0.449 s, was −1.787 s, −5.782 to
     +0.693 s), and its spread between recordings [[value:primus-awp-between-rsd]] (was 1.325 s). Within a stretch on
@@ -127,7 +127,7 @@ results: |
     physiology. Across recordings d rises with the CVP lag (Theil slope 0.47, 95% 0.40–0.54; Spearman 0.37): part
     of the spread between recordings is in the AWP stamps, the rest in the reference, the fits or the breath
     rule. The PIP fit maps the AWP stamps to recorder time with a drift from each stretch's start, which the CVP
-    lag does not, so the two differ by a few tenths of a second (work/primus_anchor_check_v4/numerics_summary.json, v4 rates).
+    lag does not, so the two differ by a few tenths of a second (`work/primus_anchor_check_v4/numerics_summary.json`, v4 rates).
   - **Matching breaths cannot tell which breath is right (null result, two recordings).** The shape correlation is
     nearly equal one breath apart (0.971 against 0.970), and the breath-size check is weak (correlations 0.02–0.40),
     changes between blocks (k = 0, 1, 0) and disagrees between the two references (CVP mostly k = 0, ART k = 2).
@@ -136,7 +136,7 @@ results: |
   - **Two attempts to bound the lead from single PIP records did not work (tests, six recordings).** Choosing the
     delay at which the share of matched PIP records rises fails because peak pressure barely changes between
     neighbouring breaths, and using records that match exactly one recent breath gives delays that do not hang
-    together (work/primus_anchor_check/test/).
+    together (`work/primus_anchor_check/test/`).
 discussion: |
   The wide per-recording offset was mostly the measurement's: a stretch that starts on the wrong breath stays on it,
   and its windows agree with each other, so leave-one-out within a stretch cannot see it. Pauses in ventilation are

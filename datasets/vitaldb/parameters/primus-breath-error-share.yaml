@@ -10,7 +10,7 @@ about: [primus-awp, primus-co2]
 date: 2026-11-11
 notes: >-
   tools/primus_numbers.py breath_error.p_window_weighted, from tools/primus_breath_rule.py's leave-one-out shares. The
-  error holds for a whole stretch between AWP pauses (median 3,627 s; work/primus_numbers_v4, v4 rates, 11 Nov 2026).
+  error holds for a whole stretch between AWP pauses (median 3,627 s, v4 rates, 11 Nov 2026).
 sources:
 - output: W:primus_numbers_v4/summary.json
   key: breath_error.p_window_weighted

@@ -5,7 +5,7 @@ value: -0.20
 unit: s
 spread:
   text: >-
-    on the recordings with both; 95% -0.31 to -0.08 s (vitaldb-bench tools/numeric_recompute_lag.py; $W/examples/numeric_recompute_lag_v4l/agg/summary.json (v4 rates and the HR delay labels of 11 Nov, recorded run; with the 1 Nov labels, numeric_recompute_lag_v4, identical to the 9 Nov v3 run); rerun 9 Nov with setup-rate fallbacks, v1 gave -0.19 s, -0.27 to -0.06).
+    on the recordings with both; 95% -0.31 to -0.08 s (vitaldb-bench tools/numeric_recompute_lag.py (v4 rates and the HR delay labels of 11 Nov, recorded run; with the 1 Nov labels, numeric_recompute_lag_v4, identical to the 9 Nov v3 run); rerun 9 Nov with setup-rate fallbacks, v1 gave -0.19 s, -0.27 to -0.06).
 status: measured
 study: numeric-delay-check
 about:

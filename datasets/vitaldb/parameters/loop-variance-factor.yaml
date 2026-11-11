@@ -12,7 +12,7 @@ about: [bis-vs-pc, bis-vs-snuadc, primus-vs-pc]
 date: 2026-11-11
 notes: >-
   SNUADC resets 7.77, bursts 5.27, BIS steps 4.79, Solar8000 route 4.66, breath matching 2.88, PIP numerics 1.95
-  (run r6, 11 November: stage-3 inputs on the v4 rates and the current HR rule; $W/clock_network/r6/summary.json).
+  (run r6, 11 November: stage-3 inputs on the v4 rates and the current HR rule).
   Run r5 (6 November): resets 6.84, bursts 5.20, BIS steps 4.74, Solar8000 route 3.74, breath 3.28, PIP 1.97. Without it (run r4, 1 November):
   resets 5.11, bursts 5.14, BIS steps 4.73, breath 3.28, PIP 1.97; the resets rise because the Solar8000 loops
   confront them with a second route. r3 of 19 October, with the earlier 0.498 s correction: 4.8, 5.19, 5.19, 3.28,

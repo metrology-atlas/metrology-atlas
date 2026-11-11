@@ -3,7 +3,7 @@ name: Solar8000 HR delay, late group
 quantity: Delay from the end of the HR window to its stamp, in the late group of cases.
 value: 4.17
 unit: s
-spread: {n: 3758, sd: 0.37, text: "63% of classified cases (mixture weight 0.61); labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py -> work/results/delay_labels_v4/hr_label_params.json)"}
+spread: {n: 3758, sd: 0.37, text: "63% of classified cases (mixture weight 0.61); labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py)"}
 status: measured
 study: hr-delay-groups
 about: [solar8000-hr]

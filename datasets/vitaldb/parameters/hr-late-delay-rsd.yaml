@@ -3,7 +3,7 @@ name: Spread of the HR delay within the late group
 quantity: Robust standard deviation (interquartile range / 1.349) of the per-case HR delay labels in the late group.
 value: 0.408
 unit: s
-spread: {n: 3758, text: "IQR / 1.349; labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py -> work/results/delay_labels_v4/hr_label_params.json); the same with the 1 Nov labels (0.6839 s before that, which no saved output reproduces)"}
+spread: {n: 3758, text: "IQR / 1.349; labels of 11 Nov 2026 (full rescan on the v4 rates, examples/numeric_delay_variability_v4; results/pat/; vitaldb-bench examples/hr_label_params.py); the same with the 1 Nov labels (0.6839 s before that, which no saved output reproduces)"}
 status: measured
 study: hr-delay-groups
 about: [solar8000-hr]

@@ -181,7 +181,7 @@ figures:
     file: spectrum-primus-awp.png
     study: waveform-frequency-content
     theme: population results
-    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    source: vitaldb-bench tools/spectra_agg.py (`$W/spectra/agg`)
     caption: >-
       The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,360 recordings. Breathing and its harmonics, falling steadily to the waveform's Nyquist frequency of 31 Hz.
     alt: >-

@@ -15,8 +15,7 @@ date: 2026-11-11
 headline: true
 notes: >-
   223 recordings without SNUADC corrections whose BIS rate comes from its own corrections; 57% of recordings have no
-  SNUADC correction, 1,248 of them hum. vitaldb-bench tools/hum_snuadc_rate.py on the burst validation of model5 (work/hum_snuadc/m5/hum_summary.json, recorded run, 11 Nov 2026). With model3 (the port's rate, uncapped; 29 Oct, work/hum_snuadc/
-  release) it was 31.3 ppm (76 ms/h): model5's cap removed most of it.
+  SNUADC correction, 1,248 of them hum. vitaldb-bench tools/hum_snuadc_rate.py on the burst validation of model5 (recorded run, 11 Nov 2026). With model3 (the port's rate, uncapped; 29 Oct) it was 31.3 ppm (76 ms/h): model5's cap removed most of it.
 sources:
 - output: W:hum_snuadc/m5/hum_summary.json
   key: test.assumed_rate.zero_robust_sd_ppm

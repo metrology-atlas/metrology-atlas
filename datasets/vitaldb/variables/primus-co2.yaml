@@ -177,7 +177,7 @@ figures:
     file: spectrum-primus-co2.png
     study: waveform-frequency-content
     theme: population results
-    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    source: vitaldb-bench tools/spectra_agg.py (`$W/spectra/agg`)
     caption: >-
       The median over recordings of each recording's median one-minute power spectrum (line) and the interquartile range across recordings (band), in physical units per hertz on log axes, with the rounding floor (dashed). 6,362 recordings. Breathing below 1 Hz; the line near 25 Hz, in 80% of recordings, is the waveform's 24.974 Hz update grid.
     alt: >-

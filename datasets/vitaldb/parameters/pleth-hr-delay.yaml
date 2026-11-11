@@ -9,7 +9,7 @@ unit: s
 spread:
   text: >-
     median over 6,151 recordings; 5th–95th percentile 2.6–4.8 s; robust SD between recordings 0.59 s (vitaldb-bench
-    tools/pleth_hr_derivation.py, uniform-phase fit; $W/examples/pleth_hr_derivation_phase/agg/summary.json, key
+    tools/pleth_hr_derivation.py, uniform-phase fit, key
     phase). Replaces, on 7 Nov 2026, the exact-match delay of 4.5 s (3.25–5.75 s, robust SD 0.74 s), which fitted one
     delay with no wait for the poll and so carried most of the wait inside it.
   p5: 2.6

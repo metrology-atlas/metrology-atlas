@@ -11,7 +11,7 @@ notes: >-
   0.5–3.8), that is one every 15 minutes to 2 hours. An earlier figure of 0.2 per hour was not traceable to any
   result and has been replaced. Sizes: the median step of each recording, p10–p90 across the 26 recordings the
   clock_correction_periods.py run covers (all steps forward; 2–64 ms in all); the earlier "+5 to +15 ms" had no
-  saved source. Both from vitaldb-bench tools/frequent_steps_summary.py ($W/frequent_steps/summary.json).
+  saved source. Both from vitaldb-bench tools/frequent_steps_summary.py.
 sources:
 - output: W:frequent_steps/summary.json
   field: display

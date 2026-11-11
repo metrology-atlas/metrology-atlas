@@ -9,7 +9,7 @@ study: primus-awp-anchoring
 about: [primus-awp, primus-co2]
 date: 2026-11-11
 notes: >-
-  tools/primus_numbers.py breath_error (work/primus_numbers_v4, v4 rates, 11 Nov 2026). Not Gaussian: 87.8% of stretches are on their right breath (error as the
+  tools/primus_numbers.py breath_error (v4 rates, 11 Nov 2026). Not Gaussian: 87.8% of stretches are on their right breath (error as the
   matching, robust SD 79 ms), the rest a whole breath either way. The 95% interval is the mixture's, by simulation.
 sources:
 - output: W:primus_numbers_v4/summary.json

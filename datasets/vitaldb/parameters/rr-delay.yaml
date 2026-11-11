@@ -3,7 +3,7 @@ name: Primus RR delay
 quantity: Delay from the end of the 30 s breath-interval window to the stamp of the Primus respiratory rate.
 value: 4.3
 unit: s
-spread: {p10: 1.55, p90: 7.45, text: "median and p10–p90 over cases; tools/numeric_delay_variability.py agg, work/examples/numeric_delay_variability_v4/agg/summary.json (tracks.RR_CO2.d_p10_25_50_75_90; v4 rates, 10 Nov 2026, recorded run; the same values as before)"}
+spread: {p10: 1.55, p90: 7.45, text: "median and p10–p90 over cases; tools/numeric_delay_variability.py agg (tracks.RR_CO2.d_p10_25_50_75_90; v4 rates, 10 Nov 2026, recorded run; the same values as before)"}
 status: measured
 study: numeric-delay-variability
 about: [primus-numerics]

@@ -114,7 +114,7 @@ figures:
   - id: spectra-all
     file: spectra-all.png
     theme: population results
-    source: vitaldb-bench tools/spectra_agg.py ($W/spectra/agg)
+    source: vitaldb-bench tools/spectra_agg.py (`$W/spectra/agg`)
     caption: >-
       The power spectrum of every waveform track in the release, in physical units per hertz: the median over
       recordings of each recording's median minute (line) and the interquartile range across recordings (band), with
