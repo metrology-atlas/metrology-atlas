@@ -150,3 +150,11 @@ def test_record_references(tmp_path):
         {"id": "c", "name": "C", "summary": "S.", "type": "oscillator", "description": "[[patient:500]]"}))
     with pytest.raises(AtlasError, match="out of range"):
         load(d)
+
+
+def test_a_reference_broken_over_a_line_is_refused(tmp_path):
+    import datetime as _dt
+    st = {"id": "st", "name": "St", "summary": "S.", "status": "current", "methods": [], "date": _dt.date(2026, 10, 1),
+          "results": "derived from [[study:\n  st]] and more"}
+    with pytest.raises(AtlasError, match="broken over a line"):
+        load(_dataset(tmp_path, **{"studies/st.yaml": st}))

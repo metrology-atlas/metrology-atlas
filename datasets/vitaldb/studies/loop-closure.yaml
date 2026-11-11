@@ -134,3 +134,5 @@ figures:
       Five panels: three of misclosure histograms centred near zero (BIS loops through the resets; two step
       histograms through the Solar8000 route; Primus loops), one of z histograms for the four loop types with a
       dashed normal curve, and a bar chart of variance factors between 2.0 and 7.8.
+typed_ok:
+  - {parameter: loop-solar-bis-misclosure, text: "10", why: "the misclosure rounded on purpose (about 10 ppm), not its value"}

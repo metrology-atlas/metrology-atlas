@@ -34,7 +34,7 @@ results: |
 
   [[figure:emr-rounding]]
 discussion: |
-  Read a 5-minute EMR time t as the interval (t − 300 s, t]: the event is estimated at t − 150 s (SD 87 s), and the
+  Read a 5-minute EMR time t as the interval (t − 300 s, t]: the event is estimated at t − [[value:emr-rounding]] (SD 87 s), and the
   entry is known no earlier than t plus the documentation lag. Minute entries keep ±60 s. The timing model in
   [[code:vitaldb-reader/src/vitaldb_reader/timing_model.py|vitaldb-reader]] gives these intervals, and the clinical_time labels of the TimeNet builds carry them. The extra ~50 s cannot be separated from rounding with these data.
 
@@ -74,3 +74,5 @@ figures:
       device markers, the shift of the 5-minute group's median against the minute group's, with its bootstrap 95%
       interval; rounding up predicts −150 s, to the nearest 0 and down +150 s.
     alt: Left, histograms with the blue 5-minute distribution shifted left of the grey minute distribution and closest to the red rounded-up prediction. Right, eleven intervals all left of zero, most around minus 200 s.
+typed_ok:
+  - {parameter: emr-rounding, text: "150", why: "the shift each rounding rule predicts (-150, 0, +150 s)"}

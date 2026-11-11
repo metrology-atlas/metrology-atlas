@@ -47,3 +47,7 @@ figures:
     source: vitaldb-bench tools/numeric_delay_variability_plot.py
     caption: Delays differ between cases far more than a fixed delay would allow (first run, 879 cases; a 6,222-case version is to replace it).
     alt: Paired range bars, observed against expected, per numeric.
+typed_ok:
+  - {parameter: etco2-delay, text: "1.6", why: "the HR p10"}
+  - {parameter: pip-delay, text: "4.6", why: "the CVP p90"}
+  - {parameter: etco2-delay, text: "1.55", why: "the Primus RR p10"}

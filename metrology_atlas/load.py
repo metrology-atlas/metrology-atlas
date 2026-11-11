@@ -249,6 +249,7 @@ def _resolve(ds: Dataset, kinds: tuple[str, ...], value: object) -> bool:
     return isinstance(value, str) and any(value in ds.items.get(k, {}) for k in kinds)
 
 
+BROKEN_XREF = re.compile(r"\[\[[a-z]+:[^\]\n]*\n")
 ROOTED = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*:[^/\\].*")
 
 
@@ -270,6 +271,8 @@ def _check_fields(ds: Dataset, fields: tuple[Field, ...], item: dict, where: str
             elif f.name == "output" and not ROOTED.match(value):
                 problems.append(f"{at}: '{value}' must be ROOT:path (a named root of the run records, e.g. 'W:x/summary.json')")
             elif f.type == "text":
+                if BROKEN_XREF.search(value):
+                    problems.append(f"{at}: a [[...]] reference is broken over a line; keep it on one line")
                 rx = record_xref(ds)
                 if rx:
                     for rid, _ in rx.findall(bare(value)):

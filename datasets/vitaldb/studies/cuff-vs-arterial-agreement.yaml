@@ -71,3 +71,5 @@ figures:
     mean, with the mean difference per 10 mmHg (orange). C: each patient''s mean difference.'
   alt: A curve peaking just after zero; a broad cloud around zero with a flat orange line; a wide histogram centred near
     zero.
+typed_ok:
+  - {parameter: nibp-between-patient-sd, text: "10", why: "10 mmHg bins"}

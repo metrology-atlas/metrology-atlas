@@ -55,7 +55,7 @@ results: |
   **Correction (29 October): the last-breath numerics' delays are about half a poll gap too low.** The fit lets each
   value have been computed anywhere in the gap since the previous record (median [[value:primus-numeric-gap]] for the Primus). For ETCO2,
   PIP and PEEP, which hold the last completed breath, that counts the hold twice and pulls the delay about half a gap
-  (3.5 s) low; [[study:numeric-delay-variability]] had found this on 13 October and uses one record's phase (0.48 s)
+  (3.5 s) low; [[study:numeric-delay-variability]] had found this on 13 October and uses one record's phase ([[value:primus-record-interval]])
   instead. Per recording, its labels sit above this fit by a median 3.55 s for ETCO2 (6,186 recordings; IQR 3.05–4.65)
   and 3.30 s for PIP (5,894; IQR 3.05–3.60), against a half gap of 3.51 s. Corrected, ETCO2 is stamped [[value:etco2-delay]]
   after the breath's peak on the CO2 waveform and PIP [[value:pip-delay]] after its
@@ -102,3 +102,6 @@ code:
   - vitaldb-bench/tools/spo2_event_pilot.py
   - vitaldb-bench/tools/spo2_event_agg.py
   - vitaldb-bench/examples/stage3_batch2_compare.py
+typed_ok:
+  - {parameter: solar8000-poll-gap, text: "2.0", why: "an interval bound in seconds, not the poll gap"}
+  - {parameter: etco2-delay, text: "1.6", why: "PEEP's delay after the phase correction"}

@@ -9,7 +9,7 @@ summary: >-
   injected into real recordings, it called no held-out slip-free event a slip and 98% of the corrections reviewed were
   judged right. Its correction was then tested end to end against the arterial line in 2,976 recordings, which showed
   the first version made a third of them worse; rebuilt so each tooth closes exactly, it brings finger PAT closer to
-  arterial PAT than the earlier method (median spread 9.5 against 11.2 ms in sawtooth recordings, 14.0 uncorrected),
+  arterial PAT than the earlier method (median spread [[value:ppg-correction-art-spread|number]] against 11.2 ms in sawtooth recordings, 14.0 uncorrected),
   though it leaves more recordings worse than uncorrected (7.3% against 2.9%). physiosync 0.3.2,
   `fit_ecg_ppg_delay(method="rebuilt")`. In development.
 date: 2026-11-05
@@ -109,10 +109,10 @@ results: |
 
     | Recordings with a sawtooth (1,867) | Spread, ms | Worse than uncorrected |
     |---|---|---|
-    | Uncorrected | 13.95 (12.35–16.84; 21.95) | — |
+    | Uncorrected | [[value:ppg-uncorrected-art-spread|number]] (12.35–16.84; 21.95) | — |
     | Earlier method ([[software:physiosync]] `detect`) | 11.17 (6.88–15.25; 21.99) | 2.9% |
     | Rebuilt, first version (0.3.1) | 10.86 (5.91–22.02; 50.9) | 28.9% |
-    | Rebuilt, final (0.3.2) | 9.46 (5.70–14.67; 22.03) | 7.3% |
+    | Rebuilt, final (0.3.2) | [[value:ppg-correction-art-spread|number]] (5.70–14.67; 22.03) | 7.3% |
 
     Over all 2,976 the final correction leaves a median 11.72 ms (earlier method 11.95, uncorrected 14.01) and improves
     42.0% of recordings by more than 2 ms (earlier 40.3%). In the 866 recordings with slips but no corrected sawtooth
@@ -129,7 +129,7 @@ results: |
     within a recording, [[study:ppg-sawtooth]]), so it was tested too, with the rate taken from the slips themselves
     so that creep and steps balance from the first slip to the last (frame × net steps ÷ their time apart; `const` in
     the tool, `$W/correction_vs_art/agg_v6`). With the same other choices it is worse than closing each tooth on its
-    own slips: median 10.62 ms against 9.46 in sawtooth recordings, 90th centile 22.96 against 22.03, 11.0% against
+    own slips: median 10.62 ms against [[value:ppg-correction-art-spread|number]] in sawtooth recordings, 90th centile 22.96 against 22.03, 11.0% against
     7.3% made worse. Neither rate is fitted to the PAT values, so physiology inside a tooth does not set it; a tooth's
     own spacing absorbs the effect of a missed, false or misplaced slip on that tooth, where one rate spreads it.
   - **Held-out labels:** 25 of 31 real slips found, 0 of 28 slip-free events called a slip (all 172: 51 of 63 and 1
@@ -268,3 +268,5 @@ code:
   - vitaldb-bench/tools/label_quality.py
   - vitaldb-bench/scripts/run_slip_rebuild_full.sh
   - physiosync/physiosync/slips.py
+typed_ok:
+  - {parameter: ppg-correction-art-spread, text: "9.5", why: "a creep rate in ppm"}

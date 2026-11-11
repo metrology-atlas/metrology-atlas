@@ -105,3 +105,5 @@ figures:
       interquartile range, 31 keys with at least 20 recordings) against the global 497 ms (±15 ms shaded). Right: bin
       medians along the case order (bins of 400 cases) minus the overall median.
     alt: Left, two single-peaked histograms near 497 and 715 ms. Middle, 31 short intervals all centred within 15 ms of a red line at 497 ms. Right, two flat lines within a few milliseconds of zero.
+typed_ok:
+  - {parameter: pleth-chain-delay, text: "385", why: "the earlier benchmark estimate, which agrees"}

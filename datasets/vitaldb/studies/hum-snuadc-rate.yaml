@@ -49,7 +49,7 @@ results: |
 
   - **Model5 did most of what the hum route did.** The cap ([[study:vital-recorder-stamping-rules]]) keeps a borrowed
     rate inside what the recording's own lack of corrections allows, and that alone takes the drift from 31 to
-    [[value:snuadc-uncorrected-drift]] (modes "none" 8.6 and "step" 10.1 ppm). The hum rate is unchanged (12 ppm)
+    [[value:snuadc-uncorrected-drift]] (modes "none" 8.6 and "step" 10.1 ppm). The hum rate is unchanged ([[value:snuadc-uncorrected-drift-hum]])
     and so no longer narrows the typical drift, but it still cuts the share drifting more than 0.1 s per hour.
   - The hum rate follows the burst drift (rank correlation +0.53, model3). Mode "none" recordings ran a median 27 ppm
     off the model3 rate; the hum sees this. After the hum rate the two modes are alike (11.9 and 12.2 ppm on model5).
@@ -90,7 +90,7 @@ open_questions:
   - title: "Combine the hum with the capped rate"
     kind: next step
     summary: >-
-      On model5 the stamp model's capped rate is better typically (9.5 against 12 ppm) and the hum better in the tail.
+      On model5 the stamp model's capped rate is better typically ([[value:snuadc-uncorrected-drift|number]] against [[value:snuadc-uncorrected-drift-hum]]) and the hum better in the tail.
       Using the hum rate only where it falls outside the cap's range, or weighting the two, may beat both. Pooling g
       from whole teeth only was tried (11 Nov, `$W/hum_snuadc/m5_teeth`, tools/hum_snuadc_rate.py --min-teeth 1) and
       was worse (21 ppm): too few recordings per setup (318 in all).
@@ -113,4 +113,5 @@ figures:
       the dashed line the hum predicts it exactly.
     alt: Two overlaid histograms of drift in ms per hour, and a scatter of predicted against measured drift.
 typed_ok:
+  - {parameter: snuadc-uncorrected-drift-hum-hourly, text: "29", why: "a date (29 Oct)"}
   - {parameter: pc-grid-rate-single, text: "1.6", why: "the withdrawn value, quoted to explain the old split"}

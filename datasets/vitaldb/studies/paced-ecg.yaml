@@ -68,3 +68,5 @@ open_questions:
 code:
   - vitaldb-bench/tools/paced_screen.py
   - vitaldb-bench/tools/paced_breaks.py
+typed_ok:
+  - {parameter: snuadc-step-correction-size, text: "0.5", why: "the 0.5 s re-anchoring threshold"}

@@ -130,3 +130,5 @@ figures:
       from the start (1,898, orange; about 10 ppm off the census fit, not used); and the time from each AWP pause to
       the nearest correction. All drifts are against the recorder PC.
     alt: Six panels; a sharp spike at [[value:bis-period]] for BIS, a scatter around a diagonal for SNUADC, spikes at [[value:primus-period]] for Primus; below, two multimodal drift histograms and a spike at [[value:primus-awp-pause]].
+typed_ok:
+  - {parameter: snuadc-reset-stamp-step, text: "−0.5", why: "the -0.5 s steps of six excluded recordings"}

@@ -258,3 +258,7 @@ figures:
       one, else its port's; a BIS without a whole tooth likewise). Before borrowed rates the grey group sat near
       −176 ms/h.
     alt: Three panels; a sharp peak near −805 ms for step mode; two cumulative curves rising between 10 and 200 ms; a slope histogram with a narrow blue peak at zero and wider orange and grey humps also centred at zero.
+typed_ok:
+  - {parameter: bis-rate, text: "25", why: "milliseconds of offset spread, not the BIS rate"}
+  - {parameter: snuadc-raw-step-bias, text: "0.24", why: "the replaced single form's value, history"}
+  - {parameter: snuadc-raw-frequent-bias, text: "0.01", why: "the replaced single form's p5, history"}

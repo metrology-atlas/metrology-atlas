@@ -85,3 +85,5 @@ figures:
     source: vitaldb-bench tools/sync_figures.py
     caption: 'Size of the stamp jump at each clock correction: SNUADC steps back about 0.48 s or makes millisecond corrections; BIS jumps forward 0–0.5 s; CardioQ is broad.'
     alt: Three stacked histograms of jump size in seconds, one per device.
+typed_ok:
+  - {parameter: snuadc-step-correction-size, text: "0.5", why: "frequent-step rates per hour, a 0.5 ms remainder and BIS forward steps of 0-0.5 s"}

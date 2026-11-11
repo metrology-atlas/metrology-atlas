@@ -172,3 +172,5 @@ figures:
     SaO₂ − SpO₂ per gas, ranked, with SpO₂ = 100 censored (red).'
   alt: A pair of overlapping histograms centred near 7 mmHg; histograms of interval widths peaking near 1.5 and 2.3 mmHg;
     a ranked plot of oximetry gradients in steps of one percentage point.
+typed_ok:
+  - {parameter: co2-change-correlation-draw, text: "0.7", why: "an oximetry gradient in percentage points"}

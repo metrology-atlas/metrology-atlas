@@ -151,5 +151,6 @@ figures:
   alt: Two density plots dominated by a bright line of equality, with fainter straight lines fanning below it at three-quarters,
     two-thirds and half of the heart rate, and a sparse cloud elsewhere.
 typed_ok:
+  - {parameter: pr-hr-ridge-ratio, text: "0.88", why: "a lag in seconds"}
   - {parameter: pleth-hr-window-centre, text: "10", why: "10 s blocks of change, and the 10 s window PLETH_HR was taken to have, not the window centre"}
   - {parameter: hr-group-lag-in-pulse-rate, text: "2.4", why: "an SD of the rate difference in /min, not the group lag"}

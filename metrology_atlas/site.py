@@ -106,10 +106,21 @@ class Site:
                 return "\n\n" + self.figure(fig) + "\n\n"
             return self.a(m.group(1), m.group(2), m.group(3))
 
-        parts = re.split(r"(`[^`\n]*`)", text.strip())  # leave inline code as written
+        parts = re.split(r"(`[^`]*`)", text.strip())  # leave inline code as written (it may wrap over lines)
         return "".join(p if p.startswith("`") and p.endswith("`") and len(p) > 1 else
                        CODE_XREF.sub(lambda m: self.code_link(m.group(1), m.group(2)), XREF.sub(sub, p))
                        for p in parts)
+
+    def plain(self, text: str | None) -> str:
+        """Plain text for attributes (alt text): [[value:id]] becomes the value, other references their label or name."""
+        def sub(m) -> str:
+            if m.group(1) == "value" and m.group(2) in self.ds.items["parameter"]:
+                return value_text(self.ds.items["parameter"][m.group(2)], m.group(3))
+            if m.group(3):
+                return m.group(3)
+            kind, id_ = m.group(1), m.group(2)
+            return self.ds.items[kind][id_]["name"] if id_ in self.ds.items.get(kind, {}) else id_
+        return XREF.sub(sub, text or "").replace('"', "&quot;")
 
     def code_link(self, ref: str, label: str | None = None) -> str:
         """A code reference as a link into its repository (plain code text when the repository is unpublished)."""
@@ -154,9 +165,9 @@ class Site:
             if m:
                 ar = f";aspect-ratio:{float(m.group(1)):.0f}/{float(m.group(2)):.0f}"
             return (f'<figure id="fig-{f["id"]}" style="width:100%">\n  <object data="{src}" type="image/svg+xml" style="width:100%{ar}" '
-                    f'aria-label="{f["alt"]}">{f["alt"]}</object>\n'
+                    f'aria-label="{self.plain(f["alt"])}">{self.plain(f["alt"])}</object>\n'
                     f"  <figcaption>{note}{caption}</figcaption>\n</figure>")
-        return (f'<figure markdown="span" id="fig-{f["id"]}">\n  [![{f["alt"]}]({src})]({src})\n'
+        return (f'<figure markdown="span" id="fig-{f["id"]}">\n  [![{self.plain(f["alt"])}]({src})]({src})\n'
                 f"  <figcaption>{note}{caption}</figcaption>\n</figure>")
 
     def start(self, item: dict | None, base: str = "../") -> None:
@@ -730,7 +741,7 @@ class Site:
             # an anchor per form, so prose can link to one: variables/<id>.md#form-<form id>
             out += (f"| <a id=\"form-{t['id']}\"></a>{t['name']}{' (default)' if t['default'] else ''}{mark} | {kinds[t['kind']]} | {bias} | {u} | "
                     f"{('instant' if t['support'] == [0, 0] else _rng(t['support'])) if t['support'] else 'not stated'} | {'no' if t['uses_future'] else 'yes'} | "
-                    f"{dn} | {t['status']} | {t['evidence']}{'; ' + studies if studies else ''} |\n")
+                    f"{dn} | {t['status']} | {self.cell(t['evidence'])}{'; ' + studies if studies else ''} |\n")
             if t["components"]:
                 budgets += self.budget(t)
         fs = timing_forms(s)
@@ -750,7 +761,7 @@ class Site:
             f"| {c['name']} | {c['type']} | {c['distribution']} | {_rng([c['u_s'], c['u_s']])}"
             f"{' (in ' + c['included_in'] + ')' if c.get('included_in') else ''} | {c['scope']}"
             f"{' (' + (c.get('correlation') or 'exponential') + ', ' + _rng([c['length_s'], c['length_s']]) + ')' if c.get('length_s') else ''}"
-            f"{': ' + c['shared_with'] if c.get('shared_with') else ''} | {c.get('evidence') or ''} |\n"
+            f"{': ' + c['shared_with'] if c.get('shared_with') else ''} | {self.cell(c.get('evidence')) if c.get('evidence') else ''} |\n"
             for c in t["components"])
         return (f"\n**Uncertainty budget, {t['name']}** (combined {_rng([t['u_c'], t['u_c']])}"
                 f"{', an upper bound' if t['upper_bound'] else ''}):\n\n"
@@ -1594,7 +1605,7 @@ class Site:
         out = []
         for q in qs or []:
             label = QUESTION_LABEL[q["kind"]]
-            out.append(f"- **{q['title']}** *({label})*. {self.prose(q['summary']).strip()}")
+            out.append(f"- **{self.summ(q['title'])}** *({label})*. {self.prose(q['summary']).strip()}")
         return "\n".join(out)
 
     def question_list(self, kinds=None, heading="##") -> str:
@@ -1610,7 +1621,7 @@ class Site:
             out += f"{heading} {QUESTION_KIND_TITLES[kind]}\n\n"
             for q, sid, src in rows:
                 anchor = "open-questions" if src == "study" else "open-questions-and-future-work"
-                out += (f"- **[{q['title']}]({self.href(src, sid)}#{anchor})** · "
+                out += (f"- **[{self.plain(q['title'])}]({self.href(src, sid)}#{anchor})** · "
                         f"*{self.name(src, sid)}*  \n  {self.prose(q['summary']).strip()}\n")
             out += "\n"
         return out
@@ -1656,7 +1667,7 @@ class Site:
             for kind, id_, f in groups[g]:
                 src = f"figures/{f['file']}"
                 href = self.href(kind, id_).replace(".md", ".html")
-                out += (f'<a class="fig-card" href="{href}"><img src="{src}" alt="{f["alt"]}" loading="lazy">'
+                out += (f'<a class="fig-card" href="{href}"><img src="{src}" alt="{self.plain(f["alt"])}" loading="lazy">'
                         f'<span>{self.name(kind, id_)}</span></a>\n')
             out += "</div>\n\n"
         return out

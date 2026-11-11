@@ -37,7 +37,7 @@ method: |
   $W/runbooks/primus_chain_v4.md): `python tools/primus_numbers.py --work $W --sync $W/primus_sync_accuracy_v4
   --rule $W/primus_breath_rule_v4 --out $W/primus_numbers_v4`. Rerun 10–11 November with the v4 rates (model5's
   cap for tracks without a correction): the held-out errors moved by under 4 ms, the breath-error share from 12.4%
-  to 12.2%, the per-recording lag by 9 ms. Earlier, rerun 9 November with the stamp model's setup-rate
+  to [[value:primus-breath-error-share]], the per-recording lag by 9 ms. Earlier, rerun 9 November with the stamp model's setup-rate
   fallbacks ([[study:snuadc-stamp-sawtooth]]); the 19 October run used port rates (old rates file and folders
   without _v3; it reproduces exactly). The headline numbers did not change: 79 ms robust SD, [[value:primus-breath-error-share]] of windows a
   whole breath off; the 95% interval and the raw lags moved by under 5 ms. One slope per recording with an
@@ -131,8 +131,8 @@ open_questions:
     kind: next step
     summary: >-
       The breaths this study finds in the Primus airway pressure and CO2 are not a published label family, so
-      they are not an atlas variable. Published with a version, they would be derived from [[variable:primus-
-      awp]] and [[variable:primus-co2]], and features per breath would propagate from them.
+      they are not an atlas variable. Published with a version, they would be derived from
+      [[variable:primus-awp]] and [[variable:primus-co2]], and features per breath would propagate from them.
 code:
   - vitaldb-bench/tools/vent_sync_pilot.py
   - vitaldb-bench/tools/primus_drift_probe.py

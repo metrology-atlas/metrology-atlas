@@ -93,7 +93,7 @@ figures:
     theme: example traces
     source: vitaldb-bench tools/ppg_sawtooth_figures.py
     records: [2156, 6241, 1094]
-    caption: The sawtooth correction removes the PPG frame slips in [[case:2156]], [[case:6241]] and [[case:1094]] (panels a–c). Across the 266 cases the steps at 831 modelled slips shrink from 32.4 ms to 0.3 ms (median), the slope inside the teeth from −24 to +3 ppm (169 cases with full teeth), and the sawtooth rate groups by recording setup rather than by SNUADC drift (panels d–i). Drawn with every fitted tooth corrected (tier C and above), as before the tiers existed; with physiosync's default (B and above) the teeth of [[case:6241]] and [[case:1094]], all tier C, keep the offset only.
+    caption: The sawtooth correction removes the PPG frame slips in [[case:2156]], [[case:6241]] and [[case:1094]] (panels a–c). Across the 266 cases the steps at 831 modelled slips shrink from [[value:pleth-slip-step]] to 0.3 ms (median), the slope inside the teeth from −24 to +3 ppm (169 cases with full teeth), and the sawtooth rate groups by recording setup rather than by SNUADC drift (panels d–i). Drawn with every fitted tooth corrected (tier C and above), as before the tiers existed; with physiosync's default (B and above) the teeth of [[case:6241]] and [[case:1094]], all tier C, keep the offset only.
     alt: Three long PAT traces of measured and corrected values beside six aggregate histograms and scatter plots.
   - id: pat-timeseries
     file: pat-timeseries.png

@@ -92,4 +92,6 @@ code:
 - vitaldb-bench/tools/pleth_hr_derivation.py
 - vitaldb-bench/examples/run_scan.sh
 typed_ok:
+  - {parameter: pleth-hr-window-pulses, text: "10", why: "band edge, delay range and candidate sizes; the window is linked where it is the result"}
+  - {parameter: pr-hr-ridge-ratio, text: "0.9", why: "a delay difference in seconds"}
   - {parameter: pleth-hr-window-centre, text: "10", why: "the 0–10 s range of delays searched, not the window centre"}

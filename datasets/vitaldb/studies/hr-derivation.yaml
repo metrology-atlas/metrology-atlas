@@ -74,3 +74,5 @@ open_questions:
     between 10% and 25% from the median, would separate them.
 code:
 - vitaldb-bench/tools/hr_derivation.py
+typed_ok:
+  - {parameter: hr-outlier-band, text: "15", why: "a candidate band in the list and the 15 s end of the delay search"}
