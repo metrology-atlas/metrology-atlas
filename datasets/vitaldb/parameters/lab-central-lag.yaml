@@ -5,3 +5,8 @@ display: "about 8–24 min (median about 14; weak, mostly chance matches)"
 status: estimated
 study: lab-timestamp-meaning
 about: [lab-central]
+sources:
+- output: W:line_access/summary_v2/summary.json
+  key: table.central
+  field: display
+  note: matched central-lab groups and their chance (control) share; the lag itself is read from lab_time_labels.csv

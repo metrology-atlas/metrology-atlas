@@ -35,6 +35,7 @@ from metrology_atlas import provenance as pv
 LEVELS = ("missing", "differs", "stale", "untraced", "ok")
 ROOTED = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(.*)$")
 NEEDS_SOURCE = ("measured", "derived")
+BASIS = re.compile(r"\[\[(reference|parameter|study):")
 
 
 @dataclass
@@ -317,7 +318,11 @@ def check(ds, roots: pv.Roots | None = None) -> tuple[list[Finding], dict[str, l
             continue
         sources = p.get("sources") or []
         if not sources:
-            unsourced.setdefault(p.get("status", "?"), []).append(pid)
+            st = p.get("status", "?")
+            unsourced.setdefault(st, []).append(pid)
+            # an assumed, documented or estimated number needs no output, but it should say where it comes from
+            if st not in NEEDS_SOURCE and not p.get("study") and not BASIS.search(str(p)):
+                unsourced.setdefault("no basis", []).append(pid)
             continue
         bad = check_value(p, sources, g)
         for i, s in enumerate(sources):
@@ -375,8 +380,13 @@ def report(findings: list[Finding], unsourced: dict[str, list[str]]) -> str:
                                         for lv, n in counts.items() if n)
              + f" (sources of {len({f.parameter for f in findings})} parameters)"]
     need = sum(len(v) for k, v in unsourced.items() if k in NEEDS_SOURCE)
-    if unsourced:
-        lines.append("provenance: no sources: " + ", ".join(f"{len(v)} {k}" for k, v in sorted(unsourced.items()))
+    kinds = {k: v for k, v in unsourced.items() if k != "no basis"}
+    if kinds:
+        lines.append("provenance: no sources: " + ", ".join(f"{len(v)} {k}" for k, v in sorted(kinds.items()))
                      + f" ({need} measured or derived)")
+    for k in sorted(v for k, v in kinds.items() if k in NEEDS_SOURCE for v in v):
+        lines.append(f"provenance: {k}: no sources")
+    for k in unsourced.get("no basis", []):
+        lines.append(f"provenance: {k}: no sources and no study, reference or parameter cited")
     lines += [f"provenance: {f.text()}" for f in findings if f.level != "ok"]
     return "\n".join(lines)

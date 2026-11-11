@@ -103,8 +103,9 @@ def test_untraced_missing_and_unsourced(setup):
                             r={"value": 1}, s={"value": 1, "status": "documented"}))
     got = {x.parameter: x.level for x in f}
     assert got == {"p": "untraced", "q": "missing"}
-    assert uns == {"measured": ["r"], "documented": ["s"]}
+    assert uns == {"measured": ["r"], "documented": ["s"], "no basis": ["s"]}
     assert "no sources: 1 documented, 1 measured (1 measured or derived)" in graph.report(f, uns)
+    assert "s: no sources and no study, reference or parameter cited" in graph.report(f, uns)
 
 
 def test_sum_of_parts(setup):
