@@ -5,3 +5,6 @@ display: "1.1 per hour (8,245 in 7,507 h); occlusions 0.4 per hour"
 status: measured
 study: arterial-line-accesses
 about: [snuadc-art]
+sources:
+- output: W:line_access/summary_v2/summary.json
+  field: display

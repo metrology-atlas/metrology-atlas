@@ -12,3 +12,7 @@ notes: >-
   From tools/primus_numbers.py (work/primus_numbers_v4/summary.json, v4 rates, 11 Nov 2026, raw_lag_per_recording_s, sign reversed), with the
   breath of each stretch from tools/primus_breath_rule.py. Includes the airway-to-CVP physiology. Before the breath
   correction (1 November) the same median was −1.787 s, 5th–95th percentile −5.782 to +0.693 s.
+sources:
+- output: W:primus_numbers_v4/summary.json
+  key: raw_lag_per_recording_s.median
+  scale: -1

@@ -9,3 +9,8 @@ notes: >-
 status: measured
 study: numeric-delay-variability
 about: [solar8000-vs-snuadc]
+sources:
+- output: W:examples/numeric_delay_variability_v4/agg/summary.json
+  key: tracks
+  field: display
+  note: tracks.*.drift_s_per_h_p10_50_90

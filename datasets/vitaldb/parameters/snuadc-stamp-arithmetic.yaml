@@ -7,3 +7,6 @@ spread: {n: 6321, text: "census of 6,321 files (17 October): median −0.9535 pp
 status: measured
 study: stamp-arithmetic
 about: [snuadc-sample, snuadc-frequent-vs-pc]
+sources:
+- output: W:results/clock/census/stamp_census_summary.json
+  key: stretch_ppm.median

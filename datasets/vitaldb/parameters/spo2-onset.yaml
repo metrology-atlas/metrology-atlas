@@ -5,3 +5,7 @@ display: "about 4 s to the start of the dip, 8 s to its deepest; window 10–20 
 status: measured
 study: spo2-latency
 about: [solar8000-spo2]
+sources:
+- output: code:vitaldb/vitaldb-bench/results/pat/spo2_event_pilot_summary.json
+  field: display
+  note: the 1 November pilot

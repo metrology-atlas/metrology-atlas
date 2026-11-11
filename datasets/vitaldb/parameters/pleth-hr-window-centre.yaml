@@ -6,12 +6,18 @@ value: 9.5
 unit: s
 spread:
   text: >-
-    9.48 s (early HR group) and 9.45 s (late): the lag read at the plateau midpoints plus each recording's HR delay
+    9.50 s (early HR group) and 9.44 s (late): the lag read at the plateau midpoints plus each recording's HR delay
     label, the mean wait for the 2 s poll and half of 8 R–R intervals (vitaldb-bench examples/pr_window_routes.py;
-    $W/pr_window_routes/summary.json). First reported as 8.5 s (plateau edges, a 6 s HR window, no poll), then 9.6 s
+    $W/pr_window_routes_v4l/summary.json, v4 rates and labels; 9.48 and 9.45 s before). First reported as 8.5 s (plateau edges, a 6 s HR window, no poll), then 9.6 s
     (7 Nov, plateau edges).
 status: measured
 study: hr-vs-pulse-rate
 about:
 - solar8000-pleth-hr
 date: 2026-11-08
+sources:
+- output: W:pr_window_routes_v4l/summary.json
+  key: groups.early.route1_centre_s
+- output: W:pr_window_routes_v4l/summary.json
+  key: groups.late.route1_centre_s
+  field: context

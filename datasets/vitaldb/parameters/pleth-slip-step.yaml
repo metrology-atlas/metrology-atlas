@@ -7,3 +7,6 @@ spread: {q1: 30.4, q3: 34.8}
 status: measured
 study: ppg-sawtooth
 about: [pleth-content-vs-frames]
+sources:
+- output: W:ppg_correction_check/summary.json
+  key: step_raw_ms_median

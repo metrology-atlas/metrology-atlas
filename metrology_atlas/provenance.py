@@ -244,7 +244,7 @@ def inputs_of(args: list[str], out: Path, script: Path | None, program: bool = F
                 res.append(d)
                 continue
             try:
-                d = describe(r, skip=out, **kw)
+                d = describe(r, skip=out if r in out.parents else None, **kw)
             except OSError as e:
                 d = {"path": portable(r), "error": f"{type(e).__name__}: {e}"[:200]}
             d["arg_index"] = i
@@ -299,7 +299,8 @@ def new_record(out: Path, args: list[str], script: Path | None, kind: str, note:
             ins.append({"path": R.portable(Path(e)), "kind": "root", "declared": True})
             continue
         try:
-            d = describe(Path(e), skip=Path(out).resolve(), **kw)
+            o, r = Path(out).resolve(), Path(e).resolve()
+            d = describe(Path(e), skip=o if r in o.parents else None, **kw)
         except OSError as err:
             d = {"path": portable(Path(e)), "error": f"{type(err).__name__}: {err}"[:200]}
         d["declared"] = True
@@ -318,7 +319,7 @@ def new_record(out: Path, args: list[str], script: Path | None, kind: str, note:
 def write(rec: dict, out: Path) -> Path:
     d = Path(out) / RUNS
     d.mkdir(parents=True, exist_ok=True)
-    stamp = dt.datetime.now().strftime("%Y%m%dT%H%M%S")
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")   # UTC, so names sort across machines
     p = d / f"run_{stamp}_{os.getpid()}.json"
     n = 1
     while p.exists():

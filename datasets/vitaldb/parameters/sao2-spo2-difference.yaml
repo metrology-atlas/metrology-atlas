@@ -14,3 +14,6 @@ about:
 - solar8000-spo2
 - sao2
 date: 2026-10-18
+sources:
+- output: W:examples/bg/summary.json
+  key: spo2.point_at_draw.median

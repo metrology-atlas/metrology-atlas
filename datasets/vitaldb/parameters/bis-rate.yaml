@@ -11,3 +11,6 @@ headline: true
 date: 2026-10-19
 notes: >-
   Full release, replacing the pilot value of 23 ppm (p10–p90 17–47). From the correction steps of all recordings ([[study:device-correction-schedules]], 19 October): median 24.8 ppm (5th–95th 7.3–51.1) in 1,939 recordings, identical to the clock-correction scan where both exist; the full census fit gives 4,728 recordings, median 21.1 ppm (5th–95th 2.1–52.8). Relative to the recorder PC.
+sources:
+- output: W:signal_survey/continuity/summary.json
+  key: bis.drift_ppm_q.2

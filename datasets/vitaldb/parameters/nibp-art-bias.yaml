@@ -11,3 +11,6 @@ study: cuff-vs-arterial-agreement
 about:
 - solar8000-nibp
 date: 2026-10-19
+sources:
+- output: W:examples/cuff_vs_arterial/agg/summary.json
+  key: population.mean_diff

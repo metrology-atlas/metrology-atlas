@@ -10,3 +10,6 @@ about: [primus-awp]
 date: 2026-11-11
 notes: >-
   tools/primus_numbers.py, raw_lag_per_recording_s.rsd (work/primus_numbers_v4, v4 rates, 11 Nov 2026; 0.702 before). It was 1.325 s before the breath correction.
+sources:
+- output: W:primus_numbers_v4/summary.json
+  key: raw_lag_per_recording_s.rsd

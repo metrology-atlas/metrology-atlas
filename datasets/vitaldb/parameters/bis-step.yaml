@@ -11,3 +11,6 @@ date: 2026-10-19
 notes: >-
   The whole release (signal_survey/continuity/summary.json, step_s_median 0.203); it is whatever drift built up over the 8,192 s since the previous correction. The pilot
   ([[study:correction-periods]]) gave 0.155 s median (0.083 to 0.289 s) in 266 corrections.
+sources:
+- output: W:signal_survey/continuity/summary.json
+  key: bis.step_s_median

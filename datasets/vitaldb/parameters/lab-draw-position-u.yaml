@@ -9,3 +9,6 @@ status: measured
 study: arterial-line-accesses
 about: [lab-blood-gas]
 date: 2026-11-01
+sources:
+- output: W:results/pat/lab_draw_labels.csv
+  note: position of the draw in its access (rectangular), median access 53 s

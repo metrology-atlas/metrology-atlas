@@ -14,3 +14,7 @@ notes: >-
   EEG packets of 0.125 s: probably the BIS's 16-bit packet counter wrapping round, which Vital Recorder treats as a
   break in the sequence and re-anchors at arrival minus 1 s [[reference:lee2026correspondence-9nov]]. The counter runs from when the BIS starts, which
   is why the first correction comes at any time in a recording (an inference, not yet confirmed).
+sources:
+- output: W:signal_survey/continuity/summary.json
+  key: bis.later_at_8192_share
+  field: context

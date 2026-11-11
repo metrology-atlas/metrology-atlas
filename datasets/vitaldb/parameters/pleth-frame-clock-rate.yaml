@@ -5,3 +5,6 @@ display: "+7 to +92 ppm by setup (medians over 42 PC keys); within 3 ppm of its 
 status: measured
 study: setup-identification
 about: [oximeter-frames-vs-snuadc]
+sources:
+- output: W:setups/assign_frame
+  field: display

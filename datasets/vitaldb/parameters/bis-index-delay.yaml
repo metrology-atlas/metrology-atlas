@@ -8,3 +8,6 @@ spread: {p5: 3, p10: 3, p90: 4, p95: 6, n: 3297, text: "good fits; whole seconds
 status: measured
 study: bis-index-delay
 about: [bis-index]
+sources:
+- output: W:results/pat/bis_index_delay_summary.json
+  key: good_fast_d_p10_25_50_75_90.2

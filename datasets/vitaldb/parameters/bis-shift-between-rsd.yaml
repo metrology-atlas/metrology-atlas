@@ -8,3 +8,6 @@ status: measured
 study: shared-bursts
 about: [bis-eeg]
 date: 2026-11-01
+sources:
+- output: W:bis_numbers/bis_numbers_m5.json
+  key: fixed_shift.between_recordings_rsd_s

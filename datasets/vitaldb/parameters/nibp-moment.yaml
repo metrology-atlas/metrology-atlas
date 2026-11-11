@@ -11,3 +11,7 @@ study: cuff-vs-arterial-agreement
 about:
 - solar8000-nibp
 date: 2026-10-19
+sources:
+- output: W:examples/cuff_vs_arterial/agg/summary.json
+  field: context
+  note: lag of best agreement; the number itself is not in this summary (a saved aggregate for it is still to write)

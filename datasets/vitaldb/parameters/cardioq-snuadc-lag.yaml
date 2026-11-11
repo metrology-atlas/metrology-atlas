@@ -5,3 +5,7 @@ display: "0.4–4.4 s (p5–p95); matched-beat MAD 0.24 s (24 cases)"
 status: measured
 study: rare-device-sync
 about: [cardioq-vs-snuadc]
+sources:
+- output: W:rare_device_sync_v4/summary.json
+  key: CardioQ
+  field: display

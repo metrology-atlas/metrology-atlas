@@ -10,3 +10,6 @@ about: [case-end]
 date: 2026-10-31
 notes: Computed from clinical_data.csv of the release (6,388 cases). A label that spans a track's records is a little
   shorter than its recording where the track starts late or stops early.
+sources:
+- output: R:clinical_data.csv
+  note: caseend - casestart over the release; no saved aggregate

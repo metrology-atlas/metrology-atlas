@@ -6,3 +6,7 @@ status: measured
 study: paced-ecg
 about: [pacemaker, snuadc-sample]
 date: 2026-10-17
+sources:
+- output: W:results/paced/breaks.jsonl
+  field: display
+  note: P_count against P_stamp per stretch

@@ -119,9 +119,11 @@ def main() -> None:
                 L = list(leaves(cache[f]))
                 if v is None:
                     continue
+                also = None
                 for path, x in L:
                     for s in matches(float(v), x):
-                        also = sorted(k for k, y in sp.items() if any(matches(float(y), z) for _, z in L))
+                        if also is None:     # once per file: which spread numbers the file also holds
+                            also = sorted(k for k, y in sp.items() if any(matches(float(y), z) for _, z in L))
                         hits.append({"output": rooted(f, R), "key": path, "scale": s, "found": x, "spread_also": also})
         hits.sort(key=lambda h: (-len(h["spread_also"]), h["scale"] != 1, len(h["key"])))
         res[pid] = {"value": v, "spread": sp, "hits": hits[:12]}

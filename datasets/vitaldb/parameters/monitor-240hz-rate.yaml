@@ -5,3 +5,7 @@ display: "−56 to −23 ppm (5th–95th percentile, 229 recordings; median −3
 status: measured
 study: monitor-lines
 about: [monitor-output-clock]
+sources:
+- output: W:monitor_lines/summary.json
+  key: lines.ART 240 Hz.ppm
+  field: display

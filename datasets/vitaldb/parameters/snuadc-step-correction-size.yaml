@@ -16,3 +16,10 @@ notes: >-
   (0.484–0.492 s) is measured from the start of the preceding run, so it also holds the −0.954 ppm stamp arithmetic
   built up over that run, 5.9 ms over the median run of 6,198 s ([[study:clock-correction-scan]]). The 0.49 s quoted
   as the trigger is the drift at which the reset falls, rounded.
+sources:
+- output: W:signal_survey/continuity/snuadc_reset_events.csv
+  field: context
+  note: the stamp step (-0.4804 s) plus the lost signal (snuadc-reset-loss)
+- output: W:results/paced/reset_loss.json
+  key: mean_ms
+  field: context

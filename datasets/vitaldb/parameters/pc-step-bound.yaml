@@ -6,3 +6,8 @@ status: measured
 study: recorder-pc-steps
 about: [recorder-pc-vs-utc, recorder-pc]
 date: 2026-10-17
+sources:
+- output: W:results/clock/pc_steps_0.jsonl
+  field: display
+- output: W:results/clock/pc_steps_1.jsonl
+  field: display

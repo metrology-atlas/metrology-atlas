@@ -8,3 +8,6 @@ status: measured
 study: hr-delay-groups
 about: [solar8000-hr]
 date: 2026-11-11
+sources:
+- output: W:results/delay_labels_v4/hr_label_params.json
+  key: late.rsd

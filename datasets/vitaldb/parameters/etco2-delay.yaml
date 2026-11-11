@@ -7,3 +7,6 @@ spread: {p10: 0.75, p90: 3.4, text: "median and p10–p90 over cases; tools/nume
 status: measured
 study: numeric-delay-variability
 about: [primus-numerics]
+sources:
+- output: W:examples/numeric_delay_variability_v4/agg/summary.json
+  key: tracks.ETCO2.d_p10_25_50_75_90.2

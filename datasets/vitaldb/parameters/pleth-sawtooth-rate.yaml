@@ -6,3 +6,6 @@ status: measured
 study: ppg-sawtooth
 about: [pleth-content-vs-frames, snuadc-pleth]
 headline: true
+sources:
+- output: W:results/pat/sawtooth_rate_by_setup.json
+  field: display

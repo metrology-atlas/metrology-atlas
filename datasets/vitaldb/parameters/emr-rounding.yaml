@@ -11,3 +11,7 @@ about: [emr-events]
 notes: >-
   The dataset's creator confirms that operation, anaesthesia and operating-room times were entered by hand in the EMR,
   usually at 5-minute resolution ([[reference:lee2026correspondence]]).
+sources:
+- output: code:vitaldb/vitaldb-bench/results/pat/emr_markers_summary.json
+  field: display
+  note: the value is half the 300 s mark; the observed shifts are in this summary

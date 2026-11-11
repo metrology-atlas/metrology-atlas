@@ -9,3 +9,7 @@ status: measured
 study: numerics-derivation-release
 about: [primus-numerics]
 date: 2026-11-07
+sources:
+- output: W:primus_awp_anchor_v4/stretches_summary.json
+  field: context
+  note: AWP records every 0.48 s; the number itself is not in this summary (a saved aggregate for it is still to write)

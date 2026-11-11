@@ -106,7 +106,7 @@ class Graph:
             pre = portable.rstrip("/") + "/"
             hits += [r for k, v in self.by_output.items() if k.startswith(pre) for r in v]
         seen, out = set(), []
-        for rec, p in sorted(hits, key=lambda x: x[1].name, reverse=True):
+        for rec, p in sorted(hits, key=lambda x: (_epoch(x[0]), x[1].name), reverse=True):
             if p not in seen:
                 seen.add(p)
                 out.append((rec, p))
@@ -195,6 +195,16 @@ class Graph:
                         why.append(f"upstream {self.norm(i['path'])}: {v[0]}")
         self.verdicts[path] = why
         return why
+
+
+def _epoch(rec: dict) -> float:
+    """When a run started, as epoch seconds (records carry their machine's offset; names do not sort across machines)."""
+    for k in ("started", "finished"):
+        try:
+            return dt.datetime.fromisoformat(rec[k]).timestamp()
+        except (KeyError, TypeError, ValueError):
+            continue
+    return 0.0
 
 
 def tree_before(p: Path, t: float, skip: Path | None = None) -> str | None:

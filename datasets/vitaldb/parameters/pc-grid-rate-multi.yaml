@@ -13,3 +13,6 @@ notes: >-
   this describes those recordings, not every PC. Until 9 November this parameter was the rate in recordings with two
   or more corrections (-13.8 ppm, 360), which included 42 without a whole tooth (vitaldb-bench tools/mains_hum.py agg
   --min-teeth 1).
+sources:
+- output: W:pc_grid_check/agg_check/summary_setup.json
+  key: pc_vs_grid_ppm.whole teeth.p10_25_50_75_90.2

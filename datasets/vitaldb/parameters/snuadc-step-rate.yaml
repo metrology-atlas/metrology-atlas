@@ -13,3 +13,6 @@ notes: >-
   all recordings ([[study:device-correction-schedules]], 19 October): median −62.9 ppm (5th–95th −80.3 to −36.9) in
   642 recordings with two resets or more; the full census fit gives 2,728 recordings, median −49.5 ppm (5th–95th −79.1 to −8.1). Relative to the recorder PC.
 headline: true
+sources:
+- output: W:signal_survey/continuity/summary.json
+  key: snuadc.drift_ppm_q_intervals.2

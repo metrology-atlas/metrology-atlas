@@ -238,3 +238,12 @@ def test_a_root_given_as_input_is_not_read(repo, work):
     rec = records(out)[0]
     root = [i for i in rec["inputs"] if i.get("kind") == "root"]
     assert root == [{"path": "W:", "kind": "root", "arg_index": 5, "flag": "--work"}]
+
+
+def test_a_declared_input_inside_the_output_folder_is_read(repo, work):
+    out = work / "res"
+    (out / "parts").mkdir(parents=True)
+    (out / "parts" / "p0.csv").write_text("1\n")
+    pv.main(["record", "--out", str(out), "--input", str(out / "parts"), "--", sys.executable, "-c", "pass"])
+    [i] = records(out)[0]["inputs"]
+    assert i["path"] == "W:res/parts" and i["files"] == 1 and "tree_sha256" in i

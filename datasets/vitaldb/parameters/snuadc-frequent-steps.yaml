@@ -12,3 +12,6 @@ notes: >-
   result and has been replaced. Sizes: the median step of each recording, p10–p90 across the 26 recordings the
   clock_correction_periods.py run covers (all steps forward; 2–64 ms in all); the earlier "+5 to +15 ms" had no
   saved source. Both from vitaldb-bench tools/frequent_steps_summary.py ($W/frequent_steps/summary.json).
+sources:
+- output: W:frequent_steps/summary.json
+  field: display

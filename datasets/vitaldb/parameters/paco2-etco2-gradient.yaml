@@ -14,3 +14,6 @@ about:
 - primus-numerics
 - pco2
 date: 2026-10-18
+sources:
+- output: W:examples/bg/summary.json
+  key: etco2.point_at_draw.median

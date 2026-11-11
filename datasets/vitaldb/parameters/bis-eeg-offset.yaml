@@ -15,3 +15,9 @@ notes: >-
   1 s, and places the following packets 0.125 s apart by their sequence numbers; a packet arrives about 0.2 s after
   its first sample on the working reference, so the stamps sit about 0.8 s early [[reference:lee2026correspondence-9nov]]. The BIS numerics (index,
   SQI, EMG, SR, SEF) are stamped the same way, at arrival minus 1 s.
+sources:
+- output: W:bis_numbers/bis_numbers_m5.json
+  key: raw.bias_per_recording_s.median
+- output: W:bis_numbers/bis_numbers_m5.json
+  key: raw.recordings
+  field: n

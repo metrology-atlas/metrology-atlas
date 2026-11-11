@@ -12,3 +12,6 @@ study: lab-bg-vs-central
 about:
 - gluc
 date: 2026-11-01
+sources:
+- output: W:examples/lab_bg_vs_central/summary.json
+  key: within_window.gluc.median_diff

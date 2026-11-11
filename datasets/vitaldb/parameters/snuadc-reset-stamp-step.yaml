@@ -13,3 +13,6 @@ notes: >-
   −0.48039 s. With the signal never sampled at each correction ([[parameter:snuadc-reset-loss]]) it makes up the
   true correction ([[parameter:snuadc-step-correction-size]]); tools/clock_edges.py scales reset-based SNUADC
   rates by their ratio.
+sources:
+- output: W:signal_survey/continuity/snuadc_reset_events.csv
+  note: median size of the reset steps

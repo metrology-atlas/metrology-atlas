@@ -13,3 +13,9 @@ date: 2026-11-11
 notes: >-
   Run r6 (11 November; as loop-solar-bis-misclosure): $W/clock_network/r6/summary.json, loop "resets + solar".
   Run r5 (6 November, the earlier HR rule): −1.03 ppm (IQR −20.3 to +20.0, 178 loops).
+sources:
+- output: W:clock_network/r6/summary.json
+  key: loops.resets + solar.misclosure_ppm_p5_25_50_75_95.2
+- output: W:clock_network/r6/summary.json
+  key: loops.resets + solar.loops
+  field: n

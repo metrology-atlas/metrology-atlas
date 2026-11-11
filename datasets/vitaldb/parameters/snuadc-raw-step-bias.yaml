@@ -10,3 +10,9 @@ status: measured
 study: snuadc-stamp-sawtooth
 about: [snuadc-ecg-ii, snuadc-art]
 date: 2026-11-09
+sources:
+- output: W:snu_raw_offset_v4/summary.json
+  key: step.anchored_p5_p50_p95_s.1
+- output: W:snu_raw_offset_v4/summary.json
+  key: step.recordings
+  field: n

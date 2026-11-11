@@ -9,3 +9,7 @@ status: measured
 study: shared-bursts
 about: [bis-vs-snuadc]
 date: 2026-10-19
+sources:
+- output: W:results/pat/shared_bursts_summary.json
+  field: context
+  note: the burst-slope rate; the number itself is not in this summary (a saved aggregate for it is still to write)

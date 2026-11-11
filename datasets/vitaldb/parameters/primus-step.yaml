@@ -13,3 +13,9 @@ notes: >-
   8,077 corrections, median −16 ms, p10–p90 −144 to +144 ms, p5–p95 −176 to +176 ms. The pilot
   ([[study:correction-periods]]) gave +8 ms median (−64 to +80 ms). These steps do not track the Primus
   drift ([[parameter:primus-drift-breath]]).
+sources:
+- output: W:signal_survey/continuity/primus_corrections.csv
+  note: median correction step
+- output: W:signal_survey/continuity/summary.json
+  key: primus.correction_ms_top
+  field: context
