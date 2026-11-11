@@ -17,3 +17,8 @@ notes: >-
   resets 5.11, bursts 5.14, BIS steps 4.73, breath 3.28, PIP 1.97; the resets rise because the Solar8000 loops
   confront them with a second route. r3 of 19 October, with the earlier 0.498 s correction: 4.8, 5.19, 5.19, 3.28,
   1.97. The stamp arithmetic has no redundancy (7.96 in r6, 7.14 in r5; not counted).
+sources:
+- output: W:clock_network/r6/summary.json
+  key: methods
+  field: display
+  note: variance_factor per method

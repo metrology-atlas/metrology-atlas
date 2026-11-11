@@ -19,3 +19,6 @@ notes: >-
   this loop at about 10 ppm (mean pressure 11.0 in both runs, HR 9.1), so the earlier +4.1 was a compromise of a
   biased HR with the pressure route ([[study:solar-snuadc-clock]]; vitaldb-bench examples/solar_route_check.py,
   $W/clock_network/r6_inputs/solar_route_check).
+sources:
+- output: W:clock_network/r6/summary.json
+  key: loops.bis_steps + bursts + solar.misclosure_ppm_p5_25_50_75_95.2

@@ -31,7 +31,9 @@ timing:
       status: estimated
   domain: vigilance
   status: estimated
-  evidence: running median over 10-36 min; 0-175 s after its window ends (52-case pilot, 16 at zero); median assumed
+  evidence: running median over 10-36 min; 0-175 s after its window ends (52-case pilot of 13 October, 16 at zero);
+    median assumed. The 11 November rerun (v4 rates, more candidate rules) gives 0-231 s (p10-p90), median 48 s, 15 at
+    zero, and windows of 10-60 min; this form is not yet refitted to it
 tags:
 - stub
 # Links between variables (schema 0.4)

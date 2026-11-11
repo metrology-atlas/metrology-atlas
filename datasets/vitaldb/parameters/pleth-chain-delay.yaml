@@ -8,3 +8,7 @@ display: "385 ms, one global value (stored R-to-foot delay 655 ms minus an adopt
 status: measured
 study: pat-offset-census
 about: [snuadc-pleth]
+sources:
+- output: W:results/pat/setup_offsets.json
+  key: all.offset_s
+  scale: 1000

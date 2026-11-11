@@ -14,3 +14,6 @@ notes: >-
   earlier 0.498 s (run r3, 19 October) the median was +1.3 ppm (IQR −3.74 to +7.8).
   Unchanged in run r5 (6 November), which adds the Solar8000 route, and in run r6 (11 November, stage-3 inputs on
   the v4 rates and the current HR rule; $W/clock_network/r6).
+sources:
+- output: W:clock_network/r6/summary.json
+  key: loops.bis_steps + bursts + resets.misclosure_ppm_p5_25_50_75_95.2

@@ -9,3 +9,7 @@ study: device-correction-schedules
 about: [primus-awp-pauses]
 date: 2026-10-30
 notes: 10,496 pauses in 5,502 recordings, every 7,230 s ([[parameter:primus-period]]).
+sources:
+- output: W:results/clock/periods_a.jsonl
+  note: per recording; the release aggregate (19 Oct) was not saved
+- output: W:results/clock/periods_b.jsonl

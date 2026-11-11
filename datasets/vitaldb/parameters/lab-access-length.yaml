@@ -8,3 +8,6 @@ status: measured
 study: arterial-line-accesses
 about: [lab-blood-gas]
 date: 2026-11-01
+sources:
+- output: W:results/pat/lab_draw_labels.csv
+  note: median of end_s - start_s over matched blood gases

@@ -12,3 +12,7 @@ notes: >-
   The outliers are the COM12 station (−57 ppm, 36 recordings) and the COM19 station (+7 ppm, 71); the other six lie
   from −16 to −5 ppm. Until 9 November, −47 to +18 ppm over 9 setups, with most recordings' SNUADC rates line fits
   through one step, not rates ([[parameter:pc-grid-rate-single]]).
+sources:
+- output: W:pc_grid_check/agg_check/summary_setup30.json
+  key: pc_vs_grid_by_setup_medians
+  field: spread

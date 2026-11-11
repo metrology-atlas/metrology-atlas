@@ -10,3 +10,6 @@ about: [snuadc-sample]
 date: 2026-10-30
 notes: >-
   vitaldb-bench tools/hum_snuadc_rate.py on the burst validation of model5 (work/hum_snuadc/m5/hum_summary.json, recorded run, 11 Nov 2026): recordings_without_corrections and rates_written; the same in the 29 Oct run.
+sources:
+- output: W:hum_snuadc/m5/hum_summary.json
+  key: rates_written

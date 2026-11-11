@@ -20,3 +20,6 @@ notes: >-
   42 ms median, p90 150 ms, 62 ms robust SD, 17 and 30 ms with the recording's own bursts, 2,710 recordings. The pilot
   gave 33 ms median, p90 116 ms (16 and 67 ms with the case's own bursts) in 143 cases; the whole release includes
   recordings with no correction, with mode changes and with many gaps, which the pilot's cases mostly lacked.
+sources:
+- output: W:bis_numbers/bis_numbers_m5.json
+  key: sync_mode_constant.median_abs_s

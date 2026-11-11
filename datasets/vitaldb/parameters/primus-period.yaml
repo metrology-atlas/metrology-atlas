@@ -12,3 +12,7 @@ notes: >-
   The whole release: 7,230 s or twice that, 8,077 corrections in 4,529 recordings; the AWP pauses recur at the same
   interval ([[observation:primus-awp-pauses]]). The pilot ([[study:correction-periods]]) gave the same. Vital Recorder has no periodic timer for the Primus,
   so the interval is the device's own [[reference:lee2026correspondence-9nov]].
+sources:
+- output: W:results/clock/periods_a.jsonl
+  note: per recording; the release aggregate (19 Oct) was not saved
+- output: W:results/clock/periods_b.jsonl

@@ -23,7 +23,7 @@ timing:
     median: {parameter: primus-awp-bias}
     p5: {parameter: primus-awp-bias, use: p5}
     p95: {parameter: primus-awp-bias, use: p95}
-    n: 1067
+    n: {parameter: primus-awp-between-rsd, use: n}
     scope: recording
     status: measured
     evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath
@@ -88,7 +88,7 @@ timing:
     median: {parameter: primus-awp-bias}
     p5: {parameter: primus-awp-bias, use: p5}
     p95: {parameter: primus-awp-bias, use: p95}
-    n: 1067
+    n: {parameter: primus-awp-between-rsd, use: n}
     scope: recording
     status: measured
     evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath
@@ -130,7 +130,7 @@ timing:
     median: {parameter: primus-awp-bias}
     p5: {parameter: primus-awp-bias, use: p5}
     p95: {parameter: primus-awp-bias, use: p95}
-    n: 1067
+    n: {parameter: primus-awp-between-rsd, use: n}
     scope: recording
     status: measured
     evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath

@@ -12,3 +12,7 @@ notes: >-
   in the gap distribution of every SNUADC, Primus and BIS track: ECG II has 1,968 gaps of 15–25 s, median 17.9 s.
   The two medians use different definitions: the survey counts gaps in one track (from the end of one record to the start of the next), while
   this parameter counts moments when every device jumps together.
+sources:
+- output: W:results/clock/pc_steps_0.jsonl
+  note: per recording; aggregate not saved
+- output: W:results/clock/pc_steps_1.jsonl

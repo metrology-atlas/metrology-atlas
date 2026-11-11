@@ -14,3 +14,7 @@ study: hr-derivation
 about:
 - solar8000-hr
 date: 2026-11-01
+sources:
+- output: W:examples/hr_derivation_v4/agg/summary.json
+  key: best
+  note: the band is the last part of the winning candidate rmean|N|band

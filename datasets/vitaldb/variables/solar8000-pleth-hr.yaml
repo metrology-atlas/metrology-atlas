@@ -19,7 +19,7 @@ timing:
     median: {parameter: pleth-hr-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     p5: {parameter: pleth-hr-delay, use: p5, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
     p95: {parameter: pleth-hr-delay, use: p95, plus: {parameter: solar8000-poll-gap, scale: 0.5}}
-    n: 6151
+    n: {parameter: pleth-hr-delay, use: n}
     scope: recording
     status: measured
     evidence: shortest delay from the end of a window of 10 pulse intervals, per recording, recomputing PLETH_HR

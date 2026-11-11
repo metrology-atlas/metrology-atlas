@@ -7,3 +7,6 @@ spread: {p10: 3.02, p90: 12.0, n: 4742, text: "every matched blood gas (lab_draw
 status: measured
 study: lab-timestamp-meaning
 about: [lab-blood-gas]
+sources:
+- output: W:results/pat/lab_draw_labels.csv
+  note: median lag over matched blood gases (410 s), in minutes; aggregate not saved

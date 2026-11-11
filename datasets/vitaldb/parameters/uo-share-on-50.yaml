@@ -11,3 +11,6 @@ study: value-model-intraop-uo
 about:
 - intraop-uo
 date: 2026-11-08
+sources:
+- output: W:worked_examples/urine_output.json
+  key: share_on_multiples_of_50_not_100_pct

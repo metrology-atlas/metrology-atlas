@@ -23,7 +23,7 @@ timing:
     median: {parameter: primus-awp-bias}
     p5: {parameter: primus-awp-bias, use: p5}
     p95: {parameter: primus-awp-bias, use: p95}
-    n: 1067
+    n: {parameter: primus-awp-between-rsd, use: n}
     scope: recording
     status: measured
     evidence: AWP stamp minus the breath on the SNUADC CVP, median per recording, each stretch on its right breath
@@ -84,7 +84,7 @@ timing:
     median: 3.625
     p5: 0.874
     p95: 4.073
-    n: 6341
+    n: {parameter: co2-sampling-line-lag, use: n}
     scope: recording
     status: measured
     evidence: CO2 fall after the AWP breath start, median per recording (co2_transit, 29 Oct) plus 20 ms for the sliding
@@ -104,7 +104,7 @@ timing:
     median: 2.156
     p5: 0.073
     p95: 3.182
-    n: 1067
+    n: {parameter: primus-awp-between-rsd, use: n}
     scope: recording
     status: measured
     evidence: 'the AWP bias (-1.469 s, each stretch on its right breath) plus the CO2 sampling line (3.625 s): sums of medians

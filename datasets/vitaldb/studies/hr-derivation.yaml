@@ -55,7 +55,7 @@ discussion: 'Rejecting outliers explains a puzzle of the heart rate against puls
   the doubled or halved interval falls outside the band and is dropped. A median would do the same, which is why the
   earlier fits found a median; the exact reproduction separates the two.
 
-  For timing, HR describes the last 8 beats: [[value:hr-window-span]] at the median rate (p10–p90 4.9–8.3 s over recordings),
+  For timing, HR describes the last 8 beats: [[value:hr-window-span]] at the median rate (p10–p90 5.0–8.3 s over recordings),
   longer at slow rates. Its support is therefore a count of beats; a form or label that gives it a fixed span in seconds
   is right only at one rate. The per-case delay labels were fitted with the older rule (60 over the median R–R of the last
   6 s); their delays agree with this fit in both groups, but their support does not.'

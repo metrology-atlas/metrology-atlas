@@ -23,7 +23,7 @@ timing:
     median: {parameter: bis-eeg-offset}
     p5: {parameter: bis-eeg-offset, use: p5}
     p95: {parameter: bis-eeg-offset, use: p95}
-    n: 2702
+    n: {parameter: bis-eeg-offset, use: n}
     scope: recording
     status: measured
     evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (vitaldb-bench tools/bis_numbers.py)
@@ -76,7 +76,7 @@ timing:
     median: {parameter: bis-eeg-offset}
     p5: {parameter: bis-eeg-offset, use: p5}
     p95: {parameter: bis-eeg-offset, use: p95}
-    n: 2702
+    n: {parameter: bis-eeg-offset, use: n}
     scope: recording
     status: measured
     evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (vitaldb-bench tools/bis_numbers.py)
@@ -121,7 +121,7 @@ timing:
     median: {parameter: bis-eeg-offset}
     p5: {parameter: bis-eeg-offset, use: p5}
     p95: {parameter: bis-eeg-offset, use: p95}
-    n: 2702
+    n: {parameter: bis-eeg-offset, use: n}
     scope: recording
     status: measured
     evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (vitaldb-bench tools/bis_numbers.py)
@@ -177,7 +177,7 @@ timing:
     median: {parameter: bis-eeg-offset}
     p5: {parameter: bis-eeg-offset, use: p5}
     p95: {parameter: bis-eeg-offset, use: p95}
-    n: 2702
+    n: {parameter: bis-eeg-offset, use: n}
     scope: recording
     status: measured
     evidence: EEG stamp minus the same burst on the stamp-model ECG, median per recording (vitaldb-bench tools/bis_numbers.py)

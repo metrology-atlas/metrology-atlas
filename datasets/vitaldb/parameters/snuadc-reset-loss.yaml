@@ -14,3 +14,6 @@ notes: >-
   0.15 ppm at one reset every 2 h, well inside the spread of the estimates. A refit with this loss left a burst-lag step of −3.3 ± 1.8 ms, which
   suggests the average loss may be nearer 15 ms.
 headline: true
+sources:
+- output: W:results/paced/breaks.jsonl
+  note: three measurements, remeasured 1 November

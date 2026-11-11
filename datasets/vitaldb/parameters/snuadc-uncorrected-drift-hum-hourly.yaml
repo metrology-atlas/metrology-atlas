@@ -8,3 +8,6 @@ status: measured
 study: hum-snuadc-rate
 about: [snuadc-sample]
 date: 2026-11-11
+sources:
+- output: W:hum_snuadc/m5/hum_summary.json
+  key: test.hum_rate.median_abs_ms_per_h

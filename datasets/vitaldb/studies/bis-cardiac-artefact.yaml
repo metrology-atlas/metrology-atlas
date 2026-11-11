@@ -29,7 +29,11 @@ discussion: |
   The averaged artefact is a second, independent SNUADC–BIS reference, including in cases with no bursts. It
   supersedes the first attempt's conclusion that the BIS EEG carries no heartbeat.
 limitations: |
-  The window counts, amplitude and lag come from eeg_cardiac_recheck.py, whose output was not saved.
+  The window counts, amplitude and lag come from eeg_cardiac_recheck.py, whose output was not saved. The run (12
+  October) placed SNUADC on the stamp model with the rates of the time; it was not repeated on the November rates
+  (v4, model5). The change reaches only tracks with no correction, which borrow a rate (15 of the 31 test-set
+  recordings have a different borrowed rate now; the rest are unchanged). In such a recording it moves the R-peak lag
+  and the burst offset along the same line, so it can widen the −16 ms comparison a little but not shift it.
 open_questions:
   - title: "Why the artefact shows in only some cases"
     kind: phenomenon

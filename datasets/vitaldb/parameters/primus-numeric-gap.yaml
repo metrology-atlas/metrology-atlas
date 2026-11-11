@@ -7,3 +7,6 @@ status: measured
 study: numerics-derivation-release
 about: [primus-numerics]
 date: 2026-10-30
+sources:
+- output: W:overnight_v4/numeric/readout.json
+  key: PIP.gap_median_s

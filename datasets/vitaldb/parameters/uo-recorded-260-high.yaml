@@ -11,3 +11,6 @@ study: value-model-intraop-uo
 about:
 - intraop-uo
 date: 2026-11-08
+sources:
+- output: W:worked_examples/urine_output.json
+  key: recorded.260.ci95_ml.1

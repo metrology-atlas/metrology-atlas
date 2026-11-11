@@ -9,3 +9,6 @@ status: measured
 study: mains-grid-pc-rate
 about: [snuadc-sample]
 date: 2026-10-30
+sources:
+- output: W:pc_grid_check/agg_check/summary_setup.json
+  key: coverage.SNUADC hum

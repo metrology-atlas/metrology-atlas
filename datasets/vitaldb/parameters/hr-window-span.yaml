@@ -4,7 +4,7 @@ quantity: Span of ECG the Solar8000 heart rate's 8 R–R intervals cover, at eac
 value: 6.6
 unit: s
 spread:
-  p10: 4.9
+  p10: 5.0
   p90: 8.3
   n: 633
   text: over recordings; longer at slow rates
@@ -13,3 +13,6 @@ study: hr-derivation
 about:
 - solar8000-hr
 date: 2026-11-01
+sources:
+- output: W:examples/hr_derivation_v4/window_span.json
+  key: span_s_p10_25_50_75_90.2

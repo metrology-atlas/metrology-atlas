@@ -8,3 +8,7 @@ status: measured
 study: numerics-derivation-release
 about: [solar8000-hr]
 date: 2026-11-10
+sources:
+- output: W:overnight_v4/numeric/readout.json
+  key: HR.floor_better_share
+  scale: 100

@@ -12,3 +12,7 @@ about:
 - solar8000-hr
 - solar8000-pleth-hr
 date: 2026-11-11
+sources:
+- output: W:examples/numeric_recompute_lag_v4l/agg/summary.json
+  key: all.hr_lag_s
+  scale: -1

@@ -10,3 +10,6 @@ status: measured
 study: numerics-derivation-release
 about: [solar8000-hr, solar8000-art-numerics, solar8000-pleth-hr]
 date: 2026-11-07
+sources:
+- output: W:signal_survey/numeric_agg/numerics.csv
+  note: median record interval of Solar8000/HR and ART_MBP

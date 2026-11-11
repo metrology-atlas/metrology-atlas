@@ -20,7 +20,7 @@ timing:
     median: 410
     p5: 150
     p95: 787
-    n: 4742
+    n: {parameter: lab-bg-lag, use: n}
     scope: independent
     status: measured
   uncertainty:

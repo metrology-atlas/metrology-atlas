@@ -16,3 +16,6 @@ notes: >-
   0.75 ppm). Recordings with one correction and no setup rate have no measured rate
   ([[parameter:pc-grid-rate-single]], withdrawn). Against UTC only if the grid keeps its nominal frequency on average
   (assumed). (vitaldb-bench tools/mains_hum.py agg --setup-rates)
+sources:
+- output: W:pc_grid_check/agg_check/summary_setup.json
+  key: pc_vs_grid_ppm.all with corrections.p10_25_50_75_90.2

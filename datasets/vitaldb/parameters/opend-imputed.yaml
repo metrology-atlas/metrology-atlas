@@ -9,3 +9,6 @@ status: measured
 study: timestamp-imputed-and-conformance
 about: [opend]
 date: 2026-10-30
+sources:
+- output: W:screens/timestamp-imputed-and-conformance.json
+  key: opend_imputed

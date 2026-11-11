@@ -43,7 +43,8 @@ method: |
     release-wide lag and keeps, per window, the shape correlation's peaks over −3 to +8 s, and per 30-minute block
     the pilot's breath-size check ([[study:ventilator-breath-matching]], breath i against breath i + k). Run on
     one recording in the main mode and one placed a breath above it, before any release-wide run
-    (work/primus_breath_id/test/).
+    (work/primus_breath_id/test/; a test on the 2 November inputs, not repeated on the November rates, which
+    do not change the comparison of lags one breath apart within a window).
   - **Breath identity from pauses in ventilation (test on four recordings).** tools/primus_vent_events.py finds
     runs of no breaths while the AWP stream continues (and the start and end of ventilation), and times the stop
     and restart in both signals: the envelopes of the airway pressure and of the reference's breathing band
@@ -56,8 +57,9 @@ results: |
     0.48 s after the one before; none is stamped on arrival. AWP and CO2 are anchored separately: their gaps coincide
     in only 778 recordings.
   - **The anchor holds across the regular pauses and resets at irregular gaps.** Of 13,988 AWP gaps, 74% are a
-    whole number of records. Pause steps at those (2,785, gaps of about 20–23 s): median +0.01 s (IQR −0.13 to
-    +0.15). At gaps that are not (724, gaps of 5–38 s): median −0.33 s (IQR −1.33 to +0.78), 86% over 0.25 s.
+    whole number of records. Pause steps at those (2,791, gaps of about 20–23 s): median +0.01 s (IQR −0.13 to
+    +0.15). At gaps that are not (726, gaps of 5–38 s): median −0.32 s (IQR −1.33 to +0.80), 87% over 0.25 s
+    (v4 rates, 11 November; `$W/primus_awp_anchor_v4/gapsteps_summary.json`).
   - **About a quarter to a third of stretches are measured a whole breath off.** Stratified by set rate, offsets
     have a main mode at 0.5–1.0 s at every rate and a second mode one breath period above it (18/min: 3.5–4.5 s;
     16/min: 4.0–5.0; 14/min: 4.5–5.5; 12/min: 5.0–6.5; 10/min: weak, 6.0–7.5), with a small third. In 1,127
@@ -118,14 +120,14 @@ results: |
     the 1,064 recordings that also have a CVP lag) gives per recording the delay d from the end of a breath's
     inspiration on the AWP stamps to the PIP stamp: d = (the device's true delay, never negative) minus the AWP bias,
     so the AWP cannot be early by more than d. d is a median [[value:primus-awp-lead-bound]] (p5–p95 0.35–3.40 s), against the AWP lag
-    behind CVP of 1.43 s (0.43–3.54 s) in the same recordings. Their difference, d minus the CVP lag, is the
-    device's true delay less the CVP reference's own delay and the airway-to-CVP physiology: a median −0.15 s
+    behind CVP of 1.46 s (0.44–3.49 s) in the same recordings. Their difference, d minus the CVP lag, is the
+    device's true delay less the CVP reference's own delay and the airway-to-CVP physiology: a median −0.16 s
     (IQR −0.55 to +0.35 s; d is shorter in 59% of recordings). So most of the lead, up to [[value:primus-awp-lead-bound]] typically, is
     the AWP stamps sitting early on the recorder's own timeline, and a few tenths of a second is the reference and
-    physiology. Across recordings d rises with the CVP lag (Theil slope 0.47, 95% 0.40–0.53; Spearman 0.37): part
+    physiology. Across recordings d rises with the CVP lag (Theil slope 0.47, 95% 0.40–0.54; Spearman 0.37): part
     of the spread between recordings is in the AWP stamps, the rest in the reference, the fits or the breath
     rule. The PIP fit maps the AWP stamps to recorder time with a drift from each stretch's start, which the CVP
-    lag does not, so the two differ by a few tenths of a second (work/primus_anchor_check/numerics_summary.json).
+    lag does not, so the two differ by a few tenths of a second (work/primus_anchor_check_v4/numerics_summary.json, v4 rates).
   - **Matching breaths cannot tell which breath is right (null result, two recordings).** The shape correlation is
     nearly equal one breath apart (0.971 against 0.970), and the breath-size check is weak (correlations 0.02–0.40),
     changes between blocks (k = 0, 1, 0) and disagrees between the two references (CVP mostly k = 0, ART k = 2).
@@ -173,14 +175,14 @@ figures:
   - id: primus-awp-breath-ambiguity
     file: primus-awp-breath-ambiguity.png
     alt: >-
-      Three panels: averaged airway pressure and CVP repeating every 5 s; a correlation curve with two equal peaks 5.1 s apart; airway-pressure and CVP breathing envelopes dropping to zero together during a pause in ventilation and rising together after it.
+      Three panels: averaged airway pressure and CVP repeating every 5 s; a correlation curve with two equal peaks 5.0 s apart; airway-pressure and CVP breathing envelopes dropping to zero together during a pause in ventilation and rising together after it.
     theme: example traces
     source: vitaldb-bench tools/primus_awp_anchor_figs.py
     records: [136, 200]
     caption: >-
       Why breath matching can sit a whole breath off. (A) In one 10-minute window of [[case:136]], the airway
       pressure and the CVP averaged over every breath: ventilation is so regular that each breath looks like the
-      next. (B) Matching the two shapes: the lag that fits best (0.5 s) and the lag one breath later (5.6 s) fit
+      next. (B) Matching the two shapes: the lag that fits best (0.4 s) and the lag one breath later (5.4 s) fit
       almost equally well, so the matching alone cannot tell them apart. (C) A pause in ventilation in [[case:200]]:
       the breathing envelope of the airway pressure stops and restarts, and so does the CVP's; only one lag lines
       the two up, because a pause does not repeat.
@@ -198,7 +200,7 @@ figures:
   - id: primus-awp-correction
     file: primus-awp-correction.png
     alt: >-
-      Three panels: per-recording AWP offsets, the uncorrected ones with a long tail to minus 7 s and the corrected ones concentrated near minus 1.5 s; bars of 72, 81 and 86 percent right; step histograms, narrow around zero for whole-record gaps and broad for other gaps.
+      Three panels: per-recording AWP offsets, the uncorrected ones with a long tail to minus 7 s and the corrected ones concentrated near minus 1.5 s; bars of 73, 81 and 86 percent right; step histograms, narrow around zero for whole-record gaps and broad for other gaps.
     theme: population results
     source: vitaldb-bench tools/primus_awp_anchor_figs.py
     caption: >-

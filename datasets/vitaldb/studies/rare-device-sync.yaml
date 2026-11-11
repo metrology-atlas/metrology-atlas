@@ -15,7 +15,7 @@ data: |
   reference:
 
   - **CardioQ:** 27 cases tried, 24 fitted.
-  - **EV1000 mean arterial pressure:** 588 tried, 579 fitted (stroke volume variation as a second signal: 67 of 589).
+  - **EV1000 mean arterial pressure:** 588 tried, 579 fitted (stroke volume variation as a second signal: 66 of 589).
   - **Vigileo stroke volume variation:** 343 tried, 25 aligned.
   - **Vigilance averaged heart rate:** 63 cases; 52 fitted (11 lacked HR_AVG or ECG).
 background: |
@@ -31,14 +31,21 @@ results: |
   - **CardioQ:** matched-beat MAD 0.24 s, R–R correlation 0.96 (24 cases); its stamps lag SNUADC by 0.4–4.4 s
     (p5–p95) and re-anchor about 40 times per case.
   - **EV1000:** values sit a median 1.6 s (p25 0.9, p95 3.2 s; 579 cases) after the end of an assumed 20 s window;
-    after alignment the residual SD is 0.25–2.4 s.
+    after alignment the residual SD is 0.24–2.4 s.
   - **Vigileo:** aligned in only 25 of 343 cases (|offset| 4.7 s median, p95 26 s).
-  - **Vigilance:** a running median in 41 of 52 cases (60 / mean interval in 11), over a median 1,050 s (about 17
-    minutes; p10–p90 660–1,980 s), available a median 51 s after its window ends (p10–p90 0–175 s; at least a
-    quarter at zero; `results/pat/vigilance_window_summary.json`).
+  - **Vigilance:** 52 of 63 cases fitted (11 lacked HR_AVG or ECG). The best fit is always a long average: a running
+    mean of the R–R intervals over 1,024–2,560 beats (16 cases; 32 beats in 2), a running median over 600–3,000 s
+    (15; 30 s in 1), 60 / mean interval over 900–3,600 s (8) or 1,792–2,048 beats (2), a median over 1,024–3,072
+    beats (6; 32 in 1) or a trimmed mean over 512 beats (1). The value is available a median 48 s after its window
+    ends (p10–p90 0–231 s; 15 of 52 at zero; `$W/vigilance_window_v4/summary.json`, 11 November, on the v4 rates and
+    with the current set of candidate rules, which added the running mean of intervals; the 13 October run found a
+    running median in 41 of 52 and 0–175 s).
+  - **Rerun on the v4 rates (11 November, `$W/rare_device_sync_v4`, the 997 cases recovered from the setup
+    tables):** CardioQ, Vigileo and the rare-device Vigilance scan unchanged; EV1000 within rounding (residual SD
+    0.24–2.4 s; stroke volume variation 66 of 589).
 discussion: |
   The three-way arterial pressure loop confirms the CardioQ and EV1000 links against each other
-  ([[study:loop-closure]]). Vigilance values describe the last 10–36 minutes; alignment finer than minutes is not
+  ([[study:loop-closure]]). Vigilance values describe the last 10–60 minutes; alignment finer than minutes is not
   meaningful.
 limitations: Small samples; Vigileo alignment is weak and Vigilance's fit is a pilot.
 open_questions:
