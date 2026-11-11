@@ -38,10 +38,11 @@ results: |
     drifts from the correction scan lie within 25 ppm (r = 0.83 among them; median difference +5 ppm). The benchmark
     gave 108 of 145 and r = 0.88.
   - **The direct rate over the release.** From the stamp-model burst check of the whole release (10-minute windows), the
-    BIS runs [[value:bis-snuadc-rate]] against the SNUADC (median of 1,805 recordings; IQR −93.4 to −76.5 ppm),
+    BIS runs [[value:bis-snuadc-rate]] against the SNUADC (median of 1,792 recordings; IQR −94.1 to −77.5 ppm),
     −87.9 ppm where both clocks have whole sawtooth teeth (339). The 191 cases above gave −72 ppm. Against the two
-    devices' drifts from their correction steps the direct rate closes to −2.1 ppm (median; IQR −11.7 to +0.3; 358
-    recordings).
+    devices' drifts from their correction steps the direct rate closes to −2.3 ppm (median; IQR −12.6 to +0.3; 358
+    recordings). (Model5 burst check, v4 rates, 11 November, `$W/direct_rate_m5`; on model3, 19 October: −84.8 ppm
+    in 1,805, closure −2.1.)
   - **The jumps are stamp steps:** over the whole release, 74% of 1,872 lag jumps (1,039 recordings) have a SNUADC
     or BIS record-stamp step in the same window, against 9% for the same interval 40 minutes later (benchmark: 79%
     of 216, against 12%).

@@ -370,7 +370,9 @@ def _linked(link: dict) -> list[str]:
 def report(findings: list[Finding], unsourced: dict[str, list[str]]) -> str:
     """Plain-text report: counts, then every finding that is not ok."""
     counts = {lv: sum(1 for f in findings if f.level == lv) for lv in LEVELS}
-    lines = ["provenance: " + ", ".join(f"{n} {lv}" for lv, n in counts.items() if n)
+    rec = sum(1 for f in findings if f.level == "ok" and f.kind == "reconstructed")
+    lines = ["provenance: " + ", ".join(f"{n} {lv}" + (f" ({rec} on reconstructed records)" if lv == "ok" and rec else "")
+                                        for lv, n in counts.items() if n)
              + f" (sources of {len({f.parameter for f in findings})} parameters)"]
     need = sum(len(v) for k, v in unsourced.items() if k in NEEDS_SOURCE)
     if unsourced:

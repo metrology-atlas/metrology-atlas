@@ -10,6 +10,9 @@ study: numerics-derivation-release
 about: [primus-numerics]
 date: 2026-11-07
 sources:
-- output: W:primus_awp_anchor_v4/stretches_summary.json
+- output: W:primus_awp_anchor/records_summary.json
+  key: recordings_all_exact_(>=0.999)
   field: context
-  note: AWP records every 0.48 s; the number itself is not in this summary (a saved aggregate for it is still to write)
+  note: >-
+    the value is the record length, 30 samples at 62.5 Hz; this summary shows every AWP record 0.48 s after the one
+    before in 6,312 of 6,360 recordings

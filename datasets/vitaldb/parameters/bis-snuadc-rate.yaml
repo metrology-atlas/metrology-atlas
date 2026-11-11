@@ -2,14 +2,16 @@ id: bis-snuadc-rate
 name: BIS drift against SNUADC
 quantity: Drift of the BIS against the SNUADC, from the slope of the ECG–EEG burst offset between stamp corrections,
   independent of the recorder; median over recordings, whole release.
-value: -84.8
+value: -85.5
 unit: ppm
-spread: {p10: -100.8, q1: -93.4, q3: -76.5, p90: -67.1, n: 1805, text: "−87.9 ppm where both clocks have whole teeth (339); the 191-case pilot gave −72"}
+spread: {p10: -101.8, q1: -94.1, q3: -77.5, p90: -69.4, n: 1792, text: "−87.9 ppm where both clocks have whole teeth (339); the 191-case pilot gave −72; on model3 (19 October) −84.8 ppm in 1,805"}
 status: measured
 study: shared-bursts
 about: [bis-vs-snuadc]
-date: 2026-10-19
+date: 2026-11-11
 sources:
-- output: W:results/pat/shared_bursts_summary.json
-  field: context
-  note: the burst-slope rate; the number itself is not in this summary (a saved aggregate for it is still to write)
+- output: W:direct_rate_m5/summary.json
+  key: direct_ppm_p10_25_50_75_90_n.all.2
+- output: W:direct_rate_m5/summary.json
+  key: direct_ppm_p10_25_50_75_90_n.all.5
+  field: n

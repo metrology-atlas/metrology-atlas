@@ -3,11 +3,13 @@ name: SNUADC start after the file's first record
 quantity: Delay of the first SNUADC record after the file's first record of any track.
 value: 1.56
 unit: s
-spread: {text: "5–95%: 0.44–4.5 s; 99th percentile 12 s; maximum 10,879 s"}
+spread: {n: 6355, text: "5–95%: 0.44–4.5 s; 99th percentile 6.1 s; maximum 9,739 s (from the waveform survey's segment tables; an earlier unsaved count gave 12 s and 10,879 s)"}
 status: measured
 study: vitaldb-loader
 about: [loaded-subset-time-zero, snuadc-ecg-ii]
 sources:
-- output: W:time_zeros/summary.json
-  field: context
-  note: the number itself is not in this summary (a saved aggregate for it is still to write)
+- output: W:snuadc_start_delay/summary.json
+  key: SNUADC.start_s_p5_25_50_75_95_99.2
+- output: W:snuadc_start_delay/summary.json
+  key: SNUADC.recordings
+  field: n

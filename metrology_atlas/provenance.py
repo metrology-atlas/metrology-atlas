@@ -14,7 +14,7 @@ Standard library only, so analysis environments can run it as a file without ins
     python provenance.py begin --out DIR --script tools/x.py -- ARGS...       prints the record's path
     python provenance.py end RECORD --exit-code N
         for a driver script (run_tool_scan.sh) that starts the parts itself
-    python provenance.py reconstructed --out DIR --script tools/x.py --note TEXT -- ARGS...
+    python provenance.py reconstructed --out DIR --script tools/x.py --note TEXT [--output FILE ...] -- ARGS...
         a record written afterwards from notes (runbooks, the work plan, git), marked as such
     python provenance.py show DIR                                              the records of a folder
 
@@ -359,6 +359,9 @@ def main(argv: list[str] | None = None) -> int:
                        help="an input the command reads without naming it (a fixed path under --work); repeatable")
         p.add_argument("--hash-limit", type=int, default=HASH_LIMIT)
         p.add_argument("--tree-limit", type=int, default=TREE_LIMIT)
+        if name == "reconstructed":
+            p.add_argument("--output", action="append", default=[],
+                           help="an output the run made (repeatable); default: every file in --out")
         p.add_argument("args", nargs=argparse.REMAINDER, help="-- then the command (or, for begin, its arguments)")
     e = sub.add_parser("end")
     e.add_argument("record")
@@ -392,7 +395,16 @@ def main(argv: list[str] | None = None) -> int:
             ap.error("reconstructed needs --note saying where the record comes from")
         rec = new_record(out, args, script, "reconstructed", a.note, a.input, **kw)
         rec["started"] = None
-        rec["outputs"] = outputs_of(out, None, a.hash_limit)
+        if a.output:
+            rec["outputs"] = []
+            for o in a.output:
+                st = Path(o).stat()
+                d = {"path": portable(Path(o)), "bytes": st.st_size}
+                if Path(o).is_file() and st.st_size <= a.hash_limit:
+                    d["sha256"] = sha256(Path(o))
+                rec["outputs"].append(d)
+        else:
+            rec["outputs"] = outputs_of(out, None, a.hash_limit)
         print(write(rec, out))
         return 0
     try:

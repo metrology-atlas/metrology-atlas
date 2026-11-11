@@ -5,8 +5,8 @@ quantity: Share of a recording's HR values the best rule (mean of the last 8 Râ€
 value: 82.6
 unit: '%'
 spread:
-  p10: 55.2
-  p90: 91.0
+  p10: 55.4
+  p90: 91.1
   n: 633
   text: 76.3% pooled over values
 status: measured
@@ -15,6 +15,8 @@ about:
 - solar8000-hr
 date: 2026-11-01
 sources:
-- output: W:examples/hr_derivation_v4/agg/summary.json
-  field: context
-  note: per-recording exact share of the adopted rule; the number itself is not in this summary (a saved aggregate for it is still to write)
+- output: W:examples/hr_derivation_v4/rule_exact.json
+  key: exact_pct_p10_25_50_75_90.2
+- output: W:examples/hr_derivation_v4/rule_exact.json
+  key: recordings
+  field: n

@@ -12,6 +12,8 @@ about:
 - pco2
 date: 2026-10-18
 sources:
-- output: W:examples/bg/summary.json
+- output: W:examples/bg/co2_gradient_spread.json
+  key: between_patient_sd
+- output: W:examples/bg/co2_gradient_spread.json
+  key: within_patient_sd_median
   field: context
-  note: the number itself is not in this summary (a saved aggregate for it is still to write)

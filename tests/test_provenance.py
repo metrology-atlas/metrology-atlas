@@ -247,3 +247,14 @@ def test_a_declared_input_inside_the_output_folder_is_read(repo, work):
     pv.main(["record", "--out", str(out), "--input", str(out / "parts"), "--", sys.executable, "-c", "pass"])
     [i] = records(out)[0]["inputs"]
     assert i["path"] == "W:res/parts" and i["files"] == 1 and "tree_sha256" in i
+
+
+def test_reconstructed_names_its_outputs(work):
+    out = work / "shared"
+    out.mkdir()
+    (out / "a.json").write_text("{}")
+    (out / "b.json").write_text("[]")
+    pv.main(["reconstructed", "--out", str(out), "--note", "docstring", "--output", str(out / "a.json"), "--",
+             "python", "x.py", "agg"])
+    [r] = records(out)
+    assert [o["path"] for o in r["outputs"]] == ["W:shared/a.json"] and r["outputs"][0]["sha256"]

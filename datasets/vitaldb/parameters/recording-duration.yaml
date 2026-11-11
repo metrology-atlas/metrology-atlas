@@ -1,15 +1,18 @@
 id: recording-duration
 name: Recording duration
 quantity: Length of a VitalDB recording, caseend minus casestart in the clinical table.
-value: 9924
+value: 9924.5
 unit: s
 display: "median 2.8 h (p5–p95 1.0–6.6 h, range 0.46–17.4 h)"
-spread: {min: 1640, max: 62494, n: 6388, text: "p5–p95 3,724–23,784 s"}
+spread: {min: 1640, max: 62494, n: 6388, text: "p5–p95 3,725–23,811 s"}
 status: measured
 about: [case-end]
 date: 2026-10-31
 notes: Computed from clinical_data.csv of the release (6,388 cases). A label that spans a track's records is a little
   shorter than its recording where the track starts late or stops early.
 sources:
-- output: R:clinical_data.csv
-  note: caseend - casestart over the release; no saved aggregate
+- output: W:recording_duration/summary.json
+  key: duration_s_p5_25_50_75_95.2
+- output: W:recording_duration/summary.json
+  key: recordings
+  field: n

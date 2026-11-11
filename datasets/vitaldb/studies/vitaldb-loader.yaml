@@ -19,7 +19,7 @@ method: |
 results: |
   - **Time zero follows the loaded tracks.** VitalFile(path, tracks) sets its start to the first record among those
     tracks; with all tracks it is the file's first record (the EVENT track in every file). Device start delays after
-    the file's first record: SNUADC [[value:snuadc-start-delay]] median (0.44–4.5 s; maximum 10,879 s), Primus 0.72 s, BIS 0.95 s.
+    the file's first record: SNUADC [[value:snuadc-start-delay]] median (0.44–4.5 s; maximum 9,739 s), Primus 0.71 s, BIS 0.95 s (`$W/snuadc_start_delay/summary.json`).
   - **Blocks are placed by rounding up.** Each wave record goes to sample index ceil((stamp − start) × rate). With
     the stamps running −0.95 ppm against the count ([[study:stamp-arithmetic]]), each time the error crosses a whole
     sample the next block is written one sample early and overwrites the last sample of the previous one: one real
