@@ -3,13 +3,13 @@ name: Primus drift against the recorder PC, from breath matching
 quantity: >-
   Drift of the Primus stamps against the SNUADC on its stamp model (the recorder PC's timeline), from one slope per
   recording of the airway-pressure-to-CVP lag, with an offset for each stretch between Primus AWP pauses.
-value: 104
+value: 105
 unit: ppm
-spread: {p10: 28, p90: 184, text: "178 recordings; whole-recording lines give +92 ppm median in 1,060 (v4 rates; p10–p90 −48 to +233)"}
+spread: {p10: 29, p90: 189, text: "178 recordings (v4 rates, 11 Nov; vitaldb-bench examples/drift_probe_summary.py on $W/results/primus_drift_v4; 104, 28–184 before); whole-recording lines give +92 ppm median in 1,060 (v4 rates; p10–p90 −48 to +233)"}
 status: measured
 study: ventilator-breath-matching
 about: [primus-vs-pc]
-date: 2026-10-19
+date: 2026-11-11
 headline: true
 notes: >-
   Relative to the recorder PC through the SNUADC stamp model, whose own error is a few ppm. The pilot gave +92 ppm

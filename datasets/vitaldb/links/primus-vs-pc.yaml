@@ -1,7 +1,7 @@
 id: primus-vs-pc
 name: Primus against the recorder PC
 summary: >-
-  The Primus stamps drift a median +104 ppm against the recorder PC (measured by breath matching through the SNUADC
+  The Primus stamps drift a median +105 ppm against the recorder PC (measured by breath matching through the SNUADC
   stamp model). Its small corrections every 7,230 s, each about 21 s after a pause in the AWP waveform, do not keep
   up with that drift.
 clock: primus-clock

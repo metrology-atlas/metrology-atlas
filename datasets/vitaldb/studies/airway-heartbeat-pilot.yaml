@@ -25,7 +25,7 @@ results: |
   | AWP | 10% | 19 ms | r = −0.05 (10 stretches) |
   | CO2 | 61% | 19 ms | r = −0.09 (60 stretches); median difference −109 ppm |
 
-  The CO2 trace is flat on the SNUADC timeline, while the Primus drifts by about +104 ppm against it.
+  The CO2 trace is flat on the SNUADC timeline, while the Primus drifts by about +105 ppm against it.
 discussion: |
   The CO2 waveform carries a clear heartbeat-locked signal, but it does not move with the Primus clock, so it is not
   a Primus timing route ([[observation:co2-cardiac-trace]]). Airway pressure carries too little cardiac signal once

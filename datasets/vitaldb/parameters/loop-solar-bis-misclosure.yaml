@@ -3,13 +3,19 @@ name: Misclosure of the BIS-SNUADC-PC loops through the Solar8000
 quantity: >-
   Misclosure of the fundamental BIS-SNUADC-PC loops that close through the Solar8000 route instead of the SNUADC
   stamps (BIS steps against ECG-EEG bursts and the Solar8000 route), after network adjustment.
-value: 4.11
+value: 10.35
 unit: ppm
-spread: {q1: -17.26, q3: 28.17, n: 245, text: "median |z| 0.79, 6.5% beyond 3 standard errors; the bursts and the Solar8000 route share the ECG"}
+spread: {q1: -10.12, q3: 35.04, n: 245, text: "median |z| 0.90, 9.4% beyond 3 standard errors; the bursts and the Solar8000 route share the ECG"}
 status: measured
 study: loop-closure
 about: [bis-vs-pc, bis-vs-snuadc]
-date: 2026-11-06
+date: 2026-11-11
 notes: >-
-  Run r5: vitaldb-bench tools/clock_edges.py --reset-loss --drop-missed --solar-min-h 6, then clock_reconcile.py;
-  $W/clock_network/r5/summary.json, loop "bis_steps + bursts + solar".
+  Run r6 (11 November): vitaldb-bench tools/clock_edges.py --reset-loss --drop-missed --solar-min-h 6 --solar-dir
+  $W/solar_snuadc_clock_v4 --breath-dir $W/results/primus_drift_v4, then clock_reconcile.py; $W/clock_network/r6/
+  summary.json, loop "bis_steps + bursts + solar" (recorded runs). Run r5 (6 November) gave +4.11 ppm (IQR −17.3 to
+  +28.2), with the Solar8000 route on the HR rule then in use (60 / median R–R over 6 s), which disagreed with the
+  mean arterial pressure route by −9.9 ppm; with the current HR rule the two agree (+2.3 ppm), and each alone closes
+  this loop at about 10 ppm (mean pressure 11.0 in both runs, HR 9.1), so the earlier +4.1 was a compromise of a
+  biased HR with the pressure route ([[study:solar-snuadc-clock]]; vitaldb-bench examples/solar_route_check.py,
+  $W/clock_network/r6_inputs/solar_route_check).

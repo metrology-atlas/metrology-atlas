@@ -4,10 +4,10 @@ summary: The Primus anaesthesia machine's own clock.
 type: oscillator
 nominal: 62.5 Hz waveform clock
 description: The Primus anaesthesia machine's own clock. Its stamps are re-anchored at recording gaps and by small
-  corrections about every two hours. Measured by breath matching, it drifts a median +104 ppm against the recorder
+  corrections about every two hours. Measured by breath matching, it drifts a median +105 ppm against the recorder
   PC, which its small corrections do not keep up with.
 tags:
 - stub
-utc_plan: 'Measured to the PC by breath matching through the SNUADC stamp model: +104 ppm within the stretches between
+utc_plan: 'Measured to the PC by breath matching through the SNUADC stamp model: +105 ppm within the stretches between
   AWP pauses (p10–p90 +28 to +184, 178 recordings), with steps at the pauses that do not reset the drift: tens of ms where CO2 carries on, up to seconds where CO2
   stops too ([[study:primus-pause-steps]]). The small correction steps imply only 1–11 ppm and are not the clock rate. Open: what re-anchors the stamps where CO2 stops too; the airway-to-CVP physiological delay inside the measured lag.'

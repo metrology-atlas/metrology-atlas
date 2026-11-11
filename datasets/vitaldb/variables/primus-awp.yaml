@@ -102,7 +102,7 @@ timing:
       u_s: {parameter: primus-awp-between-rsd}
       scope: recording
       shared_with: Primus clock
-    - name: drift within a stretch (+104 ppm against the PC)
+    - name: drift within a stretch (+105 ppm against the PC)
       type: B
       distribution: unknown
       u_s: 0.3
@@ -146,7 +146,7 @@ timing:
   domain: primus
   status: measured
   evidence: offset median -1.47 s, p5-p95 -3.56 to -0.44 s (1,067 recordings, CVP breaths, each stretch on its right
-    breath; the stamps sit before the breath seen in the CVP), incl. AWP-CVP physiology; drifts +104 ppm against the PC
+    breath; the stamps sit before the breath seen in the CVP), incl. AWP-CVP physiology; drifts +105 ppm against the PC
     between AWP pauses
   look_ahead:
     lead_s:

@@ -4,15 +4,16 @@ quantity: >-
   Variance factor of each measurement method in the clock-network adjustment (1 if the stated standard errors were
   right); range over the methods with redundancy.
 unit: ratio
-spread: {min: 1.97, max: 6.84, n: 6}
-display: "2 to 6.8 by method"
+spread: {min: 1.95, max: 7.77, n: 6}
+display: "2 to 7.8 by method"
 status: measured
 study: loop-closure
 about: [bis-vs-pc, bis-vs-snuadc, primus-vs-pc]
-date: 2026-11-06
+date: 2026-11-11
 notes: >-
-  SNUADC resets 6.84, bursts 5.20, BIS steps 4.74, Solar8000 route 3.74, breath matching 3.28, PIP numerics 1.97
-  (run r5, 6 November, with the Solar8000 route; $W/clock_network/r5/summary.json). Without it (run r4, 1 November):
+  SNUADC resets 7.77, bursts 5.27, BIS steps 4.79, Solar8000 route 4.66, breath matching 2.88, PIP numerics 1.95
+  (run r6, 11 November: stage-3 inputs on the v4 rates and the current HR rule; $W/clock_network/r6/summary.json).
+  Run r5 (6 November): resets 6.84, bursts 5.20, BIS steps 4.74, Solar8000 route 3.74, breath 3.28, PIP 1.97. Without it (run r4, 1 November):
   resets 5.11, bursts 5.14, BIS steps 4.73, breath 3.28, PIP 1.97; the resets rise because the Solar8000 loops
   confront them with a second route. r3 of 19 October, with the earlier 0.498 s correction: 4.8, 5.19, 5.19, 3.28,
-  1.97. The stamp arithmetic has no redundancy (7.14 in r5, not counted).
+  1.97. The stamp arithmetic has no redundancy (7.96 in r6, 7.14 in r5; not counted).

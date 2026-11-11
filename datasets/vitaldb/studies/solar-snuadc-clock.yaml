@@ -3,8 +3,8 @@ name: The SNUADC clock through the Solar8000 numerics, whole release
 summary: >-
   On the SNUADC's own sample count, the delay from the waveform to the PC-stamped Solar8000 heart rate and mean
   arterial pressure ramps at the SNUADC's drift against the PC, measured without its stamps or resets. In recordings
-  with whole reset intervals it agrees with them (−61 ppm against −66 ppm from their resets; median difference
-  per recording +1.5 ppm, 581 recordings). It is too
+  with whole reset intervals it agrees with them from 6 h (median difference per recording +1.7 ppm, 333 recordings;
+  +7.8 ppm over all 582, with the shorter ones biased). It is too
   noisy per recording, and in recordings under 6 h its rate is biased toward zero; from 6 h it is unbiased against
   the resets and joins the clock network as an edge ([[study:loop-closure]]).
 date: 2026-10-19
@@ -17,8 +17,10 @@ variables: [snuadc-ecg-ii, snuadc-art, solar8000-hr, solar8000-art-numerics]
 data: |
   All 6,388 recordings were read; 50 had no 500 Hz ECG. A rate needs at least 4 usable 30-minute blocks over
   1.5 h: 4,552 recordings for the combined rate (heart rate 4,447; mean arterial pressure 2,968). Reset-interval
-  rates for 581 of them come from the clock-network edge table; the shared-burst residuals of the adopted stamp model
-  (model3) for comparison.
+  rates for 582 of them come from the clock-network edge table; the shared-burst residuals of the adopted stamp model
+  (model3) for comparison. Rerun 10 Nov on the stage-3 rates (`$W/solar_snuadc_clock_v4`, recorded run) and with the
+  Solar8000 HR rule as it has been since 1 Nov ([[study:hr-derivation]]); the figures and numbers here are from that
+  run (4,553 recordings with a combined rate). The 19 Oct run used the earlier HR rule (below).
 background: |
   The Solar8000 computes heart rate and mean arterial pressure from the same ECG and arterial pressure that SNUADC
   samples from its analogue outputs, and the recorder stamps each value on arrival with the PC clock. Within a
@@ -33,32 +35,47 @@ method: |
   were grouped by SNUADC correction mode, and step-mode recordings by whether they have a whole reset interval.
 results: |
   - **Where it can be checked, it closes:** in step-mode recordings with whole reset intervals the median is
-    −61.1 ppm (580 recordings; −66.4 ppm from the same recordings' resets), and against those recordings' own reset intervals the median difference is +1.5 ppm (p25–p75 −24 to
-    +36; 581 recordings; median |z| 1.11).
-  - **Per recording it is noisy:** a median standard error of 40 ppm from mean arterial pressure and 83 ppm from
+    −55.6 ppm (581 recordings; −66.4 ppm from the same recordings' resets), and against those recordings' own reset
+    intervals the median difference is +7.8 ppm (p25–p75 −16 to +39; 582 recordings; median |z| 1.05), +1.7 ppm in
+    the 333 of 6 h or more, where the route is unbiased.
+  - **Per recording it is noisy:** a median standard error of 40 ppm from mean arterial pressure and 69 ppm from
     heart rate.
   - **It is biased toward zero in short recordings:** in every group the median rises toward 0 as recordings get
     shorter (step mode without a whole reset interval: about +10 ppm under 2.5 h, −38 to −46 ppm over 4 h). A 30-minute
     block ramps by only about 0.11 s at −63 ppm, two steps of the delay grid, and with few blocks the robust line
     is pulled flat by tied delays and by the first block, which often sits apart. Against the resets, by recording
-    length: +21.7 ppm at 4.5–6 h (197 recordings), −1.4 ppm at 6–8 h (237) and −7.0 ppm at 8 h or more (95), so the
-    bias reaches beyond 4 h but not beyond 6 h ([[code:vitaldb-bench/tools/solar_length_check.py]]).
-  - **Its stated standard error is too small:** over the 332 recordings of 6 h or more with whole reset intervals,
-    the median |route − reset rate| is 1.14 of its standard error, against 0.67 for a normal, because the
-    Solar8000's delay occasionally steps. In the clock network it is widened by that 1.7.
+    length: +20.2 ppm at 4.5–6 h (197 recordings), +4.7 ppm at 6–8 h (238) and −2.8 ppm at 8 h or more (95), so the
+    bias reaches beyond 4 h but not beyond 6 h ([[code:vitaldb-bench/tools/solar_length_check.py]],
+    `$W/clock_network/r6_inputs/solar_length_check_v4.json`).
+  - **Its stated standard error is too small:** over the 333 recordings of 6 h or more with whole reset intervals,
+    the median |route − reset rate| is 1.03 of its standard error, against 0.67 for a normal, because the
+    Solar8000's delay occasionally steps. In the clock network it is widened by that 1.5.
   - **Step-mode recordings without resets sit slower than the model:** at 6–8 h, where the route is unbiased against
-    the resets, it lies a median +19.6 ppm above the stamp model's rate in 134 step-mode recordings without a whole
-    reset interval (+7.5 ppm in 24 of 8 h or more).
+    the resets, it lies a median +18.1 ppm above the stamp model's rate in 134 step-mode recordings without a whole
+    reset interval (+18.8 ppm in 24 of 8 h or more).
   - **The burst check disagrees with the short-recording medians:** on the adopted stamp model, the ECG–EEG burst lag
     in recordings without a whole reset interval has a median slope of −8.9 ms/h (step mode, 1,118 recordings)
     and +5.6 ms/h (no correction, 1,099; `burst_validation_m3/per_recording.csv`, [[code:vitaldb-bench/tools/adhoc/audit_low_checks.py]]), close to zero, so the port's step-mode rate the model gives them fits on average.
+  - **Since the 1 November HR rule, heart rate and mean pressure agree, and the route moved (11 November).** The
+    route takes its HR algorithm from [[code:vitaldb-bench/tools/numeric_delay_variability.py]], which changed on
+    1 November from 60 / median R–R over 6 s to the Solar8000's own rule, the mean of the last 8 R–R intervals within
+    15% of their median ([[study:hr-derivation]]). Today's tool with the old module reproduces the 19 Oct run
+    exactly, and with the new one the stage-3 run, so the rule, not the rates, moved the route
+    (`$W/clock_network/r6_inputs/solar_route_check/rule_swap`). On the sample count, HR minus mean pressure per
+    recording was a median −9.9 ppm (MAD 55) with the old rule and is +2.3 ppm (MAD 44) with the new one, and HR's
+    standard error fell from 69 to 58 ppm in the same recordings (2,878;
+    [[code:vitaldb-bench/examples/solar_route_check.py]]). So the earlier route mixed a biased heart rate with an
+    unbiased pressure. Through the BIS (BIS steps and ECG–EEG bursts, [[study:loop-closure]]) each numeric alone now
+    closes at about 10 ppm (pressure 11.0 ppm in both runs, HR 9.1), where the old-rule HR gave −5.8 ppm and the
+    combined route +4.1.
 
   [[figure:solar-snuadc-rate]]
 discussion: |
   A third route to the SNUADC's drift, beside the resets and the shared bursts, and the only one that needs neither
   the SNUADC's stamps nor the BIS. Where resets exist it agrees with them, which closes a loop through the Solar8000;
-  in recordings of 6 h or more it is now an edge of the clock network, where it closes against the resets and,
-  without the SNUADC's stamps, against the BIS ([[study:loop-closure]]). Its group medians under 6 h are an artefact
+  in recordings of 6 h or more it is now an edge of the clock network, where it closes against the resets; against
+  the BIS, without the SNUADC's stamps, it closes at about +10 ppm, which both numerics show and the earlier HR rule
+  had masked ([[study:loop-closure]], open question there). Its group medians under 6 h are an artefact
   of the estimator; the burst residuals support the stamp model's choice of the port's rate there. At 6–8 h, where
   the route is unbiased, step-mode recordings without resets still sit about 20 ppm slower than the model's rate,
   which leans toward slower units for the long recordings that show no correction
@@ -79,7 +96,7 @@ open_questions:
     kind: phenomenon
     summary: >-
       At 6–8 h, where the route agrees with the resets, step-mode recordings without a whole reset interval sit a
-      median +19.6 ppm above the stamp model's rate (134 recordings). If real, the stamp model gives those units a rate
+      median +18.1 ppm above the stamp model's rate (134 recordings). If real, the stamp model gives those units a rate
       too fast, which would bear on [[observation:snuadc-long-uncorrected]]. The recorder's rules predict it: a unit
       shows a reset only if it gains 0.5 s within a segment, so those without one are selected for slower rates
       ([[study:vital-recorder-stamping-rules]]). The burst lag in the same recordings, and a finer estimator for
@@ -88,6 +105,7 @@ code:
   - vitaldb-bench/tools/solar_snuadc_clock.py
   - vitaldb-bench/tools/solar_length_check.py
   - vitaldb-bench/tools/clock_route_figs.py
+  - vitaldb-bench/examples/solar_route_check.py
 figures:
   - id: solar-snuadc-rate
     file: solar-snuadc-rate.png

@@ -3,13 +3,13 @@ name: Misclosure of the SNUADC-PC loops through the Solar8000
 quantity: >-
   Misclosure of the fundamental SNUADC-PC loops that set the SNUADC resets (and the stamp arithmetic) against the
   Solar8000 route, after network adjustment.
-value: -1.03
+value: 2.44
 unit: ppm
-spread: {q1: -20.27, q3: 19.99, n: 178, text: "median |z| 0.57, 2.8% beyond 3 standard errors; the Solar8000 route's standard error is calibrated on the resets, so z here is not a test of it"}
+spread: {q1: -14.46, q3: 23.89, n: 179, text: "median |z| 0.59, 5.0% beyond 3 standard errors; the Solar8000 route's standard error is calibrated on the resets, so z here is not a test of it"}
 status: measured
 study: loop-closure
 about: [snuadc-step-vs-pc]
-date: 2026-11-06
+date: 2026-11-11
 notes: >-
-  Run r5: vitaldb-bench tools/clock_edges.py --reset-loss --drop-missed --solar-min-h 6, then clock_reconcile.py;
-  $W/clock_network/r5/summary.json, loop "resets + solar".
+  Run r6 (11 November; as loop-solar-bis-misclosure): $W/clock_network/r6/summary.json, loop "resets + solar".
+  Run r5 (6 November, the earlier HR rule): −1.03 ppm (IQR −20.3 to +20.0, 178 loops).
