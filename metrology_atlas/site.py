@@ -1145,12 +1145,81 @@ class Site:
                       + (f"{r['q1']:g} to {r['q3']:g}" if r.get("q1") is not None else "—")
                       + f" | {int(r['n']) if r.get('n') else '—'} | {r.get('note') or ''} |\n" for r in p["by_setup"]))
         body = (self.section("By setup", by) + self.section("Notes", self.prose(p.get("notes")))
-                + self.section("Used in", "\n".join(used)))
+                + self.section("Source", self.sources(i, p)) + self.section("Used in", "\n".join(used)))
         return f"# {p['name']}\n\n{p['quantity']}\n\n" + self.glance([
             ("Value", parameter_text(p)), ("Status", f"{p['status']}: {STATUS_NOTE[p['status']]}"),
             ("From", self.a("study", p["study"]) if p.get("study") else None), ("About", about),
             ("Superseded by", self.a("parameter", p["superseded_by"]) if p.get("superseded_by") else None),
             ("Date", str(p["date"]) if p.get("date") else None)]) + body
+
+    ROOT_NAMES = {"W": "the analysis work folder (not published)", "R": "the VitalDB release"}
+    FIELD_NOTE = {"spread": "for its spread", "n": "for its count", "display": "for the numbers it shows",
+                  "by_setup": "for its values by setup", "context": "as context", "sum": "one term of a sum"}
+
+    def _output(self, out: str) -> str:
+        """Where a source output lives, for a reader: a repository file as a link, else the folder it is in."""
+        root, _, path = out.partition(":")
+        if root == "code":
+            for seg in path.split("/")[:-1]:
+                if seg in self.ds.items.get("software", {}):
+                    rest = path.split(seg + "/", 1)[1]
+                    return f"{self.code_link(f'{seg}/{rest}', f'`{rest}`')} in {self.a('software', seg)}"
+        where = self.ROOT_NAMES.get(root)
+        return f"`{path}` in {where}" if where else f"`{out}`"
+
+    def _tool(self, t: dict | None) -> str:
+        """A run's script: linked at the commit that holds it, where its repository is public."""
+        if not t or not t.get("path"):
+            return "a script not identified"
+        sw = self.ds.get("software", t.get("software") or "")
+        label = f"`{t['path']}`"
+        if sw and sw.get("repo") and t.get("commit") and t.get("committed", True) and sw.get("visibility") == "public":
+            base = sw["repo"].rstrip("/").removesuffix(".git")
+            label = f"[{label}]({base}/blob/{t['commit']}/{t['path']})"
+        if sw:
+            label += f" in {self.a('software', t['software'])}" + (f" (commit {t['commit'][:7]})" if t.get("commit") else "")
+        return label
+
+    @staticmethod
+    def _sentence(text: str) -> str:
+        """A note as a sentence: first letter capital, one full stop."""
+        text = re.sub(r"^(?:backfill|reconstructed)\s+\d{1,2}\s+\w{3}(?:\s+\d{4})?\s*[:,;]?\s*", "", text.strip())
+        text = re.sub(r"^from the tool's docstring\b", "From the tool's own usage notes", text)
+        return (text[:1].upper() + text[1:]).rstrip(".") + "." if text else ""
+
+    def sources(self, i: str, p: dict) -> str:
+        """Where the parameter's numbers come from: each saved output, the key read, and the run that made it."""
+        if not p.get("sources"):
+            return ""
+        snap = {(x.get("output"), x.get("key")): x for x in (self.ds.provenance.get("parameters") or {}).get(i, [])}
+        rows = []
+        for src in p["sources"]:
+            x = snap.get((src["output"], src.get("key")), {})
+            line = self._output(src["output"])
+            if src.get("key"):
+                line += f", at `{src['key']}`"
+            if src.get("scale") not in (None, 1):
+                line += f" (× {src['scale']:g})"
+            fld = src.get("field") or "value"
+            if fld != "value":
+                line += f", {self.FIELD_NOTE.get(fld, fld)}"
+            line += "."
+            if src.get("note"):
+                line += " " + self._sentence(self.cell(src["note"]))
+            run = x.get("run") or {}
+            if run.get("kind") == "recorded":
+                line += f" Made by {self._tool(run.get('tool'))}" + (f" on {run['date']}" if run.get("date") else "") + "."
+            elif run.get("kind") == "reconstructed":
+                line += (f" The run was not recorded at the time; its record was reconstructed for "
+                         f"{self._tool(run.get('tool'))}. " + self._sentence(self.cell(run.get("note", ""))))
+            elif x:
+                line += " No record of the run that made it."
+            if x.get("level") not in (None, "ok"):
+                line += f" At the last provenance check: **{x['level']}**."
+            rows.append(f"- {line.strip()}")
+        made = self.ds.provenance.get("made")
+        foot = (f"\n\nChecked against the run records on {made} (`metrology-atlas check --provenance`)." if made else "")
+        return "\n".join(rows) + foot
 
     def study(self, i: str, s: dict) -> str:
         """The page for one study: status note, data, method, results, discussion, open questions and code."""

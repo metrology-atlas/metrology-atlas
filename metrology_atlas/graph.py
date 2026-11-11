@@ -48,6 +48,8 @@ class Finding:
     """The run record's kind (recorded, reconstructed), when one was found."""
     used_by: list[str] = field(default_factory=list)
     """The timing forms and chain steps that take the parameter's numbers (``variable:id field``)."""
+    run: dict | None = None
+    """The run record behind the output: its kind, date, script and note (see :func:`snapshot`)."""
 
     def text(self) -> str:
         why = "; ".join(self.reasons)
@@ -355,6 +357,10 @@ def check(ds, roots: pv.Roots | None = None) -> tuple[list[Finding], dict[str, l
                         why.append(f"output changed after run {path.name}")
                     rec, path, _ = chosen
                     f.kind = rec.get("kind", "")
+                    sc = rec.get("script") or {}
+                    f.run = {"kind": f.kind, "record": g.norm(str(path)),
+                             "date": (rec.get("finished") or rec.get("started") or "")[:10] or None,
+                             "script": g.norm(sc["path"]) if sc.get("path") else None, "note": rec.get("note") or ""}
                     why += g.verdict(rec, path)
                     if why and f.level == "ok":
                         f.level = "stale"
@@ -390,3 +396,56 @@ def report(findings: list[Finding], unsourced: dict[str, list[str]]) -> str:
         lines.append(f"provenance: {k}: no sources and no study, reference or parameter cited")
     lines += [f"provenance: {f.text()}" for f in findings if f.level != "ok"]
     return "\n".join(lines)
+
+
+# the snapshot the published site reads ---------------------------------------------------------------------------
+SNAPSHOT = "metrology-atlas-provenance/0.1"
+
+
+def _tool(script: str | None, roots: pv.Roots) -> dict | None:
+    """A run's script as software id, path in its repository and the commit that holds it now (None outside git)."""
+    if not script:
+        return None
+    loc = roots.resolve(script)
+    if loc is None or not loc.is_file():
+        return {"path": script.split(":", 1)[-1]}
+    g = pv.git_state(loc) or {}
+    repo = (g.get("repo") or "").split(":", 1)[-1].rstrip("/").split("/")[-1]
+    return {"software": repo or None, "path": g.get("file") or loc.name, "commit": g.get("commit"),
+            "committed": not g.get("file_changed", True)}
+
+
+def snapshot(ds, findings: list[Finding], roots: pv.Roots | None = None) -> dict:
+    """Per parameter, each source with its run: what the published site shows under "Source" (no local paths)."""
+    roots = roots or pv.Roots.load()
+    by: dict[str, list[Finding]] = {}
+    for f in findings:
+        by.setdefault(f.parameter, []).append(f)
+    out: dict[str, list[dict]] = {}
+    tools: dict[str, dict | None] = {}
+    for pid, p in sorted(ds.items.get("parameter", {}).items()):
+        srcs = p.get("sources") or []
+        if not srcs:
+            continue
+        fs = by.get(pid, [])
+        rows = []
+        for i, s in enumerate(srcs):
+            f = fs[i] if i < len(fs) and fs[i].output == Graph(roots).norm(s["output"]) else next(
+                (x for x in fs if x.output == Graph(roots).norm(s["output"])), None)
+            row = {"output": s["output"], "level": f.level if f else "unchecked"}
+            for k in ("key", "field", "scale", "note"):
+                if s.get(k) is not None:
+                    row[k] = s[k]
+            if f and f.run:
+                sc = f.run.get("script")
+                if sc not in tools:
+                    tools[sc] = _tool(sc, roots)
+                row["run"] = {"kind": f.run["kind"], "date": f.run["date"], "tool": tools[sc]}
+                if f.run["kind"] == "reconstructed" and f.run.get("note"):
+                    row["run"]["note"] = f.run["note"]
+            rows.append(row)
+        out[pid] = rows
+    here = Path(getattr(ds, "folder", ".")).resolve()
+    g = pv.git_state(here) or {}
+    return {"schema": SNAPSHOT, "made": dt.date.today().isoformat(), "atlas_commit": g.get("commit"),
+            "atlas_dirty": g.get("dirty"), "parameters": out}

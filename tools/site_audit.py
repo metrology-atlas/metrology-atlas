@@ -25,7 +25,7 @@ from urllib.parse import unquote, urlparse
 WORDS = re.compile(r"\b(None(?! (?:of|is|undoes|yet|needed|from|of)\b)(?=[\s.,;)|]|$)|nan|NaN|TODO|FIXME|Traceback|undefined)\b")
 MARKUP = re.compile(r"\[\[[a-z]+:|\]\]|\{\{|\}\}|\]\((?:\.\./|https?:|[\w-]+\.md)")
 PATHS = re.compile(r"/sessions/|/mnt/c/|[A-Z]:\\\\|/home/\w+")
-WORK = re.compile(r"\$W/")
+WORK = re.compile(r"\$W/|(?<![\w/.-])work/[a-z_]")
 NOISE = re.compile(r"\b\d+\.\d*?(?:0{6,}[1-9]|9{6,}\d?)\b")
 TABLE = re.compile(r"^\s*\|.*\|\s*$|\|---")
 

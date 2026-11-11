@@ -8,7 +8,7 @@
     add --release to json/site for the public build: links into repositories that are not public are left out
     add --provenance to check: trace every parameter's sources through the run records and report what is stale
         (roots from METROLOGY_ATLAS_ROOTS or the roots file; see metrology_atlas/provenance.py); --provenance-json
-        FILE also writes the findings
+        FILE also writes the findings; --provenance-snapshot writes _generated/provenance.json for the site
 """
 
 from __future__ import annotations
@@ -45,6 +45,8 @@ def main(argv: list[str] | None = None) -> int:
         if name == "check":
             p.add_argument("--provenance", action="store_true", help="also check the parameters' sources")
             p.add_argument("--provenance-json", help="write the provenance findings to this file")
+            p.add_argument("--provenance-snapshot", action="store_true",
+                           help="also write _generated/provenance.json, the sources and runs the site shows")
         if name not in ("check", "todo"):
             p.add_argument("--out", required=True)
         if name in ("json", "site"):
@@ -69,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
     counts = ", ".join(f"{len(v)} {k}" for k, v in ds.items.items() if v)
     if a.cmd == "check":
         print(f"ok: {counts}")
-        if a.provenance or a.provenance_json:
+        if a.provenance or a.provenance_json or a.provenance_snapshot:
             import json
             from pathlib import Path
             from metrology_atlas import graph
@@ -78,6 +80,12 @@ def main(argv: list[str] | None = None) -> int:
             if a.provenance_json:
                 Path(a.provenance_json).write_text(json.dumps(
                     {"findings": [f.__dict__ for f in findings], "unsourced": unsourced}, indent=1), encoding="utf-8")
+            if a.provenance_snapshot:
+                snap = Path(a.dataset) / "_generated" / "provenance.json"
+                snap.parent.mkdir(exist_ok=True)
+                snap.write_text(json.dumps(graph.snapshot(ds, findings), indent=1, ensure_ascii=False) + "\n",
+                                encoding="utf-8")
+                print(f"wrote {snap}")
     elif a.cmd == "todo":
         print(todo(ds))
     elif a.cmd == "graph":

@@ -158,3 +158,33 @@ def test_a_reference_broken_over_a_line_is_refused(tmp_path):
           "results": "derived from [[study:\n  st]] and more"}
     with pytest.raises(AtlasError, match="broken over a line"):
         load(_dataset(tmp_path, **{"studies/st.yaml": st}))
+
+
+def _param_ds(tmp_path, sources):
+    import datetime as _dt
+    st = {"id": "st", "name": "St", "summary": "S.", "status": "current", "methods": [], "date": _dt.date(2026, 10, 1)}
+    p = {"id": "p", "name": "P", "quantity": "Q.", "value": 1.5, "unit": "s", "status": "measured", "study": "st",
+         "about": ["a"], "sources": sources}
+    return _dataset(tmp_path, **{"studies/st.yaml": st, "parameters/p.yaml": p})
+
+
+def test_parameter_page_shows_its_sources_and_runs(tmp_path):
+    d = _param_ds(tmp_path, [{"output": "W:res/summary.json", "key": "a.b", "note": "the median"}])
+    (d / "_generated").mkdir()
+    (d / "_generated" / "provenance.json").write_text(json.dumps({"made": "2026-11-11", "parameters": {"p": [
+        {"output": "W:res/summary.json", "key": "a.b", "level": "ok",
+         "run": {"kind": "recorded", "date": "2026-11-10", "tool": {"software": "nope", "path": "tools/x.py"}}}]}}))
+    ds = load(d)
+    assert not [w for w in ds.warnings if "provenance snapshot" in w]
+    page = (write_site(ds, tmp_path / "site") / "docs" / "parameters" / "p.md").read_text(encoding="utf-8")
+    assert "## Source" in page and "`res/summary.json` in the analysis work folder (not published), at `a.b`." in page
+    assert "The median." in page and "Made by `tools/x.py` on 2026-11-10." in page
+    assert "Checked against the run records on 2026-11-11" in page
+
+
+def test_a_stale_provenance_snapshot_warns(tmp_path):
+    d = _param_ds(tmp_path, [{"output": "W:res/summary.json", "key": "a.b"}])
+    (d / "_generated").mkdir()
+    (d / "_generated" / "provenance.json").write_text(json.dumps({"parameters": {"p": [
+        {"output": "W:res/old.json", "key": "a.b"}]}}))
+    assert any("provenance snapshot does not match" in w for w in load(d).warnings)

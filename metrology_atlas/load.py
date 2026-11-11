@@ -151,9 +151,33 @@ def load(folder: str | Path) -> Dataset:
     _check_typed_values(ds)
     ds.warnings.extend(typed_form_copies(ds))
     _check_form_dates(ds)
+    _load_provenance(ds)
     if problems:
         raise AtlasError(problems)
     return ds
+
+
+def _load_provenance(ds: Dataset) -> None:
+    """Read the provenance snapshot, if any, and warn where it no longer matches the parameters' sources."""
+    f = Path(ds.folder) / "_generated" / "provenance.json"
+    if not f.is_file():
+        return
+    try:
+        ds.provenance = json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        ds.warnings.append("_generated/provenance.json is not valid JSON; rebuild it (check --provenance-snapshot)")
+        return
+    snap = ds.provenance.get("parameters") or {}
+    stale = []
+    for pid, p in ds.items["parameter"].items():
+        want = [(s.get("output"), s.get("key")) for s in p.get("sources") or []]
+        have = [(s.get("output"), s.get("key")) for s in snap.get(pid) or []]
+        if want != have:
+            stale.append(pid)
+    if stale:
+        ds.warnings.append(f"the provenance snapshot does not match the sources of {len(stale)} parameter(s) "
+                           f"({', '.join(sorted(stale)[:5])}{', ...' if len(stale) > 5 else ''}); "
+                           "rebuild it: check --provenance-snapshot")
 
 
 def _check_form_dates(ds: Dataset) -> None:

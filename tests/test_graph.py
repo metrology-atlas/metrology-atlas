@@ -200,3 +200,16 @@ def test_a_broad_folder_with_narrower_declared_inputs(setup):
     (w / "survey" / "steps" / "s.txt").write_text("2")
     f, _ = graph.check(ds(p={"value": 1, "sources": [{"output": "W:res/c.json", "key": "v"}]}))
     assert f[0].level == "stale"
+
+
+def test_snapshot_names_the_run_and_its_tool(setup):
+    d = ds(p={"value": 60, "sources": [{"output": "W:b/out.json", "key": "x"}]})
+    d.folder = str(setup.w)
+    f, _ = graph.check(d)
+    snap = graph.snapshot(d, f)
+    [row] = snap["parameters"]["p"]
+    assert row["output"] == "W:b/out.json" and row["key"] == "x" and row["level"] == "ok"
+    assert row["run"]["kind"] == "recorded" and row["run"]["date"]
+    t = row["run"]["tool"]
+    assert t["software"] == "bench" and t["path"] == "scale.py" and len(t["commit"]) == 40 and t["committed"]
+    assert str(setup.w) not in json.dumps(snap)                 # no local paths in what is published

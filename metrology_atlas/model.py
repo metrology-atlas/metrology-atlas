@@ -641,6 +641,8 @@ class Dataset:
     """Things worth fixing that do not stop a build (for example code not yet committed)."""
     links: dict[str, list[dict]] = field(default_factory=dict)
     """variable id -> the form and chain numbers taken from parameters (formlinks), as resolved at load."""
+    provenance: dict = field(default_factory=dict)
+    """The provenance snapshot (_generated/provenance.json): parameter id -> its sources with their runs, for the site."""
 
     def get(self, kind: str, id_: str) -> dict | None:
         """The item of a kind with the given id, or None."""
