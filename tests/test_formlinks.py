@@ -108,3 +108,24 @@ def test_plus_must_be_one_number(tmp_path):
                          "p5": 3.4, "p95": 5.3, "scope": "recording"})
     with pytest.raises(AtlasError, match="'plus' must be"):
         _load(tmp_path, form, _param("late", 4.17), _param("span", 6.6, p10=4.9, p90=8.3))
+
+
+def test_a_count_links_and_a_typed_count_warns(tmp_path):
+    form = _form(bias_s={"median": {"parameter": "late"}, "p5": 3.4, "p95": 5.3, "n": {"parameter": "late", "use": "n"},
+                         "scope": "recording"}, studies=["st"])
+    ds = _load(tmp_path, form, _param("late", 4.17, n=3758))
+    assert ds.items["variable"]["s"]["timing"][0]["bias_s"]["n"] == 3758
+    assert not [w for w in ds.warnings if "(n) holds it" in w]
+    typed = _form(bias_s={"median": 4.0, "p5": 3.4, "p95": 5.3, "n": 3758, "scope": "recording"}, studies=["st"])
+    ds = _load(tmp_path / "b", typed, _param("late", 4.17, n=3758))
+    assert any("bias_s.n = 3758 is typed; parameter late (n) holds it" in w for w in ds.warnings)
+
+
+def test_a_link_inside_a_yaml_anchor_resolves_in_every_form(tmp_path):
+    shared = {"median": {"parameter": "late"}, "p5": 3.4, "p95": 5.3, "scope": "recording"}
+    a = _form(bias_s=shared)
+    b = _form(id="raw2", name="Raw 2", default=False, bias_s=shared)
+    files = {**_signal([a, b]), "studies/st.yaml": STUDY, **_param("late", 4.17)}
+    ds = load(_with_domains(_dataset(tmp_path, **files)))
+    assert [f["bias_s"]["median"] for f in ds.items["variable"]["s"]["timing"]] == [4.17, 4.17]
+    assert {l["field"] for l in ds.links["s"]} == {"timing[raw].bias_s.median", "timing[raw2].bias_s.median"}

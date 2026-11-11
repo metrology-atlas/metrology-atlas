@@ -20,7 +20,13 @@ Standard library only, so analysis environments can run it as a file without ins
 
 Paths are stored against named roots so that one record reads the same on every machine that mounts the folders
 differently: METROLOGY_ATLAS_ROOTS="W=/mnt/c/vitalDB/work;code=/mnt/c/code;R=/mnt/c/vitalDB/release" gives
-"W:primus_sync_accuracy_v4/part_0.jsonl". Paths under no root are stored as they are.
+"W:primus_sync_accuracy_v4/part_0.jsonl". Paths under no root are stored as they are. Without the variable, the roots
+come from the roots file, ~/.config/metrology-atlas/roots (or METROLOGY_ATLAS_ROOTS_FILE): one NAME=PATH per line,
+'#' for comments, a relative PATH taken from the file's folder. A name may appear more than once: the first entry that
+exists on this machine is where the root is; the others are aliases, so that records written elsewhere (or before
+the roots were set, with absolute paths) map back to the same names. The variable's entries come before the file's.
+A root itself given as an input (--work $W) is recorded as {"kind": "root"} without reading it: name the files read
+under it with --input.
 
 Inputs are the command's arguments that name an existing file or folder (also the value of --opt=PATH), apart from
 the output folder and anything inside it, plus any --input PATH given to the recorder for files the command reads
@@ -43,7 +49,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-SCHEMA = "metrology-atlas-run/0.1"
+SCHEMA = "metrology-atlas-run/0.2"
 HASH_LIMIT = 200 * 2**20
 TREE_LIMIT = 2000
 RUNS = "_runs"
@@ -53,25 +59,74 @@ def now() -> str:
     return dt.datetime.now(dt.timezone.utc).astimezone().isoformat(timespec="seconds")
 
 
+ROOTS_FILE = Path.home() / ".config" / "metrology-atlas" / "roots"
+
+
+class Roots:
+    """Named roots and their aliases: from METROLOGY_ATLAS_ROOTS, then the roots file."""
+
+    def __init__(self, entries: list[tuple[str, Path]]):
+        self.entries = entries                                   # in order: the first existing one is local
+        self.longest = sorted(entries, key=lambda x: -len(str(x[1])))
+
+    @classmethod
+    def load(cls) -> "Roots":
+        entries: list[tuple[str, Path]] = []
+        for part in os.environ.get("METROLOGY_ATLAS_ROOTS", "").split(";"):
+            if "=" in part:
+                name, path = part.split("=", 1)
+                if name.strip() and path.strip():
+                    entries.append((name.strip(), Path(os.path.abspath(path.strip()))))
+        f = Path(os.environ.get("METROLOGY_ATLAS_ROOTS_FILE") or ROOTS_FILE)
+        try:
+            lines = f.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            lines = []
+        for line in lines:
+            line = line.split("#", 1)[0].strip()
+            if "=" in line:
+                name, path = (x.strip() for x in line.split("=", 1))
+                if name and path:
+                    q = Path(path).expanduser()
+                    entries.append((name, Path(os.path.abspath(q if q.is_absolute() else f.parent / q))))
+        return cls(entries)
+
+    def local(self, name: str) -> Path | None:
+        """Where the root is on this machine: its first entry that exists (else its first entry)."""
+        cands = [p for n, p in self.entries if n == name]
+        return next((p for p in cands if p.exists()), cands[0] if cands else None)
+
+    def portable(self, p: Path, resolve: bool = True) -> str:
+        p = Path(p).resolve() if resolve else Path(os.path.abspath(p))
+        for name, root in self.longest:
+            for r in {root, root.resolve()} if resolve else {root}:
+                try:
+                    rel = p.relative_to(r).as_posix()
+                except ValueError:
+                    continue
+                return f"{name}:{'' if rel == '.' else rel}"
+        return p.as_posix()
+
+    def resolve(self, s: str) -> Path | None:
+        """A ROOT:path as a path on this machine (None if the root is not configured); other strings as paths."""
+        if ":" in s and not s.startswith("/") and not (len(s) > 1 and s[1] == ":" and s[2:3] in ("\\", "/")):
+            name, rest = s.split(":", 1)
+            base = self.local(name)
+            return None if base is None else (base / rest if rest else base)
+        return Path(s)
+
+    def is_root(self, p: Path) -> bool:
+        p = Path(os.path.abspath(p))
+        return any(p == r or p == r.resolve() for _, r in self.entries)
+
+
 def roots() -> list[tuple[str, Path]]:
-    """Named roots from METROLOGY_ATLAS_ROOTS, longest path first."""
-    out = []
-    for part in os.environ.get("METROLOGY_ATLAS_ROOTS", "").split(";"):
-        if "=" in part:
-            name, path = part.split("=", 1)
-            if name.strip() and path.strip():
-                out.append((name.strip(), Path(path.strip()).resolve()))
-    return sorted(out, key=lambda x: -len(str(x[1])))
+    """Named roots (and aliases), longest path first."""
+    return Roots.load().longest
 
 
 def portable(p: Path) -> str:
-    p = Path(p).resolve()
-    for name, root in roots():
-        try:
-            return f"{name}:{p.relative_to(root).as_posix()}"
-        except ValueError:
-            continue
-    return p.as_posix()
+    return Roots.load().portable(p)
 
 
 def sha256(p: Path) -> str:
@@ -159,6 +214,7 @@ def find_script(args: list[str]) -> Path | None:
 def inputs_of(args: list[str], out: Path, script: Path | None, program: bool = False, **kw) -> list[dict]:
     """Inputs named on a command line; program=True when args[0] is the program run (not an input)."""
     out = out.resolve()
+    R = Roots.load()
     seen, res = set(), []
     for i, a in enumerate(args):
         if program and i == 0:
@@ -181,6 +237,12 @@ def inputs_of(args: list[str], out: Path, script: Path | None, program: bool = F
             if r == Path("/") or r == Path.home():
                 continue
             seen.add(r)
+            if R.is_root(r):           # a whole work folder or release: recorded by name, not read
+                d = {"path": R.portable(r), "kind": "root", "arg_index": i}
+                if i > 0 and args[i - 1].startswith("--") and "=" not in args[i - 1]:
+                    d["flag"] = args[i - 1]
+                res.append(d)
+                continue
             try:
                 d = describe(r, skip=out, **kw)
             except OSError as e:
@@ -231,7 +293,11 @@ def new_record(out: Path, args: list[str], script: Path | None, kind: str, note:
     """A record for a command (program=True: args[0] is the program) or a driver's arguments (program=False)."""
     script = script or find_script(args)
     ins = inputs_of(args, out, script, program=program, **kw)
+    R = Roots.load()
     for e in extra or []:
+        if R.is_root(Path(e).resolve()):
+            ins.append({"path": R.portable(Path(e)), "kind": "root", "declared": True})
+            continue
         try:
             d = describe(Path(e), skip=Path(out).resolve(), **kw)
         except OSError as err:

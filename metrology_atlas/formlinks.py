@@ -15,7 +15,8 @@ A link's keys:
 
 - ``parameter`` (required): the parameter's id;
 - ``use``: which of its numbers: ``value`` (default), a spread entry (``p5``, ``p10``, ``q1``, ``q3``, ``p90``,
-  ``p95``, ``min``, ``max``, ``sd``), or a pair for a range field (``p10-p90``, ``p5-p95``, ``q1-q3``, ``min-max``);
+  ``p95``, ``min``, ``max``, ``sd``), a pair for a range field (``p10-p90``, ``p5-p95``, ``q1-q3``, ``min-max``), or
+  ``n``, the count behind it (a form's ``n``: taken as it is, no unit);
 - ``scale``: a multiplier, applied after the unit conversion (needed when the parameter's unit is not a time);
 - ``rectangular``: true when the number is a full width to be turned into a standard uncertainty (divided by
   sqrt(12));
@@ -24,11 +25,13 @@ A link's keys:
   ``{parameter: hr-label-delay, plus: {parameter: solar8000-poll-gap, scale: 0.5}}``).
 
 Form fields are in seconds; a parameter in ms, min or h is converted. :func:`typed_form_copies` lists form numbers
-typed where a parameter of a study the form cites holds the same number, for the engine to warn about.
+typed where a parameter of a study the form cites holds the same number, for the engine to warn about; a typed
+count (``n``) that equals such a parameter's n is listed too.
 """
 
 from __future__ import annotations
 
+import copy
 import math
 
 from metrology_atlas.values import written_decimals
@@ -57,6 +60,12 @@ def _value(link: dict, ds, where: str, problems: list[str]):
         problems.append(f"{where}: link to parameter '{pid}', which does not exist")
         return None
     use = link.get("use", "value")
+    if use == "n":
+        n = (p.get("spread") or {}).get("n")
+        if not isinstance(n, (int, float)) or isinstance(n, bool):
+            problems.append(f"{where}: link to '{pid}': the parameter has no n")
+            return None
+        return int(n) if float(n).is_integer() else n
     keys = PAIRS.get(use) or ((use,) if use == "value" or use in SPREAD_KEYS else None)
     if keys is None:
         problems.append(f"{where}: link to '{pid}': 'use' must be value, a spread entry or a pair, not '{use}'")
@@ -115,6 +124,10 @@ def resolve_links(ds, problems: list[str]) -> None:
 
     for vid, v in ds.items["variable"].items():
         rel = ds.sources.get(("variable", vid), f"variables/{vid}.yaml")
+        # YAML anchors share one object between forms; copy each form so a link is resolved (and recorded) in each
+        for key in ("timing", "chain"):
+            if isinstance(v.get(key), list):
+                v[key] = [copy.deepcopy(x) for x in v[key]]
         for i, form in enumerate(v.get("timing") or []):
             if isinstance(form, dict):
                 walk(form, f"timing[{form.get('id', i)}]", vid, rel)
@@ -135,6 +148,20 @@ def _numbers(node, path=""):
             yield from _numbers(v, f"{path}[{i}]")
     elif isinstance(node, (int, float)) and not isinstance(node, bool):
         yield path, node
+
+
+def _counts(node, path=""):
+    """(path, number) for every count (a key named n) in a form."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            p = f"{path}.{k}" if path else k
+            if k == "n" and isinstance(v, (int, float)) and not isinstance(v, bool):
+                yield p, v
+            else:
+                yield from _counts(v, p)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            yield from _counts(v, f"{path}[{i}]")
 
 
 def typed_form_copies(ds) -> list[str]:
@@ -181,6 +208,19 @@ def typed_form_copies(ds) -> list[str]:
                             break
                         out.append(f"variable '{vid}': {full} = {x:g} is typed; parameter {pid} ({key}) holds it: "
                                    f"link it ({{parameter: {pid}{'' if key == 'value' else ', use: ' + key}}})")
+                        break
+            # counts: a typed n equal to the n of a cited parameter
+            for path, x in _counts(unit):
+                full = f"{base}.{path}"
+                if any(vid == lv and full == lf for lv, lf in linked) or not x or x < 10:
+                    continue
+                for pid, p in sorted(params.items()):
+                    if (p.get("spread") or {}).get("n") == x:
+                        if (full, pid) in ok:
+                            used.add((full, pid))
+                            break
+                        out.append(f"variable '{vid}': {full} = {x:g} is typed; parameter {pid} (n) holds it: "
+                                   f"link it ({{parameter: {pid}, use: n}})")
                         break
         for f, pid in sorted(ok - used, key=str):
             out.append(f"variable '{vid}': typed_ok entry ({f}, {pid}) matches no typed form number now; remove it")

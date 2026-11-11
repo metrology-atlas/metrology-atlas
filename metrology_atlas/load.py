@@ -249,6 +249,9 @@ def _resolve(ds: Dataset, kinds: tuple[str, ...], value: object) -> bool:
     return isinstance(value, str) and any(value in ds.items.get(k, {}) for k in kinds)
 
 
+ROOTED = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*:[^/\\].*")
+
+
 def _check_fields(ds: Dataset, fields: tuple[Field, ...], item: dict, where: str, problems: list[str]) -> None:
     known = {f.name for f in fields}
     for key in item:
@@ -264,6 +267,8 @@ def _check_fields(ds: Dataset, fields: tuple[Field, ...], item: dict, where: str
         if f.type in {"str", "text"}:
             if not isinstance(value, str):
                 problems.append(f"{at} must be text")
+            elif f.name == "output" and not ROOTED.match(value):
+                problems.append(f"{at}: '{value}' must be ROOT:path (a named root of the run records, e.g. 'W:x/summary.json')")
             elif f.type == "text":
                 rx = record_xref(ds)
                 if rx:

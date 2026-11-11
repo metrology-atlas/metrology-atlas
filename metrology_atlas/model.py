@@ -9,7 +9,9 @@ Relations are written once, on one side, and the other side is derived:
 - a parameter names the study that produced it and the items it is about; a study's page lists its parameters;
 - a link names the two clocks it relates; each clock's page lists its links;
 - a variable names the measurands it measures or estimates, and the variables it was derived from; a measurand's page
-  lists its variables, and an input's page lists what was derived from it (schema 0.4).
+  lists its variables, and an input's page lists what was derived from it (schema 0.4);
+- a parameter names the saved outputs its numbers are read from (``sources``, schema 0.5); the run records written
+  beside those outputs (``provenance.py``) say how each was made, which joins every number to its code and data.
 
 Prose fields are Markdown. ``[[kind:id]]`` inside prose is a cross-reference, checked like any other reference.
 """
@@ -18,7 +20,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-SCHEMA_VERSION = "metrology-atlas/0.4"
+SCHEMA_VERSION = "metrology-atlas/0.5"
 
 
 @dataclass(frozen=True)
@@ -476,6 +478,19 @@ KINDS: dict[str, Kind] = {
                 Field("superseded_by", "ref", ref="parameter"),
                 Field("date", "date"),
                 Field("notes", "text"),
+                Field("sources", "objs", fields=(
+                    Field("output", "str", required=True,
+                          help="The saved output, as ROOT:path against the named roots of the run records "
+                               "(METROLOGY_ATLAS_ROOTS), e.g. 'W:hum_snuadc/m5/hum_summary.json'."),
+                    Field("key", "str", help="Where the number sits in a JSON output: keys joined by dots, list "
+                                             "positions as numbers, e.g. 'fixed_shift.u_headline_rsd_s' or 'd_s.3'."),
+                    Field("field", "enum", choices=("value", "sum", "spread", "n", "display", "by_setup", "context"),
+                          help="Which of the parameter's fields it gives (default value); sum: one of several terms "
+                               "added to give the value; context: read, not copied."),
+                    Field("scale", "number", help="Factor from the output's unit to the parameter's (e.g. 1000 for s to ms)."),
+                    Field("note", "str"),
+                ), help="Where the numbers come from, so the provenance check can trace them through the run records and "
+                        "compare them with the saved outputs."),
                 Field("headline", "bool", help="Show on the home page among the key numbers."),
                 Field("setup_key", "str", help="What a setup is for this parameter's per-setup values, e.g. 'PC key'."),
                 Field("by_setup", "objs", fields=(

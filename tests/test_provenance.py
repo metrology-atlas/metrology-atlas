@@ -200,3 +200,41 @@ def test_recorder_failure_still_runs_the_command(repo, work, monkeypatch):
     assert code == 0 and json.loads((out / "summary.json").read_text()) == {"y": 10}
     [r] = records(out)
     assert "broken" in r["record_error"] and r["exit_code"] == 0
+
+
+def test_roots_file_and_aliases(tmp_path, monkeypatch):
+    w = tmp_path / "work"
+    (w / "res").mkdir(parents=True)
+    f = tmp_path / "cfg" / "roots"
+    f.parent.mkdir()
+    f.write_text("# local first, then where other machines mount it\nW = ../work\nW=/mnt/c/vitalDB/work\n")
+    monkeypatch.delenv("METROLOGY_ATLAS_ROOTS", raising=False)
+    monkeypatch.setenv("METROLOGY_ATLAS_ROOTS_FILE", str(f))
+    R = pv.Roots.load()
+    assert R.local("W") == w
+    assert pv.portable(w / "res" / "x.json") == "W:res/x.json"
+    assert R.portable(Path("/mnt/c/vitalDB/work/res/x.json"), resolve=False) == "W:res/x.json"
+    assert R.resolve("W:res/x.json") == w / "res" / "x.json"
+    assert R.resolve("Q:x") is None
+
+
+def test_env_roots_come_first(tmp_path, monkeypatch):
+    a, b = tmp_path / "a", tmp_path / "b"
+    a.mkdir()
+    b.mkdir()
+    f = tmp_path / "roots"
+    f.write_text(f"W={b}\n")
+    monkeypatch.setenv("METROLOGY_ATLAS_ROOTS_FILE", str(f))
+    monkeypatch.setenv("METROLOGY_ATLAS_ROOTS", f"W={a}")
+    assert pv.Roots.load().local("W") == a
+
+
+def test_a_root_given_as_input_is_not_read(repo, work):
+    inp = work / "in.json"
+    inp.write_text('{"x": 4}')
+    out = work / "res"
+    pv.main(["record", "--out", str(out), "--input", str(inp), "--", sys.executable, str(repo / "tools" / "double.py"),
+             str(inp), str(out), "--work", str(work)])
+    rec = records(out)[0]
+    root = [i for i in rec["inputs"] if i.get("kind") == "root"]
+    assert root == [{"path": "W:", "kind": "root", "arg_index": 5, "flag": "--work"}]
