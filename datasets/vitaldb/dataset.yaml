@@ -236,7 +236,7 @@ forbidden_patterns:
   - pattern: '\b\d{4}\.vital\b'
     why: name a case only deliberately, as [[case:1234]]
 notice: |
-  **Open for review (v0.2.0).** This version accompanies version 2 of the preprint
+  **Open for review (v0.3.0).** This version accompanies version 2 of the preprint
   ([arXiv:2610.29001](https://arxiv.org/abs/2610.29001)), which reframes the atlas in the terms of the VIM and the GUM,
   and is released for review by the community and the dataset's custodians ahead of a peer-reviewed journal version.
   Version 0.1.0 is archived, and its superseded numbers stay on the pages that replaced them.
