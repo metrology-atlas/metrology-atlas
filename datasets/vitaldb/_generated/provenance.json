@@ -1,8 +1,8 @@
 {
  "schema": "metrology-atlas-provenance/0.1",
- "made": "2026-11-11",
- "atlas_commit": "13a21805fb34c801a029a9641da2353729df1f75",
- "atlas_dirty": true,
+ "made": "2026-11-12",
+ "atlas_commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+ "atlas_dirty": false,
  "parameters": {
   "art-mbp-delay": [
    {
@@ -15,7 +15,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_delay_variability.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -32,7 +32,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_bg_vs_central.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -49,7 +49,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_bg_vs_central.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -66,7 +66,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_bg_vs_central.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -83,7 +83,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_bg_vs_central.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -100,7 +100,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -116,7 +116,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -133,7 +133,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_index_delay.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov from the tool's docstring; the scan parts were not kept in the work folder, not reproduced"
@@ -151,7 +151,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_smoothing_labels.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov from the tool's docstring (--scan f*.jsonl --root R --devices va/p?.jsonl --out RESULTS); not reproduced"
@@ -170,7 +170,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -187,7 +187,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -204,7 +204,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -221,7 +221,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -238,7 +238,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -255,7 +255,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/direct_rate_from_bursts.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -271,7 +271,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/direct_rate_from_bursts.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -288,7 +288,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -306,7 +306,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/rare_device_sync.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -324,7 +324,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/rare_device_sync.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -341,7 +341,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/blood_gas_gradients.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -358,7 +358,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/co2_sampling_line.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -374,7 +374,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/co2_sampling_line.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -391,7 +391,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_delay_variability.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -408,7 +408,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -426,7 +426,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/emr_markers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov from the tool's docstring; committed with vitaldb-bench; parts not kept, not reproduced"
@@ -444,7 +444,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_delay_variability.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -461,7 +461,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -478,7 +478,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -495,7 +495,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_rule_exact.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -511,7 +511,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_rule_exact.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -528,7 +528,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -545,7 +545,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -561,7 +561,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -578,7 +578,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -595,7 +595,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -611,7 +611,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -628,7 +628,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -645,7 +645,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -662,7 +662,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_label_params.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -680,7 +680,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hr_derivation.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -698,7 +698,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_recompute_lag.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -716,7 +716,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_derivation_readout.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -734,7 +734,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hr_derivation.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -751,7 +751,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_window_span.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -768,7 +768,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_draw_labels.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -785,7 +785,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_draw_labels.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -804,7 +804,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/line_access_summary.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -821,7 +821,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/lab_draw_labels.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -838,7 +838,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/line_access_summary.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -855,7 +855,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/clock_reconcile.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -873,7 +873,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/clock_reconcile.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -890,7 +890,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/clock_reconcile.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -907,7 +907,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/clock_reconcile.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -923,7 +923,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/clock_reconcile.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -942,7 +942,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/clock_reconcile.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -960,7 +960,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/monitor_lines.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -977,7 +977,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/cuff_vs_arterial.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -994,7 +994,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/cuff_vs_arterial.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1013,7 +1013,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/cuff_vs_arterial.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1030,7 +1030,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/cuff_vs_arterial.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1065,7 +1065,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/paced_breaks.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov: options --min-dominant 100 --min-share 0.6 found by matching the candidate set (59 entries, checked); the 11 Nov reruns give the same reset events but other entries differ since the reader change of 2 Nov"
@@ -1083,7 +1083,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/co2_gradient_spread.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1099,7 +1099,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/co2_gradient_spread.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1116,7 +1116,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/blood_gas_gradients.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1133,7 +1133,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/mains_hum.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1150,7 +1150,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/mains_hum.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1168,7 +1168,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/mains_hum.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1185,7 +1185,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/pc_clock_steps.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov: the PC-step scan of 17 Oct (two parts); not rerun (a full read of the release)"
@@ -1201,7 +1201,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/pc_clock_steps.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov: the PC-step scan of 17 Oct (two parts); not rerun (a full read of the release)"
@@ -1219,7 +1219,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_delay_variability.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1238,7 +1238,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/pat_offset_census.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1256,7 +1256,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/setup_offsets.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1273,7 +1273,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/setup_assign.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov from the tool's docstring and PLAN (frame clock as a fingerprint); not reproduced"
@@ -1291,7 +1291,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/pleth_hr_derivation.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1308,7 +1308,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/pr_window_routes.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1324,7 +1324,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/pr_window_routes.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1343,7 +1343,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/pleth_hr_derivation.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1373,7 +1373,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/ppg_sawtooth_figures.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1390,7 +1390,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_vs_art.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1407,7 +1407,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_vs_art.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1425,7 +1425,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1442,7 +1442,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1459,7 +1459,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1475,7 +1475,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1492,7 +1492,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1509,7 +1509,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/hr_vs_pulse_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1526,7 +1526,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_recompute_lag.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1544,7 +1544,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_recompute_lag.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1561,7 +1561,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1579,7 +1579,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1596,7 +1596,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_anchor_check.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1612,7 +1612,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_anchor_check.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1629,7 +1629,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1645,7 +1645,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1662,7 +1662,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1680,7 +1680,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1697,7 +1697,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/drift_probe_summary.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1715,7 +1715,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1732,7 +1732,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_derivation_readout.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1751,7 +1751,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1770,7 +1770,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/primus_awp_anchor.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1787,7 +1787,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1803,7 +1803,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1820,7 +1820,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/recording_duration.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1836,7 +1836,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/recording_duration.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1853,7 +1853,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/recording_pause.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1870,7 +1870,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_delay_variability.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1887,7 +1887,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/blood_gas_gradients.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1904,7 +1904,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/frequent_steps_summary.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1921,7 +1921,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/paced_breaks.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov: options --min-dominant 100 --min-share 0.6 found by matching the candidate set (59 entries, checked); the 11 Nov reruns give the same reset events but other entries differ since the reader change of 2 Nov"
@@ -1939,7 +1939,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/mains_hum.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1956,7 +1956,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/snu_raw_offset.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1972,7 +1972,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/snu_raw_offset.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -1989,7 +1989,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/snu_raw_offset.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2005,7 +2005,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/snu_raw_offset.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2022,7 +2022,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/paced_reset_loss.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2038,7 +2038,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/paced_reset_loss.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2055,7 +2055,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2072,7 +2072,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/snuadc_stamp_census.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2089,7 +2089,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/snuadc_start_delay.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2105,7 +2105,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/snuadc_start_delay.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2123,7 +2123,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2139,7 +2139,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "examples/paced_reset_loss.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2156,7 +2156,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2173,7 +2173,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/correction_schedules.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2190,7 +2190,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2206,7 +2206,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2223,7 +2223,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2240,7 +2240,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2257,7 +2257,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2274,7 +2274,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2291,7 +2291,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/hum_snuadc_rate.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2310,7 +2310,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_delay_variability.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2327,7 +2327,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/numeric_agg.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2345,7 +2345,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/spo2_event_pilot.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      },
      "note": "reconstructed 11 Nov: the 1 Nov SpO2 pilot (231 cases), committed with vitaldb-bench; the release rerun is overnight_v4b/spo2"
@@ -2363,7 +2363,7 @@
      "tool": {
       "software": "vitaldb-bench",
       "path": "tools/bis_numbers.py",
-      "commit": "b43679f97cf42869a7d114026d3288dc71243295",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
       "committed": true
      }
     }
@@ -2382,7 +2382,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2398,7 +2398,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2415,7 +2415,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2432,7 +2432,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2449,7 +2449,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2466,7 +2466,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2483,7 +2483,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
@@ -2500,7 +2500,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "13a21805fb34c801a029a9641da2353729df1f75",
+      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
       "committed": true
      }
     }
