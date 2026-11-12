@@ -2,9 +2,9 @@ id: pat-offset-census
 name: One device delay for the PLETH across the release
 summary: >-
   The stored ECG-to-PLETH delay was measured in 5,536 recordings, to the foot and to the steepest upstroke of each
-  pulse. It has one peak (655 ms to the foot, 715 ms to the upstroke, in the median recording), no clusters by
+  pulse. It has one peak ([[value:pleth-stored-delay]] to the foot, 715 ms to the upstroke, in the median recording), no clusters by
   recording setup or SNUADC port, and no shift along the case order: one global device delay, [[value:pleth-chain-delay]] with an adopted
-  R-to-foot finger PAT of 270 ms, fits the whole release, as Ruffolo et al. found in their own data.
+  R-to-foot finger PAT of [[value:adopted-pat]], fits the whole release, as Ruffolo et al. found in their own data.
 date: 2026-10-18
 status: current
 methods: [delays-and-windows, signal-borne-clocks]
@@ -46,15 +46,15 @@ results: |
     stored delay changes by −4 ms (interquartile range −24 to +16).
   - **The stored delay keeps the patient's PAT:** per case, stored finger PAT correlates with arterial PAT (Spearman
     0.56). Removing one global delay keeps that; removing each case's own offset destroys it.
-  - **Foot and upstroke.** To the foot, the stored delay is 655 ms (interquartile range 640–670 ms), with the same
+  - **Foot and upstroke.** To the foot, the stored delay is [[value:pleth-stored-delay]] (interquartile range 640–670 ms), with the same
     single peak and the same absence of setup clusters (setup explains 2% of its variance) and of a trend along the
     case order (bin medians within 4 ms). The PLETH's foot-to-upstroke time is 59 ms (56.7–62.0 ms) and barely varies.
     The arterial line: 178 ms to the foot, 216 ms to the upstroke. Finger minus arterial PAT is 475 ms foot to foot.
-  - **The global delay:** the adopted 270 ms ([[study:ppg-offset-reference]]) is an R-to-finger-foot value, so the
-    delay is taken at the foot: 655 − 270 = **[[value:pleth-chain-delay]]**, which agrees with the earlier estimates: 385 ms from the
-    266 benchmark recordings' sawtooth-removed level, and 370 ms from the 293 cases' raw foot PAT (640 − 270 ms;
+  - **The global delay:** the adopted [[value:adopted-pat]] ([[study:ppg-offset-reference]]) is an R-to-finger-foot value, so the
+    delay is taken at the foot: [[value:pleth-stored-delay]] − [[value:adopted-pat]] = **[[value:pleth-chain-delay]]**, which agrees with the earlier estimates: 385 ms from the
+    266 benchmark recordings' sawtooth-removed level, and 370 ms from the 293 cases' raw foot PAT (640 ms less the adopted value;
     `results/pat/pat300_summary.json`). It implies a finger-minus-radial difference of about 90 ms foot to foot. (A first version used the
-    upstroke, 715 − 270 = 445 ms, which mixed two fiducials.)
+    upstroke, 715 ms less the adopted value, 445 ms, which mixed two fiducials.)
 
   [[figure:pat-offset-census]]
 discussion: |
@@ -74,7 +74,7 @@ open_questions:
     summary: >-
       With the global [[value:pleth-chain-delay]], finger PAT exceeds radial-artery PAT by about 90 ms foot to foot. Published values for
       the radial-to-fingertip pulse transit (and for the volume pulse lagging the pressure pulse) would check the
-      adopted 270 ms independently; a larger or smaller gap there would move the global delay by the same amount.
+      adopted [[value:adopted-pat]] independently; a larger or smaller gap there would move the global delay by the same amount.
   - title: "Epochs in time"
     kind: next step
     summary: >-

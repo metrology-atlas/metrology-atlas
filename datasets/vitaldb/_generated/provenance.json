@@ -1,8 +1,8 @@
 {
  "schema": "metrology-atlas-provenance/0.1",
  "made": "2026-11-12",
- "atlas_commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
- "atlas_dirty": false,
+ "atlas_commit": "cac055909624525ae41ef8744c85fedf7661925d",
+ "atlas_dirty": true,
  "parameters": {
   "art-mbp-delay": [
    {
@@ -1379,6 +1379,71 @@
     }
    }
   ],
+  "pleth-stored-delay": [
+   {
+    "output": "W:pat_census/aggf/summary.json",
+    "level": "ok",
+    "key": "ppg_foot_ms.p50",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pat_offset_census.py",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:pat_census/aggf/summary.json",
+    "level": "ok",
+    "key": "ppg_foot_ms.p5",
+    "field": "spread",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pat_offset_census.py",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:pat_census/aggf/summary.json",
+    "level": "ok",
+    "key": "ppg_foot_ms.p95",
+    "field": "spread",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pat_offset_census.py",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
+      "committed": true
+     }
+    }
+   },
+   {
+    "output": "W:pat_census/aggf/summary.json",
+    "level": "ok",
+    "key": "ppg_foot_ms.n",
+    "field": "n",
+    "run": {
+     "kind": "recorded",
+     "date": "2026-11-11",
+     "tool": {
+      "software": "vitaldb-bench",
+      "path": "tools/pat_offset_census.py",
+      "commit": "6c60f6b4d6e03ad4e5e2b444d40bf727b6278d4c",
+      "committed": true
+     }
+    }
+   }
+  ],
   "ppg-correction-art-spread": [
    {
     "output": "W:correction_vs_art/agg_v6/summary.json",
@@ -2382,7 +2447,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2398,7 +2463,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2415,7 +2480,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2432,7 +2497,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2449,7 +2514,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2466,7 +2531,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2483,7 +2548,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }
@@ -2500,7 +2565,7 @@
      "tool": {
       "software": "metrology-atlas",
       "path": "tools/fig_urine_heaping.py",
-      "commit": "ba0d6e6743cd26191ebe699749c13e90e9702ebd",
+      "commit": "cac055909624525ae41ef8744c85fedf7661925d",
       "committed": true
      }
     }

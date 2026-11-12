@@ -1,0 +1,28 @@
+id: pleth-stored-delay
+name: Stored ECG-to-PLETH delay
+quantity: >-
+  The delay from each ECG R peak to the foot of the following PLETH pulse, as stored (SNUADC stamps), median per
+  recording, then median over recordings. It holds the physiological pulse arrival time and the PPG hardware delay
+  together.
+value: 655.0
+unit: ms
+spread: {p5: 616.8, p95: 692.8, n: 5536, text: "median per recording; p5–p95 between recordings"}
+status: measured
+study: pat-offset-census
+about: [snuadc-pleth]
+date: 2026-11-12
+notes: >-
+  Less the adopted pulse arrival time ([[parameter:adopted-pat]], assumed), this gives the PPG hardware delay
+  ([[parameter:pleth-chain-delay]]).
+sources:
+- output: W:pat_census/aggf/summary.json
+  key: ppg_foot_ms.p50
+- output: W:pat_census/aggf/summary.json
+  key: ppg_foot_ms.p5
+  field: spread
+- output: W:pat_census/aggf/summary.json
+  key: ppg_foot_ms.p95
+  field: spread
+- output: W:pat_census/aggf/summary.json
+  key: ppg_foot_ms.n
+  field: n

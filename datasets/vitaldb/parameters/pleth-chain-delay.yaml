@@ -5,8 +5,11 @@ value: 385
 unit: ms
 spread: {min: 365, max: 405, text: "over the adopted PAT's plausible range (250–290 ms); setups differ by under ±15 ms"}
 display: "385 ms, one global value (stored R-to-foot delay 655 ms minus an adopted 270 ms); setups differ by under ±15 ms"
-status: measured
+status: derived
 study: pat-offset-census
+notes: >-
+  Derived: the stored ECG-to-PLETH delay ([[parameter:pleth-stored-delay]], measured) less the adopted pulse arrival
+  time ([[parameter:adopted-pat]], assumed); its spread is the adopted value's plausible range.
 about: [snuadc-pleth]
 sources:
 - output: W:pat_census/aggf/summary.json
