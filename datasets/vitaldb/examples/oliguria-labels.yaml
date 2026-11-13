@@ -5,7 +5,7 @@ summary: >-
   expected to be wrong, which sets a floor under the error any model can be measured to have. A typical model is
   barely affected; a good one is.
 side: value
-status: draft
+status: current
 question: |
   If a prediction model is trained and scored on "oliguric during the operation: yes or no", how good are those
   labels, and what do they do to the model's measured performance?
@@ -69,7 +69,8 @@ reproduce: |
   python examples/oliguria_labels.py --resolution <vitaldb-resolution at the pinned commit> \
       --root <VitalDB release> --out out/oliguria --draws 200
   ```
-  Under a minute on a laptop.
+  Under a minute on a laptop. The page was made with `bash scripts/rerun_examples.sh oliguria_labels`
+  (vitaldb-bench), which records each step; the run is `$W/examples_v3/oliguria_labels`.
 figures:
   - id: oliguria-labels
     file: examples/oliguria-labels.png
