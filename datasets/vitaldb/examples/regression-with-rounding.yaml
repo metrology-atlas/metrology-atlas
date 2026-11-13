@@ -5,7 +5,7 @@ summary: >-
   numbers and once per draw from the true-value distributions: the rounding moves 14% of cases across the oliguria
   threshold, but widens the confidence interval of the cohort's regression by at most 4%.
 side: value
-status: draft
+status: current
 question: |
   Is lower intraoperative urine output associated with acute kidney injury after surgery, and how much of the
   uncertainty in the answer comes from the rounding of the inputs?
@@ -75,14 +75,14 @@ results: |
 levels:
   error: random
   population: >-
-    Carried through 200 draws, the rounding is under 8% of the variance at any threshold: the cohort's answer does not change.
+    Carried through 200 draws, the rounding is at most 11% of the variance of the prevalence, and 8% of the odds
+    ratio's, at any threshold: the cohort's answer does not change.
   individual: >-
     14% of patients sit on both sides of 0.5 mL/kg/h between draws, which is what the cohort averages over.
 takeaways: |
   - Carry rounding through a regression by fitting once per draw and combining with Rubin's rules; the fraction of
     the variance that comes from the draws says how much the rounding matters for that question.
-  - A threshold is where rounding matters most: dichotomising the exposure (oliguria) gave rounding ten times the
-    weight it has with the rate as a number.
+  - A threshold is where rounding matters most: dichotomising the exposure (oliguria) gave rounding about nine times the weight it has with the rate as a number.
   - For a cohort-level question VitalDB's rounding is small next to the spread between patients, whatever the
     threshold, because independent errors cancel; only a systematic error would not. For a label or decision per
     patient it matters ([[example:oliguria-labels]], [[example:urine-output-per-kg-per-hour]]).
@@ -101,7 +101,8 @@ reproduce: |
   python examples/regression_with_rounding.py --resolution <vitaldb-resolution at the pinned commit> \
       --root <VitalDB release> --out out/regression --draws 200
   ```
-  Under a minute on a laptop.
+    Under a minute on a laptop. The page was made with `bash scripts/rerun_examples.sh regression_with_rounding`
+  (vitaldb-bench), which records each step; the run is `$W/examples_v3/regression_with_rounding`.
 figures:
   - id: regression-rounding
     file: examples/regression-rounding.png
