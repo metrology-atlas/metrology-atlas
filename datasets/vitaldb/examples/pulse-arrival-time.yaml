@@ -1,10 +1,12 @@
 id: pulse-arrival-time
 name: Pulse arrival time in two correction steps
 summary: >-
-  The time from the ECG R wave to the pulse at the finger, as stored, after the PLETH's sawtooth is removed, and
-  after its device offset is removed, smoothed by maximum likelihood, with the arterial line as the reference.
+  As stored, the ECG-to-finger PAT in VitalDB is about 0.72 s, far beyond any physiological value, because a device
+  delay of about 0.39 s and a frame-slip sawtooth sit inside it. Removing the sawtooth narrows finger minus arterial
+  PAT from 13.6 to 11.1 ms in the median case, and removing one global delay brings PAT to about 0.33 s to the
+  upstroke, keeping the differences between patients.
 side: time
-status: draft
+status: current
 question: |
   How long does the pulse take to travel from the heart to the finger, and how does that change through an
   operation?
@@ -134,15 +136,16 @@ open_questions:
   - title: "Where the sawtooth stops"
     kind: phenomenon
     summary: >-
-      In some stretches no slip comes although several were due, and the delay is flat
-      ([[study:ppg-sawtooth-pauses]]). The model treats the stretch before and after a pause as creep then hold, of
-      unknown length, which leaves up to one frame of uncertainty there.
+      Most stretches of two teeth without a slip are one slip missed, not a pause
+      ([[study:ppg-sawtooth-pauses]]). The rebuilt correction predicts the slip the grid expects there and corrects it
+      where the evidence is strong. Where it is not, the tooth is left unresolved (tier U) and only the offset is
+      removed, so up to one frame of uncertainty remains in those teeth.
   - title: "ECG and arterial-line outputs may differ in delay inside the monitor"
     kind: assumption
     summary: >-
       The SNUADC records the monitor's analogue outputs, not the patient, so sharing a converter aligns their sampling
       but not the monitor's processing before it. A difference in filtering or buffering between the ECG and
-      invasive-pressure outputs would go straight into the arterial-line PAT (223 ms) and into the arterial check on
+      invasive-pressure outputs would go straight into the arterial-line PAT (219 ms) and into the arterial check on
       the sawtooth. The converter's own channel skew is below a millisecond (it reads its channels in turn). Settled by
       the monitor's documentation of its analogue-output delays, a simulator feeding one event to both, or, from the
       data, the phase of the monitor's 240 Hz output-update line where it shows in both the ECG and the arterial
@@ -151,8 +154,8 @@ open_questions:
     kind: next step
     summary: >-
       Eight of 121 cases were paired one beat out (fast heart rates or doubled R peaks) and are left out of the cohort
-      figures. The census pairs pulses by each segment's modal delay instead ([[study:pat-offset-census]]); using
-      that pairing here would bring them back.
+      figures. The census pairs pulses by each segment's modal delay instead ([[study:pat-offset-census]]); using that pairing here would bring them back. The example [[example:pat-vs-bp]] already pairs this way, and
+      shows how much naive pairing changes PAT's correlation with blood pressure.
   - title: "The adopted 0.27 s"
     kind: assumption
     summary: >-
@@ -201,7 +204,7 @@ reproduce: |
   python examples/pat_example_stats.py out/pat --case <figure case> --json out/pat/page_stats.json
   ```
   The slips are read from the whole-release slip fit (`$PAT_FIT`); `PAT_METHOD=detect` runs the detect fit on the
-  same windows for comparison (`scripts/run_pat_example.sh` runs both). With [[software:physiosync]] and the TimeNet VitalDB reader installed (see [[software:vitaldb-bench]]).
+  same windows for comparison (`scripts/run_pat_example.sh` runs both). With [[software:physiosync]] and vitaldb-reader installed (see [[software:vitaldb-bench]]).
 references: [ruffolo2025high]
 figures:
   - id: pat-case
