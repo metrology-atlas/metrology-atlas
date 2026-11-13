@@ -4,7 +4,7 @@ summary: >-
   Fluids in minus fluids out, each a heaped charted volume, as a distribution per case: the recording alone makes a
   balance uncertain by about ±60 mL, and by ±190 mL when the blood loss was written as a round 500 mL.
 side: value
-status: draft
+status: current
 question: |
   What was this patient's net fluid balance at the end of the operation, and how precisely do the records say?
 why: |
@@ -30,8 +30,9 @@ results: |
   [[figure:fb-examples]]
 
   **The cohort.** The median 95% interval is 116 mL wide (78 to 142 mL, 10th to 90th percentile). Crystalloid
-  contributes about 55% of the variance in the median case and blood loss 36%; urine output and colloid little. A separate group of 117 cases is about 380 mL wide, nearly all
-  with a blood loss recorded as a round 500 or 1,000 mL, which the model reads as possibly rounded to the nearest 500. In 95 cases the interval spans zero. The medians of the
+  contributes about 55% of the variance in the median case and blood loss 36%; urine output and colloid little. A separate group of 117 cases is about 380 mL
+  wide. These are exactly the cases whose blood loss was recorded as a multiple of 500 mL (97 at 500 mL, 14 at
+  1,000 mL and 6 higher), which the model reads as possibly rounded to the nearest 500. In 95 cases the interval spans zero. The medians of the
   distributions sit within 1 mL of the recorded balance, so the rounding adds spread, not bias.
 
   [[figure:fb-cohort]]
@@ -44,7 +45,7 @@ levels:
 takeaways: |
   - A computed fluid balance from charted volumes is uncertain by about ±60 mL from the recording alone, before any
     error in estimating blood loss itself.
-  - Round blood losses (500, 1,000 mL) dominate the uncertainty where they occur.
+  - Blood losses written as a multiple of 500 mL dominate the uncertainty where they occur.
 limitations: |
   - Measurement error beyond rounding (estimating blood loss by eye, for one) is not included; it is larger.
   - Cases with blood products are left out.
@@ -67,6 +68,8 @@ reproduce: |
   python examples/fluid_balance.py --resolution <vitaldb-resolution at the pinned commit> \
       --root <VitalDB release> --out out/fb --figure 6156 4167 5253
   ```
+  The page was made with `bash scripts/rerun_examples.sh fluid_balance` (vitaldb-bench), which records each
+  step; the run is `$W/examples_v3/fluid_balance`.
 figures:
   - id: fb-examples
     file: examples/fb-examples.png
@@ -83,5 +86,6 @@ figures:
     source: vitaldb-bench examples/fluid_balance.py
     caption: >-
       2,639 cases without blood products. Left: 95% interval width against the recorded balance. Right: the widths;
-      the group near 380 mL has a blood loss written as a round 500 or 1,000 mL.
+      the group near 380 mL is the cases with a
+      blood loss written as a multiple of 500 mL.
     alt: A scatter with most points between 50 and 200 mL wide and a separate band near 380 mL, and a histogram with a main peak near 120 mL and a small one near 380 mL.
