@@ -4,7 +4,7 @@ summary: >-
   Intraoperative urine output per kilogram per hour, from three rounded inputs, as a probability distribution per
   case: one case in ten cannot be placed confidently on either side of 0.5 mL/kg/h.
 side: value
-status: draft
+status: current
 question: |
   Was this patient's urine output below 0.5 mL/kg/h during the operation?
 why: |
@@ -16,8 +16,8 @@ why: |
 variables: [intraop-uo, weight, ane-duration]
 studies: [value-model-intraop-uo, value-model-weight, value-model-anestart, value-model-aneend, timestamp-derived-intervals]
 data: |
-  The 3,645 cases with a positive urine output, a weight and both anaesthesia times (39 more with a positive urine
-  output lack one of the others or have no distribution for it). Recorded zeros are left out until the zero rule is
+  The 3,645 cases with a positive urine output, a weight and both anaesthesia times (39 more with a positive urine output have no distribution for one of the
+  three inputs). Recorded zeros are left out until the zero rule is
   in the library.
 steps: |
   1. For each case, draw 4,000 true values of urine output, weight and anaesthesia duration from the pinned
@@ -39,20 +39,22 @@ results: |
   uncertain. Nearly all the uncertain ones (365) have a recorded rate between 0.35 and 0.7, where they are a third
   of the cases. Of the 1,276 cases the recorded numbers put below 0.5, 190 are not confidently below; of those they
   put above, 191 are not confidently above. The 95% interval is 14% of the rate in the median case (4% to 73%, 10th to 90th
-  percentile); the widest are cases with a round urine output of 50 or 100 mL.
+  percentile); the widest are the 956 cases whose urine output is written as a round 50 or 100
+  mL (200 mL or less), with intervals a median 69% of the rate, against 9% for the other cases.
 
   [[figure:uo-cohort]]
 levels:
   error: random
   population: >-
-    The rounding adds spread but almost no bias: the median of the distributions sits within a hair of the recorded rate.
+    The rounding adds spread but almost no bias: the median of the distributions sits about 0.01 mL/kg/h from the recorded rate.
   individual: >-
     381 of 3,645 patients (10%) cannot be placed confidently on either side of 0.5 mL/kg/h; with a round 50 or 100 mL, many more.
 takeaways: |
   - A threshold on a derived rate misclassifies cases near it in a way the recorded numbers cannot show. Report the
     share that is uncertain, or carry P(below) into the analysis instead of a yes or no.
-  - Most of the uncertainty comes from urine output recorded as a round 50 or 100 mL; weight and duration add
-    little.
+  - Most of the uncertainty comes from the urine output, above all when it is written as a round 50 or 100 mL. In
+    the median case it is 86% of the variance of the log rate, the anaesthesia duration 14%, and the weight almost
+    none.
 limitations: |
   - The three inputs are drawn independently; the duration's two ends share the anaesthesia record's clock.
   - Recorded zeros (23 cases) are left out; the library's zero rule (v0.6.0) gives them a point mass and a flag, not
@@ -64,6 +66,8 @@ reproduce: |
   python examples/urine_output_rate.py --resolution <vitaldb-resolution at the pinned commit> \
       --root <VitalDB release> --out out/uo --figure 5111 111 113 305
   ```
+  The page was made with `bash scripts/rerun_examples.sh urine_output_rate` (vitaldb-bench), which records each
+  step; the run is `$W/examples_v3/urine_output_rate`.
 figures:
   - id: uo-examples
     file: examples/uo-examples.png
