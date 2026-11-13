@@ -7,10 +7,9 @@ summary: >-
   of those inside a recording are two teeth long, and where the slips on either side lie on one grid, the step the
   grid predicts is usually there, missed because a ramp or a disturbance coincided with it. Where the phase moves
   across a stretch, it moves by quarter teeth. Some stretches look flat; the frame clock keeps its rate and phase
-  through them; and the 586 recordings without any one-frame step show no hidden sawtooth, though many drift
-  slowly. In development.
-date: 2026-11-03
-status: draft
+  through them; and the 586 recordings without any one-frame step show no hidden sawtooth, though many drift slowly.
+date: 2026-11-13
+status: current
 methods: [signal-borne-clocks]
 techniques: [phase-step-detection, null-controls]
 clocks: [oximeter-frame-clock]
@@ -25,8 +24,7 @@ background: |
   and 32 whole recordings (47 hours) without a slip; there the delay was flat (median slope −0.15 of the sawtooth's
   rate), the frame clock ran on (82 of 98 stretches, within 1 ppm), and predicting slips one tooth beyond the first
   and last raised tiers A and B from 26% to 29% of the time. Its script and outputs were not kept, so it could not
-  be reproduced, and the earlier fit ([[software:physiosync]]'s `detect`) relied on it: stretches that pass its pause test are
-  labelled N (offset only). This version rebuilds it with public code and asks one more question that the slip grid
+  be reproduced, and the earlier fit ([[software:physiosync]]'s `detect`) relied on it: stretches that pass its pause test were labelled N (offset only). This version rebuilds it with public code and asks one more question that the slip grid
   makes possible: when slips resume, do they continue the old grid (the sawtooth went on unseen) or start a new
   phase?
 method: |
@@ -98,14 +96,21 @@ discussion: |
   hide a slip. Of the stretches that look flat, some are not: the delay can return by a frame slowly instead of in
   one step. Where the delay is flat, only the content's drift against the frames stops; the frames themselves run on
   unchanged. For correction, a stretch of exactly two teeth on one grid should be corrected as two teeth with a slip
-  between them, not labelled N; a stretch with a new phase should be split at a quarter-tooth shift; and a recording
-  without slips is not necessarily free of drift.
+  between them, not labelled N; a stretch with a new phase should be split at a quarter-tooth shift; and a recording without slips is not necessarily free of drift.
+  The rebuilt correction ([[study:ppg-sawtooth-correction]]) takes up all three. It predicts the slip the grid
+  expects inside such a stretch and judges it like any other slip, correcting it where the evidence is strong and
+  leaving the tooth unresolved (tier U) where it is not. It closes each tooth on its own slips, so a new phase needs no
+  special treatment, and it reports the drift of recordings without a sawtooth rather than correcting it. Some of the
+  259 recordings without a slip that drift by 5 ppm or more may run the slow sawtooth of
+  [[study:ppg-sawtooth-correction]]'s tier I: at 5 ppm a sawtooth slips by one frame only every 111 minutes or so,
+  longer than the 90 minutes analysed.
 limitations: |
-  Development version (methods and thresholds set on the 273 benchmark recordings, which are part of the full
-  release). The test of whether a middle stretch is a missed slip rests on the grid and the fall of the delay, not on
+  Methods and thresholds were set on the 273 benchmark recordings, which are part of the full release. The test of whether a middle stretch is a missed slip rests on the grid and the fall of the delay, not on
   finding the slip; stretches at the ends cannot be tested that way. The first version's slip-prediction result
-  (tiers A and B, 26% to 29%) concerns the earlier fit and is not repeated here. The manual labels of
-  [[study:ppg-sawtooth-slips]] include 25 grid-predicted slips, which will check the predicted steps by eye.
+  (tiers A and B, 26% to 29%) concerns the earlier fit and is not repeated here. The manual labels of [[study:ppg-sawtooth-slips]] included 25 grid-predicted slips. Of these, 14 show an upward
+  step on the PPG side (9 confirmed by the arterial line), 9 show none, and 2 are a sub-frame step or unclear
+  (`$W/label_eval_final/label_eval.json`). This roughly agrees with the share found here, where a quarter of
+  predicted slips show no step.
 open_questions:
   - title: "Slips that come slowly"
     kind: phenomenon
