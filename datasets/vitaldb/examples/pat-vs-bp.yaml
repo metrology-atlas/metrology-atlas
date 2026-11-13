@@ -5,7 +5,7 @@ summary: >-
   correlation moves from a mean of −0.04 to −0.21 (88% of recordings negative), reproducing Ruffolo et al. 2025
   in a second dataset; paired naively, PAT is a heart-rate signal.
 side: time
-status: draft
+status: current
 question: |
   Does pulse arrival time (PAT) follow blood pressure within a patient, and how much of the answer depends on
   synchronising the ECG and the finger pulse correctly?
@@ -17,7 +17,7 @@ why: |
   negative PAT–SBP correlation only appears after correcting such errors ([[reference:ruffolo2025high]], appendix
   B), and suspected naive synchronisation makes PAT follow heart rate instead. This example tests both in VitalDB.
 variables: [snuadc-ecg-ii, snuadc-pleth, snuadc-art, solar8000-art-numerics]
-studies: [pat-offset-census, ppg-sawtooth, ppg-offset-reference, ppg-art-reference]
+studies: [pat-offset-census, ppg-sawtooth, ppg-sawtooth-correction, ppg-offset-reference, ppg-art-reference]
 observations: [fiducial-quantisation]
 data: |
   Every recording with SNUADC ECG II, PLETH and a pulsatile arterial line at 500 Hz, and some variation in systolic
@@ -43,7 +43,7 @@ steps: |
 results: |
   **The appendix B result, reproduced.**
 
-  | PAT against SBP, r over one hour per patient | Ruffolo et al. 2025 (paediatric ICU, 3,316 patients) | VitalDB (adult surgery, 3,270 recordings) |
+  | PAT against SBP, Pearson r within 60-minute windows | Ruffolo et al. 2025 (paediatric ICU, 3,316 patients; every 60-minute window) | VitalDB (adult surgery, 3,270 recordings; one 60-minute window each) |
   |---|---|---|
   | Naive synchronisation | Centred on 0; about 50% below 0 | Mean −0.04; 60% below 0 |
   | Corrected | Mean −0.16; 84% below 0 | Mean −0.21; 88% below 0 |
@@ -76,6 +76,9 @@ results: |
   | Own beat + rebuilt correction | −0.49 | −0.35 | −0.39 |
   | Arterial PAT (reference) | −0.48 | −0.34 | −0.39 |
 
+  Like for like, on the 2,275 recordings the rebuilt fit covers: own beat −0.44, earlier correction −0.46, rebuilt
+  −0.49, arterial −0.49.
+
   Almost all of the gain comes from the pairing; removing the sawtooth adds a little over windows (−0.45 to −0.47
   with the earlier correction, −0.49 with the rebuilt one) and nothing beat to beat, where its 33 ms slips are small
   next to beat-to-beat noise. In the 1,654 recordings with a sawtooth that the rebuilt fit covers, the 30 s PAT–SBP
@@ -93,8 +96,7 @@ results: |
 levels:
   error: systematic
   population: >-
-    Naive pairing turns a cohort's mean hourly PAT–SBP correlation from −0.21 into −0.04, and its PAT–HR correlation
-    into −0.40: a systematic error that changes what a study concludes.
+    Naive pairing turns a cohort's mean hourly PAT–SBP correlation from −0.21 into −0.04, and makes PAT follow heart rate instead (median r −0.40): a systematic error that changes what a study concludes.
   individual: >-
     Each recording's correlation moves by a median −0.16 when pulses are paired with their own beats; for a
     patient-level PAT–BP calibration, the pairing decides whether there is a signal at all.
