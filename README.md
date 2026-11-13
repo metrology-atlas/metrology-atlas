@@ -86,6 +86,10 @@ accuracy is not given a number), and any text that matches a pattern the dataset
 identifier outside a deliberate link, so that no per-recording table leaves by accident. `check --provenance` also
 traces each parameter to the saved output and run record behind it (see `metrology_atlas/provenance.py`).
 
+A worked example is marked *current* only when it can be repeated. Its code is committed. Every output it uses was
+made by that committed code and has a run record. Every number on its page can be traced to a key in a saved summary,
+and every figure is byte-identical to a run output. Until then it stays *draft*, however complete its text.
+
 ## Versions, and papers that quote an atlas
 
 An atlas is revised as evidence comes in; adding a study is the system working, not a new edition. When a number

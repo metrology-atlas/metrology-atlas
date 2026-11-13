@@ -5,7 +5,7 @@ summary: >-
   correlation moves from a mean of −0.04 to −0.21 (88% of recordings negative), reproducing Ruffolo et al. 2025
   in a second dataset; paired naively, PAT is a heart-rate signal.
 side: time
-status: current
+status: draft
 question: |
   Does pulse arrival time (PAT) follow blood pressure within a patient, and how much of the answer depends on
   synchronising the ECG and the finger pulse correctly?

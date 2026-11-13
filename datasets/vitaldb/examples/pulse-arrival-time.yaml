@@ -6,7 +6,7 @@ summary: >-
   PAT from 13.6 to 11.1 ms in the median case, and removing one global delay brings PAT to about 0.33 s to the
   upstroke, keeping the differences between patients.
 side: time
-status: current
+status: draft
 question: |
   How long does the pulse take to travel from the heart to the finger, and how does that change through an
   operation?

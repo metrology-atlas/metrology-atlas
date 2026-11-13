@@ -5,7 +5,7 @@ summary: >-
   cohort at any pressure, but each patient's cuff reads a constant 10 mmHg (SD) above or below their line, and half
   the arterial readings below 65 mmHg are not below 65 by cuff.
 side: both
-status: current
+status: draft
 question: |
   When a patient has both, how well does the cuff (non-invasive) mean pressure agree with the arterial line, over a
   cohort and for one patient, and at what moment does a cuff reading apply?
