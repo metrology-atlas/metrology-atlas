@@ -193,7 +193,7 @@ def pdf_panel(x, ttl, groups, names=None):
     sd.text(0.05, hr_rec + 1.15, "value\nPDF", fontsize=6, color=MARG)
 
 
-pdf_panel(0.45, "E  The stored record alone", GROUPS_E, names=[f"early group, {W_E:.0%}", f"late group, {W_L:.0%}"])
+pdf_panel(0.45, "E  The stored record alone", GROUPS_E, names=["early group", "late group"])
 pdf_panel(3.55, "F  With the atlas: this recording's delay", GROUPS_F)
 
 from matplotlib.lines import Line2D  # noqa: E402

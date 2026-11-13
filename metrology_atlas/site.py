@@ -1501,60 +1501,10 @@ class Site:
         return out
 
     def home(self, json_name: str) -> str:
-        """The home page: summary, notice, working reference, timing graph, synchronisation figures and citation."""
-        m = self.ds.meta
-        figs = {f["id"]: f for f in m.get("figures") or []}
-        out = f"---\nhide:\n  - navigation\n---\n\n# {m['name']}\n\n"
-        if m.get("notice"):
-            out += '!!! warning "Work in progress"\n\n' + "\n".join(
-                ("    " + l) if l else "" for l in self.prose(m["notice"]).strip().splitlines()) + "\n\n"
-        out += f"{self.summ(m['summary'])}\n\n{self.prose(m.get('description'))}\n\n"
-        if m.get("overview") or "system-overview" in figs:
-            out += "## System overview\n\n" + self.prose(m.get("overview")) + "\n\n"
-            if "system-overview" in figs and "system-overview" not in self.placed:
-                out += self.figure(figs["system-overview"]) + "\n\n"
-                self.placed.add("system-overview")
-                if figs["system-overview"].get("file") == "timing-graph.svg":
-                    from metrology_atlas.overview import overview_table
-                    out += ("??? info \"The links in the timing graph\"\n\n"
-                            + "\n".join("    " + ln for ln in overview_table(
-                                self.ds, href=lambda kind, id_: f"{KINDS[kind].folder}/{id_}.md").splitlines())
-                            + "\n\n")
-        out += self.axes_table()
-        out += self.time_chart()
-        if m.get("reference"):
-            out += "## The working reference\n\n" + self.prose(m["reference"]) + "\n\n"
-        if "synchronisation-demo" in figs and "synchronisation-demo" not in self.placed:
-            out += "## What synchronising the clocks does\n\n" + self.figure(figs["synchronisation-demo"]) + "\n\n"
-            self.placed.add("synchronisation-demo")
-        if "synchronisation-census" in figs and "synchronisation-census" not in self.placed:
-            out += ("Across the whole release, for every link a shared signal can check:\n\n"
-                    + self.figure(figs["synchronisation-census"]) + "\n\n")
-            self.placed.add("synchronisation-census")
-        if m.get("references"):
-            out += ("## Citing\n\nIf you use the atlas, please also cite the data:\n\n"
-                    + "\n".join(f"- {self.ds.get('reference', r)['citation']}"
-                                 + (f" doi:[{self.ds.get('reference', r)['doi']}](https://doi.org/{self.ds.get('reference', r)['doi']})"
-                                    if self.ds.get('reference', r).get('doi') else "") for r in m["references"]) + "\n\n")
-            if any(pg["id"] == "data-and-licence" for pg in m.get("pages") or []):
-                out += ("The data's licence, what the atlas contains and how the atlas may be reused are on "
-                        "[Data and licence](data-and-licence.md).\n\n")
-        heads = sorted(p for p, v in self.ds.items["parameter"].items() if v.get("headline"))
-        if heads:
-            out += "## Key numbers\n\n" + self.params_table(heads) + "\n"
-        out += ("## Plan a multi-signal analysis\n\nThe [synchronisation planner](planner.md) takes the variables an "
-                "analysis uses and reports how well their times line up, how we know, and what window sizes keep "
-                "cross-modal features meaningful.\n\n")
-        out += "## What is in the atlas\n\n| | | |\n|---|---|---|\n"
-        for k in KINDS.values():
-            out += f"| [{k.title}]({k.folder}/index.md) | {len(self.ds.items[k.name])} | {k.help} |\n"
-        out += (f"\nThe whole atlas is also one machine-readable file: [{json_name}](data/{json_name}). "
-                "Every number carries its status (measured, derived, documented, estimated or assumed), its spread and the study "
-                "it came from.\n")
-        rest = [f for f in figs.values() if f["id"] not in self.placed]
-        if rest:
-            out += "\n## Figures\n\n" + "\n\n".join(self.figure(f) for f in rest) + "\n"
-        return out
+        """The home page (metrology_atlas.home): opening, timing network, ways in, how a record is described, what
+        affects analyses, every kind of timestamp, what synchronising does, use and cite."""
+        from metrology_atlas.home import home
+        return home(self, json_name)
 
     def time_chart(self) -> str:
         """The chart of every time stamp (delay against the interval a value describes), with its data embedded."""
@@ -1640,6 +1590,14 @@ class Site:
                 "weakest link), and how many variables it stamps or spaces. Each clock's page lists its "
                 "[links](links/index.md) to other clocks.\n\n"
                 f"| Clock | Type | {col} | Variables |\n|---|---|---|---|\n" + rows + "\n")
+        figs = {f["id"]: f for f in m.get("figures") or []}
+        if "system-overview" in figs and figs["system-overview"].get("file") == "timing-graph.svg":
+            from metrology_atlas.overview import overview_table
+            out += ("## The links in the timing graph\n\n" + self.figure(figs["system-overview"]) + "\n\n"
+                    + overview_table(self.ds, href=lambda kind, id_: f"{KINDS[kind].folder}/{id_}.md") + "\n\n")
+        if "synchronisation-census" in figs:
+            out += ("## Synchronisation across the release\n\nFor every link a shared signal can check:\n\n"
+                    + self.figure(figs["synchronisation-census"]) + "\n\n")
         out += self.time_chart()
         out += ("## Plan a multi-variable analysis\n\nThe [synchronisation planner](planner.md) takes the variables an "
                 "analysis combines and reports how well their times line up, how we know, and what window sizes keep "
@@ -1667,6 +1625,9 @@ class Site:
                 + ". Parameters: " + ", ".join(f"{n} {st}" for st, n in sorted(
                     {p["status"]: sum(1 for q in ds.items["parameter"].values() if q["status"] == p["status"])
                      for p in ds.items["parameter"].values()}.items(), key=lambda x: -x[1])) + ".\n")
+        heads = sorted(p for p, v in ds.items["parameter"].items() if v.get("headline"))
+        if heads:
+            out += "\n## Key numbers\n\n" + self.params_table(heads) + "\n"
         return out
 
     def questions(self, qs) -> str:
@@ -1945,6 +1906,12 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     (docs / "css" / "atlas.css").write_text(ATLAS_CSS, encoding="utf-8")
     (docs / "js").mkdir()
     (docs / "js" / "atlas-chart.js").write_text(CHART_JS, encoding="utf-8")
+    from metrology_atlas.home import ASSETS, BIAS_JS, HOME_CSS, about_page
+    (docs / "js" / "bias-chart.js").write_text(BIAS_JS, encoding="utf-8")
+    (docs / "css" / "atlas.css").write_text(ATLAS_CSS + HOME_CSS, encoding="utf-8")
+    if (ASSETS / "measurement-model.svg").is_file():
+        (docs / "assets").mkdir(exist_ok=True)
+        shutil.copy2(ASSETS / "measurement-model.svg", docs / "assets" / "measurement-model.svg")
     site.start(ds.meta, base="")
     (docs / "index.md").write_text(site.home(json_name), encoding="utf-8")
     site.start(None, base="")
@@ -1973,7 +1940,9 @@ def write_site(ds: Dataset, out: str | Path) -> Path:
     (docs / "anchors.md").write_text(site.anchors_page(), encoding="utf-8")
     site.start(None, base="")
     (docs / "terms.md").write_text(TERMS_PAGE.rstrip() + "\n" + site.anchors_concept(), encoding="utf-8")
-    about = [{"Aim and terms": "terms.md"}]
+    site.start(ds.meta, base="")
+    (docs / "about.md").write_text(about_page(site, json_name), encoding="utf-8")
+    about = [{"About the atlas": "about.md"}, {"Aim and terms": "terms.md"}]
     section_pages: dict[str, list] = {}
     for pg in ds.meta.get("pages") or []:
         site.start(None, base="")

@@ -249,6 +249,57 @@ notice: |
   The studies, code and pages were developed with substantial assistance from an AI assistant (Claude, by
   Anthropic), under the author's direction and review. Mistakes may remain; [how this atlas was
   made](how-it-was-made.md) says more.
+home:
+  subtitle: A description of the open VitalDB dataset as a measurement system
+  mission: |
+    Every value in VitalDB has a recorded time and a recorded value, and neither is exact. This atlas describes how
+    each one was made, how far it can be trusted, and the evidence behind every number, so that analyses can align
+    signals and carry their uncertainty.
+  status: |
+    **Pre-release v0.3.0**, open for review. Every page states how its numbers are known.
+    [How this atlas was made](how-it-was-made.md) · [Status of this version](about.md) · [Contribute](contributing.md)
+  cases: 6388
+  paper:
+    label: arXiv
+    url: https://arxiv.org/abs/2610.29001
+    citation: >-
+      Goodwin AJ, Lee H-C, Eytan D. The Metrology Atlas: describing clinical time-series data as a measurement
+      system. Preprint, 2026.
+  graph_caption: >-
+    The timing network. Each clock is measured against another (solid is measured, blue documented, dashed estimated,
+    dotted assumed). Click a clock or a link to open its page.
+  model_text: |
+    Each record is the end of a chain of steps, for its time and for its value. Some steps can be undone once they
+    are measured, such as a delay or a clock's drift. Others, such as rounding, map many true values onto one record
+    and leave an interval or a spread. The atlas writes this chain down for every variable as a measurement model,
+    undoes what can be undone, and carries the rest as uncertainty.
+  record_text: |
+    Read backwards, a measurement model turns a record into a region of true times and true values that could have
+    produced it. For a heart rate of 72 bpm, the value could be anywhere from 72 up to 73, and the time it describes
+    lies seconds before the stamp.
+
+    From the record alone, that time is spread over several seconds. With the atlas, the delay is known for the
+    recording, and the region narrows.
+  properties:
+    - title: Plethysmogram and ECG
+      text: >-
+        The plethysmogram trails the ECG by [[value:pleth-chain-delay]], a fixed delay inside the monitor, with a
+        sawtooth of frame slips on top.
+      study: pat-offset-census
+    - title: BIS EEG
+      text: >-
+        The EEG's raw timestamps sit early against the ECG, by a median of [[value:bis-eeg-offset|.2]] for the same
+        event, because of the rule the recorder uses to stamp them.
+      study: shared-bursts
+    - title: Ventilator
+      text: >-
+        The airway pressure runs ahead of the breaths it records, by seconds, and the offset drifts during the
+        recording.
+      study: ventilator-breath-matching
+    - title: Laboratory results
+      text: >-
+        A lab time marks when the specimen was logged, minutes after the blood was drawn.
+      study: lab-timestamp-meaning
 anchor_default:
   basis: convention
   note: >-

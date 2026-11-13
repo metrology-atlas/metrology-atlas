@@ -656,8 +656,21 @@ DATASET = (
     Field("description", "text"),
     Field("overview", "text", help="Shown on the home page under 'System overview'."),
     Field("examples_intro", "text", help="Introduction at the top of the worked examples' index page."),
-    Field("notice", "text", help="Shown prominently at the top of the home page, e.g. that the atlas is a work in "
-                                 "progress."),
+    Field("notice", "text", help="The status of this version, in full; shown at the top of the About page (the home "
+                                 "page carries home.status, one line)."),
+    Field("home", "obj", fields=(
+        Field("subtitle", "str", help="One line under the atlas's name."),
+        Field("mission", "text", help="The opening paragraph: what the atlas is for."),
+        Field("status", "text", help="One line on the status of this version, with links."),
+        Field("cases", "number", help="How many records (cases) the release holds, for the counts strip."),
+        Field("paper", "obj", fields=(Field("label", "str"), Field("url", "str"), Field("citation", "text"))),
+        Field("graph_caption", "text", help="A short caption for the timing graph on the home page."),
+        Field("model_text", "text", help="Introduces the measurement-model figure."),
+        Field("record_text", "text", help="Beside the conceptual figure of one record."),
+        Field("properties", "objs", fields=(
+            Field("title", "str", required=True), Field("text", "text", required=True), Field("study", "ref", ref="study"),
+        ), help="Properties of the recording system that change how the data should be used."),
+    ), help="The home page's own text; everything else on it is drawn from the atlas."),
     Field("anchor_default", "obj", fields=(
         Field("basis", "enum", required=True, choices=ANCHOR_BASIS),
         Field("note", "text", required=True),
