@@ -4,7 +4,7 @@ summary: >-
   Fluids in minus fluids out, each a heaped charted volume, as a distribution per case: the recording alone makes a
   balance uncertain by about ±60 mL, and by ±190 mL when the blood loss was written as a round 500 mL.
 side: value
-status: draft
+status: current
 question: |
   What was this patient's net fluid balance at the end of the operation, and how precisely do the records say?
 why: |
@@ -30,9 +30,8 @@ results: |
   [[figure:fb-examples]]
 
   **The cohort.** The median 95% interval is 116 mL wide (78 to 142 mL, 10th to 90th percentile). Crystalloid
-  contributes about 55% of the variance in the median case and blood loss 36%; urine output and colloid little. A
-  separate group of 117 cases is about 380 mL wide: 97 of them have a blood loss recorded as exactly 500 mL, which
-  the model reads as possibly rounded to the nearest 500. In 95 cases the interval spans zero. The medians of the
+  contributes about 55% of the variance in the median case and blood loss 36%; urine output and colloid little. A separate group of 117 cases is about 380 mL wide, nearly all
+  with a blood loss recorded as a round 500 or 1,000 mL, which the model reads as possibly rounded to the nearest 500. In 95 cases the interval spans zero. The medians of the
   distributions sit within 1 mL of the recorded balance, so the rounding adds spread, not bias.
 
   [[figure:fb-cohort]]
