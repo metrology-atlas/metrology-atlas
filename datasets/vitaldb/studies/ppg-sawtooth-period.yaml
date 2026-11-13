@@ -7,9 +7,9 @@ summary: >-
   in the signal, against 132; 79 of 146 across one, against 35), and sharp steps of a fraction of a frame in the
   PPG chain lock to quarter frames too: the slips appear to be made in units of a quarter frame, 1/120 s. Within a
   run the grid is not exact: slips scatter by about 2 s around it, mostly anchored to it. Two setups run the
-  sawtooth backwards. Cuff inflations do not explain the jumps. In development.
-date: 2026-11-03
-status: draft
+  sawtooth backwards. Cuff inflations do not explain the jumps.
+date: 2026-11-13
+status: current
 methods: [signal-borne-clocks]
 techniques: [phase-step-detection, null-controls]
 clocks: [oximeter-frame-clock, snuadc-sample]
@@ -22,7 +22,7 @@ data: |
   correction census (step mode where its rate is below −20 ppm), the frame clock rate, and the Solar8000 NIBP
   readings.
 background: |
-  The current fit ([[study:ppg-sawtooth]]) gives every tooth its own length. If the sawtooth comes from two clocks
+  The earlier fit (physiosync's `detect`, [[study:ppg-sawtooth]]) gave every tooth its own length. If the sawtooth comes from two clocks
   running at a slightly different rate (the PPG content against the 30 Hz output frames), the slips should fall
   on a grid of one tooth length, and slip times could be pinned far more closely by fitting the grid than by
   placing each slip alone. How the grid behaves, where it breaks and what the breaks look like also says how the
@@ -98,7 +98,8 @@ results: |
     few slips), and 40 on COM15 · COM13 · COM14 · COM22 (46 recordings), both at a median of −45.2 and −45.5 ppm; 19
     more are on COM3 · COM4 · COM5 · COM7, which also has 126 upward. The reversed setup's frame clock runs at
     +59 ppm against the SNUADC; upward setups at +45 ppm have frame clocks near +72 ppm. The clearest are
-    [[case:2537]], [[case:4488]] and [[case:6049]] (teeth of 735–740 s). The current fit labels these N or U.
+    [[case:2537]], [[case:4488]] and [[case:6049]] (teeth of 735–740 s). The earlier fit labelled these N or U. The rebuilt correction's own slip finder fits 275
+    reversed sawteeth in the same recordings ([[study:ppg-sawtooth-correction]]).
   - **Rate and setup.** The reversed setup has the same rate in both SNUADC modes (−45.1 and −45.4 ppm). Of 37 named
     setups seen in both modes, 26 have rates within 1 ppm of each other; the differences over 5 ppm are all on
     setups with three recordings or fewer in one mode, and the rest are 1.3–4.6 ppm. The 26 ppm difference the
@@ -110,7 +111,7 @@ results: |
   [[figure:reversed]]
 discussion: |
   A grid that holds for an hour and moves in quarter frames, and sub-frame steps in the PPG chain that lock to the
-  same quarters, fit a slip mechanism that counts in 1/120 s units, four to a frame; the PLETH's spectral lines at 30,
+  same quarters, are consistent with a slip mechanism that counts in 1/120 s units, four to a frame; the PLETH's spectral lines at 30,
   60, 90 and 120 Hz ([[study:ppg-frame-clock]]) point the same way. After a break in the signal the phase moves by
   quarters too, more loosely, so a break does not reset the mechanism to an arbitrary phase. Within a run, the 2 s
   scatter is real (ten times the placement error) but small: for correction it means each slip should be placed
@@ -118,10 +119,12 @@ discussion: |
   says the slips are pulled back toward the grid, as a threshold on an accumulated phase would do; the shortfall
   from −0.5 allows a slow wander of the rate on top. A reversed sawtooth on whole setups, in both SNUADC modes, is a
   property of those setups' oximeter chains, not of the recorder: there the PPG content runs faster than the frames.
-  For correction, a phase jump of a quarter tooth gives the current fit a tooth of odd length, and so a wrong rate and
-  an error of up to 8 ms over that tooth; and the reversed sawtooth is not corrected at all.
+  For correction, a phase jump of a quarter tooth gave the earlier fit a tooth of odd length, and so a wrong rate and
+  an error of up to 8 ms over that tooth, and the earlier fit did not correct the reversed sawtooth at all. The rebuilt
+  correction ([[study:ppg-sawtooth-correction]]) closes each tooth on its own slips, so a tooth of odd length is
+  corrected at its own rate, and it corrects reversed sawteeth as well.
 limitations: |
-  Development version: methods and thresholds were set while looking at the 273 benchmark recordings, which are part
+  Methods and thresholds were set while looking at the 273 benchmark recordings, which are part
   of the full release. The quantisation tests count shifts within ±0.03 of a quarter; a jump's shift is measured
   from two grids each fitted to a few slips, so the lock is blurred, not sharpened, by placement error. The
   quarter-frame step at most jumps has not been isolated in the delay.

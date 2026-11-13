@@ -25,7 +25,7 @@ background: |
   and 32 whole recordings (47 hours) without a slip; there the delay was flat (median slope −0.15 of the sawtooth's
   rate), the frame clock ran on (82 of 98 stretches, within 1 ppm), and predicting slips one tooth beyond the first
   and last raised tiers A and B from 26% to 29% of the time. Its script and outputs were not kept, so it could not
-  be reproduced, and the current fit ([[software:physiosync]]) relies on it: stretches that pass its pause test are
+  be reproduced, and the earlier fit ([[software:physiosync]]'s `detect`) relied on it: stretches that pass its pause test are
   labelled N (offset only). This version rebuilds it with public code and asks one more question that the slip grid
   makes possible: when slips resume, do they continue the old grid (the sawtooth went on unseen) or start a new
   phase?
@@ -104,7 +104,7 @@ limitations: |
   Development version (methods and thresholds set on the 273 benchmark recordings, which are part of the full
   release). The test of whether a middle stretch is a missed slip rests on the grid and the fall of the delay, not on
   finding the slip; stretches at the ends cannot be tested that way. The first version's slip-prediction result
-  (tiers A and B, 26% to 29%) concerns the current fit and is not repeated here. The manual labels of
+  (tiers A and B, 26% to 29%) concerns the earlier fit and is not repeated here. The manual labels of
   [[study:ppg-sawtooth-slips]] include 25 grid-predicted slips, which will check the predicted steps by eye.
 open_questions:
   - title: "Slips that come slowly"
