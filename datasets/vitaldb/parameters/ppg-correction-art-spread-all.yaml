@@ -1,0 +1,16 @@
+id: ppg-correction-art-spread-all
+name: Finger minus arterial PAT spread after the PPG correction, all recordings compared
+quantity: Spread of finger minus arterial pulse arrival time after the rebuilt sawtooth correction (robust SD of 30 s window medians), median over every recording compared with an arterial line, before any classification by slips.
+value: 11.72
+unit: ms
+spread: {q1: 7.18, q3: 16.62, p90: 23.98, n: 2976, text: "42% of recordings more than 2 ms better than uncorrected, 4.6% more than 2 ms worse"}
+status: measured
+study: ppg-sawtooth-correction
+about: [ppg-sawtooth]
+date: 2026-11-14
+notes: >-
+  vitaldb-bench tools/correction_vs_art.py agg (agg_v6, recorded run), policy final (physiosync 0.3.2 delay_at) over
+  all compared recordings. No threshold enters: the sawtooth class used by ppg-correction-art-spread is not applied.
+sources:
+- output: W:correction_vs_art/agg_v6/summary.json
+  key: policies.final.median
