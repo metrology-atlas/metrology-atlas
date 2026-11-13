@@ -5,7 +5,7 @@ summary: >-
   off the arterial line's, which moves half of all breaths' values by a point or more and scatters where in the
   breath the pulse pressure peaks; a recording's median PPV hardly changes.
 side: time
-status: draft
+status: current
 question: |
   How large is the respiratory variation in pulse pressure, breath by breath, and how much does it depend on
   putting the ventilator and the arterial line on one timeline?
@@ -21,8 +21,7 @@ studies: [ventilator-breath-matching, correction-periods, snuadc-stamp-sawtooth,
 observations: [primus-awp-pauses]
 data: |
   Every recording with Primus airway pressure, SNUADC arterial pressure and ECG II and at least 100 mechanical
-  breaths: 3,448 of the 6,388 recordings, 9.4 million breaths (rerun 10 Nov with the v4 rates,
-  `examples/ppv_by_breath_v4/agg/summary.json`; the same 10 recordings fail in both runs). 1,061 of them also have SNUADC
+  breaths: 3,448 of the 6,388 recordings, 9.4 million breaths; the scan stops with an error in 10 recordings, which are left out. 1,061 of them also have SNUADC
   central venous pressure (CVP), which the alignment needs.
 steps: |
   1. Breath onsets from the Primus airway pressure on the Primus's own stamps (rising through 30% of the local
@@ -38,13 +37,13 @@ steps: |
   4. Move the aligned breath onsets by −2 to +2 s and count the breaths whose PPV crosses 13%.
 results: |
   **The ventilator is seconds off the arterial line.** On the stamp model, the airway pressure leads the CVP by a
-  median 1.8 s (p10–p90 0.7 to 5.1 s). The lag is not fixed within a recording: it moves by a median 1.6 s over the
-  recording and grows by a median +92 ppm (p10–p90 −48 to +233). The SNUADC here is on its stamp model, on the
+  median 1.8 s (p10–p90 0.6 to 5.1 s). The lag is not fixed within a recording: it moves by a median 1.5 s over the
+  recording and grows by a median +87 ppm (p10–p90 −49 to +229). The SNUADC here is on its stamp model, on the
   recorder PC's timeline, so this is the Primus's drift against the PC; between its AWP pauses it is +105 ppm
   ([[parameter:primus-drift-breath]]). The Primus's own small corrections do not keep up with it.
 
   **Aligned, pulse pressure peaks where physiology says it should.** With the Primus aligned, the pulse-pressure
-  maximum comes a median 0.84 s after the breath onset, interquartile range 0.39 s, in the 542 recordings where the
+  maximum comes a median 0.84 s after the breath onset, interquartile range 0.40 s, in the 544 recordings where the
   breath explains enough of the pulse pressure to give a phase. On the recorded stamps the same phase is spread over
   the whole breath (interquartile range 3.3 s), split into two groups by the wrap-around of the breath cycle.
 
@@ -52,8 +51,8 @@ results: |
 
   | Change of timeline | Breaths whose PPV changes by ≥ 1 point (median per recording) | Breaths crossing 13% | Recordings whose median PPV crosses 13% |
   |---|---|---|---|
-  | Recorded stamps → stamp model (SNUADC sawtooth, p95 0.22 s) | 5% | 0.5% | 1 of 3,448 |
-  | Stamp model → Primus aligned | 53% | 6.8% | 3 of 1,061 (recorded → aligned) |
+  | Recorded stamps → stamp model (SNUADC sawtooth, p95 0.23 s) | 5% | 0.5% | 1 of 3,448 |
+  | Stamp model → Primus aligned | 53% | 6.7% | 3 of 1,061 (recorded → aligned) |
 
   Moving the aligned onsets by 0.5 s puts about 2% of breaths on the other side of 13%, and 1 s about 4%; the
   SNUADC's own sawtooth is too small to matter.
@@ -88,13 +87,14 @@ limitations: |
     are not excluded.
 code:
   - vitaldb-bench/examples/ppv_by_breath.py
-  - vitaldb-bench/examples/run_ppv_by_breath.sh
+  - vitaldb-bench/scripts/rerun_examples.sh
   - vitaldb-bench/tools/vent_sync_pilot.py
 reproduce: |
   ```
-  bash examples/run_ppv_by_breath.sh          # 8 parallel parts, about 25 minutes on a laptop
-  python examples/ppv_by_breath.py agg <work>/examples/ppv_by_breath/part_*.jsonl --out out/ppv
+  bash scripts/rerun_examples.sh ppv_by_breath           # in vitaldb-bench; 4 parallel parts, about 35 minutes
   ```
+  The script scans the recordings with both Primus and SNUADC with `examples/ppv_by_breath.py scan` and aggregates
+  the parts with `examples/ppv_by_breath.py agg`, recording each step; the run is `$W/examples_v3/ppv_by_breath`.
 figures:
   - id: ppv-by-breath
     file: examples/ppv-by-breath.png
