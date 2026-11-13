@@ -5,7 +5,7 @@ summary: >-
   "hypotension within 20 minutes of induction" is found in 27% of 2,913 patients, against 51% from the devices'
   induction, and the label changes for a quarter of patients.
 side: time
-status: draft
+status: current
 question: |
   How many patients have a mean arterial pressure below 65 mmHg in the first 20 minutes after induction, and does it
   matter which time is taken as induction?
@@ -41,19 +41,21 @@ results: |
   | Device induction | 51.1% | 49.7% | 52.8% |
   | Difference (95% interval) | +24.0 points (22.4 to 25.6) | +23.3 | +25.0 |
 
-  Moving the window's start shows why: the incidence peaks when the window opens at induction, and falls steeply as
+  Moving the window's start shows why: the incidence peaks when the window opens within a minute of
+  induction, and falls steeply as
   it opens earlier and covers the minutes before induction, when pressure is rarely low.
 
   **Per patient, a quarter of labels change** (26%): 734 patients hypotensive from the device induction are not from
-  the charted start, and 34 the other way. Where both windows find a low reading, it comes a median 4.1 minutes
-  after the device induction, and 13.8 minutes after the charted start.
+  the charted start, and 34 the other way. The first low reading comes a median
+  4.1 minutes after the device induction, in patients whose window from it finds one, and 13.8 minutes after the
+  charted start, in patients whose window from that finds one.
 
   [[figure:induction-hypotension]]
 levels:
   error: systematic
   population: >-
-    The incidence is 27% from the charted start and 51% from the device induction: the shift goes the same way in
-    every patient, so it does not cancel.
+    The incidence is 27% from the charted start and 51% from the device induction: the device induction comes after the charted start in more than nine patients in ten (10th
+    percentile, 6 minutes after), so the shift does not cancel.
   individual: >-
     26% of patients change label, nearly all from "no hypotension" to "hypotension".
 takeaways: |
@@ -71,12 +73,14 @@ limitations: |
 code:
   - vitaldb-bench/examples/induction_hypotension.py
   - vitaldb-bench/tools/emr_markers.py
-  - vitaldb-bench/examples/run_scan.sh
+  - vitaldb-bench/scripts/rerun_examples.sh
 reproduce: |
   ```
-  bash examples/run_scan.sh induction_hypotension        # 8 parallel parts, about 10 minutes
-  python examples/induction_hypotension.py agg <work>/examples/induction_hypotension/part_*.jsonl --root <VitalDB release> --out out/induction
+  bash scripts/rerun_examples.sh induction_hypotension   # in vitaldb-bench; 4 parallel parts, about 25 minutes
   ```
+  The script scans every recording with `examples/induction_hypotension.py scan` and aggregates the parts with
+  `examples/induction_hypotension.py agg --root <VitalDB release>`, recording each step; the run is
+  `$W/examples_v3/induction_hypotension`.
 figures:
   - id: induction-hypotension
     file: examples/induction-hypotension.png
@@ -87,4 +91,4 @@ figures:
       5-minute and minute entries. B: the incidence of MAP below 65 within a 20-minute window, by where the window
       opens against the device induction (dotted: the median charted start). C: the incidence from the charted start
       and from the device induction, and the share of patients whose label changes.
-    alt: Two overlapping histograms centred about 14 minutes before zero; a curve rising from about 7% to a peak of 51% at zero; paired bars, grey near 27% and blue near 51%.
+    alt: Two overlapping histograms centred about 14 minutes before zero; curves near 10% when the window opens 20 to 40 minutes before induction, rising steeply to a peak of about 51% at induction; paired bars, grey near 27% and blue near 51%.
