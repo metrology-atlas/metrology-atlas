@@ -9,11 +9,11 @@ summary: >-
   injected into real recordings, it called no held-out slip-free event a slip and 98% of the corrections reviewed were
   judged right. Its correction was then tested end to end against the arterial line in 2,976 recordings, which showed
   the first version made a third of them worse; rebuilt so each tooth closes exactly, it brings finger PAT closer to
-  arterial PAT than the earlier method (median spread [[value:ppg-correction-art-spread|number]] against 11.2 ms in sawtooth recordings, 14.0 uncorrected),
+  arterial PAT than the earlier method (median spread [[value:ppg-correction-art-spread|number]] against [[value:ppg-earlier-art-spread|number]] ms in sawtooth recordings, [[value:ppg-uncorrected-art-spread|number]] uncorrected),
   though it leaves more recordings worse than uncorrected (7.3% against 2.9%). physiosync 0.3.2,
-  `fit_ecg_ppg_delay(method="rebuilt")`. In development.
-date: 2026-11-05
-status: draft
+  `fit_ecg_ppg_delay(method="rebuilt")`.
+date: 2026-11-13
+status: current
 methods: [signal-borne-clocks, shared-events]
 techniques: [beat-matching, phase-step-detection, sawtooth-fit, null-controls, prediction-test]
 clocks: [oximeter-frame-clock, snuadc-sample]
@@ -54,10 +54,12 @@ method: |
   The correction check: [[code:vitaldb-bench/tools/ppg_fix_check.py]] `--method rebuilt --scan
   $W/sawtooth_char/scan_full --quality $W/slip_rebuild/quality --rates $W/sawtooth_stats/recordings.csv --modes
   $W/results/sync_full/snuadc_mode_label.json --rule $W/label_quality_final/summary.json --cases
-  $W/ppg_correction_check/cases266.json --out $W/ppg_correction_check/check_rebuilt3.jsonl --adopted-pat 0.27`, then
-  [[code:vitaldb-bench/tools/ppg_sawtooth_figures.py]] `check --scan $W/ppg_correction_check/check_rebuilt3.jsonl --units
+  $W/ppg_correction_check/cases266.json --out $W/ppg_correction_check/check_rebuilt6_pP.jsonl --adopted-pat 0.27 --part P
+  --of 2 --time-budget 140` (P = 0, 1, rerun until complete; `$W/ppg_correction_check/run_rebuilt_chunk.sh`), the parts
+  concatenated into `$W/ppg_correction_check/check_rebuilt6.jsonl`, then
+  [[code:vitaldb-bench/tools/ppg_sawtooth_figures.py]] `check --scan $W/ppg_correction_check/check_rebuilt6.jsonl --units
   $W/results/sync_full/units.csv --modes $W/results/sync_full/snuadc_mode_label.json --examples 2156 6241 1094 --out
-  $W/ppg_correction_check/rebuilt3`. Tier I: [[code:vitaldb-bench/tools/tier_i_check.py]] `--fit
+  $W/ppg_correction_check/rebuilt6`. Tier I: [[code:vitaldb-bench/tools/tier_i_check.py]] `--fit
   $W/slip_rebuild/full3/fit.jsonl --teeth $W/slip_rebuild/full3/tiers/teeth.csv --rates
   $W/sawtooth_stats/recordings.csv --creep $W/sawtooth_char/scan_full --out $W/slip_rebuild/full3/tier_i`.
   The review: [[code:vitaldb-bench/tools/correction_labels.py]] `sample`, `eval`, `check` and `rescore`. Teeth against
@@ -110,7 +112,7 @@ results: |
     | Recordings with a sawtooth (1,867) | Spread, ms | Worse than uncorrected |
     |---|---|---|
     | Uncorrected | [[value:ppg-uncorrected-art-spread|number]] (12.35–16.84; 21.95) | — |
-    | Earlier method ([[software:physiosync]] `detect`) | 11.17 (6.88–15.25; 21.99) | 2.9% |
+    | Earlier method ([[software:physiosync]] `detect`) | [[value:ppg-earlier-art-spread|number]] (6.88–15.25; 21.99) | 2.9% |
     | Rebuilt, first version (0.3.1) | 10.86 (5.91–22.02; 50.9) | 28.9% |
     | Rebuilt, final (0.3.2) | [[value:ppg-correction-art-spread|number]] (5.70–14.67; 22.03) | 7.3% |
 
@@ -209,7 +211,7 @@ discussion: |
   leaves more recordings worse than uncorrected (7.3% against 2.9%), and the arterial line is itself evidence inside
   both fits, so the check is not wholly independent.
 limitations: |
-  Development version. The development set contains the labelled events and the shape rule was fitted on half of
+  The development set contains the labelled events and the shape rule was fitted on half of
   them, so the held-out half and the injections are the honest measures. The injected sawtooths are written into
   slip-free recordings, which may be quieter than typical. The review covers 107 teeth from one fit; its "can't tell"
   share (11%) bounds what a reviewer can see in a delay trace. Without an arterial line (about half the recordings)
