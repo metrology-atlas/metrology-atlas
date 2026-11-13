@@ -6,7 +6,7 @@ summary: >-
   agreement peaks exactly at the estimated draw. Oximetry shows the same timing (agreement peaks at the draw), but the
   100% ceiling hides the size of the oximetry gradient for three gases in four.
 side: time
-status: draft
+status: current
 question: |
   How far apart are end-tidal and arterial CO₂, and SpO₂ and SaO₂, when they are compared at the same moment, and
   how precisely does the release say?
@@ -27,7 +27,7 @@ steps: |
   1. Take the start of the matched arterial-line access as the draw. The monitor value is the median of its readings
      over ±60 s of that moment.
   2. Draw 400 Monte Carlo samples per gas of:
-      - the draw time, uniform over the access (median 42 s long), plus the monitor's stamping delay (a numeric
+      - the draw time, uniform over the access (median 54 s long), plus the monitor's stamping delay (a numeric
         describes a window that ended 1–9 s before its stamp; [[observation:numerics-not-front-stamped]]);
       - each monitor reading's true value, uniform over ±0.5 of the whole number written; an SpO₂ of 100 is
         censored, so its true value is anywhere from 99.5 to 100;
@@ -75,12 +75,12 @@ results: |
   **PaCO₂ − EtCO₂ across patients.** Median 7 mmHg (interquartile range 5–10; 5th–95th percentile 1–16). Pooled over
   patients the two agree only moderately (correlation 0.61 at the draw, 0.50 at the stamp), because each patient has
   their own gradient: the patients' typical gradients spread with an SD of about 4.1 mmHg, while one patient's
-  gradient varies by about 1.5 mmHg. Pooled, reading at the stamp instead of the draw barely changes the
+  gradient varies by about 1.7 mmHg. Pooled, reading at the stamp instead of the draw barely changes the
   distribution, though it moves an individual gas's gradient by 3 mmHg or more in 11.5% of gases.
 
   **How well each gradient is known.** Per gas, the median 95% interval is 1.57 mmHg wide; rounding alone gives
   1.54, so the uncertain draw time adds almost nothing once the monitor is averaged over ±60 s. Using the single
-  nearest reading instead widens it to 2.29 mmHg (up to 4.3 at the 95th percentile). This is the 95% interval the
+  nearest reading instead widens it to 2.29 mmHg (up to 4.2 at the 95th percentile). This is the 95% interval the
   recording allows, not agreement between the two measurements.
 
   **SaO₂ − SpO₂.** Median 0 (interquartile range −0.8 to 0). SpO₂ is 100 at the draw for 77% of gases and SaO₂ is
@@ -102,7 +102,7 @@ levels:
   population: >-
     Pooled over patients, reading the monitor at the lab stamp instead of the draw changes the gradient's distribution little.
   individual: >-
-    Within a patient, the stamp is always about 7 minutes late, a systematic shift: the monitor tracks the blood gas far worse there (CO₂ change correlation 0.54 against 0.74).
+    Within a patient, the stamp is a median 7.2 minutes late, a systematic shift: the monitor tracks the blood gas far worse there (CO₂ change correlation 0.54 against 0.74).
 takeaways: |
   - Pair a blood gas with the monitor at the estimated draw, not at the lab stamp. Pooled over patients the
     difference is small, but within a patient the monitor tracks the blood gas much better at the draw (CO₂: 0.74
@@ -124,16 +124,15 @@ limitations: |
     100.
 code:
   - vitaldb-bench/examples/blood_gas_gradients.py
+  - vitaldb-bench/examples/co2_gradient_spread.py
+  - vitaldb-bench/scripts/rerun_examples.sh
 reproduce: |
   ```
-  python examples/blood_gas_gradients.py run --resolution <vitaldb-resolution at the pinned commit> \
-      --root <VitalDB release> --draws-csv lab_draw_labels.csv --out out/bg --cases 0:130   # repeat over chunks
-  python examples/blood_gas_gradients.py summarise --out out/bg --root <VitalDB release> \
-      --draws-csv lab_draw_labels.csv --figure 136-1 16-3
-  python examples/blood_gas_gradients.py lagscan --root <VitalDB release> --draws-csv lab_draw_labels.csv \
-      --out out/bg --cases 0:140   # repeat over chunks: the monitor at every minute around the draw
-  python examples/blood_gas_gradients.py lagsummary --out out/bg   # change figure and timing scans
+  bash scripts/rerun_examples.sh blood_gas_gradients     # in vitaldb-bench; 4 chunks, about an hour
   ```
+  The script runs `examples/blood_gas_gradients.py run` and `lagscan` over the gases in chunks, then `summarise`
+  (with the example gases 136-1 and 16-3), `lagsummary` and `examples/co2_gradient_spread.py`, recording each step;
+  the run is `$W/examples_v3/blood_gas_gradients`.
 figures:
   - id: bg-examples
     file: examples/bg-examples.png
