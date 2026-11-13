@@ -8,9 +8,11 @@ summary: >-
   between two fiducials. Built on a benchmark of 273 recordings and run on all 5,714 with ECG lead II and PLETH. On
   held-out injected ground truth in 219 recordings it finds 88% of slips (the current fit 89%) with 3 false slips
   (the current fit 38) and places them two and a half times as closely. It also finds slips that lose a frame
-  instead of gaining one. A blinded manual labelling of real events is under way. In development.
-date: 2026-11-03
-status: draft
+  instead of gaining one. A blinded manual labelling of 172 real events, weighted
+  to the whole release, puts its precision at 0.95 against 0.72 for the current fit, and its recall at 0.88 against
+  0.94. The final slip finder and correction, built on this detector, are in [[study:ppg-sawtooth-correction]].
+date: 2026-11-13
+status: current
 methods: [signal-borne-clocks]
 techniques: [beat-matching, phase-step-detection, null-controls]
 clocks: [oximeter-frame-clock, snuadc-sample]
@@ -62,7 +64,7 @@ method: |
     33 ms of content held at each slip) and the fiducials found again; the same slips as a shift of the fiducial
     times; and six more fiducial-shift sawtooths per recording, seeds 0–2 used while setting thresholds (on the
     benchmark) and 3–5 held out. The current fit is run on each for comparison.
-  - **Manual labels** (in progress): `label-sample --scan $W/sawtooth_char/scan_full --slips
+  - **Manual labels:** `label-sample --scan $W/sawtooth_char/scan_full --slips
     $W/sawtooth_char/full/slips.jsonl --out $W/sawtooth_char/labels` draws 172 events, stratified by which detector
     found them (both, each alone, predicted by the grid but not found, downward steps, mid-tooth and slip-free
     controls; seed 20261102), shown blinded on a private labelling page as ECG→PPG, ART→PPG and ECG→ART per beat.
@@ -70,6 +72,10 @@ method: |
     size, position (a point or an interval) and other features; `label-eval` turns the answers into verdicts through
     ECG→PPG = ECG→ART + ART→PPG and weights each stratum by its size in the run.
 results: |
+  - **Blinded manual labels** (172 events, all labelled; `$W/label_eval_final/label_eval.json`), weighted by the size
+    of each stratum: precision 0.95 for the new detector (16,040 of 16,874 slips real) against 0.72 for the current
+    fit (17,027 of 23,769), and recall 0.88 against 0.94 of the real slips in the sampled strata. A real slip is a
+    one-frame step on the PPG side, confirmed by the arterial line where one is clean.
   - **Held-out injected ground truth:**
 
     | | Full release: new detector | Current fit | Benchmark: new detector | Current fit |
@@ -96,7 +102,8 @@ results: |
     Benchmark: 898 upward slips in 234 of 273 (the current fit 1,248), 128 downward.
   - **The two detectors disagree on real data far more than on injected slips.** The current fit finds 47% more
     slips than the new detector on real recordings, against 1% more on injected ones; 8,668 of its slips have no
-    upward or downward step from the new detector within 60 s. Which are real is what the manual labels are for.
+    upward or downward step from the new detector within 60 s. The labels show that most of the current fit's extra slips are
+    not slips.
   - **"Sawtooth-free" recordings are not all free:** 278 of the 497 recordings in which the current fit finds no slip
     (56%) have one-frame steps, upward or downward, without any injection (benchmark: 8 of 22).
   - **One step or two?** A test of two steps against one around each slip prefers two at 59% of real slips and at
@@ -109,20 +116,15 @@ discussion: |
   up on fifteen times as many injected sawtooths. Placing a slip to a tenth of a second matters: a slip misplaced by s seconds
   leaves a whole-frame error for s seconds. On real recordings the current fit reports half as many slips again,
   which its recall on injected slips does not explain; either it finds real slips the new detector misses in
-  disturbed data, or it reports steps that are not slips. The blinded labels will divide the two.
+  disturbed data, or it reports steps that are not slips. The blinded labels show both, but mostly the second. The current fit's recall is higher
+  by six points, and its precision is lower by twenty-three.
 limitations: |
-  Development version: thresholds were set while looking at the 273 benchmark recordings (which are part of the full
+  Thresholds were set while looking at the 273 benchmark recordings (which are part of the full
   release), so the injected test is the honest measure of the detector, and the hosts are recordings without slips,
   which may not be typical. The injection holds 33 ms of content at each slip; a real slip shows no held segment
-  ([[study:ppg-sawtooth]]), so the real waveform near a slip may differ from the injected one. Precision on real
-  data is not known until the labels are in.
+  ([[study:ppg-sawtooth]]), so the real waveform near a slip may differ from the injected one. The labels sample 172 events, so the weighted precision and recall carry the sampling
+  error of a few dozen events per stratum.
 open_questions:
-  - title: "Which detector's extra slips are real?"
-    kind: next step
-    summary: >-
-      8,668 of the current fit's slips have no step either way from the new detector within 60 s, and the new detector has slips of its
-      own. A blinded, stratified labelling of 172 events (in progress) will estimate each detector's precision and
-      recall on real data.
   - title: "The last few percent"
     kind: next step
     summary: >-
