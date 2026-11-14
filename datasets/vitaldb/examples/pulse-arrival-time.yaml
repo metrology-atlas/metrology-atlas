@@ -6,7 +6,7 @@ summary: >-
   PAT from 13.6 to 11.1 ms in the median case, and removing one global delay brings PAT to about 0.33 s to the
   upstroke, keeping the differences between patients.
 side: time
-status: draft
+status: current
 question: |
   How long does the pulse take to travel from the heart to the finger, and how does that change through an
   operation?
@@ -31,7 +31,7 @@ observations: [ppg-sawtooth, ppg-hardware-delay, snuadc-one-clock, pleth-30hz-fr
 data: |
   60 minutes per case, starting 10 minutes into the overlap of ECG lead II and PLETH, and kept inside the stretch the
   whole-release slip fit covers, where the correction is known ([[study:ppg-sawtooth-correction]]). The cohort is a random 120
-  of the recordings with both signals (97% of recordings have them: 817 of 846 sampled), plus [[case:5975]] for
+  of the recordings with both signals (most recordings have both), plus [[case:5975]] for
   the figure; 66 of the 121 also have a pulsatile arterial line, which serves as the reference.
 steps: |
   1. **Fiducials.** R peaks in ECG lead II; the steepest upstroke after each R peak in the PLETH, and in the
@@ -55,7 +55,7 @@ steps: |
      rounding), evaluated by Monte Carlo, with a 2% floor for mis-detected beats. A median gives every beat the
      same weight whatever its error; the likelihood weighs them by the error model and ignores outliers.
 results: |
-  **One case.** In [[case:5975]] the stored PAT (grey) is about 0.68 s and jumps back by one frame three times in
+  **One case.** In [[case:5975]] the stored PAT (grey) is about 0.67 s and jumps back by one frame three times in
   the hour (dotted). After step 1 (blue) the jumps and ramps are gone and the series has the same course as the
   arterial PAT (green): the spread of finger minus arterial PAT, minute by minute, falls from 10.7 to 2.7 ms.
   Step 2 (orange) moves the whole series down by the global 385 ms, without changing its shape; the corrected finger
@@ -65,7 +65,7 @@ results: |
 
   **The cohort (121 cases).**
 
-  - *Global delay (step 2).* The stored PAT's case median is 0.65–0.75 s; step 2 subtracts 385 ms from every case,
+  - *Global delay (step 2).* The stored PAT's case median is 0.65–0.77 s; step 2 subtracts 385 ms from every case,
     so the corrected case medians keep their spread (median 329 ms to the upstroke, interquartile range 313–345 ms). Eight cases
     have a stored median of 0.44–0.54 s: their pulses were paired with the wrong beat (fast heart rates or doubled
     R peaks, with a 0.7 s delay longer than one RR interval; see [[study:pat-offset-census]]). They are left out of
@@ -77,7 +77,7 @@ results: |
     over the windows of the 36 with a tooth in tier A or B, it fell from 14.9 to 8.3 ms. The within-case spread of
     PAT itself changes less (17.2 to 14.5 ms in the median case), because real changes in PAT, tens of milliseconds
     as blood pressure changes, are larger than the sawtooth.
-  - *Against the earlier correction.* Run on the same windows, the detect fit corrects a tooth in 45 cases and
+  - *Against the earlier correction.* Run on the same windows, the detect fit corrects a tooth in 56 cases and
     leaves a median spread against the arterial line of 13.1 ms (rebuilt: 11.1); the rebuilt correction is tighter
     by more than 2 ms in 18 of the 60 cases and looser in 7, and makes 3 worse than stored against detect's 1.
 
@@ -123,7 +123,7 @@ takeaways: |
 limitations: |
   - The beat detector is deliberately simple: 9% of 30 s windows lie more than 40 ms from their case's median,
     mostly from mis-detected beats.
-  - 60 minutes of 121 cases; a full run belongs in the runbook.
+  - 60 minutes of 121 cases, not the whole release.
 open_questions:
   - title: "Isolated slips are left uncorrected"
     kind: next step
@@ -131,8 +131,7 @@ open_questions:
       With the rebuilt correction, 33 of the 113 cases have slips but no sawtooth (tier I): a step without its creep
       is not corrected, because correcting the step alone turns a sawtooth into a ramp
       ([[study:ppg-sawtooth-correction]]). Their delay drifts slowly and is reported, not removed. In the 60 cases
-      with an arterial line the correction widens the spread against the line in 3. (The earlier detect fit left 75
-      of 121 cases without a confident tooth; that question is closed.)
+      with an arterial line the correction widens the spread against the line in 3.
   - title: "Where the sawtooth stops"
     kind: phenomenon
     summary: >-
@@ -193,18 +192,20 @@ code:
   - vitaldb-bench/examples/pulse_arrival_time.py
   - vitaldb-bench/examples/pat_example_stats.py
   - vitaldb-bench/scripts/run_pat_example.sh
+  - vitaldb-bench/scripts/rerun_examples.sh
   - physiosync/physiosync/ecg_ppg.py
   - physiosync/physiosync/slips.py
   - physiosync/physiosync/measurement.py
 reproduce: |
   ```
-  python examples/pulse_arrival_time.py --root <VitalDB release> --cases 5975 --figure 5975 --out out/pat
-  python examples/pulse_arrival_time.py --root <VitalDB release> --cases <case ids> --out out/pat
-  python examples/pulse_arrival_time.py --out out/pat --cohort-figure
-  python examples/pat_example_stats.py out/pat --case <figure case> --json out/pat/page_stats.json
+  bash scripts/rerun_examples.sh slip_rebuild_fit     # in vitaldb-bench; the whole-release fit, 6 parts, about 30 minutes
+  bash scripts/rerun_examples.sh pulse_arrival_time   # the 121 cases, rebuilt and detect, about 2 minutes
   ```
-  The slips are read from the whole-release slip fit (`$PAT_FIT`); `PAT_METHOD=detect` runs the detect fit on the
-  same windows for comparison (`scripts/run_pat_example.sh` runs both). With [[software:physiosync]] and vitaldb-reader installed (see [[software:vitaldb-bench]]).
+  The script runs `examples/pulse_arrival_time.py` on the cases in `scripts/run_pat_example.sh` with the rebuilt fit,
+  and again with `PAT_METHOD=detect` on the same windows, draws the cohort figures, and saves the page's numbers with
+  `examples/pat_example_stats.py`, recording each step. The runs are `$W/examples_v3/pulse_arrival_time` and
+  `pulse_arrival_time_detect`. With [[software:physiosync]] and vitaldb-reader installed (see
+  [[software:vitaldb-bench]]).
 references: [ruffolo2025high]
 figures:
   - id: pat-case
