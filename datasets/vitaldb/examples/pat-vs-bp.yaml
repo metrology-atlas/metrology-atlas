@@ -2,10 +2,10 @@ id: pat-vs-bp
 name: Pulse arrival time against blood pressure, before and after synchronisation
 summary: >-
   In 3,270 recordings, PAT tracks systolic pressure only once each pulse is paired with its own beat: the hourly
-  correlation moves from a mean of −0.04 to −0.21 (88% of recordings negative), reproducing Ruffolo et al. 2025
+  correlation moves from a mean of −0.05 to −0.21 (88% of recordings negative), reproducing Ruffolo et al. 2025
   in a second dataset; paired naively, PAT is a heart-rate signal.
 side: time
-status: draft
+status: current
 question: |
   Does pulse arrival time (PAT) follow blood pressure within a patient, and how much of the answer depends on
   synchronising the ECG and the finger pulse correctly?
@@ -31,7 +31,7 @@ steps: |
      **own beat**, the upstroke within 0.25 s of the recording's typical delay;
      **+ sawtooth removed**, step 1 of [[example:pulse-arrival-time]];
      **+ global delay**, step 2, a constant, so every correlation must equal the previous one (a built-in check);
-     **own beat + rebuilt correction**, the final correction of [[study:ppg-sawtooth-correction]] (physiosync 0.3.2,
+     **own beat + rebuilt correction**, the final correction of [[study:ppg-sawtooth-correction]] (physiosync 0.3.4,
      from the whole-release fit, applied where that fit covers the beat: 90% or more of the window in 2,283
      recordings); and **arterial PAT**, R peak to the arterial upstroke, with neither problem, as the reference.
   3. Pearson r per recording between PAT and SBP, MAP and heart rate, and between PAT and SBP with heart rate held
@@ -45,7 +45,7 @@ results: |
 
   | PAT against SBP, Pearson r within 60-minute windows | Ruffolo et al. 2025 (paediatric ICU, 3,316 patients; every 60-minute window) | VitalDB (adult surgery, 3,270 recordings; one 60-minute window each) |
   |---|---|---|
-  | Naive synchronisation | Centred on 0; about 50% below 0 | Mean −0.04; 60% below 0 |
+  | Naive synchronisation | Centred on 0; about 50% below 0 | Mean −0.05; 60% below 0 |
   | Corrected | Mean −0.16; 84% below 0 | Mean −0.21; 88% below 0 |
 
   [[figure:pat-vs-bp-ruffolo]]
@@ -81,22 +81,22 @@ results: |
 
   Almost all of the gain comes from the pairing; removing the sawtooth adds a little over windows (−0.45 to −0.47
   with the earlier correction, −0.49 with the rebuilt one) and nothing beat to beat, where its 33 ms slips are small
-  next to beat-to-beat noise. In the 1,654 recordings with a sawtooth that the rebuilt fit covers, the 30 s PAT–SBP
-  correlation is −0.46 paired only, −0.50 with the earlier correction, −0.52 with the rebuilt one and −0.50 for the
+  next to beat-to-beat noise. In the 1,653 recordings with a sawtooth that the rebuilt fit covers, the 30 s PAT–SBP
+  correlation is −0.46 paired only, −0.50 with the earlier correction, −0.52 with the rebuilt one and −0.51 for the
   arterial PAT. The rebuilt correction also brings the finger PAT closest to the arterial PAT: the spread of finger
   minus arterial PAT is 14.1 ms paired only, 12.7 with the earlier correction and 11.6 with the rebuilt one (2,579
-  recordings; with a sawtooth 14.1, 12.3 and 10.7). The global delay changes nothing, as it must. The slope is −0.41 ms of PAT per mmHg of SBP (median over recordings), against −0.34 for
-  the arterial PAT.
+  recordings; with a sawtooth 14.1, 12.3 and 10.7). The global delay changes nothing, as it must. With each pulse paired with its own beat, the slope is −0.41 ms of PAT
+  per mmHg of SBP (median over recordings), against −0.34 for the arterial PAT.
 
   [[figure:pat-vs-bp]]
 
   **Between patients, PAT says little about SBP.** Naive PAT's recording medians correlate with heart rate (r
-  −0.69) and slightly positively with SBP (+0.08); correctly paired, both are near zero (−0.15 and −0.05). The device
+  −0.69) and slightly positively with SBP (+0.08); correctly paired, both are near zero (−0.15 and −0.04). The device
   delay is the same for every recording, so it neither helps nor hurts between patients.
 levels:
   error: systematic
   population: >-
-    Naive pairing turns a cohort's mean hourly PAT–SBP correlation from −0.21 into −0.04, and makes PAT follow heart rate instead (median r −0.40): a systematic error that changes what a study concludes.
+    Naive pairing turns a cohort's mean hourly PAT–SBP correlation from −0.21 into −0.05, and makes PAT follow heart rate instead (median r −0.40): a systematic error that changes what a study concludes.
   individual: >-
     Each recording's correlation moves by a median −0.16 when pulses are paired with their own beats; for a
     patient-level PAT–BP calibration, the pairing decides whether there is a signal at all.
@@ -119,12 +119,16 @@ limitations: |
 code:
   - vitaldb-bench/examples/pat_vs_bp.py
   - vitaldb-bench/examples/pulse_arrival_time.py
-  - vitaldb-bench/examples/run_scan.sh
+  - vitaldb-bench/tools/slip_rebuild.py
+  - vitaldb-bench/scripts/rerun_examples.sh
 reproduce: |
   ```
-  bash examples/run_scan.sh pat_vs_bp                    # 8 parallel parts, about 15 minutes
-  python examples/pat_vs_bp.py agg <work>/examples/pat_vs_bp/part_*.jsonl --out out/pat_bp   # also pat_vs_bp_ruffolo.png
+  bash scripts/rerun_examples.sh slip_rebuild_fit   # in vitaldb-bench; the whole-release fit, 6 parts, about 30 minutes
+  bash scripts/rerun_examples.sh pat_vs_bp          # 4 parallel parts, about 30 minutes
   ```
+  The script scans every recording with `examples/pat_vs_bp.py scan`, using the fit from the first run, and
+  aggregates the parts with `examples/pat_vs_bp.py agg`, recording each step. The runs are
+  `$W/examples_v3/slip_rebuild_fit` and `$W/examples_v3/pat_vs_bp`.
 references: [ruffolo2025high]
 figures:
   - id: pat-vs-bp-ruffolo
