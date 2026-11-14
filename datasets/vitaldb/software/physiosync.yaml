@@ -21,7 +21,7 @@ role: |
   [[software:vitaldb-bench]] scripts call it on VitalDB cases.
 install: |
   ```bash
-  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.3"
+  pip install "physiosync @ git+https://github.com/metrology-atlas/physiosync@v0.3.4"
   ```
 
   Version 0.3 adds the rebuilt slip finder and `fit_ecg_ppg_delay(method="rebuilt")`
