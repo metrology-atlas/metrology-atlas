@@ -13,5 +13,5 @@ about:
 - pco2
 date: 2026-10-18
 sources:
-- output: W:examples/bg/lag_summary.json
+- output: W:examples_v3/blood_gas_gradients/lag_summary.json
   key: change_figure.monitor_draw.r

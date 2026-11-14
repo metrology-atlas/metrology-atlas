@@ -15,5 +15,5 @@ about:
 - sao2
 date: 2026-10-18
 sources:
-- output: W:examples/bg/summary.json
+- output: W:examples_v3/blood_gas_gradients/summary.json
   key: spo2.point_at_draw.median

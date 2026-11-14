@@ -15,5 +15,5 @@ about:
 - solar8000-nibp
 date: 2026-10-19
 sources:
-- output: W:examples/cuff_vs_arterial/agg/summary.json
+- output: W:examples_v3/cuff_vs_arterial/agg/summary.json
   key: individual.between_patient_sd

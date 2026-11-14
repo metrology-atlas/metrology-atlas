@@ -116,7 +116,7 @@ results: |
     | Rebuilt, first version (0.3.1) | 10.86 (5.91–22.02; 50.9) | 28.9% |
     | Rebuilt, final (0.3.2) | [[value:ppg-correction-art-spread|number]] (5.70–14.67; 22.03) | 7.3% |
 
-    Over all 2,976 the final correction leaves a median 11.72 ms (earlier method 11.95, uncorrected 14.01) and improves
+    Over all 2,976 the final correction leaves a median [[value:ppg-correction-art-spread-all|number]] ms (earlier method 11.95, uncorrected [[value:ppg-uncorrected-art-spread-all|number]]) and improves
     42.0% of recordings by more than 2 ms (earlier 40.3%). In the 866 recordings with slips but no corrected sawtooth
     (602 without a sawtooth, 264 with a tooth from two slips) it changes nothing, by design; the earlier method, which
     corrects some of them, improves their median by about 1–2 ms. The first version's errors had three causes, each
