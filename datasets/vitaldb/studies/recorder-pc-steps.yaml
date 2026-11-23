@@ -54,9 +54,8 @@ results: |
     as buffered data catching up after a stall would. The Primus waveforms lose the same stretch in all four and the
     BIS waveform jumps at or soon after three of them; only the SNUADC carries straight through.
 discussion: |
-  The PC–UTC link stays an assumption, but now a bounded one: whatever the time synchronisation does, it never
-  steps the clock by half a second or more. Steps smaller than that, and the gradual slewing Windows normally uses,
-  remain invisible.
+  The PC–UTC link stays an assumption, but a bounded one. No step of half a second or more moves the recorder's time
+  within any of the 6,388 files, and smaller steps would remain invisible to this search.
 
   Prof. Lee's account of the recorder explains the result ([[reference:lee2026correspondence-9nov]]). Vital Recorder
   reads the VitalDB server's time once at each start and then runs on the PC's hardware timer, so setting the
@@ -64,14 +63,9 @@ discussion: |
   running recorder's time. UTCk mattered only when the server request failed at start-up. No search for UTCk steps
   is needed, and a step of every device together within one run would point to something else.
 limitations: |
-  Detection is limited to steps of 0.5 s and above. A slow slew of the PC clock cannot be told apart from device
-  drift with these data.
-open_questions:
-  - title: "PC clock steps, not slews"
-    kind: assumption
-    summary: >-
-      The analysis assumes the recorder PC's clock corrects in steps. Slow slewing would look like device drift and
-      cannot be told apart from it with these data.
+  Detection is limited to steps of 0.5 s and above. Within a run the recorder's time drifts at the rate of the PC's
+  hardware timer, which these data cannot tell apart from device drift. That rate is measured against the mains grid
+  instead ([[link:recorder-pc-vs-grid]]).
 code:
   - vitaldb-bench/tools/pc_clock_steps.py
   - vitaldb-bench/tools/pc_step_check.py
