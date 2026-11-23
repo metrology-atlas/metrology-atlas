@@ -82,12 +82,15 @@ results: |
     new ones alone not significant) gave conflicting readings; the whole release settles it. The first statement
     (17 October) that no pairs were seen came from a coarser step search and is withdrawn.
 discussion: |
-  The stall rule explains the signal lost at each reset ([[study:reset-cluster-order]]): the acquisition pauses
-  about 20 ms and the time is never sampled. The channel skew fits the ART–PLETH phase difference at 240 Hz (a median
+  The signal lost at each reset, about 20 ms, is the block the recorder discards when it re-anchors the count, not a
+  stall of the board ([[reference:lee2026correspondence-9nov]], [[observation:reset-signal-lost]]). The firmware's
+  stall rule would lose time the same way, but nothing shows it acting at resets. The channel skew fits the ART–PLETH phase difference at 240 Hz (a median
   0.37 ms, 0.29–0.46 ms in 69 recordings; [[study:monitor-lines]]). The wrap fault is intermittent, about half a
   sample, and missing on some ports and in frequent-correction mode. The public code predicts a fault at every wrap,
-  so either it depends on where in the 2 ms cycle the wrap falls, or the boards differ in firmware, the
-  frequent-correction mode itself perhaps being the mark of a different board. For the timing it adds a step of
+  so either it depends on where in the 2 ms cycle the wrap falls, or the boards differ in firmware.
+  Frequent-correction mode is not a setting but the recorder's rule applied to a converter whose crystal runs slower
+  than the PC's clock ([[reference:lee2026correspondence-9nov]]), so the fault's rarity there may come from the
+  board, its firmware or its rate, and the data cannot yet tell which. For the timing it adds a step of
   about 1 ms to all SNUADC channels together at roughly one wrap in four: below the stamp model's error, and shared
   by every SNUADC channel, so the delays between them are untouched.
 
@@ -131,4 +134,4 @@ open_questions:
       The board sends no time, so Vital Recorder assigns every stamp. Its rule is inferred from the data (the stamp
       sawtooth and its corrections); a description or the code would test the stamp model directly. Asked of the
       dataset's creator.
-references: [snuadc, lee2026correspondence, lee2026correspondence-nov]
+references: [snuadc, lee2026correspondence, lee2026correspondence-nov, lee2026correspondence-9nov]

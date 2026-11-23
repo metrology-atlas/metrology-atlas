@@ -1,19 +1,24 @@
 id: snuadc-ten-bit-codes
-name: SNUADC values are 10-bit codes, though the device is documented as 12-bit
+name: SNUADC values are 10-bit codes, though the recorder's device list gives 12 bits
 summary: >-
-  Every SNUADC channel in the release stores codes 0–1023 and nothing above: 10 bits, a step of 0.0098746 V. The
-  VitalRecorder device list describes the SNUADC as a 12-bit converter.
-status: open
+  Every SNUADC channel in the release stores codes 0–1023 and nothing above, so 10 bits with a step of 0.0098746 V.
+  The Vital Recorder paper describes the SNUADC as a 10-bit converter, and the public firmware reads a 10-bit
+  converter, but the recorder's current device list gives 12 bits.
+status: established
 devices: [snuadc]
 variables: [snuadc-ecg-ii, snuadc-art, snuadc-pleth]
 studies: [track-value-resolution, snuadc-firmware]
-references: [vitaldb-docs-devices, vitaldb-docs-config]
+references: [vitaldb-docs-devices, vitaldb-docs-config, lee2018vitalrecorder, lee2026correspondence-9nov, lee2026correspondence-nov]
 consequence: |
   The resolution is the 10-bit step: 0.00987 mV for ECG, 0.987 mmHg for ART, CVP and FEM, 0.395 units for PLETH.
-  Anyone assuming the documented 12 bits would expect steps four times finer than the data hold.
+  Anyone assuming the 12 bits in the current device list would expect steps four times finer than the data hold.
 handling: |
-  The atlas uses the observed 10-bit step. Why the documented and stored resolutions differ is open: an older
-  10-bit SNUADC, or 12-bit readings reduced to 10 bits before transmission.
+  The atlas uses the observed 10-bit step. It agrees with the Vital Recorder paper, which describes the SNUADC as an
+  8-channel, ±5 V, 10-bit converter ([[reference:lee2018vitalrecorder]]), as Prof. Lee pointed out
+  ([[reference:lee2026correspondence-9nov]]), and with the public firmware, which reads the 10-bit converter of its
+  ATmega32U4 ([[study:snuadc-firmware]]). Only the recorder's current device list gives 12 bits. Which firmware ran
+  on each unit was not recorded ([[reference:lee2026correspondence-nov]]), so the stored codes are the evidence for
+  the recordings themselves.
 figures:
   - id: snuadc-ten-bit-codes
     file: snuadc-ten-bit-codes.png
